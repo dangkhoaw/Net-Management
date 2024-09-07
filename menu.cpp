@@ -6,8 +6,5 @@ Menu::~Menu() {}
 
 void Menu::show()
 {
-    if (this->typeMenu == "admin")
-        admin();
-    else if (this->typeMenu == "user")
-        user();
+    (this->typeMenu == "employee") ? menuEmployee() : menuCustomer();
 }

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <conio.h>
 #include <windows.h>
+#include "function.h"
 
 using namespace std;
 
@@ -19,8 +20,8 @@ private:
 public:
     Menu(string typeMenu);
     ~Menu();
-    friend void admin();
-    friend void user();
+    friend void menuEmployee();
+    friend void menuCustomer();
     void show();
 };
 

@@ -4,7 +4,7 @@ using namespace std;
 
 int main(int argc, char const *argv[])
 {
-    Menu menu("admin");
+    Menu menu("customer");
     menu.show();
     return 0;
 }

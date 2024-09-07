@@ -3,7 +3,7 @@
 /*------------------------------------MENU------------------------------------*/
 void optionMenu(string typeMenu, int option)
 {
-    if (typeMenu == "admin")
+    if (typeMenu == "employee")
     {
         switch (option)
         {
@@ -11,24 +11,35 @@ void optionMenu(string typeMenu, int option)
             cout << "Thêm tài khoản" << endl;
             break;
         case 2:
-            cout << "Xóa tài khoản" << endl;
-            break;
-        case 3:
             cout << "Khóa tài khoản" << endl;
             break;
-        case 4:
+        case 3:
             cout << "Mở khóa tài khoản" << endl;
             break;
-        case 5:
+        case 4:
             cout << "Xem danh sách tài khoản" << endl;
             break;
-        case 6:
+        case 5:
             cout << "Thêm máy tính" << endl;
             break;
-        case 7:
+        case 6:
             cout << "Xem danh sách máy tính" << endl;
             break;
-        case 8:
+        case 7:
+            cout << "Thoát" << endl;
+            break;
+        default:
+            break;
+        }
+    }
+    else
+    {
+        switch (option)
+        {
+        case 1:
+            cout << "Đổi mật khẩu" << endl;
+            break;
+        case 2:
             cout << "Thoát" << endl;
             break;
         default:
@@ -48,10 +59,19 @@ void printMenuOption(string typeMenu, int option, bool isSelected)
 
 void showMenu(string typeMenu, int selectOption)
 {
-    if (typeMenu == "admin")
+    if (typeMenu == "employee")
     {
         system("cls");
-        for (int i = 1; i <= 8; i++)
+        for (int i = 1; i <= 7; i++)
+        {
+            bool isSelected = (i == selectOption);
+            printMenuOption(typeMenu, i, isSelected);
+        }
+    }
+    else
+    {
+        system("cls");
+        for (int i = 1; i <= 2; i++)
         {
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
@@ -59,9 +79,9 @@ void showMenu(string typeMenu, int selectOption)
     }
 }
 
-void admin()
+void menuEmployee()
 {
-    Menu menu("admin");
+    Menu menu("employee");
     int selectOption = 1;
     while (true)
     {
@@ -70,13 +90,13 @@ void admin()
         switch (key)
         {
         case KEY_UP:
-            selectOption = (selectOption == 1) ? 8 : selectOption - 1;
+            selectOption = (selectOption == 1) ? 7 : selectOption - 1;
             break;
         case KEY_DOWN:
-            selectOption = (selectOption == 8) ? 1 : selectOption + 1;
+            selectOption = (selectOption == 7) ? 1 : selectOption + 1;
             break;
         case KEY_ENTER:
-            if (selectOption == 8)
+            if (selectOption == 7)
             {
                 cout << "Thoát" << endl;
                 return;
@@ -89,6 +109,33 @@ void admin()
     }
 }
 
-void user()
+void menuCustomer()
 {
+    Menu menu("customer");
+    int selectOption = 1;
+
+    while (true)
+    {
+        showMenu(menu.typeMenu, selectOption);
+        int key = _getch();
+        switch (key)
+        {
+        case KEY_UP:
+            selectOption = (selectOption == 1) ? 2 : selectOption - 1;
+            break;
+        case KEY_DOWN:
+            selectOption = (selectOption == 2) ? 1 : selectOption + 1;
+            break;
+        case KEY_ENTER:
+            if (selectOption == 2)
+            {
+                cout << "Thoát" << endl;
+                return;
+            }
+            cout << "Chọn " << selectOption << endl;
+            break;
+        default:
+            break;
+        }
+    }
 }
