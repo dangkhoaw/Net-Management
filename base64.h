@@ -7,7 +7,7 @@ using namespace std;
 class Base64
 {
 private:
-    string s;
+    string str;
 
 public:
     Base64(const string);
