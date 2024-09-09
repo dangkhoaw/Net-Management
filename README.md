@@ -10,3 +10,8 @@ cd quan-ly-tiem-internet
 g++ *.cpp -o main
 ./main
 ```
+
+# 🧑🏻‍💻 Contributors
+
+- [Đặng Đăng Khoa](https://www.facebook.com/khoaw.dang/)
+- [Trần Nguyễn Văn Phát](https://www.facebook.com/profile.php?id=100043746661303)

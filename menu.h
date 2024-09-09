@@ -11,6 +11,7 @@ using namespace std;
 #define KEY_UP 72
 #define KEY_DOWN 80
 #define KEY_ENTER 13
+#define KEY_BACKSPACE 8
 
 class Menu
 {

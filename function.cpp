@@ -1,5 +1,17 @@
 #include "function.h"
 
+/*------------------------------------CONSOLE------------------------------------*/
+void ShowCursor(bool CursorVisibility)
+{
+    HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_CURSOR_INFO ConCurInf;
+
+    ConCurInf.dwSize = 10;
+    ConCurInf.bVisible = CursorVisibility;
+
+    SetConsoleCursorInfo(handle, &ConCurInf);
+}
+
 /*------------------------------------MENU------------------------------------*/
 void optionMenu(string typeMenu, int option)
 {
@@ -81,6 +93,8 @@ void showMenu(string typeMenu, int selectOption)
 
 void menuEmployee()
 {
+    SetConsoleTitle(TEXT("Menu nhân viên"));
+    ShowCursor(false);
     Menu menu("employee");
     int selectOption = 1;
     while (true)
@@ -107,10 +121,14 @@ void menuEmployee()
             break;
         }
     }
+    ShowCursor(true);
 }
 
 void menuCustomer()
 {
+    MessageBox(NULL, TEXT("Chào mừng đến với tiệm Internet"), TEXT("Thông báo"), MB_OK | MB_ICONINFORMATION);
+    SetConsoleTitle(TEXT("Menu khách hàng"));
+    ShowCursor(false);
     Menu menu("customer");
     int selectOption = 1;
 
@@ -136,6 +154,54 @@ void menuCustomer()
             break;
         default:
             break;
+        }
+    }
+    ShowCursor(true);
+}
+
+/*------------------------------------ACCOUNT------------------------------------*/
+
+void loading()
+{
+    cout << "\n\n";
+    for (int i = 0; i <= 25; i++)
+    {
+        cout << "\r";
+        for (int j = 0; j < i; j++)
+            cout << "█";
+        for (int j = i; j < 25; j++)
+            cout << "▒";
+        cout << " " << i * 4 << "%";
+        Sleep(50);
+    }
+}
+
+void enterPassword(string &password)
+{
+    password = "";
+    int i = 0;
+    while (true)
+    {
+        char ch = getch();
+        if (ch == KEY_ENTER)
+            break;
+        else if (ch == KEY_BACKSPACE)
+        {
+            if (i > 0)
+            {
+                i--;
+                cout << "\b \b";
+            }
+            else
+            {
+                cout << " \b";
+            }
+        }
+        else
+        {
+            password += ch;
+            i++;
+            cout << "•";
         }
     }
 }
