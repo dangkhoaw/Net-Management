@@ -12,6 +12,7 @@ private:
     string username;
     string password;
     string role;
+    string id;
 
 public:
     Account();
@@ -32,5 +33,28 @@ Account::Account(string username, string password, string role) : username(usern
 Account::~Account() {}
 
 string Account::getRole() { return role; }
+
+// class of customer
+class Customer : public Account
+{
+private:
+    string phone;
+    string hour;
+
+public:
+    Customer();
+    Customer(string username, string password, string role, string phone, string hour);
+    ~Customer();
+
+    string getPhone();
+    string getHour();
+
+    void changepassword();
+};
+class Staff : public Account
+{
+private:
+public:
+};
 
 #endif
