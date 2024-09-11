@@ -1,4 +1,6 @@
-![Header](./github-header-image.png)
+<h3 align="center">
+	<img src="https://raw.githubusercontent.com/dangkhoaw/quan-ly-tiem-internet/main/github-header-image.png" alt="Logo" width="950">
+</h3>
 
 <p align="center">
 	<a href="https://github.com/dangkhoaw/quan-ly-tiem-internet/stargazers"><img src="https://img.shields.io/github/stars/dangkhoaw/quan-ly-tiem-internet?colorA=363a4f&colorB=b7bdf8&style=for-the-badge"></a>
