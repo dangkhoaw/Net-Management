@@ -1,5 +1,5 @@
 <h3 align="center">
-	<img src="https://raw.githubusercontent.com/dangkhoaw/quan-ly-tiem-internet/main/github-header-image.png" alt="Logo" width="950">
+	<img src="./github-header-image.png" alt="Logo" width="950">
 </h3>
 
 <p align="center">
