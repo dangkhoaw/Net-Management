@@ -1,21 +1,30 @@
 #include "function.h"
 
+atomic<bool> running(true); // Dùng để dừng thread
+
 /*------------------------------------CONSOLE------------------------------------*/
+
 void ShowCursor(bool CursorVisibility)
 {
     HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_CURSOR_INFO ConCurInf;
+    CONSOLE_CURSOR_INFO cursor = {1, CursorVisibility};
+    SetConsoleCursorInfo(handle, &cursor);
+}
 
-    ConCurInf.dwSize = 10;
-    ConCurInf.bVisible = CursorVisibility;
+void Gotoxy(SHORT posX, SHORT posY)
+{
+    HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
+    COORD Position;
+    Position.X = posX;
+    Position.Y = posY;
 
-    SetConsoleCursorInfo(handle, &ConCurInf);
+    SetConsoleCursorPosition(hStdout, Position);
 }
 
 /*------------------------------------MENU------------------------------------*/
 void optionMenu(string typeMenu, int option)
 {
-    if (typeMenu == "employee")
+    if (typeMenu == "staff")
     {
         switch (option)
         {
@@ -71,9 +80,9 @@ void printMenuOption(string typeMenu, int option, bool isSelected)
 
 void showMenu(string typeMenu, int selectOption)
 {
-    if (typeMenu == "employee")
+    if (typeMenu == "staff")
     {
-        system("cls");
+        Gotoxy(0, 1);
         for (int i = 1; i <= 7; i++)
         {
             bool isSelected = (i == selectOption);
@@ -82,7 +91,7 @@ void showMenu(string typeMenu, int selectOption)
     }
     else
     {
-        system("cls");
+        Gotoxy(0, 1);
         for (int i = 1; i <= 2; i++)
         {
             bool isSelected = (i == selectOption);
@@ -91,15 +100,14 @@ void showMenu(string typeMenu, int selectOption)
     }
 }
 
-void menuEmployee()
+void menuStaff()
 {
     SetConsoleTitle(TEXT("Menu nhân viên"));
     ShowCursor(false);
-    Menu menu("employee");
     int selectOption = 1;
     while (true)
     {
-        showMenu(menu.typeMenu, selectOption);
+        showMenu("staff", selectOption);
         int key = _getch();
         switch (key)
         {
@@ -113,6 +121,8 @@ void menuEmployee()
             if (selectOption == 7)
             {
                 cout << "Thoát" << endl;
+                system("cls");
+                ShowCursor(true);
                 return;
             }
             cout << "Chọn " << selectOption << endl;
@@ -124,17 +134,19 @@ void menuEmployee()
     ShowCursor(true);
 }
 
-void menuCustomer()
+void menuCustomer(Time *time)
 {
     MessageBox(NULL, TEXT("Chào mừng đến với tiệm Internet"), TEXT("Thông báo"), MB_OK | MB_ICONINFORMATION);
     SetConsoleTitle(TEXT("Menu khách hàng"));
     ShowCursor(false);
-    Menu menu("customer");
     int selectOption = 1;
+
+    thread t(showTime, time);
+    Sleep(100);
 
     while (true)
     {
-        showMenu(menu.typeMenu, selectOption);
+        showMenu("customer", selectOption);
         int key = _getch();
         switch (key)
         {
@@ -148,6 +160,10 @@ void menuCustomer()
             if (selectOption == 2)
             {
                 cout << "Thoát" << endl;
+                system("cls");
+                running = false;
+                t.join();
+                ShowCursor(true);
                 return;
             }
             cout << "Chọn " << selectOption << endl;
@@ -203,5 +219,25 @@ void enterPassword(string &password)
             i++;
             cout << "•";
         }
+    }
+}
+
+/*------------------------------------TIME------------------------------------*/
+
+void showTime(Time *time)
+{
+    while (running)
+    {
+        Gotoxy(0, 0);
+        cout << (*time);
+        if ((*time).isZero())
+        {
+            system("cls");
+            cout << "Hết thời gian sử dụng" << endl;
+            running = false;
+            return;
+        }
+        --(*time);
+        Sleep(1000);
     }
 }

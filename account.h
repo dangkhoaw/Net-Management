@@ -1,9 +1,9 @@
-#ifndef _ACCOUNT_H
-#define _ACCOUNT_H 1
+#ifndef ACCOUNT_H
+#define ACCOUNT_H 1
 #include <iostream>
-#include "menu.h"
 #include "mtime.h"
 #include "base64.h"
+#include "historynode.h"
 using namespace std;
 
 class Account
@@ -35,20 +35,6 @@ Account::~Account() {}
 string Account::getRole() { return role; }
 
 // class of customer
-class HistoryNode
-{
-private:
-    string time;
-    HistoryNode *next;
-
-public:
-    HistoryNode();
-    HistoryNode(string time);
-    ~HistoryNode();
-    friend class Customer;
-};
-//
-//
 class Customer : public Account //
 {
 private:
