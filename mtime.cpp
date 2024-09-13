@@ -1,7 +1,5 @@
 #include "mtime.h"
 
-Time::Time() : hour(0), minute(0), second(0), colon(':') {}
-
 Time::Time(int hour, int minute, int second) : hour(hour), minute(minute), second(second), colon(':') {}
 
 Time::~Time() {}

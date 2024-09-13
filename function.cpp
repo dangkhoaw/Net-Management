@@ -136,13 +136,13 @@ void menuStaff()
 
 void menuCustomer(Time *time)
 {
-    MessageBox(NULL, TEXT("Chào mừng đến với tiệm Internet"), TEXT("Thông báo"), MB_OK | MB_ICONINFORMATION);
+    MessageBox(NULL, TEXT("Chào mừng đến với tiệm Internet"), TEXT("Thông báo"), MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
     SetConsoleTitle(TEXT("Menu khách hàng"));
     ShowCursor(false);
     int selectOption = 1;
 
     thread t(showTime, time);
-    Sleep(100);
+    Sleep(115);
 
     while (true)
     {
@@ -175,53 +175,6 @@ void menuCustomer(Time *time)
     ShowCursor(true);
 }
 
-/*------------------------------------ACCOUNT------------------------------------*/
-
-void loading()
-{
-    cout << "\n\n";
-    for (int i = 0; i <= 25; i++)
-    {
-        cout << "\r";
-        for (int j = 0; j < i; j++)
-            cout << "█";
-        for (int j = i; j < 25; j++)
-            cout << "▒";
-        cout << " " << i * 4 << "%";
-        Sleep(50);
-    }
-}
-
-void enterPassword(string &password)
-{
-    password = "";
-    int i = 0;
-    while (true)
-    {
-        char ch = getch();
-        if (ch == KEY_ENTER)
-            break;
-        else if (ch == KEY_BACKSPACE)
-        {
-            if (i > 0)
-            {
-                i--;
-                cout << "\b \b";
-            }
-            else
-            {
-                cout << " \b";
-            }
-        }
-        else
-        {
-            password += ch;
-            i++;
-            cout << "•";
-        }
-    }
-}
-
 /*------------------------------------TIME------------------------------------*/
 
 void showTime(Time *time)
@@ -235,9 +188,10 @@ void showTime(Time *time)
             system("cls");
             cout << "Hết thời gian sử dụng" << endl;
             running = false;
-            return;
+            break;
         }
         --(*time);
         Sleep(1000);
     }
+    exit(0);
 }

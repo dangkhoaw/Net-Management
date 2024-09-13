@@ -17,8 +17,7 @@ private:
     char colon;
 
 public:
-    Time();
-    Time(int hour, int minute, int second);
+    Time(int hour = 0, int minute = 0, int second = 0);
     ~Time();
 
     bool isZero();

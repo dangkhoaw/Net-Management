@@ -1,10 +1,17 @@
 #ifndef ACCOUNT_H
 #define ACCOUNT_H 1
+
 #include <iostream>
-#include "mtime.h"
+#include <fstream>
+#include <windows.h>
+#include <sstream>
+#include "function.h"
 #include "base64.h"
-#include "historynode.h"
+
 using namespace std;
+
+void enterPassword(string &password);
+void loading();
 
 class Account
 {
@@ -15,59 +22,17 @@ private:
     string id;
 
 public:
-    Account();
-    Account(string username, string password, string role);
+    Account(string username = "", string password = "", string role = "");
     ~Account();
 
     string getRole();
 
     bool signIn();
-    void signUp();
     void changePassword();
-};
 
-Account::Account() : username(""), password(""), role("") {}
-
-Account::Account(string username, string password, string role) : username(username), password(password), role(role) {}
-
-Account::~Account() {}
-
-string Account::getRole() { return role; }
-
-// class of customer
-class Customer : public Account //
-{
-private:
-    string phone;
-    int remainingTime;        // đổi ra giây hết thay thế cho hour
-    HistoryNode *historyHead; // lịch sử dụng máy bằng linklist
-
-public:
-    Customer();
-    Customer(string username, string password, string role, string phone, string hour);
-    ~Customer();
-
-    string getPhone();
-    string getHour();
-    void displayTimeLeft();
-    void addHistory();
-    void changePassword();
-};
-class Staff : public Account
-{
-private: // sử dụng mảng và bảng băm
-    Customer customer[21];
-    // bảng băm để lưu thông tin khách hàng ..
-public:
-    Staff();
-    Staff(string username, string password, string role);
-    ~Staff();
-    void viewComputerInfor();
-    void TopUpAccount(int amount);
-    void viewCustomerInfor();
-    void addComputer(int amountofComputer);
-    void ViewRevenue();
-    void lockComputer(Customer &customer);
+    friend istream &operator>>(istream &is, Account &account);
+    friend bool checkAccount(Account &account);
+    friend bool getAccountFromFile(fstream &file, Account &account);
 };
 
 #endif
