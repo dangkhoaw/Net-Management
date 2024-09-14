@@ -136,7 +136,7 @@ void menuStaff()
 
 void menuCustomer(Time *time)
 {
-    MessageBox(NULL, TEXT("Chào mừng đến với tiệm Internet"), TEXT("Thông báo"), MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
+    MessageBoxW(NULL, L"Chào mừng bạn đến với tiệm Internet", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_SETFOREGROUND | MB_TOPMOST);
     SetConsoleTitle(TEXT("Menu khách hàng"));
     ShowCursor(false);
     int selectOption = 1;
@@ -186,7 +186,7 @@ void showTime(Time *time)
         if ((*time).isZero())
         {
             system("cls");
-            cout << "Hết thời gian sử dụng" << endl;
+            MessageBoxW(NULL, L"Hết thời gian sử dụng!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_SETFOREGROUND | MB_TOPMOST);
             running = false;
             break;
         }

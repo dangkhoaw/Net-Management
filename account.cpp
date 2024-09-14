@@ -25,7 +25,7 @@ bool Account::signIn()
         cin >> *this;
         if (checkAccount(*this))
         {
-            MessageBox(NULL, TEXT("Login successfully!"), TEXT("Thông báo"), MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
+            MessageBoxW(NULL, L"Đăng nhập thành công!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_SETFOREGROUND | MB_TOPMOST);
             system("cls");
             loading();
             system("cls");
@@ -34,11 +34,11 @@ bool Account::signIn()
         else
         {
             system("cls");
-            MessageBox(NULL, TEXT("Login failed!"), TEXT("Thông báo"), MB_OK | MB_ICONERROR | MB_TOPMOST);
+            MessageBoxW(NULL, L"Đăng nhập thất bại!", L"Thông báo", MB_OK | MB_ICONERROR | MB_SETFOREGROUND | MB_TOPMOST);
             count++;
         }
     }
-    cout << "Bạn đã nhập sai quá 3 lần" << endl;
+    MessageBoxW(NULL, L"Đăng nhập sai quá 3 lần!", L"Thông báo", MB_OK | MB_ICONERROR | MB_SETFOREGROUND) | MB_TOPMOST;
     Sleep(555);
     system("cls");
     return false;
