@@ -3,6 +3,7 @@
     "iomanip": "cpp"
   },
   "code-runner.executorMap": {
-    "cpp": "cd $dir && g++ *.cpp -o $fileNameWithoutExt && $dir$fileNameWithoutExt"
-  }
+    "cpp": "cd $dir && g++ *.cpp -o main && ./main"
+  },
+  "code-runner.runInTerminal": true
 }
