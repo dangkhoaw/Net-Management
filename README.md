@@ -7,14 +7,32 @@
 	<a href="https://github.com/dangkhoaw/quan-ly-tiem-internet/contributors"><img src="https://img.shields.io/github/contributors/dangkhoaw/quan-ly-tiem-internet?colorA=363a4f&colorB=a6da95&style=for-the-badge"></a>
 </p>
 
-## Chạy chương trình
+> [!NOTE]
+> Chương trình chỉ chạy trên hệ điều hành Windows
 
-Mở terminal và chạy lệnh sau:
+## Hướng dẫn sử dụng
 
-```shell
+1. Clone repository này về máy
+
+```bash
 git clone https://github.com/dangkhoaw/quan-ly-tiem-internet.git
+```
+
+2. Di chuyển vào thư mục chứa mã nguồn
+
+```bash
 cd quan-ly-tiem-internet
+```
+
+3. Biên dịch chuơng trình
+
+```bash
 g++ *.cpp -o main
+```
+
+4. Chạy chương trình
+
+```bash
 ./main
 ```
 
