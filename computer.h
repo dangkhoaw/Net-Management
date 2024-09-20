@@ -7,14 +7,14 @@ using namespace std;
 class Computer
 {
 private:
-    string id_may;
+    string id;
     bool status;
 
 public:
-    Computer(string id_may = "", bool status = false);
+    Computer(string id = "", bool status = false);
     ~Computer();
-    string getId_may();
-    void setId_may();
+    string getId();
+    void setId();
     bool getStatus();
     void setStatus(bool status);
 };

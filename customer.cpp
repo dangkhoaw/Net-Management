@@ -1,54 +1,43 @@
 #include "customer.h"
-#include <bits/stdc++.h>
-#include "account.h"
-#include "computer.h"
-#include "staff.h"
+#include "base64.h"
+#include "function.h"
 using namespace std;
 
-Customer::Customer(string Name, string phone, bool status_customer) : Name(Name), phone(phone), status_customer(status_customer)
-{
-}
+Customer::Customer(string name, string phone, bool status, bool isFirstLogin, Time time) : Account(), name(name), phone(phone), status(status), isFirstLogin(isFirstLogin), time(time) {}
+Customer::~Customer() {}
 
-void Customer::setStatus_customer(bool status_customer)
-{
-    this->status_customer = status_customer;
-}
-void Customer::setTime(Time time)
-{
-    this->time = time;
-}
-void Customer::setPhone(string phone)
-{
-    this->phone = phone;
-}
+string Customer::getName() { return name; }
+string Customer::getPhone() { return phone; }
+bool Customer::getStatus() { return status; }
+bool Customer::getIsFirstLogin() { return isFirstLogin; }
+Time Customer::getTime() { return time; }
+void Customer::setStatus(bool status) { this->status = status; }
+void Customer::setTime(Time time) { this->time = time; }
+void Customer::setPhone(string phone) { this->phone = phone; }
+void Customer::setName(string name) { this->name = name; }
+void Customer::setIsFirstLogin(bool isFirstLogin) { this->isFirstLogin = isFirstLogin; }
 
 istream &operator>>(istream &is, Customer &customer)
 {
-
-    string username_temp, password_temp = "123456", role_temp = "customer";
+    is.ignore();
     cout << "Tên khách hàng : ";
-    getline(is, customer.Name);
+    getline(is, customer.name);
     cout << "Số điện thoại: ";
     is >> customer.phone;
     is.ignore();
-    cout << "Tên đăng nhập:";
-    getline(is, username_temp);
-    customer.setUserName(username_temp);
-    customer.setPassword(password_temp);
-    customer.setRole(role_temp);
-    customer.status_customer = false;
-    customer.generateID();
+    do
+    {
+        cout << "Tên đăng nhập: ";
+        getline(is, customer.username);
+        if (!isValidUsername(customer.username))
+        {
+            cout << "Tên đăng nhập đã tồn tại" << endl;
+        }
+    } while (!isValidUsername(customer.username));
+
+    customer.password = Base64("123456").encode();
+    cout << "Mật khẩu: 123456" << endl;
+    customer.role = "customer";
+    generateID(customer);
     return is;
-}
-string Customer::getPhone()
-{
-    return phone;
-}
-string Customer::getName()
-{
-    return Name;
-}
-bool Customer::getStatus_customer()
-{
-    return status_customer;
 }

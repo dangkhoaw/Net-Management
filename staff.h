@@ -4,7 +4,6 @@
 #include <iostream>
 #include "account.h"
 #include "customer.h"
-#include "function.h"
 #include <vector>
 #include <fstream>
 using namespace std;
@@ -18,12 +17,10 @@ public:
     void viewComputerInfo();
     void topUpAccount(int amount);
     void viewCustomerInfo();
-    void addComputer(int amountofComputer);
+    void addComputer(int amountOfComputer);
     void viewRevenue();
     void lockAccount(Customer &customer);
     void addAccount();
-    void addCustomerToFile(Customer &customer);
-    void addNewAccountToFile(Customer &customer);
 };
 
 #endif

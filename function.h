@@ -7,6 +7,7 @@
 #include <fstream>
 #include <windows.h>
 #include "mtime.h"
+#include "customer.h"
 
 #define KEY_UP 72
 #define KEY_DOWN 80
@@ -28,5 +29,12 @@ void showTime(Time *time);
 
 void enterPassword(string &password);
 void loading();
+void updateNumberOfAccounts(int &count);
+int getNumberOfAccounts();
+bool addNewAccountToFile(Customer &customer);
+void generateID(Customer &customer);
+bool isValidUsername(string &username);
+
+bool addCustomerToFile(Customer &customer);
 
 #endif

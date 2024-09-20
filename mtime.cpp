@@ -80,7 +80,7 @@ Time operator+(Time &time1, Time &time2)
     return temp;
 }
 
-ostream &operator<<(ostream &os, Time &time)
+ostream &operator<<(ostream &os, const Time &time)
 {
     os << setw(2) << setfill('0') << time.hour << time.colon << setw(2) << setfill('0') << time.minute << time.colon << setw(2) << setfill('0') << time.second;
     return os;

@@ -102,7 +102,7 @@ void showMenu(string typeMenu, int selectOption)
 
 void menuStaff()
 {
-
+    system("cls");
     Staff staff;
     SetConsoleTitle(TEXT("Menu nhân viên"));
     ShowCursor(false);
@@ -125,10 +125,11 @@ void menuStaff()
             case 1:
                 staff.addAccount();
                 break;
+            case 7:
+                system("cls");
+                ShowCursor(true);
+                return;
             }
-        case 7:
-            return;
-
         default:
             break;
         }
@@ -162,9 +163,9 @@ void menuCustomer(Time *time)
             if (selectOption == 2)
             {
                 cout << "Thoát" << endl;
-                system("cls");
                 running = false;
                 t.join();
+                system("cls");
                 ShowCursor(true);
                 return;
             }
@@ -198,7 +199,7 @@ void showTime(Time *time)
     exit(0);
 }
 
-/*------------------------------------PASSWORD------------------------------------*/
+/*------------------------------------ACCOUNT------------------------------------*/
 void loading()
 {
     for (int i = 0; i <= 25; i++)
@@ -237,4 +238,97 @@ void enterPassword(string &password)
             cout << "•";
         }
     }
+}
+
+void updateNumberOfAccounts(int &count)
+{
+    fstream file("./account/count.txt", ios::out);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file" << endl;
+        return;
+    }
+    file << count;
+    file.close();
+}
+
+int getNumberOfAccounts()
+{
+    int count;
+    fstream file("./account/count.txt", ios::in);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file" << endl;
+        return -1;
+    }
+    file >> count;
+    file.close();
+    return count;
+}
+
+bool addNewAccountToFile(Customer &customer)
+{
+    string path1 = "./account/account.txt"; // đưa vào file account
+    fstream file(path1, ios::app);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file" << endl;
+        return false;
+    }
+    file << customer.getId() << '|' << customer.getUserName() << '|' << customer.getPassword() << '|' << customer.getRole() << endl;
+    file.close();
+    return true;
+}
+
+void generateID(Customer &customer)
+{
+    int count = getNumberOfAccounts();
+    count++;
+    stringstream ss;
+    ss << setw(4) << setfill('0') << count;
+    string id = "USER" + ss.str();
+    customer.setId(id);
+    updateNumberOfAccounts(count);
+}
+
+bool isValidUsername(string &username)
+{
+    fstream file("./account/account.txt", ios::in);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file" << endl;
+        return false;
+    }
+    string line;
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        string id, usrname;
+        getline(ss, id, '|');
+        getline(ss, usrname, '|');
+        if (usrname == username)
+        {
+            file.close();
+            return false;
+        }
+    }
+    file.close();
+    return true;
+}
+
+/*------------------------------------STAFF------------------------------------*/
+
+/*------------------------------------CUSTOMER------------------------------------*/
+bool addCustomerToFile(Customer &customer)
+{
+    string path1 = "./data/customer.txt"; // đưa vào file customer
+    fstream file(path1, ios::app);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file" << endl;
+        return false;
+    }
+    file << customer.getId() << '|' << customer.getName() << '|' << customer.getUserName() << '|' << customer.getPhone() << '|' << customer.getStatus() << '|' << customer.getIsFirstLogin() << '|' << customer.getTime() << endl;
+    file.close();
+    return true;
 }

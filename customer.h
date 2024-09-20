@@ -6,32 +6,35 @@
 #include "history.h"
 #include "mtime.h"
 using namespace std;
-// class of customer
+
 class Customer : public Account
 {
 private:
     static int count;
-    string Name;
+    string name;
     string phone;
     Time time;
     History history;
-    bool status_customer;
-    // lịch sử dụng máy bằng linklist
+    bool status, isFirstLogin;
 
 public:
-    Customer(string Name = "", string phone = "", bool status_customer = false);
+    Customer(string name = "", string phone = "", bool status = false, bool isFirstLogin = true, Time time = Time());
+    ~Customer();
+    friend istream &operator>>(istream &is, Customer &customer);
+    void addHistory();
+
+    void setName(string name);
     void setPhone(string phone);
-    static void setCount(int count);
-    void setStatus_customer(bool status_customer);
+    // static void setCount(int count); t nghĩ cái ni k cần
+    void setStatus(bool status);
+    void setIsFirstLogin(bool isFirstLogin);
     void setTime(Time time);
     static int getCount();
     string getPhone();
     string getName();
-    bool getStatus_customer();
-    string getHour();
-    void addHistory();
-    void nhap();
-    friend istream &operator>>(istream &is, Customer &customer);
+    bool getStatus();
+    bool getIsFirstLogin();
+    Time getTime();
 };
 
 #endif

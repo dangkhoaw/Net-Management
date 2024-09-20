@@ -1,2 +1,0 @@
-USER0002|van phat|grayzy|23456u|0
-USER0003|dang khoa|grayzy|23456|0
