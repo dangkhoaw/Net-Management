@@ -32,6 +32,7 @@ public:
     friend istream &operator>>(istream &is, Account &account);
     friend bool checkAccount(Account &account);
     friend bool getAccountFromFile(fstream &file, Account &account);
+    friend void updateAccountToFile(Account &account);
 };
 
 #endif

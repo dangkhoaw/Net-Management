@@ -44,7 +44,6 @@ public:
 
     Time getTimeFromFile();
     void setTimeToFile(Time time);
-    // void updateTime();
 };
 
 #endif

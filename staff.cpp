@@ -2,6 +2,9 @@
 #include "computer.h"
 #include "function.h"
 using namespace std;
+
+Staff::Staff(string username, string password, string role, string id) : Account(username, password, role, id) {}
+
 void Staff::addAccount()
 {
     system("cls");

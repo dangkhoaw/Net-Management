@@ -13,7 +13,8 @@ private:
     vector<Customer> ListCustomer;
 
 public:
-    // Từ từ rồi làm hàm dựng sau
+    Staff(string username = "", string password = "", string role = "", string id = "");
+
     void viewComputerInfo();
     void topUpAccount(int amount);
     void viewCustomerInfo();

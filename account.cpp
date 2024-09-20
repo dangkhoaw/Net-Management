@@ -71,10 +71,42 @@ bool Account::changePassword()
         return false;
     }
     password = Base64(newPassword).encode();
+    updateAccountToFile(*this);
     MessageBoxW(NULL, L"Đổi mật khẩu thành công!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
     system("cls");
     ShowCursor(false);
     return true;
+}
+
+void updateAccountToFile(Account &account)
+{
+    string path = "./account/account.txt";
+    fstream file(path, ios::in);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file" << endl;
+        return;
+    }
+    string tempPath = "./account/temp.txt";
+    fstream tempFile(tempPath, ios::out);
+    if (!tempFile.is_open())
+    {
+        cout << "Không thể mở file" << endl;
+        return;
+    }
+    Account temp;
+    while (getAccountFromFile(file, temp))
+    {
+        if (temp.id == account.id)
+        {
+            temp = account;
+        }
+        tempFile << temp.id << "|" << temp.username << "|" << temp.password << "|" << temp.role << endl;
+    }
+    file.close();
+    tempFile.close();
+    system("del .\\account\\account.txt");
+    system("rename .\\account\\temp.txt account.txt");
 }
 
 bool getAccountFromFile(fstream &file, Account &account)

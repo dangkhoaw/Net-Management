@@ -45,12 +45,6 @@ void Customer::setTimeToFile(Time time)
     }
 }
 
-// void Customer::updateTime()
-// {
-//     Time time = getTimeFromFile();
-//     setTime(time);
-// }
-
 istream &operator>>(istream &is, Customer &customer)
 {
     is.ignore();
