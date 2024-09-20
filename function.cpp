@@ -1,5 +1,5 @@
 #include "function.h"
-
+#include "staff.h"
 atomic<bool> running(true); // Dùng để dừng thread
 
 /*------------------------------------CONSOLE------------------------------------*/
@@ -102,6 +102,8 @@ void showMenu(string typeMenu, int selectOption)
 
 void menuStaff()
 {
+
+    Staff staff;
     SetConsoleTitle(TEXT("Menu nhân viên"));
     ShowCursor(false);
     int selectOption = 1;
@@ -118,15 +120,15 @@ void menuStaff()
             selectOption = (selectOption == 7) ? 1 : selectOption + 1;
             break;
         case KEY_ENTER:
-            if (selectOption == 7)
+            switch (selectOption)
             {
-                cout << "Thoát" << endl;
-                system("cls");
-                ShowCursor(true);
-                return;
+            case 1:
+                staff.addAccount();
+                break;
             }
-            cout << "Chọn " << selectOption << endl;
-            break;
+        case 7:
+            return;
+
         default:
             break;
         }
@@ -194,4 +196,45 @@ void showTime(Time *time)
         Sleep(1000);
     }
     exit(0);
+}
+
+/*------------------------------------PASSWORD------------------------------------*/
+void loading()
+{
+    for (int i = 0; i <= 25; i++)
+    {
+        cout << "\r";
+        for (int j = 0; j < i; j++)
+            cout << "█";
+        for (int j = i; j < 25; j++)
+            cout << "▒";
+        cout << " " << i * 4 << "%";
+        Sleep(50);
+    }
+}
+
+void enterPassword(string &password)
+{
+    password = "";
+    int i = 0;
+    while (true)
+    {
+        char ch = getch();
+        if (ch == KEY_ENTER)
+            break;
+        else if (ch == KEY_BACKSPACE)
+        {
+            if (i > 0)
+            {
+                i--;
+                cout << "\b \b";
+            }
+        }
+        else
+        {
+            password += ch;
+            i++;
+            cout << "•";
+        }
+    }
 }

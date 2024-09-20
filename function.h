@@ -26,4 +26,7 @@ void menuCustomer(Time *time);
 
 void showTime(Time *time);
 
+void enterPassword(string &password);
+void loading();
+
 #endif

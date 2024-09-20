@@ -10,18 +10,19 @@ int main(int argc, char const *argv[])
     SetConsoleOutputCP(65001);
 
     Account account;
-    if (account.signIn())
-    {
-        if (account.getRole() == "staff")
-        {
-            menuStaff();
-        }
-        else if (account.getRole() == "customer")
-        {
-            Time time(0, 0, 20);
-            menuCustomer(&time);
-        }
-    }
+    menuStaff();
+    // if (account.signIn())
+    // {
+    //     if (account.getRole() == "staff")
+    //     {
+
+    //     }
+    //     else if (account.getRole() == "customer")
+    //     {
+    //         Time time(0, 0, 20);
+    //         menuCustomer(&time);
+    //     }
+    // }
 
     return 0;
 }
