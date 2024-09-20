@@ -1,3 +1,2 @@
-USER0001|dangkhoa|YWRtaW4=|staff
-USER0002|grayzy|MTIzNDU2|customer
-USER0003|dangkhoaw|MTIzNDU2|customer
+ADMIN|dangkhoa|YWRtaW4=|staff
+USER0001|dangkhoaw|MTIzNDU2|customer

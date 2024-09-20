@@ -1,2 +1,1 @@
-USER0002|Van Phat|grayzy|123456789|0|1|00:00:00
-USER0003|Dang Khoa|dangkhoaw|0906457124|0|1|00:00:00
+USER0001|Dang Khoa|dangkhoaw|123456789|0|1|0

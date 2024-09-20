@@ -10,7 +10,11 @@
 > [!NOTE]
 > Chương trình chỉ chạy trên hệ điều hành Windows
 
-## Hướng dẫn sử dụng
+## Requirements
+
+- **g++** phiên bản **4.8** trở lên để hỗ trợ chuẩn **C++11** (hoặc cao hơn), đảm bảo tính năng `thread` hoạt động.
+
+## Usage
 
 1. Clone repository này về máy
 
@@ -27,7 +31,7 @@ cd quan-ly-tiem-internet
 3. Biên dịch chuơng trình
 
 ```bash
-g++ *.cpp -o main
+g++ -std=c++11 *.cpp -o main
 ```
 
 4. Chạy chương trình

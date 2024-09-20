@@ -85,3 +85,9 @@ ostream &operator<<(ostream &os, const Time &time)
     os << setw(2) << setfill('0') << time.hour << time.colon << setw(2) << setfill('0') << time.minute << time.colon << setw(2) << setfill('0') << time.second;
     return os;
 }
+
+istream &operator>>(istream &is, Time &time)
+{
+    is >> time.hour >> time.colon >> time.minute >> time.colon >> time.second;
+    return is;
+}

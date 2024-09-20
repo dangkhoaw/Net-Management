@@ -23,9 +23,9 @@ void printMenuOption(string typeMenu, int option, bool isSelected);
 void showMenu(string typeMenu, int selectOption);
 void optionMenu(string typeMenu, int option);
 void menuStaff();
-void menuCustomer(Time *time);
+void menuCustomer(Customer &customer);
 
-void showTime(Time *time);
+void showTime(Customer *customer);
 
 void enterPassword(string &password);
 void loading();

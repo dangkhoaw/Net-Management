@@ -27,6 +27,7 @@ public:
     friend Time operator--(Time &time, int);
     friend Time operator+(Time &time1, Time &time2);
     friend ostream &operator<<(ostream &os, const Time &time);
+    friend istream &operator>>(istream &is, Time &time);
 };
 
 #endif

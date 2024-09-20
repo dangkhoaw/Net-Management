@@ -1,6 +1,8 @@
 #include "function.h"
 #include "staff.h"
-atomic<bool> running(true); // Dùng để dừng thread
+atomic<bool> runningShowTime(true); // Dùng để dừng thread
+atomic<bool> runningTime(true);
+bool isChangingPassword = false;
 
 /*------------------------------------CONSOLE------------------------------------*/
 
@@ -29,31 +31,65 @@ void optionMenu(string typeMenu, int option)
         switch (option)
         {
         case 1:
+            cout << "Quản lí khách hàng" << endl;
+            break;
+        case 2:
+            cout << "Quản lí máy tính" << endl;
+            break;
+        case 3:
+            cout << "Xem doanh thu" << endl;
+            break;
+        case 4:
+            cout << "Thoát" << endl;
+            break;
+        }
+    }
+    else if (typeMenu == "customerManger")
+    {
+        switch (option)
+        {
+        case 1:
             cout << "Thêm tài khoản" << endl;
             break;
         case 2:
-            cout << "Khóa tài khoản" << endl;
+            cout << "Xóa tài khoản" << endl;
             break;
         case 3:
-            cout << "Mở khóa tài khoản" << endl;
+            cout << "Khóa tài khoản" << endl;
             break;
         case 4:
-            cout << "Xem danh sách tài khoản" << endl;
+            cout << "Mở khóa tài khoản" << endl;
             break;
         case 5:
-            cout << "Thêm máy tính" << endl;
+            cout << "Nạp tiền" << endl;
             break;
         case 6:
-            cout << "Xem danh sách máy tính" << endl;
+            cout << "Xem thông tin khách hàng" << endl;
             break;
         case 7:
             cout << "Thoát" << endl;
             break;
-        default:
+        }
+    }
+    else if (typeMenu == "computerManager")
+    {
+        switch (option)
+        {
+        case 1:
+            cout << "Thêm máy tính" << endl;
+            break;
+        case 2:
+            cout << "Xóa máy tính" << endl;
+            break;
+        case 3:
+            cout << "Sửa thông tin máy tính" << endl;
+            break;
+        case 4:
+            cout << "Thoát" << endl;
             break;
         }
     }
-    else
+    else if (typeMenu == "customer")
     {
         switch (option)
         {
@@ -61,9 +97,10 @@ void optionMenu(string typeMenu, int option)
             cout << "Đổi mật khẩu" << endl;
             break;
         case 2:
-            cout << "Thoát" << endl;
+            cout << "Xem thông tin cá nhân" << endl;
             break;
-        default:
+        case 3:
+            cout << "Thoát" << endl;
             break;
         }
     }
@@ -82,20 +119,103 @@ void showMenu(string typeMenu, int selectOption)
 {
     if (typeMenu == "staff")
     {
-        Gotoxy(0, 1);
+        Gotoxy(0, 0);
+        for (int i = 1; i <= 4; i++)
+        {
+            bool isSelected = (i == selectOption);
+            printMenuOption(typeMenu, i, isSelected);
+        }
+    }
+    else if (typeMenu == "customerManger")
+    {
+        Gotoxy(0, 0);
         for (int i = 1; i <= 7; i++)
         {
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
         }
     }
-    else
+    else if (typeMenu == "computerManager")
     {
-        Gotoxy(0, 1);
-        for (int i = 1; i <= 2; i++)
+        Gotoxy(0, 0);
+        for (int i = 1; i <= 4; i++)
         {
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
+        }
+    }
+    else if (typeMenu == "customer")
+    {
+        Gotoxy(0, 1);
+        for (int i = 1; i <= 3; i++)
+        {
+            bool isSelected = (i == selectOption);
+            printMenuOption(typeMenu, i, isSelected);
+        }
+    }
+}
+
+void menuCustomerManager(Staff &staff)
+{
+    system("cls");
+    SetConsoleTitle(TEXT("Menu quản lí khách hàng"));
+    int selectOption = 1;
+    while (true)
+    {
+        showMenu("customerManger", selectOption);
+        int key = _getch();
+        switch (key)
+        {
+        case KEY_UP:
+            selectOption = (selectOption == 1) ? 7 : selectOption - 1;
+            break;
+        case KEY_DOWN:
+            selectOption = (selectOption == 7) ? 1 : selectOption + 1;
+            break;
+        case KEY_ENTER:
+            switch (selectOption)
+            {
+            case 1:
+                staff.addAccount();
+                break;
+            case 7:
+                system("cls");
+                return;
+            }
+        default:
+            break;
+        }
+    }
+}
+
+void menuComputerManager(Staff &staff)
+{
+    system("cls");
+    SetConsoleTitle(TEXT("Menu quản lí máy tính"));
+    int selectOption = 1;
+    while (true)
+    {
+        showMenu("computerManager", selectOption);
+        int key = _getch();
+        switch (key)
+        {
+        case KEY_UP:
+            selectOption = (selectOption == 1) ? 4 : selectOption - 1;
+            break;
+        case KEY_DOWN:
+            selectOption = (selectOption == 4) ? 1 : selectOption + 1;
+            break;
+        case KEY_ENTER:
+            switch (selectOption)
+            {
+            case 1:
+                break;
+            case 4:
+                system("cls");
+                return;
+            }
+        default:
+            break;
         }
     }
 }
@@ -114,18 +234,23 @@ void menuStaff()
         switch (key)
         {
         case KEY_UP:
-            selectOption = (selectOption == 1) ? 7 : selectOption - 1;
+            selectOption = (selectOption == 1) ? 4 : selectOption - 1;
             break;
         case KEY_DOWN:
-            selectOption = (selectOption == 7) ? 1 : selectOption + 1;
+            selectOption = (selectOption == 4) ? 1 : selectOption + 1;
             break;
         case KEY_ENTER:
             switch (selectOption)
             {
             case 1:
-                staff.addAccount();
+                menuCustomerManager(staff);
                 break;
-            case 7:
+            case 2:
+                menuComputerManager(staff);
+                break;
+            case 3:
+                break;
+            case 4:
                 system("cls");
                 ShowCursor(true);
                 return;
@@ -137,66 +262,94 @@ void menuStaff()
     ShowCursor(true);
 }
 
-void menuCustomer(Time *time)
+void menuCustomer(Customer &customer)
 {
     MessageBoxW(NULL, L"Chào mừng bạn đến với tiệm Internet", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
     SetConsoleTitle(TEXT("Menu khách hàng"));
     ShowCursor(false);
     int selectOption = 1;
 
-    thread t(showTime, time);
+    thread threadShowTime(showTime, &customer);
     Sleep(115);
 
-    while (true)
+    while (runningShowTime)
     {
         showMenu("customer", selectOption);
         int key = _getch();
         switch (key)
         {
         case KEY_UP:
-            selectOption = (selectOption == 1) ? 2 : selectOption - 1;
+            selectOption = (selectOption == 1) ? 3 : selectOption - 1;
             break;
         case KEY_DOWN:
-            selectOption = (selectOption == 2) ? 1 : selectOption + 1;
+            selectOption = (selectOption == 3) ? 1 : selectOption + 1;
             break;
         case KEY_ENTER:
-            if (selectOption == 2)
+            switch (selectOption)
             {
-                cout << "Thoát" << endl;
-                running = false;
-                t.join();
+            case 1:
+                isChangingPassword = true;
+                customer.changePassword();
+                isChangingPassword = false;
+                break;
+            case 2:
+                // customer.showMyInfo();
+                break;
+            case 3:
+                runningShowTime = false;
                 system("cls");
                 ShowCursor(true);
-                return;
+                break;
             }
-            cout << "Chọn " << selectOption << endl;
-            break;
         default:
             break;
         }
     }
+    threadShowTime.join();
     ShowCursor(true);
 }
 
 /*------------------------------------TIME------------------------------------*/
 
-void showTime(Time *time)
+void showTime(Customer *customer)
 {
-    while (running)
+    while (runningShowTime)
     {
-        Gotoxy(0, 0);
-        cout << (*time);
-        if ((*time).isZero())
+        if (!isChangingPassword)
         {
-            system("cls");
-            MessageBoxW(NULL, L"Hết thời gian sử dụng!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
-            running = false;
-            break;
+            Time currentTime = customer->getTime();
+
+            Gotoxy(0, 0);
+            cout << "Thời gian còn lại: " << currentTime << endl;
+
+            if (currentTime.isZero())
+            {
+                runningShowTime = false;
+                MessageBoxW(NULL, L"Hết thời gian sử dụng!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
+                break;
+            }
+            Sleep(1000);
+            currentTime--;
+            customer->setTime(currentTime);
+            customer->setTimeToFile(currentTime);
         }
-        --(*time);
-        Sleep(1000);
+        else
+        {
+            Time currentTime = customer->getTime();
+            if (currentTime.isZero())
+            {
+                runningShowTime = false;
+                MessageBoxW(NULL, L"Hết thời gian sử dụng!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
+                break;
+            }
+            Sleep(1000);
+            currentTime--;
+            customer->setTime(currentTime);
+            customer->setTimeToFile(currentTime);
+        }
     }
-    exit(0);
+    ShowCursor(true);
+    return;
 }
 
 /*------------------------------------ACCOUNT------------------------------------*/
@@ -229,6 +382,7 @@ void enterPassword(string &password)
             {
                 i--;
                 cout << "\b \b";
+                password.pop_back();
             }
         }
         else
@@ -328,7 +482,15 @@ bool addCustomerToFile(Customer &customer)
         cout << "Không thể mở file" << endl;
         return false;
     }
-    file << customer.getId() << '|' << customer.getName() << '|' << customer.getUserName() << '|' << customer.getPhone() << '|' << customer.getStatus() << '|' << customer.getIsFirstLogin() << '|' << customer.getTime() << endl;
+    file << customer.getId() << '|' << customer.getName() << '|' << customer.getUserName() << '|' << customer.getPhone() << '|' << customer.getStatus() << '|' << customer.getIsFirstLogin() << '|' << customer.getBalance() << endl;
+    file.close();
+    file.open("./time/" + customer.getId() + ".txt", ios::out);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file" << endl;
+        return false;
+    }
+    file << customer.getTime();
     file.close();
     return true;
 }

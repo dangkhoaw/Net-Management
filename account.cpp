@@ -54,6 +54,29 @@ bool Account::signIn()
     return false;
 }
 
+bool Account::changePassword()
+{
+    system("cls");
+    ShowCursor(true);
+    string newPassword;
+    cout << "Mật khẩu mới: ";
+    enterPassword(newPassword);
+    cout << "\nNhập lại mật khẩu: ";
+    string rePassword;
+    enterPassword(rePassword);
+    if (newPassword != rePassword)
+    {
+        MessageBoxW(NULL, L"Mật khẩu không khớp!", L"Thông báo", MB_OK | MB_ICONERROR | MB_TOPMOST);
+        system("cls");
+        return false;
+    }
+    password = Base64(newPassword).encode();
+    MessageBoxW(NULL, L"Đổi mật khẩu thành công!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
+    system("cls");
+    ShowCursor(false);
+    return true;
+}
+
 bool getAccountFromFile(fstream &file, Account &account)
 {
     string line;
@@ -84,6 +107,7 @@ bool checkAccount(Account &account)
         if (temp.username == account.username && temp.password == account.password)
         {
             account.role = temp.role;
+            account.id = temp.id;
             file.close();
             return true;
         }

@@ -10,7 +10,6 @@ int main(int argc, char const *argv[])
     SetConsoleOutputCP(65001);
 
     Account account;
-    // menuStaff();
     if (account.signIn())
     {
         if (account.getRole() == "staff")
@@ -19,10 +18,12 @@ int main(int argc, char const *argv[])
         }
         else if (account.getRole() == "customer")
         {
-            Time time(0, 0, 20);
-            menuCustomer(&time);
+            Customer customer(account.getUserName(), account.getPassword(), account.getRole(), account.getId());
+            Time t(0, 1, 0);
+            customer.setTimeToFile(t);
+            customer.setTime(t);
+            menuCustomer(customer);
         }
     }
-
     return 0;
 }

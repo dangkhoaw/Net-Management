@@ -18,7 +18,7 @@ public:
     ~Account();
 
     bool signIn();
-    void changePassword();
+    bool changePassword();
 
     string getRole();
     string getUserName();
