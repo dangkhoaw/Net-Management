@@ -8,6 +8,7 @@
 #include <windows.h>
 #include "mtime.h"
 #include "customer.h"
+#include "staff.h"
 
 #define KEY_UP 72
 #define KEY_DOWN 80
@@ -22,7 +23,9 @@ void Gotoxy(SHORT posX, SHORT posY);
 void printMenuOption(string typeMenu, int option, bool isSelected);
 void showMenu(string typeMenu, int selectOption);
 void optionMenu(string typeMenu, int option);
-void menuStaff();
+void computerManagementMenu(Staff &staff);
+void customerManagementMenu(Staff &staff);
+void menuStaff(Staff &staff);
 void menuCustomer(Customer &customer);
 
 void showTime(Customer *customer);
@@ -36,5 +39,6 @@ void generateID(Customer &customer);
 bool isValidUsername(string &username);
 
 bool addCustomerToFile(Customer &customer);
+bool checkFirstLogin(Customer &customer);
 
 #endif

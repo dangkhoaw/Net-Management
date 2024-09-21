@@ -58,20 +58,40 @@ bool Account::changePassword()
 {
     system("cls");
     ShowCursor(true);
-    string newPassword;
-    cout << "Mật khẩu mới: ";
-    enterPassword(newPassword);
+    string passwd, newPassword, rePassword;
+    cout << "Mật khẩu cũ: ";
+    enterPassword(passwd);
+    cout << endl;
+    if (passwd != password)
+    {
+        MessageBoxW(NULL, L"Mật khẩu không đúng!", L"Thông báo", MB_OK | MB_ICONERROR | MB_TOPMOST);
+        system("cls");
+        ShowCursor(false);
+        return false;
+    }
+    while (true)
+    {
+        cout << "Mật khẩu mới: ";
+        enterPassword(newPassword);
+        if (newPassword == passwd)
+        {
+            cout << "\nMật khẩu mới không được trùng với mật khẩu cũ!" << endl;
+            continue;
+        }
+        break;
+    }
     cout << "\nNhập lại mật khẩu: ";
-    string rePassword;
     enterPassword(rePassword);
     if (newPassword != rePassword)
     {
         MessageBoxW(NULL, L"Mật khẩu không khớp!", L"Thông báo", MB_OK | MB_ICONERROR | MB_TOPMOST);
         system("cls");
+        ShowCursor(false);
         return false;
     }
     password = Base64(newPassword).encode();
     updateAccountToFile(*this);
+    password = newPassword;
     MessageBoxW(NULL, L"Đổi mật khẩu thành công!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
     system("cls");
     ShowCursor(false);
@@ -138,6 +158,8 @@ bool checkAccount(Account &account)
         temp.password = Base64(temp.password).decode();
         if (temp.username == account.username && temp.password == account.password)
         {
+            account.username = temp.username;
+            account.password = temp.password;
             account.role = temp.role;
             account.id = temp.id;
             file.close();

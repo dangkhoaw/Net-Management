@@ -155,7 +155,7 @@ void showMenu(string typeMenu, int selectOption)
     }
 }
 
-void menuCustomerManager(Staff &staff)
+void customerManagementMenu(Staff &staff)
 {
     system("cls");
     SetConsoleTitle(TEXT("Menu quản lí khách hàng"));
@@ -188,7 +188,7 @@ void menuCustomerManager(Staff &staff)
     }
 }
 
-void menuComputerManager(Staff &staff)
+void computerManagementMenu(Staff &staff)
 {
     system("cls");
     SetConsoleTitle(TEXT("Menu quản lí máy tính"));
@@ -220,10 +220,9 @@ void menuComputerManager(Staff &staff)
     }
 }
 
-void menuStaff()
+void menuStaff(Staff &staff)
 {
     system("cls");
-    Staff staff;
     SetConsoleTitle(TEXT("Menu nhân viên"));
     ShowCursor(false);
     int selectOption = 1;
@@ -243,10 +242,10 @@ void menuStaff()
             switch (selectOption)
             {
             case 1:
-                menuCustomerManager(staff);
+                customerManagementMenu(staff);
                 break;
             case 2:
-                menuComputerManager(staff);
+                computerManagementMenu(staff);
                 break;
             case 3:
                 break;
@@ -293,7 +292,7 @@ void menuCustomer(Customer &customer)
                 isChangingPassword = false;
                 break;
             case 2:
-                // customer.showMyInfo();
+                customer.showMyInfo();
                 break;
             case 3:
                 runningShowTime = false;
@@ -493,4 +492,14 @@ bool addCustomerToFile(Customer &customer)
     file << customer.getTime();
     file.close();
     return true;
+}
+
+bool checkFirstLogin(Customer &customer)
+{
+    if (customer.getIsFirstLogin())
+    {
+        customer.setIsFirstLogin(false);
+        return true;
+    }
+    return false;
 }

@@ -1,6 +1,7 @@
 #include "function.h"
 #include "account.h"
 #include "mtime.h"
+#include "base64.h"
 
 using namespace std;
 
@@ -14,16 +15,33 @@ int main(int argc, char const *argv[])
     {
         if (account.getRole() == "staff")
         {
-            menuStaff();
+            Staff staff(account.getUserName(), account.getPassword(), account.getRole(), account.getId());
+            menuStaff(staff);
         }
         else if (account.getRole() == "customer")
         {
             Customer customer(account.getUserName(), account.getPassword(), account.getRole(), account.getId());
+            getCustomerFromFile(customer);
             Time t(0, 1, 0);
             customer.setTimeToFile(t);
             customer.setTime(t);
+            if (checkFirstLogin(customer))
+            {
+                MessageBoxW(NULL, L"Đây là lần đầu tiên bạn đăng nhập, vui lòng đổi mật khẩu!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
+                while (true)
+                {
+                    if (customer.changePassword())
+                    {
+                        customer.setPassword(Base64(customer.getPassword()).encode());
+                        updateAccountToFile(customer);
+                        customer.setPassword(Base64(customer.getPassword()).decode());
+                        updateCustomerToFile(customer);
+                        break;
+                    }
+                }
+            }
             menuCustomer(customer);
         }
+        return 0;
     }
-    return 0;
 }

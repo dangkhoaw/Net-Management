@@ -1,2 +1,3 @@
 ADMIN|dangkhoa|YWRtaW4=|staff
-USER0001|dangkhoaw|MjAwNQ==|customer
+USER0001|dangkhoaw|MTIzNDU2|customer
+USER0002|grayzy|MTIzNDU2|customer

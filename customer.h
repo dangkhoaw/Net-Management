@@ -44,6 +44,10 @@ public:
 
     Time getTimeFromFile();
     void setTimeToFile(Time time);
+
+    friend ostream &operator<<(ostream &os, Customer &customer);
+    friend bool getCustomerFromFile(Customer &customer);
+    friend void updateCustomerToFile(Customer &customer);
 };
 
 #endif

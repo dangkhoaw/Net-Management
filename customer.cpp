@@ -45,6 +45,99 @@ void Customer::setTimeToFile(Time time)
     }
 }
 
+void Customer::showMyInfo()
+{
+    cout << "Tên khách hàng: " << name << endl;
+    cout << "Số điện thoại: " << phone << endl;
+    cout << "Số dư: " << balance << endl;
+}
+
+bool getCustomerFromFile(Customer &customer)
+{
+    fstream file("./data/customer.txt", ios::in);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file" << endl;
+        return false;
+    }
+    string line;
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        string id, name, username, phone, status, isFirstLogin, balance;
+        getline(ss, id, '|');
+        getline(ss, name, '|');
+        getline(ss, username, '|');
+        getline(ss, phone, '|');
+        getline(ss, status, '|');
+        getline(ss, isFirstLogin, '|');
+        getline(ss, balance);
+        if (customer.id == id)
+        {
+            customer.name = name;
+            customer.username = username;
+            customer.phone = phone;
+            customer.status = status == "1" ? true : false;
+            customer.isFirstLogin = isFirstLogin == "1" ? true : false;
+            customer.balance = stof(balance);
+            file.close();
+
+            file.open("./time/" + customer.id + ".txt", ios::in);
+            if (file.is_open())
+            {
+                file >> customer.time;
+                file.close();
+            }
+            return true;
+        }
+    }
+    file.close();
+    return false;
+}
+
+void updateCustomerToFile(Customer &customer)
+{
+    fstream file("./data/customer.txt", ios::in);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file" << endl;
+        return;
+    }
+    string tempPath = "./data/temp.txt";
+    fstream tempFile(tempPath, ios::out);
+    if (!tempFile.is_open())
+    {
+        cout << "Không thể mở file" << endl;
+        return;
+    }
+    string line;
+    Customer temp;
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        getline(ss, temp.id, '|');
+        getline(ss, temp.name, '|');
+        getline(ss, temp.username, '|');
+        getline(ss, temp.phone, '|');
+        getline(ss, line, '|');
+        temp.status = line == "1" ? true : false;
+        getline(ss, line, '|');
+        temp.isFirstLogin = line == "1" ? true : false;
+        getline(ss, line);
+        temp.balance = stof(line);
+
+        if (temp.id == customer.id)
+        {
+            temp = customer;
+        }
+        tempFile << temp.id << "|" << temp.name << "|" << temp.username << "|" << temp.phone << "|" << temp.status << "|" << temp.isFirstLogin << "|" << temp.balance << endl;
+    }
+    file.close();
+    tempFile.close();
+    system("del .\\data\\customer.txt");
+    system("rename .\\data\\temp.txt customer.txt");
+}
+
 istream &operator>>(istream &is, Customer &customer)
 {
     is.ignore();
