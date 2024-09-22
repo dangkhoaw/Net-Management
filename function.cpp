@@ -316,7 +316,7 @@ void showTime(Customer *customer)
     {
         if (!isChangingPassword)
         {
-            Time currentTime = customer->getTime();
+            Time currentTime = customer->getTimeFromFile();
 
             Gotoxy(0, 0);
             cout << "Thời gian còn lại: " << currentTime << endl;
@@ -329,12 +329,12 @@ void showTime(Customer *customer)
             }
             Sleep(1000);
             currentTime--;
-            customer->setTime(currentTime);
             customer->setTimeToFile(currentTime);
+            customer->setTime(currentTime);
         }
         else
         {
-            Time currentTime = customer->getTime();
+            Time currentTime = customer->getTimeFromFile();
             if (currentTime.isZero())
             {
                 runningShowTime = false;
