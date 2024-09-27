@@ -6,17 +6,17 @@
 #include "customer.h"
 #include <vector>
 #include <fstream>
+#include "computer.h"
 using namespace std;
+
 class Staff : public Account
 {
 private:
-    vector<Customer> ListCustomer;
-
 public:
     Staff(string username = "", string password = "", string role = "", string id = "");
 
-    void viewComputerInfo();
-    void topUpAccount(int amount);
+    void viewComputerStatus();
+    void topUpAccount();
     void viewCustomerInfo();
     void addComputer(int amountOfComputer);
     void viewRevenue();

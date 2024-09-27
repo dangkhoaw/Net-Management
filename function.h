@@ -3,12 +3,14 @@
 
 #include <iostream>
 #include <thread>
+#include <mutex>
 #include <atomic>
 #include <fstream>
 #include <windows.h>
 #include "mtime.h"
 #include "customer.h"
 #include "staff.h"
+#include "computer.h"
 
 #define KEY_UP 72
 #define KEY_DOWN 80
@@ -37,8 +39,8 @@ int getNumberOfAccounts();
 bool addNewAccountToFile(Customer &customer);
 void generateID(Customer &customer);
 bool isValidUsername(string &username);
-
+void setMachineID(Customer &customer);
 bool addCustomerToFile(Customer &customer);
 bool checkFirstLogin(Customer &customer);
-
+void viewComputerStatus();
 #endif

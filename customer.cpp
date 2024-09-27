@@ -7,7 +7,10 @@ Customer::Customer(string username, string password, string role,
                    string id, string name, string phone,
                    bool status, bool isFirstLogin, float balance, Time time)
     : Account(username, password, role, id), name(name), phone(phone), status(status),
-      isFirstLogin(isFirstLogin), balance(balance), time(time) {}
+      isFirstLogin(isFirstLogin), balance(balance), time(time)
+{
+    computers = new Computer[10];
+}
 Customer::~Customer() {}
 
 string Customer::getName() { return name; }
@@ -72,10 +75,10 @@ bool getCustomerFromFile(Customer &customer)
         getline(ss, status, '|');
         getline(ss, isFirstLogin, '|');
         getline(ss, balance);
-        if (customer.id == id)
+        if (customer.username == username)
         {
             customer.name = name;
-            customer.username = username;
+            customer.id = id;
             customer.phone = phone;
             customer.status = status == "1" ? true : false;
             customer.isFirstLogin = isFirstLogin == "1" ? true : false;

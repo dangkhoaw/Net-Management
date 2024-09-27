@@ -2,7 +2,6 @@
 #include "account.h"
 #include "mtime.h"
 #include "base64.h"
-
 using namespace std;
 
 int main(int argc, char const *argv[])
@@ -22,9 +21,7 @@ int main(int argc, char const *argv[])
         {
             Customer customer(account.getUserName(), account.getPassword(), account.getRole(), account.getId());
             getCustomerFromFile(customer);
-            Time t(0, 1, 0);
-            customer.setTimeToFile(t);
-            customer.setTime(t);
+            setMachineID(customer);
             if (checkFirstLogin(customer))
             {
                 MessageBoxW(NULL, L"Đây là lần đầu tiên bạn đăng nhập, vui lòng đổi mật khẩu!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);

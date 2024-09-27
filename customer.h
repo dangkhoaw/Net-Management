@@ -5,12 +5,12 @@
 #include "account.h"
 #include "history.h"
 #include "mtime.h"
+#include "computer.h"
 using namespace std;
 
 class Customer : public Account
 {
 private:
-    static int count;
     float balance;
     string name;
     string phone;
@@ -29,7 +29,6 @@ public:
 
     void setName(string name);
     void setPhone(string phone);
-    // static void setCount(int count); t nghĩ cái ni k cần
     void setStatus(bool status);
     void setIsFirstLogin(bool isFirstLogin);
     void setTime(Time time);

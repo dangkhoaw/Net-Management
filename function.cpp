@@ -1,5 +1,10 @@
 #include "function.h"
 #include "staff.h"
+#include <mutex>
+#include <set>
+#include <cstdlib>
+#include "customer.h"
+
 atomic<bool> runningShowTime(true); // Dùng để dừng thread
 atomic<bool> runningTime(true);
 bool isChangingPassword = false;
@@ -76,15 +81,18 @@ void optionMenu(string typeMenu, int option)
         switch (option)
         {
         case 1:
-            cout << "Thêm máy tính" << endl;
+            cout << "xem trạng thái máy " << endl;
             break;
         case 2:
-            cout << "Xóa máy tính" << endl;
+            cout << "Thêm máy tính" << endl;
             break;
         case 3:
-            cout << "Sửa thông tin máy tính" << endl;
+            cout << "Xóa máy tính" << endl;
             break;
         case 4:
+            cout << "Sửa thông tin máy tính" << endl;
+            break;
+        case 5:
             cout << "Thoát" << endl;
             break;
         }
@@ -178,6 +186,9 @@ void customerManagementMenu(Staff &staff)
             case 1:
                 staff.addAccount();
                 break;
+            case 5:
+                staff.topUpAccount();
+                break;
             case 7:
                 system("cls");
                 return;
@@ -200,15 +211,16 @@ void computerManagementMenu(Staff &staff)
         switch (key)
         {
         case KEY_UP:
-            selectOption = (selectOption == 1) ? 4 : selectOption - 1;
+            selectOption = (selectOption == 1) ? 5 : selectOption - 1;
             break;
         case KEY_DOWN:
-            selectOption = (selectOption == 4) ? 1 : selectOption + 1;
+            selectOption = (selectOption == 5) ? 1 : selectOption + 1;
             break;
         case KEY_ENTER:
             switch (selectOption)
             {
             case 1:
+                staff.viewComputerStatus();
                 break;
             case 4:
                 system("cls");
@@ -268,6 +280,9 @@ void menuCustomer(Customer &customer)
     ShowCursor(false);
     int selectOption = 1;
 
+    Computer computer;
+    update(computer, customer, true);
+
     thread threadShowTime(showTime, &customer);
     Sleep(115);
 
@@ -295,6 +310,7 @@ void menuCustomer(Customer &customer)
                 customer.showMyInfo();
                 break;
             case 3:
+                update(computer, customer, false);
                 runningShowTime = false;
                 system("cls");
                 ShowCursor(true);
@@ -307,9 +323,6 @@ void menuCustomer(Customer &customer)
     threadShowTime.join();
     ShowCursor(true);
 }
-
-/*------------------------------------TIME------------------------------------*/
-
 void showTime(Customer *customer)
 {
     while (runningShowTime)
@@ -350,6 +363,8 @@ void showTime(Customer *customer)
     ShowCursor(true);
     return;
 }
+
+/*------------------------------------TIME------------------------------------*/
 
 /*------------------------------------ACCOUNT------------------------------------*/
 void loading()
@@ -495,6 +510,7 @@ bool addCustomerToFile(Customer &customer)
 }
 
 bool checkFirstLogin(Customer &customer)
+
 {
     if (customer.getIsFirstLogin())
     {
@@ -502,4 +518,56 @@ bool checkFirstLogin(Customer &customer)
         return true;
     }
     return false;
+}
+
+// computer
+
+int assignRandomComputer(set<int> &usedIds)
+{
+    int computerId;
+    do
+    {
+        computerId = rand() % 10 + 1; // Random ID từ 1 đến 10
+    } while (usedIds.find(computerId) != usedIds.end()); // Lặp lại nếu ID đã được sử dụng
+
+    usedIds.insert(computerId); // Thêm ID vào danh sách đã sử dụng
+    return computerId;
+}
+void setMachineID(Computer &computer)
+{
+    set<int> usedIds; // Lưu trữ các ID máy đã sử dụng
+    srand(time(0));
+    if (usedIds.size() == 10)
+    {
+        // thoong bao het may ngoài trang chủ
+    }
+    int computerId = assignRandomComputer(usedIds);
+    computer.setId("PC" + to_string(computerId));
+    computer.setStatus(true);
+}
+void update(Computer &computer, Customer &customer, bool status = false)
+{
+    int index = computer.getId().at(2) - '0';
+    if (status == true)
+    {
+        setMachineID(computer);
+        computer.setCustomer(customer);
+        computer.computers[index - 1] = computer;
+    }
+    else
+    {
+        Customer newcustomer;
+        computer.setStatus(false);
+        computer.setCustomer(newcustomer);
+        computer.computers[index - 1] = computer;
+    }
+}
+void viewComputerStatus(Computer *computers)
+{
+    system("cls");
+    cout << "Id máy\t\tTrạng thái\t\t\t người sử dụng" << endl;
+    for (int i = 0; i < 10; i++)
+    {
+        cout << computers[i].getId() << "\t\t" << (computers[i].getStatus() ? "Đang sử dụng" : "Trống") << "\t\t\t" << computers[i].getNameCustomer() << endl;
+    }
 }
