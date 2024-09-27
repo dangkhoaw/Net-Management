@@ -50,5 +50,6 @@ void updateNumberOfComputers(int &count);
 bool addNewComputerToFile(Computer &computer);
 void generateIDComputer(Computer &computer);
 vector<Computer> getComputersByStatus(bool status);
+vector<Computer> getComputers();
 void assignRandomComputer(Customer &customer, Computer &computer);
 #endif

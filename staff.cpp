@@ -3,7 +3,6 @@
 #include "function.h"
 #include "customer.h"
 #include "mtime.h"
-#include <windows.h>
 
 using namespace std;
 Staff::Staff(string username, string password, string role, string id) : Account(username, password, role, id) {}
@@ -39,6 +38,61 @@ void Staff::addComputer()
     }
     MessageBoxW(NULL, L"Thêm máy tính thành công", L"Thông báo", MB_OK);
     system("pause");
+    system("cls");
+    ShowCursor(false);
+}
+
+void Staff::viewComputerStatus()
+{
+    ShowCursor(true);
+    while (true)
+    {
+        system("cls");
+        vector<Computer> computers = getComputers();
+        Gotoxy(0, 0);
+        cout << "MÁY";
+        Gotoxy(10, 0);
+        cout << "TRẠNG THÁI";
+        Gotoxy(30, 0);
+        cout << "KHÁCH HÀNG";
+        Gotoxy(50, 0);
+        cout << "THỜI GIAN SỬ DỤNG";
+        for (int i = 0; i < computers.size(); i++)
+        {
+            if (_kbhit())
+            {
+                char key = _getch();
+                if (key == 'q')
+                {
+                    system("cls");
+                    ShowCursor(false);
+                    return;
+                }
+            }
+            Gotoxy(0, i + 1);
+            cout << computers[i].getId();
+            Gotoxy(10, i + 1);
+            if (computers[i].getStatus())
+                cout << "Đang sử dụng";
+            else
+                cout << "Trống";
+            Gotoxy(30, i + 1);
+            cout << computers[i].getCustomerUsingName();
+            Gotoxy(54, i + 1);
+            cout << computers[i].getUsageTimeFromFile();
+        }
+        Gotoxy(0, computers.size() + 1);
+        cout << "Nhấn phím q để thoát ";
+        if (_kbhit())
+        {
+            char key = _getch();
+            if (key == 'q')
+            {
+                break;
+            }
+        }
+        Sleep(1000);
+    }
     system("cls");
     ShowCursor(false);
 }

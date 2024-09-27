@@ -21,6 +21,8 @@ int main(int argc, char const *argv[])
         {
             Customer customer(account.getUserName(), account.getPassword(), account.getRole(), account.getId());
             getCustomerFromFile(customer);
+            customer.setStatus(true);
+            updateCustomerToFile(customer);
             Computer computer;
             assignRandomComputer(customer, computer);
             if (checkFirstLogin(customer))

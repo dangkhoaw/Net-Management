@@ -35,17 +35,37 @@ bool Account::signIn()
         cin >> *this;
         if (checkAccount(*this))
         {
-            MessageBoxW(NULL, L"Đăng nhập thành công!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
-            system("cls");
-            loading();
-            system("cls");
-            return true;
+            if (role == "customer")
+            {
+                Customer customer(username, password, role, id);
+                getCustomerFromFile(customer);
+                if (customer.getStatus())
+                {
+                    MessageBoxW(NULL, L"Tài khoản đã đăng nhập ở máy khác!", L"Thông báo", MB_OK | MB_ICONERROR | MB_TOPMOST);
+                    count++;
+                    system("cls");
+                    continue;
+                }
+                MessageBoxW(NULL, L"Đăng nhập thành công!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
+                system("cls");
+                loading();
+                system("cls");
+                return true;
+            }
+            else
+            {
+                MessageBoxW(NULL, L"Đăng nhập thành công!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
+                system("cls");
+                loading();
+                system("cls");
+                return true;
+            }
         }
         else
         {
-            system("cls");
             MessageBoxW(NULL, L"Đăng nhập thất bại!", L"Thông báo", MB_OK | MB_ICONERROR | MB_TOPMOST);
             count++;
+            system("cls");
         }
     }
     MessageBoxW(NULL, L"Đăng nhập sai quá 3 lần!", L"Thông báo", MB_OK | MB_ICONERROR | MB_TOPMOST);

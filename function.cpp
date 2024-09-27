@@ -219,6 +219,9 @@ void computerManagementMenu(Staff &staff)
             case 1:
                 staff.addComputer();
                 break;
+            case 4:
+                staff.viewComputerStatus();
+                break;
             case 5:
                 system("cls");
                 return;
@@ -308,6 +311,8 @@ void menuCustomer(Customer &customer, Computer &computer)
             case 3:
                 showUsageTime = false;
                 showRemainingTime = false;
+                customer.setStatus(false);
+                updateCustomerToFile(customer);
                 computer.setStatus(false);
                 computer.setCustomerUsingName("");
                 computer.setUsageTimeToFile(Time());
@@ -319,6 +324,7 @@ void menuCustomer(Customer &customer, Computer &computer)
         default:
             break;
         }
+        Sleep(20);
     }
     threadShowTimeCustomer.join();
     threadShowTimeComputer.join();
@@ -610,6 +616,30 @@ vector<Computer> getComputersByStatus(bool status)
             Computer computer(id, statusStr == "1" ? true : false, customerUsingName);
             computers.push_back(computer);
         }
+    }
+    file.close();
+    return computers;
+}
+
+vector<Computer> getComputers()
+{
+    vector<Computer> computers;
+    fstream file("./data/computer.txt", ios::in);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file" << endl;
+        return computers;
+    }
+    string line;
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        string id, statusStr, customerUsingName;
+        getline(ss, id, '|');
+        getline(ss, statusStr, '|');
+        getline(ss, customerUsingName);
+        Computer computer(id, statusStr == "1" ? true : false, customerUsingName);
+        computers.push_back(computer);
     }
     file.close();
     return computers;
