@@ -6,7 +6,6 @@
 #include <windows.h>
 
 using namespace std;
-mutex Mutex;
 Staff::Staff(string username, string password, string role, string id) : Account(username, password, role, id) {}
 
 void Staff::addAccount()
@@ -18,6 +17,27 @@ void Staff::addAccount()
     addCustomerToFile(customer);
     addNewAccountToFile(customer);
     MessageBoxW(NULL, L"Thêm tài khoản thành công", L"Thông báo", MB_OK);
+    system("pause");
+    system("cls");
+    ShowCursor(false);
+}
+
+void Staff::addComputer()
+{
+    system("cls");
+    ShowCursor(true);
+    int amountOfComputer;
+    cout << "Nhập số lượng máy tính cần thêm: ";
+    cin >> amountOfComputer;
+    cin.ignore();
+
+    for (int i = 0; i < amountOfComputer; i++)
+    {
+        Computer computer;
+        generateIDComputer(computer);
+        addNewComputerToFile(computer);
+    }
+    MessageBoxW(NULL, L"Thêm máy tính thành công", L"Thông báo", MB_OK);
     system("pause");
     system("cls");
     ShowCursor(false);

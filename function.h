@@ -3,10 +3,11 @@
 
 #include <iostream>
 #include <thread>
-#include <mutex>
+#include <chrono>
 #include <atomic>
 #include <fstream>
 #include <windows.h>
+#include <vector>
 #include "mtime.h"
 #include "customer.h"
 #include "staff.h"
@@ -18,29 +19,36 @@
 #define KEY_BACKSPACE 8
 
 using namespace std;
-
+/*------------------------------------CONSOLE------------------------------------*/
 void ShowCursor(bool CursorVisibility);
 void Gotoxy(SHORT posX, SHORT posY);
-
+/*------------------------------------MENU------------------------------------*/
 void printMenuOption(string typeMenu, int option, bool isSelected);
 void showMenu(string typeMenu, int selectOption);
 void optionMenu(string typeMenu, int option);
 void computerManagementMenu(Staff &staff);
 void customerManagementMenu(Staff &staff);
 void menuStaff(Staff &staff);
-void menuCustomer(Customer &customer);
-
-void showTime(Customer *customer);
-
+void menuCustomer(Customer &customer, Computer &computer);
+/*------------------------------------TIME------------------------------------*/
+void showRemainingTimeOfCustomer(Customer *customer);
+void showUsageTimeOfComputer(Computer *computer);
+/*------------------------------------ACCOUNT------------------------------------*/
 void enterPassword(string &password);
 void loading();
 void updateNumberOfAccounts(int &count);
 int getNumberOfAccounts();
 bool addNewAccountToFile(Customer &customer);
-void generateID(Customer &customer);
 bool isValidUsername(string &username);
-void setMachineID(Customer &customer);
+/*------------------------------------CUSTOMER------------------------------------*/
 bool addCustomerToFile(Customer &customer);
+void generateID(Customer &customer);
 bool checkFirstLogin(Customer &customer);
-void viewComputerStatus();
+/*------------------------------------COMPUTER------------------------------------*/
+int getNumberOfComputers();
+void updateNumberOfComputers(int &count);
+bool addNewComputerToFile(Computer &computer);
+void generateIDComputer(Computer &computer);
+vector<Computer> getComputersByStatus(bool status);
+void assignRandomComputer(Customer &customer, Computer &computer);
 #endif

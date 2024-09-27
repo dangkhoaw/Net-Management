@@ -18,7 +18,7 @@ public:
     void viewComputerStatus();
     void topUpAccount();
     void viewCustomerInfo();
-    void addComputer(int amountOfComputer);
+    void addComputer();
     void viewRevenue();
     void lockAccount(Customer &customer);
     void addAccount();

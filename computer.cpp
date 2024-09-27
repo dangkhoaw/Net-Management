@@ -1,11 +1,12 @@
 #include "computer.h"
 
 using namespace std;
-Computer::Computer(string id, bool status) : id(id), status(status)
+Computer::Computer(string id, bool status, string customerUsingName, Time usageTime)
+    : id(id), status(status), customerUsingName(customerUsingName), usageTime(usageTime) {}
+
+Computer::~Computer()
 {
 }
-
-Computer::~Computer() {}
 
 string Computer::getId()
 {
@@ -26,29 +27,124 @@ void Computer::setStatus(bool status)
 {
     this->status = status;
 }
-void setCustomer(Customer &customer)
+
+void Computer::setUsageTime(Time usageTime)
 {
-    customer = customer;
-}
-string Computer::getNameCustomer()
-{
-    return customer.getName();
+    this->usageTime = usageTime;
 }
 
-// void Computer::viewComputerStatus()
-// {
-//     system("cls");
-//     for (int i = 0; i < 10; i++)
-//     {
-//         computers[i].id = "PC" + to_string(i + 1);
-//         status = false;
-//     }
-//     //
+Time Computer::getUsageTime()
+{
+    return usageTime;
+}
 
-//     //
-//     cout << "Id máy\t\tTrạng thái\t\t\t người sử dụng" << endl;
-//     for (int i = 0; i < 10; i++)
-//     {
-//         cout << computers[i].id << "\t\t" << (computers[i].status ? "Đang sử dụng" : "Trống") << "\t\t\t" << computers[i].customer.getName() << endl;
-//     }
-// }
+Time Computer::getUsageTimeFromFile()
+{
+    Time time;
+    fstream file("./time/" + id + ".txt", ios::in);
+    if (file.is_open())
+    {
+        file >> time;
+        file.close();
+    }
+    return time;
+}
+
+string Computer::getCustomerUsingName()
+{
+    return customerUsingName;
+}
+
+void Computer::setCustomerUsingName(string customerUsingName)
+{
+    this->customerUsingName = customerUsingName;
+}
+
+void Computer::setUsageTimeToFile(Time time)
+{
+    fstream file("./time/" + id + ".txt", ios::out);
+    if (file.is_open())
+    {
+        file << time;
+        file.close();
+    }
+}
+
+ostream &operator<<(ostream &os, Computer &computer)
+{
+    os << computer.id << "|" << computer.status << "|" << computer.customerUsingName;
+    return os;
+}
+
+bool getComputerFromFile(Computer &computer)
+{
+    fstream file("./data/computer.txt", ios::in);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file" << endl;
+        return false;
+    }
+    string line;
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        string id, status, customerUsingName;
+        getline(ss, id, '|');
+        getline(ss, status, '|');
+        getline(ss, customerUsingName);
+        if (id == computer.id)
+        {
+            computer.status = status == "1" ? true : false;
+            computer.customerUsingName = customerUsingName;
+
+            computer.usageTime = computer.getUsageTimeFromFile();
+
+            file.close();
+            return true;
+        }
+    }
+    file.close();
+    return false;
+}
+
+void updateComputerToFile(Computer &computer)
+{
+    fstream file("./data/computer.txt", ios::in);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file" << endl;
+        return;
+    }
+    string tempPath = "./data/temp.txt";
+    fstream tempFile(tempPath, ios::out);
+    if (!tempFile.is_open())
+    {
+        cout << "Không thể mở file" << endl;
+        return;
+    }
+    string line;
+    Computer temp;
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        string id, status, customerUsingName;
+        getline(ss, id, '|');
+        getline(ss, status, '|');
+        getline(ss, customerUsingName);
+        if (id == computer.id)
+        {
+            temp = computer;
+        }
+        else
+        {
+            temp.id = id;
+            temp.status = status == "1" ? true : false;
+            temp.customerUsingName = customerUsingName;
+        }
+        tempFile << temp << endl;
+    }
+    file.close();
+    tempFile.close();
+    system("del data\\computer.txt");
+    system("ren data\\temp.txt computer.txt");
+}

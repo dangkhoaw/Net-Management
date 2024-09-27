@@ -1,6 +1,7 @@
 #include "customer.h"
 #include "base64.h"
 #include "function.h"
+#include "account.h"
 using namespace std;
 
 Customer::Customer(string username, string password, string role,
@@ -9,7 +10,6 @@ Customer::Customer(string username, string password, string role,
     : Account(username, password, role, id), name(name), phone(phone), status(status),
       isFirstLogin(isFirstLogin), balance(balance), time(time)
 {
-    computers = new Computer[10];
 }
 Customer::~Customer() {}
 
@@ -85,12 +85,7 @@ bool getCustomerFromFile(Customer &customer)
             customer.balance = stof(balance);
             file.close();
 
-            file.open("./time/" + customer.id + ".txt", ios::in);
-            if (file.is_open())
-            {
-                file >> customer.time;
-                file.close();
-            }
+            customer.time = customer.getTimeFromFile();
             return true;
         }
     }
@@ -138,7 +133,7 @@ void updateCustomerToFile(Customer &customer)
     file.close();
     tempFile.close();
     system("del .\\data\\customer.txt");
-    system("rename .\\data\\temp.txt customer.txt");
+    system("ren .\\data\\temp.txt customer.txt");
 }
 
 istream &operator>>(istream &is, Customer &customer)
@@ -149,15 +144,15 @@ istream &operator>>(istream &is, Customer &customer)
     cout << "Số điện thoại: ";
     is >> customer.phone;
     is.ignore();
-    do
+    while (true)
     {
         cout << "Tên đăng nhập: ";
         getline(is, customer.username);
         if (!isValidUsername(customer.username))
-        {
             cout << "Tên đăng nhập đã tồn tại" << endl;
-        }
-    } while (!isValidUsername(customer.username));
+        else
+            break;
+    }
 
     customer.password = Base64("123456").encode();
     cout << "Mật khẩu: 123456" << endl;

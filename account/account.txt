@@ -1,5 +1,6 @@
 ADMIN|dangkhoa|YWRtaW4=|staff
-USER0001|dangkhoaw|MTIzNDU2Nw==|customer
+USER0001|dangkhoaw|MTIzNDU2|customer
 USER0002|grayzy|MjAwNQ==|customer
 USER0003|grayzyss3|MTIzNDU2Nw==|customer
 USER0004|phat|MTIzNDU2|customer
+USER0005|khoadang|MTIzNDU2|customer

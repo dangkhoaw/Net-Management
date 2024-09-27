@@ -21,7 +21,8 @@ int main(int argc, char const *argv[])
         {
             Customer customer(account.getUserName(), account.getPassword(), account.getRole(), account.getId());
             getCustomerFromFile(customer);
-            setMachineID(customer);
+            Computer computer;
+            assignRandomComputer(customer, computer);
             if (checkFirstLogin(customer))
             {
                 MessageBoxW(NULL, L"Đây là lần đầu tiên bạn đăng nhập, vui lòng đổi mật khẩu!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
@@ -37,7 +38,7 @@ int main(int argc, char const *argv[])
                     }
                 }
             }
-            menuCustomer(customer);
+            menuCustomer(customer, computer);
         }
         return 0;
     }

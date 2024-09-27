@@ -1,27 +1,38 @@
 #ifndef COMPUTER_H
 #define COMPUTER_H 1
 #include <iostream>
+#include <fstream>
+#include <sstream>
 #include "account.h"
-#include "customer.h"
+#include "mtime.h"
 using namespace std;
+
 class Computer
 {
 private:
-    Customer customer;
-    string id;
+    string id, customerUsingName;
     bool status;
+    Time usageTime;
 
 public:
-    Computer *computers = new Computer[10];
-    Computer(string id = "", bool status = false);
+    Computer(string id = "", bool status = false, string customerUsingName = "", Time usageTime = Time());
     ~Computer();
     string getId();
     void setId(string id);
+    Time getUsageTime();
+    string getCustomerUsingName();
     bool getStatus();
     void setStatus(bool status);
-    void setCustomer(Customer &customer);
-    void viewComputerStatus();
-    string getNameCustomer();
+    void setCustomerUsingName(string customerUsingName);
+    void setUsageTime(Time usageTime);
+    // void viewComputerStatus();
+
+    Time getUsageTimeFromFile();
+    void setUsageTimeToFile(Time usageTime);
+
+    friend ostream &operator<<(ostream &os, Computer &computer);
+    friend bool getComputerFromFile(Computer &computer);
+    friend void updateComputerToFile(Computer &computer);
 };
 
 #endif

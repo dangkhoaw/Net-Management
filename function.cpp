@@ -1,13 +1,10 @@
 #include "function.h"
 #include "staff.h"
-#include <mutex>
-#include <set>
-#include <cstdlib>
 #include "customer.h"
 
-atomic<bool> runningShowTime(true); // Dùng để dừng thread
-atomic<bool> runningTime(true);
-bool isChangingPassword = false;
+atomic<bool> showRemainingTime(true);
+atomic<bool> showUsageTime(true);
+atomic<bool> isChangingPassword(false);
 
 /*------------------------------------CONSOLE------------------------------------*/
 
@@ -81,16 +78,16 @@ void optionMenu(string typeMenu, int option)
         switch (option)
         {
         case 1:
-            cout << "xem trạng thái máy " << endl;
-            break;
-        case 2:
             cout << "Thêm máy tính" << endl;
             break;
-        case 3:
+        case 2:
             cout << "Xóa máy tính" << endl;
             break;
-        case 4:
+        case 3:
             cout << "Sửa thông tin máy tính" << endl;
+            break;
+        case 4:
+            cout << "Xem trạng thái máy " << endl;
             break;
         case 5:
             cout << "Thoát" << endl;
@@ -146,7 +143,7 @@ void showMenu(string typeMenu, int selectOption)
     else if (typeMenu == "computerManager")
     {
         Gotoxy(0, 0);
-        for (int i = 1; i <= 4; i++)
+        for (int i = 1; i <= 5; i++)
         {
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
@@ -154,7 +151,7 @@ void showMenu(string typeMenu, int selectOption)
     }
     else if (typeMenu == "customer")
     {
-        Gotoxy(0, 1);
+        Gotoxy(0, 3);
         for (int i = 1; i <= 3; i++)
         {
             bool isSelected = (i == selectOption);
@@ -220,9 +217,9 @@ void computerManagementMenu(Staff &staff)
             switch (selectOption)
             {
             case 1:
-                staff.viewComputerStatus();
+                staff.addComputer();
                 break;
-            case 4:
+            case 5:
                 system("cls");
                 return;
             }
@@ -273,20 +270,19 @@ void menuStaff(Staff &staff)
     ShowCursor(true);
 }
 
-void menuCustomer(Customer &customer)
+void menuCustomer(Customer &customer, Computer &computer)
 {
     MessageBoxW(NULL, L"Chào mừng bạn đến với tiệm Internet", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
     SetConsoleTitle(TEXT("Menu khách hàng"));
     ShowCursor(false);
     int selectOption = 1;
 
-    Computer computer;
-    update(computer, customer, true);
+    thread threadShowTimeCustomer(showRemainingTimeOfCustomer, &customer);
+    Sleep(80);
+    thread threadShowTimeComputer(showUsageTimeOfComputer, &computer);
+    Sleep(80);
 
-    thread threadShowTime(showTime, &customer);
-    Sleep(115);
-
-    while (runningShowTime)
+    while (showRemainingTime)
     {
         showMenu("customer", selectOption);
         int key = _getch();
@@ -310,8 +306,12 @@ void menuCustomer(Customer &customer)
                 customer.showMyInfo();
                 break;
             case 3:
-                update(computer, customer, false);
-                runningShowTime = false;
+                showUsageTime = false;
+                showRemainingTime = false;
+                computer.setStatus(false);
+                computer.setCustomerUsingName("");
+                computer.setUsageTimeToFile(Time());
+                updateComputerToFile(computer);
                 system("cls");
                 ShowCursor(true);
                 break;
@@ -320,51 +320,59 @@ void menuCustomer(Customer &customer)
             break;
         }
     }
-    threadShowTime.join();
+    threadShowTimeCustomer.join();
+    threadShowTimeComputer.join();
     ShowCursor(true);
 }
-void showTime(Customer *customer)
+
+/*------------------------------------TIME------------------------------------*/
+void showRemainingTimeOfCustomer(Customer *customer)
 {
-    while (runningShowTime)
+    while (showRemainingTime)
     {
+        Time currentTime = customer->getTimeFromFile();
+        currentTime--;
+        customer->setTimeToFile(currentTime);
+        customer->setTime(currentTime);
+
         if (!isChangingPassword)
         {
-            Time currentTime = customer->getTimeFromFile();
-
             Gotoxy(0, 0);
-            cout << "Thời gian còn lại: " << currentTime << endl;
+            cout << "\033[37mThời gian còn lại: " << currentTime << "\033[0m" << endl;
+        }
 
-            if (currentTime.isZero())
-            {
-                runningShowTime = false;
-                MessageBoxW(NULL, L"Hết thời gian sử dụng!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
-                break;
-            }
-            Sleep(1000);
-            currentTime--;
-            customer->setTimeToFile(currentTime);
-            customer->setTime(currentTime);
-        }
-        else
+        if (currentTime.isZero())
         {
-            Time currentTime = customer->getTimeFromFile();
-            if (currentTime.isZero())
-            {
-                runningShowTime = false;
-                MessageBoxW(NULL, L"Hết thời gian sử dụng!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
-                break;
-            }
-            Sleep(1000);
-            currentTime--;
-            customer->setTime(currentTime);
-            customer->setTimeToFile(currentTime);
+            showRemainingTime = false;
+            showUsageTime = false;
+            MessageBoxW(NULL, L"Hết thời gian sử dụng!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
+            break;
         }
+        this_thread::sleep_for(chrono::seconds(1));
     }
     ShowCursor(true);
     return;
 }
 
-/*------------------------------------TIME------------------------------------*/
+void showUsageTimeOfComputer(Computer *computer)
+{
+    while (showUsageTime)
+    {
+        Time currentTime = computer->getUsageTime();
+        currentTime++;
+        computer->setUsageTime(currentTime);
+        computer->setUsageTimeToFile(currentTime);
+
+        if (!isChangingPassword)
+        {
+            Gotoxy(0, 1);
+            cout << "\033[37mThời gian sử dụng: " << currentTime << endl;
+            cout << "Bạn đang sử dụng máy: " << computer->getId() << "\033[0m" << endl;
+        }
+        this_thread::sleep_for(chrono::seconds(1));
+    }
+    return;
+}
 
 /*------------------------------------ACCOUNT------------------------------------*/
 void loading()
@@ -520,54 +528,105 @@ bool checkFirstLogin(Customer &customer)
     return false;
 }
 
-// computer
-
-int assignRandomComputer(set<int> &usedIds)
+/*------------------------------------COMPUTER------------------------------------*/
+int getNumberOfComputers()
 {
-    int computerId;
-    do
+    int count;
+    fstream file("./data/countComputer.txt", ios::in);
+    if (!file.is_open())
     {
-        computerId = rand() % 10 + 1; // Random ID từ 1 đến 10
-    } while (usedIds.find(computerId) != usedIds.end()); // Lặp lại nếu ID đã được sử dụng
-
-    usedIds.insert(computerId); // Thêm ID vào danh sách đã sử dụng
-    return computerId;
-}
-void setMachineID(Computer &computer)
-{
-    set<int> usedIds; // Lưu trữ các ID máy đã sử dụng
-    srand(time(0));
-    if (usedIds.size() == 10)
-    {
-        // thoong bao het may ngoài trang chủ
+        cout << "Không thể mở file" << endl;
+        return -1;
     }
-    int computerId = assignRandomComputer(usedIds);
-    computer.setId("PC" + to_string(computerId));
+    file >> count;
+    file.close();
+    return count;
+}
+
+void updateNumberOfComputers(int &count)
+{
+    fstream file("./data/countComputer.txt", ios::out);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file" << endl;
+        return;
+    }
+    file << count;
+    file.close();
+}
+
+bool addNewComputerToFile(Computer &computer)
+{
+    string path1 = "./data/computer.txt"; // đưa vào file computer
+    fstream file(path1, ios::app);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file" << endl;
+        return false;
+    }
+    file << computer.getId() << '|' << computer.getStatus() << '|' << computer.getCustomerUsingName() << endl;
+    file.close();
+
+    file.open("./time/" + computer.getId() + ".txt", ios::out);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file" << endl;
+        return false;
+    }
+    file << computer.getUsageTime();
+    return true;
+}
+
+void generateIDComputer(Computer &computer)
+{
+    int count = getNumberOfComputers();
+    count++;
+    stringstream ss;
+    ss << setw(2) << setfill('0') << count;
+    string id = "COM" + ss.str();
+    computer.setId(id);
+    updateNumberOfComputers(count);
+}
+
+vector<Computer> getComputersByStatus(bool status)
+{
+    vector<Computer> computers;
+    fstream file("./data/computer.txt", ios::in);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file" << endl;
+        return computers;
+    }
+    string line;
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        string id, statusStr, customerUsingName;
+        getline(ss, id, '|');
+        getline(ss, statusStr, '|');
+        getline(ss, customerUsingName);
+        if (status == (statusStr == "1" ? true : false))
+        {
+            Computer computer(id, statusStr == "1" ? true : false, customerUsingName);
+            computers.push_back(computer);
+        }
+    }
+    file.close();
+    return computers;
+}
+
+void assignRandomComputer(Customer &customer, Computer &computer)
+{
+    vector<Computer> computers = getComputersByStatus(false);
+    if (computers.size() == 0)
+    {
+        MessageBoxW(NULL, L"Hiện tại không có máy trống!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
+        return;
+    }
+    srand(time(NULL));
+    int randomIndex = rand() % computers.size();
+    computer = computers[randomIndex];
+    computer.setCustomerUsingName(customer.getUserName());
     computer.setStatus(true);
-}
-void update(Computer &computer, Customer &customer, bool status = false)
-{
-    int index = computer.getId().at(2) - '0';
-    if (status == true)
-    {
-        setMachineID(computer);
-        computer.setCustomer(customer);
-        computer.computers[index - 1] = computer;
-    }
-    else
-    {
-        Customer newcustomer;
-        computer.setStatus(false);
-        computer.setCustomer(newcustomer);
-        computer.computers[index - 1] = computer;
-    }
-}
-void viewComputerStatus(Computer *computers)
-{
-    system("cls");
-    cout << "Id máy\t\tTrạng thái\t\t\t người sử dụng" << endl;
-    for (int i = 0; i < 10; i++)
-    {
-        cout << computers[i].getId() << "\t\t" << (computers[i].getStatus() ? "Đang sử dụng" : "Trống") << "\t\t\t" << computers[i].getNameCustomer() << endl;
-    }
+    updateComputerToFile(computer);
 }
