@@ -21,13 +21,12 @@ public:
     ~Time();
 
     bool isZero();
-    string toString() const;
-    Time fromString(string time);
     friend Time &operator++(Time &time);
     friend Time &operator--(Time &time);
     friend Time operator++(Time &time, int);
     friend Time operator--(Time &time, int);
-    friend Time operator+(const Time &time1, const Time &time2);
+    // friend Time operator+(const Time &time1, const Time &time2);
+    Time operator+(const Time &time);
     friend ostream &operator<<(ostream &os, const Time &time);
     friend istream &operator>>(istream &is, Time &time);
 };

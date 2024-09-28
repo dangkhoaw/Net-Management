@@ -44,7 +44,6 @@ void Staff::addComputer()
 
 void Staff::viewComputerStatus()
 {
-    ShowCursor(true);
     while (true)
     {
         system("cls");
@@ -65,7 +64,6 @@ void Staff::viewComputerStatus()
                 if (key == 'q')
                 {
                     system("cls");
-                    ShowCursor(false);
                     return;
                 }
             }
@@ -94,7 +92,6 @@ void Staff::viewComputerStatus()
         Sleep(1000);
     }
     system("cls");
-    ShowCursor(false);
 }
 float caculateTime(float &minus) // đổi phút ra giờ
 {
@@ -109,6 +106,7 @@ float caculateTime(float &minus) // đổi phút ra giờ
 void Staff::topUpAccount()
 {
     system("cls");
+    ShowCursor(true);
     string userName;
     Customer customer;
 
@@ -117,13 +115,9 @@ void Staff::topUpAccount()
         cout << "Tên đăng nhập: ";
         cin >> userName;
         if (isValidUsername(userName))
-        {
             cout << "Tên đăng nhập không tồn tại" << endl;
-        }
         else
-        {
             break;
-        }
     }
     customer.setUserName(userName);
     getCustomerFromFile(customer);
@@ -140,9 +134,7 @@ void Staff::topUpAccount()
     cin.ignore();
     float minutes = (amount * 60) / 10000;
     float hours = caculateTime(minutes);
-    Time t(hours, minutes, 0);
-    Time t2 = customer.getTime() + t;
-    customer.setTime(t2);
+    customer.setTimeToFile(Time(hours, minutes, 0) + customer.getTime());
     system("pause");
     system("cls");
     ShowCursor(false);

@@ -17,10 +17,7 @@ Time &operator++(Time &time)
         if (++time.minute == 60)
         {
             time.minute = 0;
-            if (++time.hour == 24)
-            {
-                time.hour = 0;
-            }
+            ++time.hour;
         }
     }
     return time;
@@ -36,7 +33,7 @@ Time &operator--(Time &time)
             time.minute = 59;
             if (--time.hour == -1)
             {
-                time.hour = 23;
+                time.hour = 0;
             }
         }
     }
@@ -57,22 +54,12 @@ Time operator--(Time &time, int)
     return temp;
 }
 
-Time operator+(const Time &time1, const Time &time2)
+Time Time::operator+(const Time &time)
 {
     Time temp;
-    temp.hour = time1.hour + time2.hour;
-    temp.minute = time1.minute + time2.minute;
-    temp.second = time1.second + time2.second;
-    while (temp.second >= 60)
-    {
-        temp.second -= 60;
-        temp.minute++;
-    }
-    while (temp.minute >= 60)
-    {
-        temp.minute -= 60;
-        temp.hour++;
-    }
+    temp.second = (second + time.second) % 60;
+    temp.minute = (minute + time.minute + (second + time.second) / 60) % 60;
+    temp.hour = hour + time.hour + (minute + time.minute + (second + time.second) / 60) / 60;
     return temp;
 }
 
@@ -86,22 +73,4 @@ istream &operator>>(istream &is, Time &time)
 {
     is >> time.hour >> time.colon >> time.minute >> time.colon >> time.second;
     return is;
-}
-string Time ::toString() const
-{
-    ostringstream oss;
-
-    // Định dạng thành chuỗi "HH:MM:SS"
-    oss << std::setw(2) << std::setfill('0') << hour << ":"
-        << std::setw(2) << std::setfill('0') << minute << ":"
-        << std::setw(2) << std::setfill('0') << second;
-
-    return oss.str();
-}
-Time Time::fromString(string time)
-{
-    Time temp;
-    istringstream iss(time);
-    iss >> temp.hour >> temp.colon >> temp.minute >> temp.colon >> temp.second;
-    return temp;
 }
