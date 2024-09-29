@@ -44,41 +44,40 @@ void Staff::addComputer()
 
 void Staff::viewComputerStatus()
 {
+    system("cls");
+    vector<Computer> prevComputers;
+    Gotoxy(0, 0);
+    cout << "MÁY";
+    Gotoxy(10, 0);
+    cout << "TRẠNG THÁI";
+    Gotoxy(30, 0);
+    cout << "KHÁCH HÀNG";
+    Gotoxy(50, 0);
+    cout << "THỜI GIAN SỬ DỤNG";
     while (true)
     {
-        system("cls");
         vector<Computer> computers = getComputers();
-        Gotoxy(0, 0);
-        cout << "MÁY";
-        Gotoxy(10, 0);
-        cout << "TRẠNG THÁI";
-        Gotoxy(30, 0);
-        cout << "KHÁCH HÀNG";
-        Gotoxy(50, 0);
-        cout << "THỜI GIAN SỬ DỤNG";
+
         for (int i = 0; i < computers.size(); i++)
         {
-            if (_kbhit())
+            if (prevComputers.empty() || prevComputers[i].getUsageTime() != computers[i].getUsageTime())
             {
-                char key = _getch();
-                if (key == 'q')
-                {
-                    system("cls");
-                    return;
-                }
+                Gotoxy(0, i + 1);
+                ClearLine(i + 1);
+                cout << computers[i].getId();
+                Gotoxy(10, i + 1);
+                if (computers[i].getStatus())
+                    cout << "Đang sử dụng";
+                else
+                    cout << "Trống";
+                Gotoxy(30, i + 1);
+                cout << computers[i].getCustomerUsingName();
+                Gotoxy(54, i + 1);
+                cout << computers[i].getUsageTime();
             }
-            Gotoxy(0, i + 1);
-            cout << computers[i].getId();
-            Gotoxy(10, i + 1);
-            if (computers[i].getStatus())
-                cout << "Đang sử dụng";
-            else
-                cout << "Trống";
-            Gotoxy(30, i + 1);
-            cout << computers[i].getCustomerUsingName();
-            Gotoxy(54, i + 1);
-            cout << computers[i].getUsageTimeFromFile();
         }
+        prevComputers = computers;
+
         Gotoxy(0, computers.size() + 1);
         cout << "Nhấn phím q để thoát ";
         if (_kbhit())
@@ -89,7 +88,7 @@ void Staff::viewComputerStatus()
                 break;
             }
         }
-        Sleep(1000);
+        Sleep(500);
     }
     system("cls");
 }

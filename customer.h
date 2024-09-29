@@ -12,8 +12,7 @@ class Customer : public Account
 {
 private:
     float balance;
-    string name;
-    string phone;
+    string name, phone, currentComputerID;
     Time time;
     History history;
     bool status, isFirstLogin;
@@ -28,6 +27,7 @@ public:
     void addHistory();
 
     void setName(string name);
+    void setCurrentComputerID(string id);
     void setPhone(string phone);
     void setStatus(bool status);
     void setIsFirstLogin(bool isFirstLogin);
@@ -40,6 +40,7 @@ public:
     bool getIsFirstLogin();
     Time getTime();
     float getBalance();
+    string getCurrentComputerID();
 
     Time getTimeFromFile();
     void setTimeToFile(Time time);
