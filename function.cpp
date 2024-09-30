@@ -25,6 +25,14 @@ void Gotoxy(SHORT posX, SHORT posY)
     SetConsoleCursorPosition(hStdout, Position);
 }
 
+void ClearLine(SHORT posY)
+{
+    Gotoxy(0, posY);
+    for (int i = 0; i < 100; i++)
+        cout << " ";
+    Gotoxy(0, posY);
+}
+
 /*------------------------------------MENU------------------------------------*/
 void optionMenu(string typeMenu, int option)
 {
@@ -283,9 +291,9 @@ void menuCustomer(Customer &customer, Computer &computer)
     int selectOption = 1;
 
     thread threadShowTimeCustomer(showRemainingTimeOfCustomer, &customer);
-    Sleep(80);
+    Sleep(100);
     thread threadShowTimeComputer(showUsageTimeOfComputer, &computer);
-    Sleep(80);
+    Sleep(100);
 
     while (showRemainingTime)
     {
@@ -314,6 +322,7 @@ void menuCustomer(Customer &customer, Computer &computer)
                 showUsageTime = false;
                 showRemainingTime = false;
                 customer.setStatus(false);
+                customer.setCurrentComputerID("");
                 updateCustomerToFile(customer);
                 computer.setStatus(false);
                 computer.setCustomerUsingName("");
@@ -512,7 +521,7 @@ bool addCustomerToFile(Customer &customer)
         cout << "Không thể mở file" << endl;
         return false;
     }
-    file << customer.getId() << '|' << customer.getName() << '|' << customer.getUserName() << '|' << customer.getPhone() << '|' << customer.getStatus() << '|' << customer.getIsFirstLogin() << '|' << customer.getBalance() << endl;
+    file << customer.getId() << '|' << customer.getName() << '|' << customer.getUserName() << '|' << customer.getPhone() << '|' << customer.getStatus() << '|' << customer.getIsFirstLogin() << '|' << customer.getBalance() << '|' << customer.getCurrentComputerID() << endl;
     file.close();
     file.open("./time/" + customer.getId() + ".txt", ios::out);
     if (!file.is_open())
@@ -641,6 +650,7 @@ vector<Computer> getComputers()
         getline(ss, statusStr, '|');
         getline(ss, customerUsingName);
         Computer computer(id, statusStr == "1" ? true : false, customerUsingName);
+        computer.setUsageTime(computer.getUsageTimeFromFile());
         computers.push_back(computer);
     }
     file.close();
@@ -661,4 +671,7 @@ void assignRandomComputer(Customer &customer, Computer &computer)
     computer.setCustomerUsingName(customer.getUserName());
     computer.setStatus(true);
     updateComputerToFile(computer);
+
+    customer.setCurrentComputerID(computer.getId());
+    updateCustomerToFile(customer);
 }

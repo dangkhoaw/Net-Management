@@ -22,6 +22,7 @@ using namespace std;
 /*------------------------------------CONSOLE------------------------------------*/
 void ShowCursor(bool CursorVisibility);
 void Gotoxy(SHORT posX, SHORT posY);
+void ClearLine(SHORT posY);
 /*------------------------------------MENU------------------------------------*/
 void printMenuOption(string typeMenu, int option, bool isSelected);
 void showMenu(string typeMenu, int selectOption);

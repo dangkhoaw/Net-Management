@@ -74,3 +74,13 @@ istream &operator>>(istream &is, Time &time)
     is >> time.hour >> time.colon >> time.minute >> time.colon >> time.second;
     return is;
 }
+
+bool operator==(const Time &time1, const Time &time2)
+{
+    return time1.hour == time2.hour && time1.minute == time2.minute && time1.second == time2.second;
+}
+
+bool operator!=(const Time &time1, const Time &time2)
+{
+    return !(time1 == time2);
+}
