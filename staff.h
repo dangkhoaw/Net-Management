@@ -22,6 +22,7 @@ public:
     void viewRevenue();
     void lockAccount(Customer &customer);
     void addAccount();
+    void removeComputer();
 };
 
 #endif

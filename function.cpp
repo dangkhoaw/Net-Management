@@ -84,7 +84,7 @@ void optionMenu(string typeMenu, int option)
             cout << "Xóa máy tính" << endl;
             break;
         case 3:
-            cout << "Sửa thông tin máy tính" << endl;
+            cout << "Sửa thông tin máy tính" << endl; // cần thiết không
             break;
         case 4:
             cout << "Xem trạng thái máy " << endl;
@@ -219,6 +219,8 @@ void computerManagementMenu(Staff &staff)
             case 1:
                 staff.addComputer();
                 break;
+            case 2:
+                staff.removeComputer();
             case 4:
                 staff.viewComputerStatus();
                 break;
