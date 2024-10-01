@@ -122,10 +122,14 @@ void optionMenu(string typeMenu, int option)
 void printMenuOption(string typeMenu, int option, bool isSelected)
 {
     HANDLE myConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    int color = isSelected ? 240 : 15;
+
+    int foregroundWhite = FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY;
+    int backgroundWhite = BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_RED | BACKGROUND_INTENSITY;
+    int color = isSelected ? backgroundWhite : foregroundWhite;
+
     SetConsoleTextAttribute(myConsole, color);
     optionMenu(typeMenu, option);
-    SetConsoleTextAttribute(myConsole, 15);
+    SetConsoleTextAttribute(myConsole, foregroundWhite);
 }
 
 void showMenu(string typeMenu, int selectOption)
