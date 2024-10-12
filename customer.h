@@ -15,10 +15,10 @@ private:
     string name, phone, currentComputerID;
     Time time;
     History history;
-    bool status, isFirstLogin;
+    bool isFirstLogin;
 
 public:
-    Customer(string username = "", string password = "", string role = "", string id = "", string name = "", string phone = "", bool status = false, bool isFirstLogin = true, float balance = 0, Time time = Time());
+    Customer(string username = "", string password = "", string role = "", string id = "", string name = "", string phone = "", bool isFirstLogin = true, float balance = 0, Time time = Time());
     ~Customer();
 
     friend istream &operator>>(istream &is, Customer &customer);
@@ -29,14 +29,12 @@ public:
     void setName(string name);
     void setCurrentComputerID(string id);
     void setPhone(string phone);
-    void setStatus(bool status);
     void setIsFirstLogin(bool isFirstLogin);
     void setTime(Time time);
     void setBalance(float balance);
     static int getCount();
     string getPhone();
     string getName();
-    bool getStatus();
     bool getIsFirstLogin();
     Time getTime();
     float getBalance();

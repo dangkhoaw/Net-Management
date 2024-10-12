@@ -9,7 +9,6 @@
 
 using namespace std;
 
-class Time;
 class Time
 {
 private:

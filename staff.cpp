@@ -4,8 +4,10 @@
 #include "customer.h"
 #include "mtime.h"
 #include <vector>
+#include <string>
 
 using namespace std;
+
 Staff::Staff(string username, string password, string role, string id) : Account(username, password, role, id) {}
 
 void Staff::addAccount()
@@ -17,7 +19,6 @@ void Staff::addAccount()
     addCustomerToFile(customer);
     addNewAccountToFile(customer);
     MessageBoxW(NULL, L"Thêm tài khoản thành công", L"Thông báo", MB_OK);
-    system("pause");
     system("cls");
     ShowCursor(false);
 }
@@ -38,7 +39,6 @@ void Staff::addComputer()
         addNewComputerToFile(computer);
     }
     MessageBoxW(NULL, L"Thêm máy tính thành công", L"Thông báo", MB_OK);
-    system("pause");
     system("cls");
     ShowCursor(false);
 }
@@ -46,76 +46,15 @@ void Staff::removeComputer()
 {
     system("cls");
     ShowCursor(true);
-    string id_computer;
-    bool check = false;
-    cin.ignore();
+    string idComputer;
     cout << "Nhập id máy cần xóa: ";
-    getline(cin, id_computer);
-
-    fstream file("./data/computer.txt", ios::in);
-    if (!file.is_open())
-    {
-        cout << "Không thể mở file" << endl;
-        return;
-    }
-    string tempPath = "./data/temp.txt";
-    fstream tempFile(tempPath, ios::out);
-    if (!tempFile.is_open())
-    {
-        cout << "Không thể mở file" << endl;
-        return;
-    }
-    string line;
-    while (getline(file, line))
-    {
-        stringstream ss(line);
-        string id, statusStr, customerUsingName;
-        getline(ss, id, '|');
-        getline(ss, statusStr, '|');
-        getline(ss, customerUsingName);
-        if (id == id_computer)
-        {
-            check = true;
-            if (statusStr == "1")
-            {
-                check = true;
-                MessageBoxW(NULL, L"Máy đang sử dụng không thể xóa", L"Thông báo", MB_OK || MB_ICONWARNING);
-                system("pause");
-                system("cls");
-                ShowCursor(false);
-                return;
-            }
-            else
-            {
-                continue;
-            }
-        }
-        else
-        {
-            tempFile << line << endl;
-        }
-    }
-    if (check == false)
-    {
-        MessageBoxW(NULL, L"Không tìm thấy máy", L"Thông báo", MB_OK || MB_ICONWARNING);
-        system("del .\\data\\temp.txt");
-        system("pause");
-        system("cls");
-        ShowCursor(false);
-        return;
-    }
-
-    file.close();
-    tempFile.close();
-    system("del .\\data\\computer.txt");
-    system("ren .\\data\\temp.txt computer.txt");
-    int count = getNumberOfComputers();
-    count--;
-    updateNumberOfComputers(count);
-    MessageBoxW(NULL, L"Xóa máy tính thành công", L"Thông báo", MB_OK);
-    system("pause");
-    system("cls");
+    cin >> idComputer;
+    toUpper(idComputer);
+    Computer computer;
+    computer.setId(idComputer);
+    removeComputerFromFile(computer);
     ShowCursor(false);
+    system("cls");
 }
 void Staff::viewComputerStatus()
 {
@@ -213,7 +152,6 @@ void Staff::topUpAccount()
     swprintf(message, sizeof(message) / sizeof(wchar_t), L"Bạn đã nạp %.0f VND vào tài khoản của bạn", amount);
     MessageBoxW(NULL, message, L"Nạp tiền thành công", MB_OK);
 
-    system("pause");
     system("cls");
     ShowCursor(false);
 }

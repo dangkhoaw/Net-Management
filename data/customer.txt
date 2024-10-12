@@ -1,5 +1,1 @@
-USER0001|Dang Khoa|dangkhoaw|123456789|0|0|0|
-USER0002|Van Phat|grayzy|123456789|0|0|0|
-USER0003|vanphat|grayzyss3|234567|0|0|0|
-USER0004|phat|phat|123456|0|0|0|
-USER0005|Khoa Dang|khoadang|0123456789|0|1|0|
+USER0001|Dang Khoa|dangkhoaw|0906457124|0|0|

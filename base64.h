@@ -12,7 +12,7 @@ private:
 public:
     Base64(const string);
 
-    /// @brief Giải mã
+    /// @brief Mã hóa
     /// @return
     string encode();
 

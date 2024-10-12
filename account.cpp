@@ -3,7 +3,7 @@
 #include "base64.h"
 using namespace std;
 
-Account::Account(string username, string password, string role, string id) : username(username), password(password), role(role), id(id) {}
+Account::Account(string username, string password, string role, string id) : username(username), password(password), role(role), id(id), status(false) {}
 
 Account::~Account() {}
 void Account::setRole(string role) { this->role = role; }
@@ -13,6 +13,8 @@ string Account::getRole() { return role; }
 string Account::getUserName() { return username; }
 string Account::getPassword() { return password; }
 string Account::getId() { return id; }
+bool Account::getStatus() { return status; }
+void Account::setStatus(bool status) { this->status = status; }
 
 void Account::setId(string id) { this->id = id; }
 
@@ -35,28 +37,15 @@ bool Account::signIn()
         cin >> *this;
         if (checkAccount(*this))
         {
-            if (role == "customer")
+            if (status)
             {
-                Customer customer(username, password, role, id);
-                getCustomerFromFile(customer);
-                if (customer.getStatus())
-                {
-                    MessageBoxW(NULL, L"Tài khoản đã đăng nhập ở máy khác!", L"Thông báo", MB_OK | MB_ICONERROR | MB_TOPMOST);
-                    count++;
-                    system("cls");
-                    continue;
-                }
-                MessageBoxW(NULL, L"Đăng nhập thành công!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
+                MessageBoxW(NULL, L"Tài khoản đã đăng nhập ở máy khác!", L"Thông báo", MB_OK | MB_ICONERROR | MB_TOPMOST);
+                count++;
                 system("cls");
-                loading();
-                system("cls");
-                return true;
             }
             else
             {
                 MessageBoxW(NULL, L"Đăng nhập thành công!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
-                system("cls");
-                loading();
                 system("cls");
                 return true;
             }
@@ -141,12 +130,12 @@ void updateAccountToFile(Account &account)
         {
             temp = account;
         }
-        tempFile << temp.id << "|" << temp.username << "|" << temp.password << "|" << temp.role << endl;
+        tempFile << temp.id << "|" << temp.username << "|" << temp.password << "|" << temp.role << "|" << temp.status << endl;
     }
     file.close();
     tempFile.close();
     system("del .\\account\\account.txt");
-    system("rename .\\account\\temp.txt account.txt");
+    system("ren .\\account\\temp.txt account.txt");
 }
 
 bool getAccountFromFile(fstream &file, Account &account)
@@ -159,7 +148,10 @@ bool getAccountFromFile(fstream &file, Account &account)
     getline(ss, account.id, '|');
     getline(ss, account.username, '|');
     getline(ss, account.password, '|');
-    getline(ss, account.role);
+    getline(ss, account.role, '|');
+    string status;
+    getline(ss, status);
+    account.status = status == "1" ? true : false;
     return true;
 }
 
@@ -175,13 +167,11 @@ bool checkAccount(Account &account)
     Account temp;
     while (getAccountFromFile(file, temp))
     {
-        temp.password = Base64(temp.password).decode();
-        if (temp.username == account.username && temp.password == account.password)
+        if (temp.username == account.username && temp.password == Base64(account.password).encode())
         {
-            account.username = temp.username;
-            account.password = temp.password;
             account.role = temp.role;
             account.id = temp.id;
+            account.status = temp.status;
             file.close();
             return true;
         }

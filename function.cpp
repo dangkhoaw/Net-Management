@@ -1,10 +1,11 @@
 #include "function.h"
 #include "staff.h"
 #include "customer.h"
+#include "base64.h"
 
-atomic<bool> showRemainingTime(true);
-atomic<bool> showUsageTime(true);
-atomic<bool> isChangingPassword(false);
+bool showRemainingTime = true;
+bool showUsageTime = true;
+bool isChangingPassword = false;
 
 /*------------------------------------CONSOLE------------------------------------*/
 
@@ -31,6 +32,16 @@ void ClearLine(SHORT posY)
     for (int i = 0; i < 100; i++)
         cout << " ";
     Gotoxy(0, posY);
+}
+
+/*-----------------------------------STRING-----------------------------------*/
+void toUpper(string &str)
+{
+    for (int i = 0; i < str.size(); i++)
+    {
+        if (str[i] >= 'a' && str[i] <= 'z')
+            str[i] -= 32;
+    }
 }
 
 /*------------------------------------MENU------------------------------------*/
@@ -233,6 +244,7 @@ void computerManagementMenu(Staff &staff)
                 break;
             case 2:
                 staff.removeComputer();
+                break;
             case 4:
                 staff.viewComputerStatus();
                 break;
@@ -276,6 +288,9 @@ void menuStaff(Staff &staff)
             case 3:
                 break;
             case 4:
+                staff.setStatus(false);
+                staff.setPassword(Base64(staff.getPassword()).encode());
+                updateAccountToFile(staff);
                 system("cls");
                 ShowCursor(true);
                 return;
@@ -327,7 +342,9 @@ void menuCustomer(Customer &customer, Computer &computer)
                 showRemainingTime = false;
                 customer.setStatus(false);
                 customer.setCurrentComputerID("");
+                customer.setPassword(Base64(customer.getPassword()).encode());
                 updateCustomerToFile(customer);
+                updateAccountToFile(customer);
                 computer.setStatus(false);
                 computer.setCustomerUsingName("");
                 computer.setUsageTimeToFile(Time());
@@ -396,20 +413,6 @@ void showUsageTimeOfComputer(Computer *computer)
 }
 
 /*------------------------------------ACCOUNT------------------------------------*/
-void loading()
-{
-    for (int i = 0; i <= 25; i++)
-    {
-        cout << "\r";
-        for (int j = 0; j < i; j++)
-            cout << "█";
-        for (int j = i; j < 25; j++)
-            cout << "▒";
-        cout << " " << i * 4 << "%";
-        Sleep(50);
-    }
-}
-
 void enterPassword(string &password)
 {
     password = "";
@@ -472,7 +475,7 @@ bool addNewAccountToFile(Customer &customer)
         cout << "Không thể mở file" << endl;
         return false;
     }
-    file << customer.getId() << '|' << customer.getUserName() << '|' << customer.getPassword() << '|' << customer.getRole() << endl;
+    file << customer.getId() << '|' << customer.getUserName() << '|' << Base64(customer.getPassword()).encode() << '|' << customer.getRole() << '|' << customer.getStatus() << endl;
     file.close();
     return true;
 }
@@ -525,7 +528,7 @@ bool addCustomerToFile(Customer &customer)
         cout << "Không thể mở file" << endl;
         return false;
     }
-    file << customer.getId() << '|' << customer.getName() << '|' << customer.getUserName() << '|' << customer.getPhone() << '|' << customer.getStatus() << '|' << customer.getIsFirstLogin() << '|' << customer.getBalance() << '|' << customer.getCurrentComputerID() << endl;
+    file << customer.getId() << '|' << customer.getName() << '|' << customer.getUserName() << '|' << customer.getPhone() << '|' << customer.getIsFirstLogin() << '|' << customer.getBalance() << '|' << customer.getCurrentComputerID() << endl;
     file.close();
     file.open("./time/" + customer.getId() + ".txt", ios::out);
     if (!file.is_open())
@@ -678,4 +681,52 @@ void assignRandomComputer(Customer &customer, Computer &computer)
 
     customer.setCurrentComputerID(computer.getId());
     updateCustomerToFile(customer);
+}
+
+void removeComputerFromFile(Computer &computer)
+{
+    if (getComputerFromFile(computer))
+    {
+        if (computer.getStatus())
+        {
+            MessageBoxW(NULL, L"Máy đang sử dụng không thể xóa", L"Thông báo", MB_OK | MB_ICONWARNING);
+            return;
+        }
+        fstream file("./data/computer.txt", ios::in);
+        if (!file.is_open())
+        {
+            cout << "Không thể mở file" << endl;
+            return;
+        }
+
+        fstream tempFile("./data/temp.txt", ios::out);
+        if (!tempFile.is_open())
+        {
+            cout << "Không thể mở file" << endl;
+            return;
+        }
+
+        string line;
+        while (getline(file, line))
+        {
+            stringstream ss(line);
+            string id;
+            getline(ss, id, '|');
+            if (id != computer.getId())
+            {
+                tempFile << line << endl;
+            }
+        }
+        file.close();
+        tempFile.close();
+        system("del .\\data\\computer.txt");
+        system("ren .\\data\\temp.txt computer.txt");
+        string time = "del .\\time\\" + computer.getId() + ".txt";
+        system(time.c_str());
+        MessageBoxW(NULL, L"Xóa máy thành công", L"Thông báo", MB_OK);
+    }
+    else
+    {
+        MessageBoxW(NULL, L"Không tìm thấy máy", L"Thông báo", MB_OK | MB_ICONWARNING);
+    }
 }

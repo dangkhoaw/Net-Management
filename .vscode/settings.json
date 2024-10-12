@@ -5,7 +5,8 @@
     "ostream": "cpp",
     "iosfwd": "cpp",
     "fstream": "cpp",
-    "atomic": "cpp"
+    "atomic": "cpp",
+    "string": "cpp"
   },
   "code-runner.executorMap": {
     "cpp": "cd $dir && g++ *.cpp -o main && ./main"

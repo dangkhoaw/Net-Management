@@ -4,7 +4,6 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
-#include <atomic>
 #include <fstream>
 #include <windows.h>
 #include <vector>
@@ -23,6 +22,8 @@ using namespace std;
 void ShowCursor(bool CursorVisibility);
 void Gotoxy(SHORT posX, SHORT posY);
 void ClearLine(SHORT posY);
+/*-----------------------------------STRING-----------------------------------*/
+void toUpper(string &str);
 /*------------------------------------MENU------------------------------------*/
 void printMenuOption(string typeMenu, int option, bool isSelected);
 void showMenu(string typeMenu, int selectOption);
@@ -41,6 +42,7 @@ void updateNumberOfAccounts(int &count);
 int getNumberOfAccounts();
 bool addNewAccountToFile(Customer &customer);
 bool isValidUsername(string &username);
+// void updateAccountToFile(Account &account);
 /*------------------------------------CUSTOMER------------------------------------*/
 bool addCustomerToFile(Customer &customer);
 void generateID(Customer &customer);
@@ -53,4 +55,5 @@ void generateIDComputer(Computer &computer);
 vector<Computer> getComputersByStatus(bool status);
 vector<Computer> getComputers();
 void assignRandomComputer(Customer &customer, Computer &computer);
+void removeComputerFromFile(Computer &computer);
 #endif
