@@ -46,50 +46,72 @@ void Staff::removeComputer()
 {
     system("cls");
     ShowCursor(true);
-    vector<Computer> computers = getComputers();
-    string id;
+    string id_computer;
+    bool check = false;
+    cin.ignore();
     cout << "Nhập id máy cần xóa: ";
-    cin >> id;
-    for (int i = 0; i < computers.size(); i++)
+    getline(cin, id_computer);
+
+    fstream file("./data/computer.txt", ios::in);
+    if (!file.is_open())
     {
-        if (computers[i].getId() == id)
+        cout << "Không thể mở file" << endl;
+        return;
+    }
+    string tempPath = "./data/temp.txt";
+    fstream tempFile(tempPath, ios::out);
+    if (!tempFile.is_open())
+    {
+        cout << "Không thể mở file" << endl;
+        return;
+    }
+    string line;
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        string id, statusStr, customerUsingName;
+        getline(ss, id, '|');
+        getline(ss, statusStr, '|');
+        getline(ss, customerUsingName);
+        if (id == id_computer)
         {
-            if (computers[i].getStatus())
+            check = true;
+            if (statusStr == "1")
             {
+                check = true;
                 MessageBoxW(NULL, L"Máy đang sử dụng không thể xóa", L"Thông báo", MB_OK || MB_ICONWARNING);
                 system("pause");
                 system("cls");
                 ShowCursor(false);
                 return;
             }
-            computers.erase(computers.begin() + i);
-            break;
+            else
+            {
+                continue;
+            }
         }
         else
         {
-            MessageBoxW(NULL, L"Không tìm thấy máy", L"Thông báo", MB_OK || MB_ICONWARNING);
-            system("pause");
-            system("cls");
-            ShowCursor(false);
-            return;
+            tempFile << line << endl;
         }
     }
+    if (check == false)
+    {
+        MessageBoxW(NULL, L"Không tìm thấy máy", L"Thông báo", MB_OK || MB_ICONWARNING);
+        system("del .\\data\\temp.txt");
+        system("pause");
+        system("cls");
+        ShowCursor(false);
+        return;
+    }
+
+    file.close();
+    tempFile.close();
+    system("del .\\data\\computer.txt");
+    system("ren .\\data\\temp.txt computer.txt");
     int count = getNumberOfComputers();
     count--;
     updateNumberOfComputers(count);
-    fstream file("./data/computer.txt", ios::out);
-    if (!file.is_open())
-    {
-        cout << "Không thể mở file" << endl;
-        return;
-    }
-    for (int i = 0; i < computers.size() - 1; i++)
-    {
-        file << computers[i] << endl;
-    }
-    file << computers[computers.size() - 1];
-    file.close();
-
     MessageBoxW(NULL, L"Xóa máy tính thành công", L"Thông báo", MB_OK);
     system("pause");
     system("cls");
