@@ -5,6 +5,7 @@
 #include <fstream>
 #include <windows.h>
 #include <sstream>
+#include "base64.h"
 
 using namespace std;
 
@@ -12,10 +13,10 @@ class Account
 {
 protected:
     string username, password, role, id;
-    bool status;
+    bool status, isFirstLogin;
 
 public:
-    Account(string username = "", string password = "", string role = "", string id = "");
+    Account(string username = "", string password = "", string role = "", string id = "", bool status = false, bool isFirstLogin = true);
     ~Account();
 
     bool signIn();
@@ -26,15 +27,17 @@ public:
     string getPassword();
     string getId();
     bool getStatus();
+    bool getIsFirstLogin();
     void setRole(string role);
     void setPassword(string password);
     void setUserName(string username);
     void setId(string id);
     void setStatus(bool status);
+    void setIsFirstLogin(bool isFirstLogin);
 
     friend istream &operator>>(istream &is, Account &account);
     friend bool checkAccount(Account &account);
-    friend bool getAccountFromFile(fstream &file, Account &account);
+    friend bool getAccountFromFile(Account &account);
     friend void updateAccountToFile(Account &account);
 };
 

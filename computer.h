@@ -1,8 +1,5 @@
 #ifndef COMPUTER_H
 #define COMPUTER_H 1
-#include <iostream>
-#include <fstream>
-#include <sstream>
 #include "account.h"
 #include "mtime.h"
 using namespace std;
@@ -25,7 +22,6 @@ public:
     void setStatus(bool status);
     void setCustomerUsingName(string customerUsingName);
     void setUsageTime(Time usageTime);
-    // void viewComputerStatus();
 
     Time getUsageTimeFromFile();
     void setUsageTimeToFile(Time usageTime);

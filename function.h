@@ -1,11 +1,7 @@
 #ifndef FUNCTION_H
 #define FUNCTION_H 1
 
-#include <iostream>
 #include <thread>
-#include <chrono>
-#include <fstream>
-#include <windows.h>
 #include <vector>
 #include "mtime.h"
 #include "customer.h"
@@ -40,13 +36,13 @@ void enterPassword(string &password);
 void loading();
 void updateNumberOfAccounts(int &count);
 int getNumberOfAccounts();
-bool addNewAccountToFile(Customer &customer);
+bool addNewAccountToFile(Account &account);
 bool isValidUsername(string &username);
 // void updateAccountToFile(Account &account);
 /*------------------------------------CUSTOMER------------------------------------*/
 bool addCustomerToFile(Customer &customer);
-void generateID(Customer &customer);
-bool checkFirstLogin(Customer &customer);
+void generateID(Account &account);
+bool checkFirstLogin(Account &account);
 /*------------------------------------COMPUTER------------------------------------*/
 int getNumberOfComputers();
 void updateNumberOfComputers(int &count);

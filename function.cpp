@@ -1,11 +1,10 @@
 #include "function.h"
-#include "staff.h"
-#include "customer.h"
-#include "base64.h"
+#include <mutex>
 
 bool showRemainingTime = true;
 bool showUsageTime = true;
 bool isChangingPassword = false;
+mutex mtx;
 
 /*------------------------------------CONSOLE------------------------------------*/
 
@@ -29,9 +28,8 @@ void Gotoxy(SHORT posX, SHORT posY)
 void ClearLine(SHORT posY)
 {
     Gotoxy(0, posY);
-    for (int i = 0; i < 100; i++)
-        cout << " ";
-    Gotoxy(0, posY);
+    for (int i = 0; i < 10; i++)
+        cout << "          ";
 }
 
 /*-----------------------------------STRING-----------------------------------*/
@@ -61,6 +59,9 @@ void optionMenu(string typeMenu, int option)
             cout << "Xem doanh thu" << endl;
             break;
         case 4:
+            cout << "Nạp tiền" << endl;
+            break;
+        case 5:
             cout << "Thoát" << endl;
             break;
         }
@@ -82,12 +83,9 @@ void optionMenu(string typeMenu, int option)
             cout << "Mở khóa tài khoản" << endl;
             break;
         case 5:
-            cout << "Nạp tiền" << endl;
-            break;
-        case 6:
             cout << "Xem thông tin khách hàng" << endl;
             break;
-        case 7:
+        case 6:
             cout << "Thoát" << endl;
             break;
         }
@@ -118,13 +116,13 @@ void optionMenu(string typeMenu, int option)
         switch (option)
         {
         case 1:
-            cout << "Đổi mật khẩu" << endl;
+            cout << "Đổi mật khẩu";
             break;
         case 2:
-            cout << "Xem thông tin cá nhân" << endl;
+            cout << "Xem thông tin cá nhân";
             break;
         case 3:
-            cout << "Thoát" << endl;
+            cout << "Thoát";
             break;
         }
     }
@@ -148,7 +146,7 @@ void showMenu(string typeMenu, int selectOption)
     if (typeMenu == "staff")
     {
         Gotoxy(0, 0);
-        for (int i = 1; i <= 4; i++)
+        for (int i = 1; i <= 5; i++)
         {
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
@@ -157,7 +155,7 @@ void showMenu(string typeMenu, int selectOption)
     else if (typeMenu == "customerManger")
     {
         Gotoxy(0, 0);
-        for (int i = 1; i <= 7; i++)
+        for (int i = 1; i <= 6; i++)
         {
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
@@ -174,9 +172,10 @@ void showMenu(string typeMenu, int selectOption)
     }
     else if (typeMenu == "customer")
     {
-        Gotoxy(0, 3);
+        lock_guard<mutex> lock(mtx);
         for (int i = 1; i <= 3; i++)
         {
+            Gotoxy(0, i + 2);
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
         }
@@ -195,10 +194,10 @@ void customerManagementMenu(Staff &staff)
         switch (key)
         {
         case KEY_UP:
-            selectOption = (selectOption == 1) ? 7 : selectOption - 1;
+            selectOption = (selectOption == 1) ? 6 : selectOption - 1;
             break;
         case KEY_DOWN:
-            selectOption = (selectOption == 7) ? 1 : selectOption + 1;
+            selectOption = (selectOption == 6) ? 1 : selectOption + 1;
             break;
         case KEY_ENTER:
             switch (selectOption)
@@ -206,10 +205,7 @@ void customerManagementMenu(Staff &staff)
             case 1:
                 staff.addAccount();
                 break;
-            case 5:
-                staff.topUpAccount();
-                break;
-            case 7:
+            case 6:
                 system("cls");
                 return;
             }
@@ -271,10 +267,10 @@ void menuStaff(Staff &staff)
         switch (key)
         {
         case KEY_UP:
-            selectOption = (selectOption == 1) ? 4 : selectOption - 1;
+            selectOption = (selectOption == 1) ? 5 : selectOption - 1;
             break;
         case KEY_DOWN:
-            selectOption = (selectOption == 4) ? 1 : selectOption + 1;
+            selectOption = (selectOption == 5) ? 1 : selectOption + 1;
             break;
         case KEY_ENTER:
             switch (selectOption)
@@ -288,6 +284,9 @@ void menuStaff(Staff &staff)
             case 3:
                 break;
             case 4:
+                staff.topUpAccount();
+                break;
+            case 5:
                 staff.setStatus(false);
                 staff.setPassword(Base64(staff.getPassword()).encode());
                 updateAccountToFile(staff);
@@ -310,9 +309,7 @@ void menuCustomer(Customer &customer, Computer &computer)
     int selectOption = 1;
 
     thread threadShowTimeCustomer(showRemainingTimeOfCustomer, &customer);
-    Sleep(100);
     thread threadShowTimeComputer(showUsageTimeOfComputer, &computer);
-    Sleep(100);
 
     while (showRemainingTime)
     {
@@ -356,7 +353,7 @@ void menuCustomer(Customer &customer, Computer &computer)
         default:
             break;
         }
-        Sleep(20);
+        // Sleep(30);
     }
     threadShowTimeCustomer.join();
     threadShowTimeComputer.join();
@@ -375,8 +372,10 @@ void showRemainingTimeOfCustomer(Customer *customer)
 
         if (!isChangingPassword)
         {
+            lock_guard<mutex> lock(mtx);
+            ClearLine(0);
             Gotoxy(0, 0);
-            cout << "\033[37mThời gian còn lại: " << currentTime << "\033[0m" << endl;
+            cout << "Thời gian còn lại: " << currentTime;
         }
 
         if (currentTime.isZero())
@@ -386,7 +385,7 @@ void showRemainingTimeOfCustomer(Customer *customer)
             MessageBoxW(NULL, L"Hết thời gian sử dụng!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
             break;
         }
-        this_thread::sleep_for(chrono::seconds(1));
+        Sleep(1000);
     }
     ShowCursor(true);
     return;
@@ -403,11 +402,13 @@ void showUsageTimeOfComputer(Computer *computer)
 
         if (!isChangingPassword)
         {
+            lock_guard<mutex> lock(mtx);
             Gotoxy(0, 1);
-            cout << "\033[37mThời gian sử dụng: " << currentTime << endl;
-            cout << "Bạn đang sử dụng máy: " << computer->getId() << "\033[0m" << endl;
+            cout << "Thời gian sử dụng: " << currentTime;
+            Gotoxy(0, 2);
+            cout << "Bạn đang sử dụng máy: " << computer->getId();
         }
-        this_thread::sleep_for(chrono::seconds(1));
+        Sleep(1000);
     }
     return;
 }
@@ -466,7 +467,7 @@ int getNumberOfAccounts()
     return count;
 }
 
-bool addNewAccountToFile(Customer &customer)
+bool addNewAccountToFile(Account &account)
 {
     string path1 = "./account/account.txt"; // đưa vào file account
     fstream file(path1, ios::app);
@@ -475,19 +476,19 @@ bool addNewAccountToFile(Customer &customer)
         cout << "Không thể mở file" << endl;
         return false;
     }
-    file << customer.getId() << '|' << customer.getUserName() << '|' << Base64(customer.getPassword()).encode() << '|' << customer.getRole() << '|' << customer.getStatus() << endl;
+    file << account.getId() << '|' << account.getUserName() << '|' << Base64(account.getPassword()).encode() << '|' << account.getRole() << '|' << account.getStatus() << '|' << account.getIsFirstLogin() << endl;
     file.close();
     return true;
 }
 
-void generateID(Customer &customer)
+void generateID(Account &account)
 {
     int count = getNumberOfAccounts();
     count++;
     stringstream ss;
     ss << setw(4) << setfill('0') << count;
     string id = "USER" + ss.str();
-    customer.setId(id);
+    account.setId(id);
     updateNumberOfAccounts(count);
 }
 
@@ -528,7 +529,7 @@ bool addCustomerToFile(Customer &customer)
         cout << "Không thể mở file" << endl;
         return false;
     }
-    file << customer.getId() << '|' << customer.getName() << '|' << customer.getUserName() << '|' << customer.getPhone() << '|' << customer.getIsFirstLogin() << '|' << customer.getBalance() << '|' << customer.getCurrentComputerID() << endl;
+    file << customer.getId() << '|' << customer.getName() << '|' << customer.getUserName() << '|' << customer.getPhone() << '|' << customer.getBalance() << '|' << customer.getCurrentComputerID() << endl;
     file.close();
     file.open("./time/" + customer.getId() + ".txt", ios::out);
     if (!file.is_open())
@@ -541,12 +542,11 @@ bool addCustomerToFile(Customer &customer)
     return true;
 }
 
-bool checkFirstLogin(Customer &customer)
-
+bool checkFirstLogin(Account &account)
 {
-    if (customer.getIsFirstLogin())
+    if (account.getIsFirstLogin())
     {
-        customer.setIsFirstLogin(false);
+        account.setIsFirstLogin(false);
         return true;
     }
     return false;

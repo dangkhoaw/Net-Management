@@ -1,14 +1,10 @@
 #include "staff.h"
-#include "computer.h"
 #include "function.h"
-#include "customer.h"
-#include "mtime.h"
-#include <vector>
 #include <string>
 
 using namespace std;
 
-Staff::Staff(string username, string password, string role, string id) : Account(username, password, role, id) {}
+Staff::Staff(string username, string password, string role, string id, bool status, bool isFirstLogin) : Account(username, password, role, id, status, isFirstLogin) {}
 
 void Staff::addAccount()
 {

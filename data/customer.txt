@@ -1,1 +1,2 @@
-USER0001|Dang Khoa|dangkhoaw|0906457124|0|0|
+USER0001|Dang Khoa|dangkhoaw|0906457124|0|
+USER0002|Van Phat|grayzy|0123456789|0|

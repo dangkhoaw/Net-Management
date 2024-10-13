@@ -12,32 +12,30 @@ int main(int argc, char const *argv[])
     Account account;
     if (account.signIn())
     {
+        getAccountFromFile(account);
         account.setStatus(true);
-        account.setPassword(Base64(account.getPassword()).encode());
         updateAccountToFile(account);
         account.setPassword(Base64(account.getPassword()).decode());
         if (account.getRole() == "staff")
         {
-            Staff staff(account.getUserName(), account.getPassword(), account.getRole(), account.getId());
+            Staff staff(account.getUserName(), account.getPassword(), account.getRole(), account.getId(), account.getStatus(), account.getIsFirstLogin());
             menuStaff(staff);
         }
         else if (account.getRole() == "customer")
         {
-            Customer customer(account.getUserName(), account.getPassword(), account.getRole(), account.getId());
+            Customer customer(account.getUserName(), account.getPassword(), account.getRole(), account.getId(), account.getStatus(), account.getIsFirstLogin());
             getCustomerFromFile(customer);
             Computer computer;
             assignRandomComputer(customer, computer);
-            if (checkFirstLogin(customer))
+            if (checkFirstLogin(account))
             {
                 MessageBoxW(NULL, L"Đây là lần đầu tiên bạn đăng nhập, vui lòng đổi mật khẩu!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
                 while (true)
                 {
-                    if (customer.changePassword())
+                    if (account.changePassword())
                     {
-                        customer.setPassword(Base64(customer.getPassword()).encode());
-                        updateAccountToFile(customer);
-                        customer.setPassword(Base64(customer.getPassword()).decode());
-                        updateCustomerToFile(customer);
+                        customer.setPassword(account.getPassword());
+                        customer.setIsFirstLogin(false);
                         break;
                     }
                 }

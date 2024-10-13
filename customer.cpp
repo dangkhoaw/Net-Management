@@ -1,27 +1,22 @@
 #include "customer.h"
-#include "base64.h"
 #include "function.h"
-#include "account.h"
 using namespace std;
 
 Customer::Customer(string username, string password, string role,
-                   string id, string name, string phone, bool isFirstLogin, float balance, Time time)
-    : Account(username, password, role, id), name(name), phone(phone), isFirstLogin(isFirstLogin),
-      balance(balance), time(time), currentComputerID("")
-{
-}
+                   string id, bool status, bool isFirstLogin, string name,
+                   string phone, float balance, Time time)
+    : Account(username, password, role, id, status, isFirstLogin),
+      name(name), phone(phone), balance(balance), time(time) {}
 Customer::~Customer() {}
 
 string Customer::getName() { return name; }
 string Customer::getPhone() { return phone; }
-bool Customer::getIsFirstLogin() { return isFirstLogin; }
 Time Customer::getTime() { return time; }
 float Customer::getBalance() { return balance; }
 string Customer::getCurrentComputerID() { return currentComputerID; }
 void Customer::setTime(Time time) { this->time = time; }
 void Customer::setPhone(string phone) { this->phone = phone; }
 void Customer::setName(string name) { this->name = name; }
-void Customer::setIsFirstLogin(bool isFirstLogin) { this->isFirstLogin = isFirstLogin; }
 void Customer::setBalance(float balance) { this->balance = balance; }
 void Customer::setCurrentComputerID(string id) { currentComputerID = id; }
 
@@ -63,27 +58,26 @@ bool getCustomerFromFile(Customer &customer)
         return false;
     }
     string line;
+    Customer temp;
     while (getline(file, line))
     {
         stringstream ss(line);
-        string id, name, username, phone, isFirstLogin, balance, currentComputerID;
-        getline(ss, id, '|');
-        getline(ss, name, '|');
-        getline(ss, username, '|');
-        getline(ss, phone, '|');
-        getline(ss, isFirstLogin, '|');
-        getline(ss, balance, '|');
-        getline(ss, currentComputerID);
-        if (customer.username == username)
-        {
-            customer.name = name;
-            customer.id = id;
-            customer.phone = phone;
-            customer.isFirstLogin = isFirstLogin == "1" ? true : false;
-            customer.balance = stof(balance);
-            customer.currentComputerID = currentComputerID;
-            file.close();
+        getline(ss, temp.id, '|');
+        getline(ss, temp.name, '|');
+        getline(ss, temp.username, '|');
+        getline(ss, temp.phone, '|');
+        getline(ss, line, '|');
+        temp.balance = stof(line);
+        getline(ss, temp.currentComputerID);
 
+        if (temp.username == customer.username)
+        {
+            customer.id = temp.id;
+            customer.name = temp.name;
+            customer.phone = temp.phone;
+            customer.balance = temp.balance;
+            customer.currentComputerID = temp.currentComputerID;
+            file.close();
             customer.time = customer.getTimeFromFile();
             return true;
         }
@@ -117,8 +111,6 @@ void updateCustomerToFile(Customer &customer)
         getline(ss, temp.username, '|');
         getline(ss, temp.phone, '|');
         getline(ss, line, '|');
-        temp.isFirstLogin = line == "1" ? true : false;
-        getline(ss, line, '|');
         temp.balance = stof(line);
         getline(ss, temp.currentComputerID);
 
@@ -126,7 +118,7 @@ void updateCustomerToFile(Customer &customer)
         {
             temp = customer;
         }
-        tempFile << temp.id << "|" << temp.name << "|" << temp.username << "|" << temp.phone << "|" << temp.isFirstLogin << "|" << temp.balance << "|" << temp.currentComputerID << endl;
+        tempFile << temp.id << "|" << temp.name << "|" << temp.username << "|" << temp.phone << "|" << temp.balance << "|" << temp.currentComputerID << endl;
     }
     file.close();
     tempFile.close();

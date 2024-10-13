@@ -1,9 +1,9 @@
 #include "account.h"
 #include "function.h"
-#include "base64.h"
+
 using namespace std;
 
-Account::Account(string username, string password, string role, string id) : username(username), password(password), role(role), id(id), status(false) {}
+Account::Account(string username, string password, string role, string id, bool status, bool isFirstLogin) : username(username), password(password), role(role), id(id), status(status), isFirstLogin(isFirstLogin) {}
 
 Account::~Account() {}
 void Account::setRole(string role) { this->role = role; }
@@ -13,6 +13,8 @@ string Account::getRole() { return role; }
 string Account::getUserName() { return username; }
 string Account::getPassword() { return password; }
 string Account::getId() { return id; }
+bool Account::getIsFirstLogin() { return isFirstLogin; }
+void Account::setIsFirstLogin(bool isFirstLogin) { this->isFirstLogin = isFirstLogin; }
 bool Account::getStatus() { return status; }
 void Account::setStatus(bool status) { this->status = status; }
 
@@ -124,13 +126,25 @@ void updateAccountToFile(Account &account)
         return;
     }
     Account temp;
-    while (getAccountFromFile(file, temp))
+    string line;
+    while (getline(file, line))
     {
+        stringstream ss(line);
+        getline(ss, temp.id, '|');
+        getline(ss, temp.username, '|');
+        getline(ss, temp.password, '|');
+        getline(ss, temp.role, '|');
+        string status;
+        getline(ss, status, '|');
+        temp.status = status == "1" ? true : false;
+        string isFirstLogin;
+        getline(ss, isFirstLogin);
+        temp.isFirstLogin = isFirstLogin == "1" ? true : false;
         if (temp.id == account.id)
         {
             temp = account;
         }
-        tempFile << temp.id << "|" << temp.username << "|" << temp.password << "|" << temp.role << "|" << temp.status << endl;
+        tempFile << temp.id << '|' << temp.username << '|' << temp.password << '|' << temp.role << '|' << temp.status << '|' << temp.isFirstLogin << endl;
     }
     file.close();
     tempFile.close();
@@ -138,21 +152,39 @@ void updateAccountToFile(Account &account)
     system("ren .\\account\\temp.txt account.txt");
 }
 
-bool getAccountFromFile(fstream &file, Account &account)
+bool getAccountFromFile(Account &account)
 {
-    string line;
-    getline(file, line);
-    if (line == "")
+    string path = "./account/account.txt";
+    fstream file(path, ios::in);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file" << endl;
         return false;
-    stringstream ss(line);
-    getline(ss, account.id, '|');
-    getline(ss, account.username, '|');
-    getline(ss, account.password, '|');
-    getline(ss, account.role, '|');
-    string status;
-    getline(ss, status);
-    account.status = status == "1" ? true : false;
-    return true;
+    }
+    string line;
+    Account temp;
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        getline(ss, temp.id, '|');
+        getline(ss, temp.username, '|');
+        getline(ss, temp.password, '|');
+        getline(ss, temp.role, '|');
+        string status;
+        getline(ss, status, '|');
+        temp.status = status == "1" ? true : false;
+        string isFirstLogin;
+        getline(ss, isFirstLogin);
+        temp.isFirstLogin = isFirstLogin == "1" ? true : false;
+        if (temp.id == account.id)
+        {
+            account = temp;
+            file.close();
+            return true;
+        }
+    }
+    file.close();
+    return false;
 }
 
 bool checkAccount(Account &account)
@@ -164,14 +196,23 @@ bool checkAccount(Account &account)
         cout << "Không thể mở file" << endl;
         return false;
     }
+    string line;
     Account temp;
-    while (getAccountFromFile(file, temp))
+    while (getline(file, line))
     {
+        stringstream ss(line);
+        getline(ss, temp.id, '|');
+        getline(ss, temp.username, '|');
+        getline(ss, temp.password, '|');
+        getline(ss, temp.role, '|');
+        string status;
+        getline(ss, status, '|');
+        temp.status = status == "1" ? true : false;
+        string isFirstLogin;
+        getline(ss, isFirstLogin);
         if (temp.username == account.username && temp.password == Base64(account.password).encode())
         {
-            account.role = temp.role;
-            account.id = temp.id;
-            account.status = temp.status;
+            account = temp;
             file.close();
             return true;
         }
