@@ -2,15 +2,15 @@
 #define HISTORY_H 1
 
 #include <iostream>
-#include "mtime.h"
+#include "day.h"
 using namespace std;
 
 class History
 {
 private:
-    Time time;
-    string day, month, year;
-    History *next;
+    Day day;
+    string computerID, customerID;
+    float money;
 
 public:
     // Từ từ rồi làm hàm dựng sau

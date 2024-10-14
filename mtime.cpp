@@ -9,6 +9,18 @@ bool Time::isZero()
     return hour == 0 && minute == 0 && second == 0;
 }
 
+bool Time::isValid()
+{
+    return hour >= 0 && hour < 24 && minute >= 0 && minute < 60 && second >= 0 && second < 60;
+}
+
+Time Time::getCurrentTime()
+{
+    time_t now = time(0);
+    tm *ltm = localtime(&now);
+    return Time(ltm->tm_hour, ltm->tm_min, ltm->tm_sec);
+}
+
 Time &operator++(Time &time)
 {
     if (++time.second == 60)
@@ -60,6 +72,15 @@ Time Time::operator+(const Time &time)
     temp.second = (second + time.second) % 60;
     temp.minute = (minute + time.minute + (second + time.second) / 60) % 60;
     temp.hour = hour + time.hour + (minute + time.minute + (second + time.second) / 60) / 60;
+    return temp;
+}
+
+Time Time::operator-(const Time &time)
+{
+    Time temp;
+    temp.second = (second - time.second + 60) % 60;
+    temp.minute = (minute - time.minute + (second - time.second + 60) / 60 + 60) % 60;
+    temp.hour = hour - time.hour + (minute - time.minute + (second - time.second + 60) / 60 + 60) / 60;
     return temp;
 }
 
