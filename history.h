@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "day.h"
+
 using namespace std;
 
 class History
@@ -10,10 +11,20 @@ class History
 private:
     Day day;
     string computerID, customerID;
-    float money;
 
 public:
-    // Từ từ rồi làm hàm dựng sau
+    History(Day day = Day(), string computerID = "", string customerID = "");
+    ~History();
+
+    friend ostream &operator<<(ostream &os, const History &history);
+    friend istream &operator>>(istream &is, History &history);
+
+    Day getDay();
+    string getComputerID();
+    string getCustomerID();
+    void setDay(Day day);
+    void setComputerID(string computerID);
+    void setCustomerID(string customerID);
 };
 
 #endif
