@@ -4,9 +4,8 @@
 #include <thread>
 #include <vector>
 #include "mtime.h"
-#include "customer.h"
 #include "staff.h"
-#include "computer.h"
+#include "account.h"
 
 #define KEY_UP 72
 #define KEY_DOWN 80

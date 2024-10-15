@@ -4,39 +4,19 @@ using namespace std;
 Computer::Computer(string id, bool status, string customerUsingName, Time usageTime)
     : id(id), status(status), customerUsingName(customerUsingName), usageTime(usageTime) {}
 
-Computer::~Computer()
-{
-}
+Computer::~Computer() {}
 
-string Computer::getId()
-{
-    return id;
-}
+string Computer::getId() { return id; }
 
-void Computer::setId(string id)
-{
-    this->id = id;
-}
+void Computer::setId(string id) { this->id = id; }
 
-bool Computer::getStatus()
-{
-    return status;
-}
+bool Computer::getStatus() { return status; }
 
-void Computer::setStatus(bool status)
-{
-    this->status = status;
-}
+void Computer::setStatus(bool status) { this->status = status; }
 
-void Computer::setUsageTime(Time usageTime)
-{
-    this->usageTime = usageTime;
-}
+void Computer::setUsageTime(Time usageTime) { this->usageTime = usageTime; }
 
-Time Computer::getUsageTime()
-{
-    return usageTime;
-}
+Time Computer::getUsageTime() { return usageTime; }
 
 Time Computer::getUsageTimeFromFile()
 {
@@ -50,15 +30,9 @@ Time Computer::getUsageTimeFromFile()
     return time;
 }
 
-string Computer::getCustomerUsingName()
-{
-    return customerUsingName;
-}
+string Computer::getCustomerUsingName() { return customerUsingName; }
 
-void Computer::setCustomerUsingName(string customerUsingName)
-{
-    this->customerUsingName = customerUsingName;
-}
+void Computer::setCustomerUsingName(string customerUsingName) { this->customerUsingName = customerUsingName; }
 
 void Computer::setUsageTimeToFile(Time time)
 {

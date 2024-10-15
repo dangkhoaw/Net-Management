@@ -3,9 +3,8 @@
 
 #include <iostream>
 #include <fstream>
-#include <windows.h>
+#include <windows.h> // Đừng động vào :'))
 #include <sstream>
-#include "base64.h"
 
 using namespace std;
 

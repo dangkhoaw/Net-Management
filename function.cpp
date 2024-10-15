@@ -1,4 +1,5 @@
 #include "function.h"
+#include "base64.h"
 #include <mutex>
 
 bool showRemainingTime = true;

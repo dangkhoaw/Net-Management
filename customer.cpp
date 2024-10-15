@@ -1,6 +1,6 @@
 #include "customer.h"
+#include "base64.h"
 #include "function.h"
-using namespace std;
 
 Customer::Customer(string username, string password, string role,
                    string id, bool status, bool isFirstLogin, string name,

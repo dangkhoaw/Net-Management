@@ -1,7 +1,6 @@
 #include "account.h"
 #include "function.h"
-
-using namespace std;
+#include "base64.h"
 
 Account::Account(string username, string password, string role, string id, bool status, bool isFirstLogin) : username(username), password(password), role(role), id(id), status(status), isFirstLogin(isFirstLogin) {}
 

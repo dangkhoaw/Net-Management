@@ -2,6 +2,7 @@
 #define BASE64_H 1
 
 #include <iostream>
+
 using namespace std;
 
 class Base64
