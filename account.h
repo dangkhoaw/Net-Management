@@ -1,5 +1,5 @@
-#ifndef ACCOUNT_H
-#define ACCOUNT_H 1
+#ifndef ACCOUNT
+#define ACCOUNT 1
 
 #include <iostream>
 #include <fstream>
@@ -18,15 +18,13 @@ public:
     Account(string username = "", string password = "", string role = "", string id = "", bool status = false, bool isFirstLogin = true);
     ~Account();
 
-    bool signIn();
-    bool changePassword();
-
     string getRole();
     string getUserName();
     string getPassword();
     string getId();
     bool getStatus();
     bool getIsFirstLogin();
+
     void setRole(string role);
     void setPassword(string password);
     void setUserName(string username);
@@ -34,6 +32,8 @@ public:
     void setStatus(bool status);
     void setIsFirstLogin(bool isFirstLogin);
 
+    bool signIn();
+    bool changePassword();
     friend istream &operator>>(istream &is, Account &account);
     friend bool checkAccount(Account &account);
     friend bool getAccountFromFile(Account &account);

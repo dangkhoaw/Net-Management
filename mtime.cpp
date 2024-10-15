@@ -1,6 +1,22 @@
 #include "mtime.h"
 
-Time::Time(int hour, int minute, int second) : hour(hour), minute(minute), second(second), colon(':') {}
+Time::Time(int hour, int minute, int second) : colon(':')
+{
+    while (second >= 60)
+    {
+        second -= 60;
+        minute++;
+    }
+    while (minute >= 60)
+    {
+        minute -= 60;
+        hour++;
+    }
+
+    this->hour = hour;
+    this->minute = minute;
+    this->second = second;
+}
 
 Time::~Time() {}
 

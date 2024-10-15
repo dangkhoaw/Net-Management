@@ -1,5 +1,5 @@
-#ifndef HISTORY_H
-#define HISTORY_H 1
+#ifndef HISTORY
+#define HISTORY 1
 
 #include <iostream>
 #include "day.h"

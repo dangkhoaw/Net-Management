@@ -1,5 +1,5 @@
-#ifndef DAY_H
-#define DAY_H 1
+#ifndef DAY
+#define DAY 1
 
 #include <iostream>
 #include "mtime.h"

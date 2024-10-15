@@ -44,9 +44,13 @@ void Customer::setTimeToFile(Time time)
 
 void Customer::showMyInfo()
 {
+    system("cls");
+
     cout << "Tên khách hàng: " << name << endl;
     cout << "Số điện thoại: " << phone << endl;
     cout << "Số dư: " << balance << endl;
+
+    pressKeyQ();
 }
 
 bool getCustomerFromFile(Customer &customer)

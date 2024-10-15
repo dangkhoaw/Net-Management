@@ -1,5 +1,5 @@
-#ifndef DATE_H
-#define DATE_H 1
+#ifndef DATE
+#define DATE 1
 
 #include <iostream>
 #include <iomanip>

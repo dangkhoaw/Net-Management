@@ -5,6 +5,13 @@
 bool showRemainingTime = true;
 bool showUsageTime = true;
 bool isChangingPassword = false;
+bool isViewingInfo = false;
+
+const int MENUSTAFF = 5;
+const int MENUCUSTOMERMANAGER = 6;
+const int MENUCOMPUTERMANAGER = 5;
+const int MENUCUSTOMER = 3;
+
 mutex mtx;
 
 /*------------------------------------CONSOLE------------------------------------*/
@@ -176,7 +183,7 @@ void showMenu(string typeMenu, int selectOption)
         lock_guard<mutex> lock(mtx);
         for (int i = 1; i <= 3; i++)
         {
-            Gotoxy(0, i + 2);
+            Gotoxy(0, i + 3);
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
         }
@@ -228,10 +235,10 @@ void computerManagementMenu(Staff &staff)
         switch (key)
         {
         case KEY_UP:
-            selectOption = (selectOption == 1) ? 5 : selectOption - 1;
+            selectOption = (selectOption == 1) ? MENUCOMPUTERMANAGER : selectOption - 1;
             break;
         case KEY_DOWN:
-            selectOption = (selectOption == 5) ? 1 : selectOption + 1;
+            selectOption = (selectOption == MENUCOMPUTERMANAGER) ? 1 : selectOption + 1;
             break;
         case KEY_ENTER:
             switch (selectOption)
@@ -268,10 +275,10 @@ void menuStaff(Staff &staff)
         switch (key)
         {
         case KEY_UP:
-            selectOption = (selectOption == 1) ? 5 : selectOption - 1;
+            selectOption = (selectOption == 1) ? MENUSTAFF : selectOption - 1;
             break;
         case KEY_DOWN:
-            selectOption = (selectOption == 5) ? 1 : selectOption + 1;
+            selectOption = (selectOption == MENUSTAFF) ? 1 : selectOption + 1;
             break;
         case KEY_ENTER:
             switch (selectOption)
@@ -304,10 +311,13 @@ void menuStaff(Staff &staff)
 
 void menuCustomer(Customer &customer, Computer &computer)
 {
-    MessageBoxW(NULL, L"Chào mừng bạn đến với tiệm Internet", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
+    // MessageBoxW(NULL, L"Chào mừng bạn đến với tiệm Internet", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
     SetConsoleTitle(TEXT("Menu khách hàng"));
     ShowCursor(false);
     int selectOption = 1;
+
+    Gotoxy(0, 3);
+    cout << "───────────────────────────";
 
     thread threadShowTimeCustomer(showRemainingTimeOfCustomer, &customer);
     thread threadShowTimeComputer(showUsageTimeOfComputer, &computer);
@@ -319,10 +329,10 @@ void menuCustomer(Customer &customer, Computer &computer)
         switch (key)
         {
         case KEY_UP:
-            selectOption = (selectOption == 1) ? 3 : selectOption - 1;
+            selectOption = (selectOption == 1) ? MENUCUSTOMER : selectOption - 1;
             break;
         case KEY_DOWN:
-            selectOption = (selectOption == 3) ? 1 : selectOption + 1;
+            selectOption = (selectOption == MENUCUSTOMER) ? 1 : selectOption + 1;
             break;
         case KEY_ENTER:
             switch (selectOption)
@@ -333,7 +343,9 @@ void menuCustomer(Customer &customer, Computer &computer)
                 isChangingPassword = false;
                 break;
             case 2:
+                isViewingInfo = true;
                 customer.showMyInfo();
+                isViewingInfo = false;
                 break;
             case 3:
                 showUsageTime = false;
@@ -354,7 +366,6 @@ void menuCustomer(Customer &customer, Computer &computer)
         default:
             break;
         }
-        // Sleep(30);
     }
     threadShowTimeCustomer.join();
     threadShowTimeComputer.join();
@@ -371,7 +382,7 @@ void showRemainingTimeOfCustomer(Customer *customer)
         customer->setTimeToFile(currentTime);
         customer->setTime(currentTime);
 
-        if (!isChangingPassword)
+        if (!isChangingPassword && !isViewingInfo)
         {
             lock_guard<mutex> lock(mtx);
             ClearLine(0);
@@ -401,7 +412,7 @@ void showUsageTimeOfComputer(Computer *computer)
         computer->setUsageTime(currentTime);
         computer->setUsageTimeToFile(currentTime);
 
-        if (!isChangingPassword)
+        if (!isChangingPassword && !isViewingInfo)
         {
             lock_guard<mutex> lock(mtx);
             Gotoxy(0, 1);
@@ -415,33 +426,6 @@ void showUsageTimeOfComputer(Computer *computer)
 }
 
 /*------------------------------------ACCOUNT------------------------------------*/
-void enterPassword(string &password)
-{
-    password = "";
-    int i = 0;
-    while (true)
-    {
-        char ch = getch();
-        if (ch == KEY_ENTER)
-            break;
-        else if (ch == KEY_BACKSPACE)
-        {
-            if (i > 0)
-            {
-                i--;
-                cout << "\b \b";
-                password.pop_back();
-            }
-        }
-        else
-        {
-            password += ch;
-            i++;
-            cout << "•";
-        }
-    }
-}
-
 void updateNumberOfAccounts(int &count)
 {
     fstream file("./account/count.txt", ios::out);
@@ -495,6 +479,9 @@ void generateID(Account &account)
 
 bool isValidUsername(string &username)
 {
+    if (username == "admin")
+        return false;
+
     fstream file("./account/account.txt", ios::in);
     if (!file.is_open())
     {
@@ -730,4 +717,41 @@ void removeComputerFromFile(Computer &computer)
     {
         MessageBoxW(NULL, L"Không tìm thấy máy", L"Thông báo", MB_OK | MB_ICONWARNING);
     }
+}
+
+/*------------------------------------OTHER------------------------------------*/
+void enterPassword(string &password)
+{
+    password = "";
+    int i = 0;
+    while (true)
+    {
+        char ch = getch();
+        if (ch == KEY_ENTER)
+            break;
+        else if (ch == KEY_BACKSPACE)
+        {
+            if (i > 0)
+            {
+                i--;
+                cout << "\b \b";
+                password.pop_back();
+            }
+        }
+        else
+        {
+            password += ch;
+            i++;
+            cout << "•";
+        }
+    }
+}
+
+void pressKeyQ()
+{
+    ShowCursor(false);
+    cout << "\n\n(Nhấn 'q' để thoát)" << endl;
+    while (_getch() != 'q')
+        ;
+    system("cls");
 }
