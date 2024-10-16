@@ -9,7 +9,7 @@ using namespace std;
 
 class Day
 {
-private:
+protected:
     Date date;
     Time time;
 

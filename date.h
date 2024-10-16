@@ -8,7 +8,7 @@ using namespace std;
 
 class Date
 {
-private:
+protected:
     int day;
     int month;
     int year;

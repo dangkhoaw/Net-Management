@@ -57,10 +57,10 @@ void optionMenu(string typeMenu, int option)
             cout << "Quản lí máy tính" << endl;
             break;
         case 3:
-            cout << "Xem doanh thu" << endl;
+            cout << "Xem doanh thu" << endl; // ch xong
             break;
         case 4:
-            cout << "Nạp tiền" << endl;
+            cout << "Nạp tiền" << endl; // xong
             break;
         case 5:
             cout << "Thoát" << endl;
@@ -78,13 +78,13 @@ void optionMenu(string typeMenu, int option)
             cout << "Xóa tài khoản" << endl;
             break;
         case 3:
-            cout << "Khóa tài khoản" << endl;
+            cout << "Khóa tài khoản" << endl; // ch xong
             break;
         case 4:
-            cout << "Mở khóa tài khoản" << endl;
+            cout << "Mở khóa tài khoản" << endl; // ch xong
             break;
         case 5:
-            cout << "Xem thông tin khách hàng" << endl;
+            cout << "Xem thông tin khách hàng" << endl; // ch xong còn cái lịch sử gần nhất
             break;
         case 6:
             cout << "Thoát" << endl;
@@ -124,6 +124,66 @@ void optionMenu(string typeMenu, int option)
             break;
         case 3:
             cout << "Thoát";
+            break;
+        }
+    }
+    else if (typeMenu == "revenue")
+    {
+        switch (option)
+        {
+        case 1:
+            cout << "Xem doanh thu theo ngày";
+            break;
+        case 2:
+            cout << "Xem doanh thu theo tháng";
+            break;
+        case 3:
+            cout << "Xem doanh thu theo năm";
+            break;
+        }
+    }
+    else if (typeMenu == " revenueDay")
+    {
+        switch (option)
+        {
+        case 1:
+            cout << "Xem doanh thu hôm nay";
+            break;
+        case 2:
+            cout << "Xem doanh thu hôm qua";
+            break;
+        case 3:
+            cout << "Xem doanh thu ngày khác";
+            break;
+        }
+    }
+    else if (typeMenu == " revenueMonth")
+    {
+        switch (option)
+        {
+        case 1:
+            cout << "Xem doanh thu tháng này";
+            break;
+        case 2:
+            cout << "Xem doanh thu tháng trước";
+            break;
+        case 3:
+            cout << "Xem doanh thu tháng khác";
+            break;
+        }
+    }
+    else if (typeMenu == " revenueYear")
+    {
+        switch (option)
+        {
+        case 1:
+            cout << "Xem doanh thu năm nay";
+            break;
+        case 2:
+            cout << "Xem doanh thu năm trước";
+            break;
+        case 3:
+            cout << "Xem doanh thu năm khác";
             break;
         }
     }
@@ -177,6 +237,42 @@ void showMenu(string typeMenu, int selectOption)
         for (int i = 1; i <= 3; i++)
         {
             Gotoxy(0, i + 2);
+            bool isSelected = (i == selectOption);
+            printMenuOption(typeMenu, i, isSelected);
+        }
+    }
+    else if (typeMenu == "revenue")
+    {
+        Gotoxy(0, 0);
+        for (int i = 1; i <= 3; i++)
+        {
+            bool isSelected = (i == selectOption);
+            printMenuOption(typeMenu, i, isSelected);
+        }
+    }
+    else if (typeMenu == "revenueDay")
+    {
+        Gotoxy(0, 0);
+        for (int i = 1; i <= 3; i++)
+        {
+            bool isSelected = (i == selectOption);
+            printMenuOption(typeMenu, i, isSelected);
+        }
+    }
+    else if (typeMenu == "revenueMonth")
+    {
+        Gotoxy(0, 0);
+        for (int i = 1; i <= 3; i++)
+        {
+            bool isSelected = (i == selectOption);
+            printMenuOption(typeMenu, i, isSelected);
+        }
+    }
+    else if (typeMenu == "revenueYear")
+    {
+        Gotoxy(0, 0);
+        for (int i = 1; i <= 3; i++)
+        {
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
         }
@@ -361,6 +457,148 @@ void menuCustomer(Customer &customer, Computer &computer)
     ShowCursor(true);
 }
 
+void menuRevenue(Staff &staff)
+{
+    system("cls");
+    SetConsoleTitle(TEXT("Menu doanh thu"));
+    ShowCursor(false);
+    int selectOption = 1;
+    while (true)
+    {
+        showMenu("revenue", selectOption);
+        int key = _getch();
+        switch (key)
+        {
+        case KEY_UP:
+            selectOption = (selectOption == 1) ? 3 : selectOption - 1;
+            break;
+        case KEY_DOWN:
+            selectOption = (selectOption == 3) ? 1 : selectOption + 1;
+            break;
+        case KEY_ENTER:
+            switch (selectOption)
+            {
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            }
+        default:
+            break;
+        }
+    }
+    ShowCursor(true);
+}
+
+void menuRevenueDay(Staff &staff)
+{
+
+    system("cls");
+    SetConsoleTitle(TEXT("Menu doanh thu theo ngày"));
+    ShowCursor(false);
+    int selectOption = 1;
+    while (true)
+    {
+        showMenu("revenueDay", selectOption);
+        int key = _getch();
+        switch (key)
+        {
+        case KEY_UP:
+            selectOption = (selectOption == 1) ? 3 : selectOption - 1;
+            break;
+        case KEY_DOWN:
+            selectOption = (selectOption == 3) ? 1 : selectOption + 1;
+            break;
+        case KEY_ENTER:
+            switch (selectOption)
+            {
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            }
+        default:
+            break;
+        }
+    }
+    ShowCursor(true);
+}
+
+void menuRevenueMonth(Staff &staff)
+{
+
+    system("cls");
+    SetConsoleTitle(TEXT("Menu doanh thu theo tháng"));
+    ShowCursor(false);
+    int selectOption = 1;
+    while (true)
+    {
+        showMenu("revenueMonth", selectOption);
+        int key = _getch();
+        switch (key)
+        {
+        case KEY_UP:
+            selectOption = (selectOption == 1) ? 3 : selectOption - 1;
+            break;
+        case KEY_DOWN:
+            selectOption = (selectOption == 3) ? 1 : selectOption + 1;
+            break;
+        case KEY_ENTER:
+            switch (selectOption)
+            {
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            }
+        default:
+            break;
+        }
+    }
+    ShowCursor(true);
+}
+
+void menuRevenueYear(Staff &staff)
+{
+
+    system("cls");
+    SetConsoleTitle(TEXT("Menu doanh thu theo năm"));
+    ShowCursor(false);
+    int selectOption = 1;
+    while (true)
+    {
+        showMenu("revenueYear", selectOption);
+        int key = _getch();
+        switch (key)
+        {
+        case KEY_UP:
+            selectOption = (selectOption == 1) ? 3 : selectOption - 1;
+            break;
+        case KEY_DOWN:
+            selectOption = (selectOption == 3) ? 1 : selectOption + 1;
+            break;
+        case KEY_ENTER:
+            switch (selectOption)
+            {
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            }
+        default:
+            break;
+        }
+    }
+    ShowCursor(true);
+}
 /*------------------------------------TIME------------------------------------*/
 void showRemainingTimeOfCustomer(Customer *customer)
 {

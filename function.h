@@ -27,6 +27,10 @@ void computerManagementMenu(Staff &staff);
 void customerManagementMenu(Staff &staff);
 void menuStaff(Staff &staff);
 void menuCustomer(Customer &customer, Computer &computer);
+void menuRevenue(Staff &staff);
+void menuRevenueMonth(Staff &staff);
+void menuRevenueYear(Staff &staff);
+void menuRevenueDay(Staff &staff);
 /*------------------------------------TIME------------------------------------*/
 void showRemainingTimeOfCustomer(Customer *customer);
 void showUsageTimeOfComputer(Computer *computer);
