@@ -27,7 +27,7 @@ vector<DoanhThu> DoanhThu::getDoanhThu()
     fstream file("./data/doanhthu_nam2024.txt", ios::in);
     if (!file.is_open())
     {
-        cout << "Không thể mở file" << endl;
+        cout << "Không thể mở file doanh thu" << endl;
         return doanhthus;
     }
 
@@ -61,7 +61,7 @@ void DoanhThu::updateDoanhThu(DoanhThu &doanhThu)
     fstream file("./data/doanhthu_nam2024.txt", ios::out);
     if (!file.is_open())
     {
-        cout << "Không thể mở file" << endl;
+        cout << "Không thể mở file doanh thu" << endl;
         return;
     }
 

@@ -1,6 +1,8 @@
 #include "computer.h"
+// #include <mutex>
 
-using namespace std;
+// mutex computer;
+
 Computer::Computer(string id, bool status, string customerUsingName, Time usageTime)
     : id(id), status(status), customerUsingName(customerUsingName), usageTime(usageTime) {}
 
@@ -20,12 +22,17 @@ Time Computer::getUsageTime() { return usageTime; }
 
 Time Computer::getUsageTimeFromFile()
 {
+    // lock_guard<mutex> lock(computer);
     Time time;
     fstream file("./time/" + id + ".txt", ios::in);
     if (file.is_open())
     {
         file >> time;
         file.close();
+    }
+    else
+    {
+        cout << "Không thể mở file t/g computer" << endl;
     }
     return time;
 }
@@ -36,11 +43,16 @@ void Computer::setCustomerUsingName(string customerUsingName) { this->customerUs
 
 void Computer::setUsageTimeToFile(Time time)
 {
+    // lock_guard<mutex> lock(computer);
     fstream file("./time/" + id + ".txt", ios::out);
     if (file.is_open())
     {
         file << time;
         file.close();
+    }
+    else
+    {
+        cout << "Không thể mở file t/g computer" << endl;
     }
 }
 
@@ -55,7 +67,7 @@ bool getComputerFromFile(Computer &computer)
     fstream file("./data/computer.txt", ios::in);
     if (!file.is_open())
     {
-        cout << "Không thể mở file" << endl;
+        cout << "Không thể mở file computer" << endl;
         return false;
     }
     string line;
@@ -86,14 +98,14 @@ void updateComputerToFile(Computer &computer)
     fstream file("./data/computer.txt", ios::in);
     if (!file.is_open())
     {
-        cout << "Không thể mở file" << endl;
+        cout << "Không thể mở file computer" << endl;
         return;
     }
     string tempPath = "./data/temp.txt";
     fstream tempFile(tempPath, ios::out);
     if (!tempFile.is_open())
     {
-        cout << "Không thể mở file" << endl;
+        cout << "Không thể mở file temp" << endl;
         return;
     }
     string line;

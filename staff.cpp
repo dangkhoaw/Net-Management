@@ -75,8 +75,8 @@ void Staff::viewComputerStatus()
         {
             if (prevComputers.empty() || prevComputers[i].getUsageTime() != computers[i].getUsageTime())
             {
-                Gotoxy(0, i + 1);
                 ClearLine(i + 1);
+                Gotoxy(0, i + 1);
                 cout << computers[i].getId();
                 Gotoxy(10, i + 1);
                 if (computers[i].getStatus())
@@ -91,8 +91,8 @@ void Staff::viewComputerStatus()
         }
         prevComputers = computers;
 
-        Gotoxy(0, computers.size() + 1);
-        cout << "Nhấn phím q để thoát ";
+        Gotoxy(0, computers.size() + 2);
+        cout << "(Nhấn phím q để thoát)";
         if (_kbhit())
         {
             char key = _getch();
@@ -101,7 +101,7 @@ void Staff::viewComputerStatus()
                 break;
             }
         }
-        Sleep(500);
+        Sleep(1000);
     }
     system("cls");
 }

@@ -1,6 +1,9 @@
 #include "customer.h"
 #include "base64.h"
 #include "function.h"
+// #include <mutex>
+
+// mutex customer;
 
 Customer::Customer(string username, string password, string role,
                    string id, bool status, bool isFirstLogin, bool isLocked,
@@ -22,6 +25,7 @@ void Customer::setCurrentComputerID(string id) { currentComputerID = id; }
 
 Time Customer::getTimeFromFile()
 {
+    // lock_guard<mutex> lock(customer);
     Time time;
     fstream file("./time/" + getId() + ".txt", ios::in);
     if (file.is_open())
@@ -29,16 +33,25 @@ Time Customer::getTimeFromFile()
         file >> time;
         file.close();
     }
+    else
+    {
+        cout << "Không thể mở file t/g customer" << endl;
+    }
     return time;
 }
 
 void Customer::setTimeToFile(Time time)
 {
+    // lock_guard<mutex> lock(customer);
     fstream file("./time/" + getId() + ".txt", ios::out);
     if (file.is_open())
     {
         file << time;
         file.close();
+    }
+    else
+    {
+        cout << "Không thể mở file t/g customer" << endl;
     }
 }
 
@@ -58,7 +71,7 @@ bool Customer::isLocked()
     fstream file("./account/account.txt", ios::in);
     if (!file.is_open())
     {
-        cout << "Không thể mở file" << endl;
+        cout << "Không thể mở file account" << endl;
         return false;
     }
     string line;
@@ -97,7 +110,7 @@ bool getCustomerFromFile(Customer &customer)
     fstream file("./data/customer.txt", ios::in);
     if (!file.is_open())
     {
-        cout << "Không thể mở file" << endl;
+        cout << "Không thể mở file customer" << endl;
         return false;
     }
     string line;
@@ -134,14 +147,14 @@ void updateCustomerToFile(Customer &customer)
     fstream file("./data/customer.txt", ios::in);
     if (!file.is_open())
     {
-        cout << "Không thể mở file" << endl;
+        cout << "Không thể mở file customer" << endl;
         return;
     }
     string tempPath = "./data/temp.txt";
     fstream tempFile(tempPath, ios::out);
     if (!tempFile.is_open())
     {
-        cout << "Không thể mở file" << endl;
+        cout << "Không thể mở file temp" << endl;
         return;
     }
     string line;

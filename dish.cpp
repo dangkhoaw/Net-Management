@@ -42,7 +42,7 @@ Dish Dish::getDishFromFile()
     fstream file("./data/dish.txt", ios::in);
     if (!file.is_open())
     {
-        cout << "Không thể mở file" << endl;
+        cout << "Không thể mở file dish" << endl;
         return Dish();
     }
 
@@ -68,7 +68,7 @@ void Dish::addDishToFile()
     fstream file("./data/dish.txt", ios::app);
     if (!file.is_open())
     {
-        cout << "Không thể mở file" << endl;
+        cout << "Không thể mở file dish" << endl;
         return;
     }
     file << *this;
@@ -79,14 +79,14 @@ void Dish::removeDishFromFile()
     fstream file("./data/dish.txt", ios::in);
     if (!file.is_open())
     {
-        cout << "Không thể mở file" << endl;
+        cout << "Không thể mở file dish" << endl;
         return;
     }
 
     fstream tempFile("./data/temp.txt", ios::out);
     if (!tempFile.is_open())
     {
-        cout << "Không thể mở file" << endl;
+        cout << "Không thể mở file temp" << endl;
         return;
     }
 
@@ -112,14 +112,14 @@ void Dish::updateDishToFile()
     fstream file("./data/dish.txt", ios::in);
     if (!file.is_open())
     {
-        cout << "Không thể mở file" << endl;
+        cout << "Không thể mở file dish" << endl;
         return;
     }
 
     fstream tempFile("./data/temp.txt", ios::out);
     if (!tempFile.is_open())
     {
-        cout << "Không thể mở file" << endl;
+        cout << "Không thể mở file temp" << endl;
         return;
     }
 

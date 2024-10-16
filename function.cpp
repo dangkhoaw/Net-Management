@@ -1,7 +1,7 @@
 #include "function.h"
 #include "base64.h"
 #include <mutex>
-#include <string>
+#include <chrono>
 
 bool showRemainingTime = true;
 bool showUsageTime = true;
@@ -36,9 +36,16 @@ void Gotoxy(SHORT posX, SHORT posY)
 
 void ClearLine(SHORT posY)
 {
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+
+    int consoleWidth = csbi.srWindow.Right - csbi.srWindow.Left + 1;
+
     Gotoxy(0, posY);
-    for (int i = 0; i < 10; i++)
-        cout << "          ";
+    for (int i = 0; i < consoleWidth; i++)
+    {
+        cout << " ";
+    }
 }
 
 /*------------------------------------MENU------------------------------------*/
@@ -414,8 +421,8 @@ void menuCustomer(Customer &customer, Computer &computer)
     ShowCursor(false);
     int selectOption = 1;
 
-    Gotoxy(0, 3);
-    cout << "───────────────────────────";
+    // Gotoxy(0, 3);
+    // cout << "───────────────────────────";
 
     thread threadShowTimeCustomer(showRemainingTimeOfCustomer, &customer);
     thread threadShowTimeComputer(showUsageTimeOfComputer, &computer);
@@ -667,7 +674,7 @@ void showRemainingTimeOfCustomer(Customer *customer)
             MessageBoxW(NULL, L"Hết thời gian sử dụng!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
             break;
         }
-        Sleep(1000);
+        this_thread::sleep_for(chrono::seconds(1));
     }
     ShowCursor(true);
     return;
@@ -685,12 +692,14 @@ void showUsageTimeOfComputer(Computer *computer)
         if (!isChangingPassword && !isViewingInfo)
         {
             lock_guard<mutex> lock(mtx);
+            ClearLine(1);
             Gotoxy(0, 1);
             cout << "Thời gian sử dụng: " << currentTime;
             Gotoxy(0, 2);
             cout << "Bạn đang sử dụng máy: " << computer->getId();
         }
-        Sleep(1000);
+
+        this_thread::sleep_for(chrono::seconds(1));
     }
     return;
 }
@@ -701,7 +710,7 @@ void updateNumberOfAccounts(int &count)
     fstream file("./account/count.txt", ios::out);
     if (!file.is_open())
     {
-        cout << "Không thể mở file" << endl;
+        cout << "Không thể mở file count" << endl;
         return;
     }
     file << count;
@@ -714,7 +723,7 @@ int getNumberOfAccounts()
     fstream file("./account/count.txt", ios::in);
     if (!file.is_open())
     {
-        cout << "Không thể mở file" << endl;
+        cout << "Không thể mở file count" << endl;
         return -1;
     }
     file >> count;
@@ -728,7 +737,7 @@ bool addNewAccountToFile(Account &account)
     fstream file(path1, ios::app);
     if (!file.is_open())
     {
-        cout << "Không thể mở file" << endl;
+        cout << "Không thể mở file account" << endl;
         return false;
     }
     file << account.getId() << '|' << account.getUserName() << '|' << Base64(account.getPassword()).encode() << '|' << account.getRole() << '|' << account.getStatus() << '|' << account.getIsFirstLogin() << '|' << account.getIsLocked() << endl;
@@ -755,7 +764,7 @@ bool isValidUsername(string &username)
     fstream file("./account/account.txt", ios::in);
     if (!file.is_open())
     {
-        cout << "Không thể mở file" << endl;
+        cout << "Không thể mở file account" << endl;
         return false;
     }
     string line;
@@ -784,7 +793,7 @@ bool addCustomerToFile(Customer &customer)
     fstream file(path1, ios::app);
     if (!file.is_open())
     {
-        cout << "Không thể mở file" << endl;
+        cout << "Không thể mở file customer" << endl;
         return false;
     }
     file << customer.getId() << '|' << customer.getName() << '|' << customer.getUserName() << '|' << customer.getPhone() << '|' << customer.getBalance() << '|' << customer.getCurrentComputerID() << endl;
@@ -792,7 +801,7 @@ bool addCustomerToFile(Customer &customer)
     file.open("./time/" + customer.getId() + ".txt", ios::out);
     if (!file.is_open())
     {
-        cout << "Không thể mở file" << endl;
+        cout << "Không thể mở file t/g customer" << endl;
         return false;
     }
     file << customer.getTime();
@@ -817,7 +826,7 @@ int getNumberOfComputers()
     fstream file("./data/countComputer.txt", ios::in);
     if (!file.is_open())
     {
-        cout << "Không thể mở file" << endl;
+        cout << "Không thể mở file countComputer" << endl;
         return -1;
     }
     file >> count;
@@ -830,7 +839,7 @@ void updateNumberOfComputers(int &count)
     fstream file("./data/countComputer.txt", ios::out);
     if (!file.is_open())
     {
-        cout << "Không thể mở file" << endl;
+        cout << "Không thể mở file countComputer" << endl;
         return;
     }
     file << count;
@@ -843,7 +852,7 @@ bool addNewComputerToFile(Computer &computer)
     fstream file(path1, ios::app);
     if (!file.is_open())
     {
-        cout << "Không thể mở file" << endl;
+        cout << "Không thể mở file computer" << endl;
         return false;
     }
     file << computer.getId() << '|' << computer.getStatus() << '|' << computer.getCustomerUsingName() << endl;
@@ -852,7 +861,7 @@ bool addNewComputerToFile(Computer &computer)
     file.open("./time/" + computer.getId() + ".txt", ios::out);
     if (!file.is_open())
     {
-        cout << "Không thể mở file" << endl;
+        cout << "Không thể mở file t/g computer" << endl;
         return false;
     }
     file << computer.getUsageTime();
@@ -876,7 +885,7 @@ vector<Computer> getComputersByStatus(bool status)
     fstream file("./data/computer.txt", ios::in);
     if (!file.is_open())
     {
-        cout << "Không thể mở file" << endl;
+        cout << "Không thể mở file computer" << endl;
         return computers;
     }
     string line;
@@ -903,7 +912,7 @@ vector<Computer> getComputers()
     fstream file("./data/computer.txt", ios::in);
     if (!file.is_open())
     {
-        cout << "Không thể mở file" << endl;
+        cout << "Không thể mở file computer" << endl;
         return computers;
     }
     string line;
@@ -953,14 +962,14 @@ void removeComputerFromFile(Computer &computer)
         fstream file("./data/computer.txt", ios::in);
         if (!file.is_open())
         {
-            cout << "Không thể mở file" << endl;
+            cout << "Không thể mở file computer" << endl;
             return;
         }
 
         fstream tempFile("./data/temp.txt", ios::out);
         if (!tempFile.is_open())
         {
-            cout << "Không thể mở file" << endl;
+            cout << "Không thể mở file temp" << endl;
             return;
         }
 
