@@ -83,27 +83,62 @@ void DoanhThu::updateDoanhThu(DoanhThu &doanhThu)
 }
 void DoanhThu::viewRevenueDay() // chỗ ni cần thêm dk
 {
-    time_t now = time(0);
-    tm *ltm = localtime(&now);
-    if (ltm->tm_mday == this->getDate().getDay())
+    // time_t now = time(0);
+    // tm *ltm = localtime(&now);
+    // if (ltm->tm_mday == this->getDate().getDay())
+    // {
+    //     system("cls");
+    //     this->getTotalMoneyFromFile();
+    //     cout << "Doanh thu ngay hom nay: " << this->getTotalMoney() << endl;
+    // }
+    // else if (ltm->tm_mday == this->getDate().getDay() + 1)
+    // {
+    //     system("cls");
+    //     this->setDate(this->getDate() + 1);
+    //     this->getTotalMoneyFromFile();
+    //     cout << "Doanh thu ngay hom qua: " << this->getTotalMoney() << endl;
+    // }
+    // else
+    // {
+    //     system("cls");
+    //     ShowCursor(true);
+    //     Date date;
+    //     cout << "nhập vào ngày tháng năm dưới dạng (ddmmyyyy): ";
+    //     cin >> date;
+    //     if (!date.isValid() || !checkDayMonthYear(date))
+    //     {
+    //         cout << "Ngày không hợp lệ hoặc ngày không thể lớn hơn ngày hiện tại" << endl;
+    //         return;
+    //     }
+    //     this->setDate(date);
+    //     this->getTotalMoneyFromFile();
+    //     cout << "Doanh thu ngay " << date << " : " << this->getTotalMoney() << endl;
+    // }
+    // pressKeyQ();
+    // ShowCursor(false);
+
+    // Ta sửa lại chộ ni chạy thử đc k (chạy đc thì xóa cái comment ở trên, k đc thì xóa cái ni :)))
+    Date date;
+    date = date.getCurrentDate();
+
+    if (date == this->getDate().getCurrentDate())
     {
         system("cls");
         this->getTotalMoneyFromFile();
-        cout << "Doanh thu ngay hom nay: " << this->getTotalMoney() << endl;
+        cout << "Doanh thu hôm nay: " << this->getTotalMoney() << endl;
     }
-    else if (ltm->tm_mday == this->getDate().getDay() + 1)
+    else if (date == this->getDate() + 1)
     {
         system("cls");
         this->setDate(this->getDate() + 1);
         this->getTotalMoneyFromFile();
-        cout << "Doanh thu ngay hom qua: " << this->getTotalMoney() << endl;
+        cout << "Doanh thu hôm qua: " << this->getTotalMoney() << endl;
     }
     else
     {
         system("cls");
         ShowCursor(true);
-        Date date;
-        cout << "nhập vào ngày tháng năm dưới dạng (ddmmyyyy): ";
+        cout << "Nhập vào ngày tháng năm dưới dạng (ddmmyyyy): ";
         cin >> date;
         if (!date.isValid() || !checkDayMonthYear(date))
         {
@@ -112,7 +147,7 @@ void DoanhThu::viewRevenueDay() // chỗ ni cần thêm dk
         }
         this->setDate(date);
         this->getTotalMoneyFromFile();
-        cout << "Doanh thu ngay " << date << " : " << this->getTotalMoney() << endl;
+        cout << "Doanh thu ngày " << date << " : " << this->getTotalMoney() << endl;
     }
     pressKeyQ();
     ShowCursor(false);

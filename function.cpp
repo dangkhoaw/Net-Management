@@ -300,6 +300,14 @@ void customerManagementMenu(Staff &staff)
             case 1:
                 staff.addAccount();
                 break;
+            case 2:
+            // xóa tài khoản
+            case 3:
+                staff.lockAccount();
+            case 4:
+            // mở khóa tài khoản
+            case 5:
+            // xem thông tin khách hàng
             case 6:
                 system("cls");
                 return;
@@ -336,6 +344,8 @@ void computerManagementMenu(Staff &staff)
             case 2:
                 staff.removeComputer();
                 break;
+            case 3:
+                // sửa thông tin máy
             case 4:
                 staff.viewComputerStatus();
                 break;
@@ -413,46 +423,68 @@ void menuCustomer(Customer &customer, Computer &computer)
     while (showRemainingTime)
     {
         showMenu("customer", selectOption);
-        int key = _getch();
-        switch (key)
+        if (customer.isLocked())
         {
-        case KEY_UP:
-            selectOption = (selectOption == 1) ? MENUCUSTOMER : selectOption - 1;
+            system("cls");
+            showRemainingTime = false;
+            showUsageTime = false;
+            customer.setStatus(false);
+            customer.setCurrentComputerID("");
+            customer.setPassword(Base64(customer.getPassword()).encode());
+            updateCustomerToFile(customer);
+            updateAccountToFile(customer);
+            computer.setStatus(false);
+            computer.setCustomerUsingName("");
+            computer.setUsageTimeToFile(Time());
+            updateComputerToFile(computer);
+            MessageBoxW(NULL, L"Tài khoản của bạn đã bị khóa", L"Thông báo", MB_OK | MB_ICONERROR | MB_TOPMOST);
+            ShowCursor(true);
+            system("cls");
             break;
-        case KEY_DOWN:
-            selectOption = (selectOption == MENUCUSTOMER) ? 1 : selectOption + 1;
-            break;
-        case KEY_ENTER:
-            switch (selectOption)
+        }
+        if (_kbhit())
+        {
+            int key = _getch();
+            switch (key)
             {
-            case 1:
-                isChangingPassword = true;
-                customer.changePassword();
-                isChangingPassword = false;
+            case KEY_UP:
+                selectOption = (selectOption == 1) ? MENUCUSTOMER : selectOption - 1;
                 break;
-            case 2:
-                isViewingInfo = true;
-                customer.showMyInfo();
-                isViewingInfo = false;
+            case KEY_DOWN:
+                selectOption = (selectOption == MENUCUSTOMER) ? 1 : selectOption + 1;
                 break;
-            case 3:
-                showUsageTime = false;
-                showRemainingTime = false;
-                customer.setStatus(false);
-                customer.setCurrentComputerID("");
-                customer.setPassword(Base64(customer.getPassword()).encode());
-                updateCustomerToFile(customer);
-                updateAccountToFile(customer);
-                computer.setStatus(false);
-                computer.setCustomerUsingName("");
-                computer.setUsageTimeToFile(Time());
-                updateComputerToFile(computer);
-                system("cls");
-                ShowCursor(true);
+            case KEY_ENTER:
+                switch (selectOption)
+                {
+                case 1:
+                    isChangingPassword = true;
+                    customer.changePassword();
+                    isChangingPassword = false;
+                    break;
+                case 2:
+                    isViewingInfo = true;
+                    customer.showMyInfo();
+                    isViewingInfo = false;
+                    break;
+                case 3:
+                    showUsageTime = false;
+                    showRemainingTime = false;
+                    customer.setStatus(false);
+                    customer.setCurrentComputerID("");
+                    customer.setPassword(Base64(customer.getPassword()).encode());
+                    updateCustomerToFile(customer);
+                    updateAccountToFile(customer);
+                    computer.setStatus(false);
+                    computer.setCustomerUsingName("");
+                    computer.setUsageTimeToFile(Time());
+                    updateComputerToFile(computer);
+                    system("cls");
+                    ShowCursor(true);
+                    break;
+                }
+            default:
                 break;
             }
-        default:
-            break;
         }
     }
     threadShowTimeCustomer.join();

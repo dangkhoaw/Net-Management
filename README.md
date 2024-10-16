@@ -40,6 +40,9 @@ g++ -std=c++11 *.cpp -o main
 ./main
 ```
 
+> [!TIP]
+> Bạn có thể chạy file main.exe mà không cần biên dịch lại chương trình
+
 # 🧑🏻‍💻 Contributors
 
 - [Đặng Đăng Khoa](https://github.com/dangkhoaw)

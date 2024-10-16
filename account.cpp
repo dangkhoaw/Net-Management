@@ -190,7 +190,7 @@ bool getAccountFromFile(Account &account)
         string isLocked;
         getline(ss, isLocked);
         temp.isLocked = isLocked == "1" ? true : false;
-        if (temp.id == account.id)
+        if (temp.username == account.username)
         {
             account = temp;
             file.close();

@@ -16,7 +16,7 @@ private:
     History history;
 
 public:
-    Customer(string username = "", string password = "", string role = "", string id = "", bool status = false, bool isFirstLogin = true, string name = "", string phone = "", float balance = 0, Time time = Time());
+    Customer(string username = "", string password = "", string role = "", string id = "", bool status = false, bool isFirstLogin = true, bool isLocked = false, string name = "", string phone = "", float balance = 0, Time time = Time());
     ~Customer();
 
     string getPhone();
@@ -37,8 +37,9 @@ public:
 
     void showMyInfo();
     void addHistory();
+    bool isLocked();
 
-        friend ostream &operator<<(ostream &os, Customer &customer);
+    friend ostream &operator<<(ostream &os, Customer &customer);
     friend bool getCustomerFromFile(Customer &customer);
     friend void updateCustomerToFile(Customer &customer);
 };

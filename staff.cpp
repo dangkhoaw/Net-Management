@@ -136,9 +136,9 @@ void Staff::topUpAccount()
             if (++count == 4)
             {
                 system("cls");
-                ShowCursor(false);
                 cout << "Nhập sai 3 lần. Hãy thử lại sau" << endl;
                 pressKeyQ();
+                ShowCursor(false);
                 return;
             }
         }
@@ -177,5 +177,65 @@ void Staff::topUpAccount()
 
     pressKeyQ();
 
+    ShowCursor(false);
+}
+
+void Staff::lockAccount()
+{
+    system("cls");
+    ShowCursor(true);
+    string userName;
+    Account account;
+    int count = 0;
+
+    while (true)
+    {
+        ClearLine(3);
+        ClearLine(4);
+
+        Gotoxy(0, 3);
+
+        cout << "(Nhập sai 3 lần sẽ thoát: " << count - 1 << " lần nhập sai)";
+
+        ClearLine(0);
+        Gotoxy(0, 0);
+        cout << "Tên đăng nhập: ";
+        getline(cin, userName);
+
+        if (isValidUsername(userName))
+        {
+            if (++count == 4)
+            {
+                system("cls");
+                cout << "Nhập sai 3 lần. Hãy thử lại sau" << endl;
+                pressKeyQ();
+                ShowCursor(false);
+                return;
+            }
+        }
+        else
+        {
+            ClearLine(3);
+            ClearLine(4);
+            break;
+        }
+    }
+
+    account.setUserName(userName);
+    getAccountFromFile(account);
+
+    if (account.getIsLocked())
+    {
+        cout << "Tài khoản đã bị khóa" << endl;
+        pressKeyQ();
+        ShowCursor(false);
+        return;
+    }
+
+    account.setLocked(true);
+    updateAccountToFile(account);
+
+    cout << "Khóa tài khoản thành công" << endl;
+    pressKeyQ();
     ShowCursor(false);
 }

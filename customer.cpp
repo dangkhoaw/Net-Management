@@ -3,9 +3,9 @@
 #include "function.h"
 
 Customer::Customer(string username, string password, string role,
-                   string id, bool status, bool isFirstLogin, string name,
-                   string phone, float balance, Time time)
-    : Account(username, password, role, id, status, isFirstLogin),
+                   string id, bool status, bool isFirstLogin, bool isLocked,
+                   string name, string phone, float balance, Time time)
+    : Account(username, password, role, id, status, isFirstLogin, isLocked),
       name(name), phone(phone), balance(balance), time(time) {}
 Customer::~Customer() {}
 
@@ -51,6 +51,45 @@ void Customer::showMyInfo()
     cout << "Số dư: " << balance << endl;
 
     pressKeyQ();
+}
+
+bool Customer::isLocked()
+{
+    fstream file("./account/account.txt", ios::in);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file" << endl;
+        return false;
+    }
+    string line;
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        string id, username, password, role, status, isFirstLogin, isLocked;
+        getline(ss, id, '|');
+        getline(ss, username, '|');
+        getline(ss, password, '|');
+        getline(ss, role, '|');
+        getline(ss, status, '|');
+        getline(ss, isFirstLogin, '|');
+        getline(ss, isLocked);
+
+        if (username == this->username)
+        {
+            if (isLocked == "1")
+            {
+                file.close();
+                return true;
+            }
+            else
+            {
+                file.close();
+                return false;
+            }
+        }
+    }
+    file.close();
+    return false;
 }
 
 bool getCustomerFromFile(Customer &customer)
