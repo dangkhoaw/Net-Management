@@ -113,7 +113,6 @@ void Staff::topUpAccount()
     std::time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
     std::tm *local_time = std::localtime(&now);
     doanhThu.setDate(Date(local_time->tm_mday, local_time->tm_mon + 1, local_time->tm_year + 1900));
-    wchar_t message[100];
     system("cls");
     ShowCursor(true);
     string userName;
@@ -158,7 +157,8 @@ void Staff::topUpAccount()
         Gotoxy(0, 1);
         cout << "Nhập số tiền cần nạp (10k/h): ";
         cin >> amount;
-        doanhThu.operator+(amount); // cộng tiền vào doanh thu
+        // doanhThu.operator+(amount); // cộng tiền vào doanh thu
+        doanhThu = doanhThu + amount;
         if (amount < 1000)
         {
             MessageBoxW(NULL, L"Số tiền được nhập phải là số nguyên dương và lớn hơn 1000", L"Thông báo", MB_ICONWARNING);
