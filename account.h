@@ -12,10 +12,10 @@ class Account
 {
 protected:
     string username, password, role, id;
-    bool status, isFirstLogin;
+    bool status, isFirstLogin, isLocked;
 
 public:
-    Account(string username = "", string password = "", string role = "", string id = "", bool status = false, bool isFirstLogin = true);
+    Account(string username = "", string password = "", string role = "", string id = "", bool status = false, bool isFirstLogin = true, bool isLocked = false);
     ~Account();
 
     string getRole();
@@ -24,6 +24,7 @@ public:
     string getId();
     bool getStatus();
     bool getIsFirstLogin();
+    bool getIsLocked();
 
     void setRole(string role);
     void setPassword(string password);
@@ -31,6 +32,7 @@ public:
     void setId(string id);
     void setStatus(bool status);
     void setIsFirstLogin(bool isFirstLogin);
+    void setLocked(bool isLocked);
 
     bool signIn();
     bool changePassword();

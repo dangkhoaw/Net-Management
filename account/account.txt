@@ -1,3 +1,3 @@
-ADMIN|admin|YWRtaW4=|staff|0|0
-USER0001|dangkhoaw|MTIzNDU2|customer|0|0
-USER0002|grayzy|MTIzNDU2|customer|0|0
+ADMIN|admin|YWRtaW4=|staff|0|0|0
+UID0001|dangkhoaw|MTIzNDU2|customer|0|1|0
+UID0002|khoadang|MTIzNDU2|customer|0|1|0

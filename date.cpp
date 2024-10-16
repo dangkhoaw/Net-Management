@@ -165,7 +165,7 @@ int Date::getDaysInMonth()
 
 bool Date::isValid()
 {
-    return day >= 1 && day <= getDaysInMonth() && month >= 1 && month <= 12 && year >= 1;
+    return day >= 1 && day <= getDaysInMonth() && month >= 1 && month <= 12 && year >= 2024;
 }
 
 Date Date::getCurrentDate()

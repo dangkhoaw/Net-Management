@@ -6,6 +6,7 @@
 #include "mtime.h"
 #include "staff.h"
 #include "account.h"
+#include "doanhthu.h"
 // #include "dish.h"
 
 #define KEY_UP 72
@@ -18,8 +19,6 @@ using namespace std;
 void ShowCursor(bool CursorVisibility);
 void Gotoxy(SHORT posX, SHORT posY);
 void ClearLine(SHORT posY);
-/*-----------------------------------STRING-----------------------------------*/
-void toUpper(string &str);
 /*------------------------------------MENU------------------------------------*/
 void printMenuOption(string typeMenu, int option, bool isSelected);
 void showMenu(string typeMenu, int selectOption);
@@ -58,5 +57,8 @@ void removeComputerFromFile(Computer &computer);
 /*------------------------------------OTHER------------------------------------*/
 void enterPassword(string &password);
 void pressKeyQ();
+void toUpper(string &str);
+bool isNumber(const string &str);
+bool isPhoneNumber(const string &str);
 
 #endif

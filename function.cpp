@@ -1,6 +1,7 @@
 #include "function.h"
 #include "base64.h"
 #include <mutex>
+#include <string>
 
 bool showRemainingTime = true;
 bool showUsageTime = true;
@@ -38,16 +39,6 @@ void ClearLine(SHORT posY)
     Gotoxy(0, posY);
     for (int i = 0; i < 10; i++)
         cout << "          ";
-}
-
-/*-----------------------------------STRING-----------------------------------*/
-void toUpper(string &str)
-{
-    for (int i = 0; i < str.size(); i++)
-    {
-        if (str[i] >= 'a' && str[i] <= 'z')
-            str[i] -= 32;
-    }
 }
 
 /*------------------------------------MENU------------------------------------*/
@@ -124,10 +115,10 @@ void optionMenu(string typeMenu, int option)
         switch (option)
         {
         case 1:
-            cout << "Đổi mật khẩu";
+            cout << "Đổi mật khẩu" << endl;
             break;
         case 2:
-            cout << "Xem thông tin cá nhân";
+            cout << "Xem thông tin cá nhân" << endl;
             break;
         case 3:
             cout << "Thoát";
@@ -139,58 +130,58 @@ void optionMenu(string typeMenu, int option)
         switch (option)
         {
         case 1:
-            cout << "Xem doanh thu theo ngày";
+            cout << "Xem doanh thu theo ngày" << endl;
             break;
         case 2:
-            cout << "Xem doanh thu theo tháng";
+            cout << "Xem doanh thu theo tháng" << endl;
             break;
         case 3:
-            cout << "Xem doanh thu theo năm";
+            cout << "Xem doanh thu theo năm" << endl;
             break;
         }
     }
-    else if (typeMenu == " revenueDay")
+    else if (typeMenu == "revenueDay")
     {
         switch (option)
         {
         case 1:
-            cout << "Xem doanh thu hôm nay";
+            cout << "Xem doanh thu hôm nay" << endl;
             break;
         case 2:
-            cout << "Xem doanh thu hôm qua";
+            cout << "Xem doanh thu hôm qua" << endl;
             break;
         case 3:
-            cout << "Xem doanh thu ngày khác";
+            cout << "Xem doanh thu ngày khác" << endl;
             break;
         }
     }
-    else if (typeMenu == " revenueMonth")
+    else if (typeMenu == "revenueMonth")
     {
         switch (option)
         {
         case 1:
-            cout << "Xem doanh thu tháng này";
+            cout << "Xem doanh thu tháng này" << endl;
             break;
         case 2:
-            cout << "Xem doanh thu tháng trước";
+            cout << "Xem doanh thu tháng trước" << endl;
             break;
         case 3:
-            cout << "Xem doanh thu tháng khác";
+            cout << "Xem doanh thu tháng khác" << endl;
             break;
         }
     }
-    else if (typeMenu == " revenueYear")
+    else if (typeMenu == "revenueYear")
     {
         switch (option)
         {
         case 1:
-            cout << "Xem doanh thu năm nay";
+            cout << "Xem doanh thu năm nay" << endl;
             break;
         case 2:
-            cout << "Xem doanh thu năm trước";
+            cout << "Xem doanh thu năm trước" << endl;
             break;
         case 3:
-            cout << "Xem doanh thu năm khác";
+            cout << "Xem doanh thu năm khác" << endl;
             break;
         }
     }
@@ -386,6 +377,7 @@ void menuStaff(Staff &staff)
                 computerManagementMenu(staff);
                 break;
             case 3:
+                menuRevenue(staff);
                 break;
             case 4:
                 staff.topUpAccount();
@@ -490,10 +482,13 @@ void menuRevenue(Staff &staff)
             switch (selectOption)
             {
             case 1:
+                menuRevenueDay(staff);
                 break;
             case 2:
+                menuRevenueMonth(staff);
                 break;
             case 3:
+                menuRevenueYear(staff);
                 break;
             }
         default:
@@ -505,7 +500,8 @@ void menuRevenue(Staff &staff)
 
 void menuRevenueDay(Staff &staff)
 {
-
+    DoanhThu doanhThu;
+    doanhThu.setDate(doanhThu.getCurrentDate());
     system("cls");
     SetConsoleTitle(TEXT("Menu doanh thu theo ngày"));
     ShowCursor(false);
@@ -526,10 +522,14 @@ void menuRevenueDay(Staff &staff)
             switch (selectOption)
             {
             case 1:
+                doanhThu.viewRevenueDay();
                 break;
             case 2:
+                doanhThu.setDate(doanhThu.getDate() - 1);
+                doanhThu.viewRevenueDay();
                 break;
             case 3:
+                doanhThu.viewRevenueDay();
                 break;
             }
         default:
@@ -699,7 +699,7 @@ bool addNewAccountToFile(Account &account)
         cout << "Không thể mở file" << endl;
         return false;
     }
-    file << account.getId() << '|' << account.getUserName() << '|' << Base64(account.getPassword()).encode() << '|' << account.getRole() << '|' << account.getStatus() << '|' << account.getIsFirstLogin() << endl;
+    file << account.getId() << '|' << account.getUserName() << '|' << Base64(account.getPassword()).encode() << '|' << account.getRole() << '|' << account.getStatus() << '|' << account.getIsFirstLogin() << '|' << account.getIsLocked() << endl;
     file.close();
     return true;
 }
@@ -710,7 +710,7 @@ void generateID(Account &account)
     count++;
     stringstream ss;
     ss << setw(4) << setfill('0') << count;
-    string id = "USER" + ss.str();
+    string id = "UID" + ss.str();
     account.setId(id);
     updateNumberOfAccounts(count);
 }
@@ -833,7 +833,7 @@ void generateIDComputer(Computer &computer)
     count++;
     stringstream ss;
     ss << setw(2) << setfill('0') << count;
-    string id = "COM" + ss.str();
+    string id = "CID" + ss.str();
     computer.setId(id);
     updateNumberOfComputers(count);
 }
@@ -992,4 +992,36 @@ void pressKeyQ()
     while (_getch() != 'q')
         ;
     system("cls");
+}
+
+void toUpper(string &str)
+{
+    for (int i = 0; i < str.size(); i++)
+    {
+        if (str[i] >= 'a' && str[i] <= 'z')
+            str[i] -= 32;
+    }
+}
+
+bool isNumber(const string &str)
+{
+    for (int i = 0; i < str.size(); i++)
+    {
+        if (str[i] < '0' || str[i] > '9')
+            return false;
+    }
+    return true;
+}
+
+bool isPhoneNumber(const string &str)
+{
+    if (str.size() != 10)
+        return false;
+    const vector<string> arr = {"013", "016", "032", "033", "034", "035", "036", "037", "038", "039", "052", "055", "056", "058", "059", "070", "076", "077", "078", "079", "081", "082", "083", "084", "085", "086", "088", "089", "090", "091", "092", "093", "094", "096", "097", "098", "099"};
+    for (int i = 0; i < arr.size(); i++)
+    {
+        if (str.substr(0, 3) == arr[i])
+            return isNumber(str);
+    }
+    return false;
 }
