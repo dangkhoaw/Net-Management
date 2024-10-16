@@ -1,5 +1,5 @@
-#ifndef STAFF_H
-#define STAFF_H 1
+#ifndef STAFF
+#define STAFF 1
 
 #include "customer.h"
 #include <vector>

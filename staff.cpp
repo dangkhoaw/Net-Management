@@ -105,16 +105,7 @@ void Staff::viewComputerStatus()
     }
     system("cls");
 }
-float caculateTime(float &minus) // đổi phút ra giờ
-{
-    float hours = 0;
-    while (minus >= 60)
-    {
-        minus -= 60;
-        hours++;
-    }
-    return hours;
-}
+
 void Staff::topUpAccount()
 {
     DoanhThu doanhThu;
@@ -122,41 +113,71 @@ void Staff::topUpAccount()
     std::time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
     std::tm *local_time = std::localtime(&now);
     doanhThu.setDate(Date(local_time->tm_mday, local_time->tm_mon + 1, local_time->tm_year + 1900));
-    wchar_t message[100];
     system("cls");
     ShowCursor(true);
     string userName;
     Customer customer;
+    int count = 0;
 
     while (true)
     {
+        ClearLine(3);
+        ClearLine(4);
+
+        Gotoxy(0, 3);
+
+        cout << "(Nhập sai 3 lần sẽ thoát: " << count - 1 << " lần nhập sai)";
+
+        ClearLine(0);
+        Gotoxy(0, 0);
         cout << "Tên đăng nhập: ";
-        cin >> userName;
+        getline(cin, userName);
+
         if (isValidUsername(userName))
-            cout << "Tên đăng nhập không tồn tại" << endl;
+        {
+            if (++count == 4)
+            {
+                system("cls");
+                ShowCursor(false);
+                cout << "Nhập sai 3 lần. Hãy thử lại sau" << endl;
+                pressKeyQ();
+                return;
+            }
+        }
         else
+        {
+            ClearLine(3);
+            ClearLine(4);
             break;
+        }
     }
-    customer.setUserName(userName);
-    getCustomerFromFile(customer);
     float amount;
     do
     {
+        Gotoxy(0, 1);
         cout << "Nhập số tiền cần nạp (10k/h): ";
         cin >> amount;
-        doanhThu.operator+(amount); // cộng tiền vào doanh thu
+        // doanhThu.operator+(amount); // cộng tiền vào doanh thu
+        doanhThu = doanhThu + amount;
         if (amount < 1000)
         {
             MessageBoxW(NULL, L"Số tiền được nhập phải là số nguyên dương và lớn hơn 1000", L"Thông báo", MB_ICONWARNING);
         }
     } while (amount < 1000);
     cin.ignore();
-    float minutes = (amount * 60) / 10000;
-    float hours = caculateTime(minutes);
-    customer.setTimeToFile(Time(hours, minutes, 0) + customer.getTime());
-    swprintf(message, sizeof(message) / sizeof(wchar_t), L"Bạn đã nạp %.0f VND vào tài khoản của bạn", amount);
-    MessageBoxW(NULL, message, L"Nạp tiền thành công", MB_OK);
+    customer.setUserName(userName);
+    getCustomerFromFile(customer);
 
-    system("cls");
+    float minutes = (amount * 60) / 10000;
+    Time time(0, minutes, 0);
+    customer.setTimeToFile(time + customer.getTime());
+    customer.setBalance(customer.getBalance() + amount);
+
+    updateCustomerToFile(customer);
+
+    cout << "\nNạp tiền thành công" << endl;
+
+    pressKeyQ();
+
     ShowCursor(false);
 }

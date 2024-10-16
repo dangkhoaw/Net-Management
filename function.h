@@ -1,11 +1,12 @@
-#ifndef FUNCTION_H
-#define FUNCTION_H 1
+#ifndef FUNCTION
+#define FUNCTION 1
 
 #include <thread>
 #include <vector>
 #include "mtime.h"
 #include "staff.h"
 #include "account.h"
+// #include "dish.h"
 
 #define KEY_UP 72
 #define KEY_DOWN 80
@@ -35,13 +36,10 @@ void menuRevenueDay(Staff &staff);
 void showRemainingTimeOfCustomer(Customer *customer);
 void showUsageTimeOfComputer(Computer *computer);
 /*------------------------------------ACCOUNT------------------------------------*/
-void enterPassword(string &password);
-void loading();
 void updateNumberOfAccounts(int &count);
 int getNumberOfAccounts();
 bool addNewAccountToFile(Account &account);
 bool isValidUsername(string &username);
-// void updateAccountToFile(Account &account);
 /*------------------------------------CUSTOMER------------------------------------*/
 bool addCustomerToFile(Customer &customer);
 void generateID(Account &account);
@@ -55,4 +53,10 @@ vector<Computer> getComputersByStatus(bool status);
 vector<Computer> getComputers();
 void assignRandomComputer(Customer &customer, Computer &computer);
 void removeComputerFromFile(Computer &computer);
+/*------------------------------------DISH------------------------------------*/
+// void generateID(Dish &dish);
+/*------------------------------------OTHER------------------------------------*/
+void enterPassword(string &password);
+void pressKeyQ();
+
 #endif

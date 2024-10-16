@@ -1,5 +1,5 @@
-#ifndef BASE64_H
-#define BASE64_H 1
+#ifndef BASE64
+#define BASE64 1
 
 #include <iostream>
 

@@ -1,5 +1,5 @@
-#ifndef M_TIME_H
-#define M_TIME_H 1
+#ifndef MY_TIME
+#define MY_TIME 1
 
 #include <iostream>
 #include <windows.h> // Đừng động vào :'))
