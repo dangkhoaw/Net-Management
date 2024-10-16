@@ -10,7 +10,7 @@ class History
 {
 private:
     Day day;
-    string computerID, customerID;
+    // string computerID, customerID;
 
 public:
     // History(Day day = Day(), string computerID = "", string customerID = "");
