@@ -4,6 +4,7 @@
 #include "day.h"
 #include <iostream>
 #include <vector>
+
 using namespace std;
 class DoanhThu
 {
@@ -18,21 +19,25 @@ public:
     friend istream &operator>>(istream &is, DoanhThu &doanhThu);
     // friend bool operator==(const DoanhThu &doanhThu1, const DoanhThu &doanhThu2);
     // friend bool operator!=(const DoanhThu &doanhThu1, const DoanhThu &doanhThu2);
-    void addDoanhThu();
+    // void addDoanhThu();
     vector<DoanhThu> getDoanhThu();
+    void updateDoanhThu(DoanhThu &doanhThu);
     DoanhThu operator+(double money);
     DoanhThu operator-(double money);
     DoanhThu operator+(const DoanhThu &other);
     DoanhThu operator-(const DoanhThu &other);
     Date getDate();
+    Date getCurrentDate();
     double getTotalMoney();
+    void getTotalMoneyFromFile();
+
     void setDate(Date date);
     void setTotalMoney(double totalMoney);
+    bool checkDayMonthYear(Date date);
     bool isValid();
-    void viewRevenueDay(Date date);
-    void viewRevenueMonth(Date date);
-    void viewRevenueYear(Date date);
+    void viewRevenueDay();
+    void viewRevenueMonth();
+    void viewRevenueYear();
 };
 
 #endif
-// tính tiền theo ngày , theo tháng , theo năm

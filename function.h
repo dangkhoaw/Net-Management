@@ -6,6 +6,7 @@
 #include "mtime.h"
 #include "staff.h"
 #include "account.h"
+#include "doanhthu.h"
 // #include "dish.h"
 
 #define KEY_UP 72
