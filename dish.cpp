@@ -24,7 +24,6 @@ void Dish::setUnit(string unit) { this->unit = unit; }
 void Dish::setPrice(float price) { this->price = price; }
 
 void Dish::setCount(int count) { this->count = count; }
-
 ostream &operator<<(ostream &os, const Dish &dish)
 {
     os << dish.id << dish.name << dish.unit << dish.price << dish.count << endl;

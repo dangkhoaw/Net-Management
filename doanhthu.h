@@ -31,6 +31,8 @@ public:
     double getTotalMoney();
     void getTotalMoneyFromFile();
 
+    Date inputDate();
+    Date switchStringToDate(string date);
     void setDate(Date date);
     void setTotalMoney(double totalMoney);
     bool checkDayMonthYear(Date date);

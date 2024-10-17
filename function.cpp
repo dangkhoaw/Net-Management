@@ -11,7 +11,7 @@ bool isViewingInfo = false;
 const int MENUSTAFF = 5;
 const int MENUCUSTOMERMANAGER = 6;
 const int MENUCOMPUTERMANAGER = 5;
-const int MENUCUSTOMER = 3;
+const int MENUCUSTOMER = 4;
 
 mutex mtx;
 
@@ -128,6 +128,9 @@ void optionMenu(string typeMenu, int option)
             cout << "Xem thông tin cá nhân" << endl;
             break;
         case 3:
+            cout << " menu đồ ăn/thức uống" << endl;
+            break;
+        case 4:
             cout << "Thoát";
             break;
         }
@@ -145,6 +148,9 @@ void optionMenu(string typeMenu, int option)
         case 3:
             cout << "Xem doanh thu theo năm" << endl;
             break;
+        case 4:
+            cout << "Thoát" << endl;
+            break;
         }
     }
     else if (typeMenu == "revenueDay")
@@ -159,6 +165,9 @@ void optionMenu(string typeMenu, int option)
             break;
         case 3:
             cout << "Xem doanh thu ngày khác" << endl;
+            break;
+        case 4:
+            cout << "Thoát" << endl;
             break;
         }
     }
@@ -175,6 +184,9 @@ void optionMenu(string typeMenu, int option)
         case 3:
             cout << "Xem doanh thu tháng khác" << endl;
             break;
+        case 4:
+            cout << "Thoát" << endl;
+            break;
         }
     }
     else if (typeMenu == "revenueYear")
@@ -189,6 +201,9 @@ void optionMenu(string typeMenu, int option)
             break;
         case 3:
             cout << "Xem doanh thu năm khác" << endl;
+            break;
+        case 4:
+            cout << "Thoát" << endl;
             break;
         }
     }
@@ -239,9 +254,9 @@ void showMenu(string typeMenu, int selectOption)
     else if (typeMenu == "customer")
     {
         lock_guard<mutex> lock(mtx);
-        for (int i = 1; i <= 3; i++)
+        for (int i = 1; i <= 4; i++)
         {
-            Gotoxy(0, i + 3);
+            Gotoxy(0, i + 4);
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
         }
@@ -249,16 +264,17 @@ void showMenu(string typeMenu, int selectOption)
     else if (typeMenu == "revenue")
     {
         Gotoxy(0, 0);
-        for (int i = 1; i <= 3; i++)
+        for (int i = 1; i <= 4; i++)
         {
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
         }
     }
+
     else if (typeMenu == "revenueDay")
     {
         Gotoxy(0, 0);
-        for (int i = 1; i <= 3; i++)
+        for (int i = 1; i <= 4; i++)
         {
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
@@ -267,7 +283,7 @@ void showMenu(string typeMenu, int selectOption)
     else if (typeMenu == "revenueMonth")
     {
         Gotoxy(0, 0);
-        for (int i = 1; i <= 3; i++)
+        for (int i = 1; i <= 4; i++)
         {
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
@@ -276,7 +292,16 @@ void showMenu(string typeMenu, int selectOption)
     else if (typeMenu == "revenueYear")
     {
         Gotoxy(0, 0);
-        for (int i = 1; i <= 3; i++)
+        for (int i = 1; i <= 4; i++)
+        {
+            bool isSelected = (i == selectOption);
+            printMenuOption(typeMenu, i, isSelected);
+        }
+    }
+    else if (typeMenu == "dish")
+    {
+        Gotoxy(0, 0);
+        for (int i = 1; i <= 9; i++) // để hỏi đầu bếp khoa
         {
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
@@ -474,6 +499,9 @@ void menuCustomer(Customer &customer, Computer &computer)
                     isViewingInfo = false;
                     break;
                 case 3:
+                    // menuDish(customer);
+                    break;
+                case 4:
                     showUsageTime = false;
                     showRemainingTime = false;
                     customer.setStatus(false);
@@ -512,10 +540,10 @@ void menuRevenue(Staff &staff)
         switch (key)
         {
         case KEY_UP:
-            selectOption = (selectOption == 1) ? 3 : selectOption - 1;
+            selectOption = (selectOption == 1) ? 4 : selectOption - 1;
             break;
         case KEY_DOWN:
-            selectOption = (selectOption == 3) ? 1 : selectOption + 1;
+            selectOption = (selectOption == 4) ? 1 : selectOption + 1;
             break;
         case KEY_ENTER:
             switch (selectOption)
@@ -529,7 +557,12 @@ void menuRevenue(Staff &staff)
             case 3:
                 menuRevenueYear(staff);
                 break;
+            case 4:
+                system("cls");
+                ShowCursor(true);
+                return;
             }
+
         default:
             break;
         }
@@ -552,15 +585,16 @@ void menuRevenueDay(Staff &staff)
         switch (key)
         {
         case KEY_UP:
-            selectOption = (selectOption == 1) ? 3 : selectOption - 1;
+            selectOption = (selectOption == 1) ? 4 : selectOption - 1;
             break;
         case KEY_DOWN:
-            selectOption = (selectOption == 3) ? 1 : selectOption + 1;
+            selectOption = (selectOption == 4) ? 1 : selectOption + 1;
             break;
         case KEY_ENTER:
             switch (selectOption)
             {
             case 1:
+                doanhThu.setDate(doanhThu.getCurrentDate());
                 doanhThu.viewRevenueDay();
                 break;
             case 2:
@@ -568,8 +602,13 @@ void menuRevenueDay(Staff &staff)
                 doanhThu.viewRevenueDay();
                 break;
             case 3:
+                doanhThu.setDate(doanhThu.inputDate());
                 doanhThu.viewRevenueDay();
                 break;
+            case 4:
+                system("cls");
+                ShowCursor(true);
+                return;
             }
         default:
             break;
@@ -592,10 +631,10 @@ void menuRevenueMonth(Staff &staff)
         switch (key)
         {
         case KEY_UP:
-            selectOption = (selectOption == 1) ? 3 : selectOption - 1;
+            selectOption = (selectOption == 1) ? 4 : selectOption - 1;
             break;
         case KEY_DOWN:
-            selectOption = (selectOption == 3) ? 1 : selectOption + 1;
+            selectOption = (selectOption == 4) ? 1 : selectOption + 1;
             break;
         case KEY_ENTER:
             switch (selectOption)
@@ -606,6 +645,10 @@ void menuRevenueMonth(Staff &staff)
                 break;
             case 3:
                 break;
+            case 4:
+                system("cls");
+                ShowCursor(true);
+                return;
             }
         default:
             break;
@@ -628,10 +671,10 @@ void menuRevenueYear(Staff &staff)
         switch (key)
         {
         case KEY_UP:
-            selectOption = (selectOption == 1) ? 3 : selectOption - 1;
+            selectOption = (selectOption == 1) ? 4 : selectOption - 1;
             break;
         case KEY_DOWN:
-            selectOption = (selectOption == 3) ? 1 : selectOption + 1;
+            selectOption = (selectOption == 4) ? 1 : selectOption + 1;
             break;
         case KEY_ENTER:
             switch (selectOption)
@@ -642,6 +685,10 @@ void menuRevenueYear(Staff &staff)
                 break;
             case 3:
                 break;
+            case 4:
+                system("cls");
+                ShowCursor(true);
+                return;
             }
         default:
             break;

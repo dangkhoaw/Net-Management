@@ -1,2 +1,2 @@
-UID0001|Dang Khoa|dangkhoaw|0906457124|0|
+UID0001|Dang Khoa|dangkhoaw|0906457124|30000|COM01
 UID0002|dangkhoaw|khoadang|2005|0|
