@@ -1,9 +1,9 @@
 #include "customer.h"
 #include "base64.h"
 #include "function.h"
-// #include <mutex>
+#include <mutex>
 
-// mutex customer;
+mutex cus;
 
 Customer::Customer(string username, string password, string role,
                    string id, bool status, bool isFirstLogin, bool isLocked,
@@ -25,7 +25,7 @@ void Customer::setCurrentComputerID(string id) { currentComputerID = id; }
 
 Time Customer::getTimeFromFile()
 {
-    // lock_guard<mutex> lock(customer);
+    lock_guard<mutex> lock(cus);
     Time time;
     fstream file("./time/" + getId() + ".txt", ios::in);
     if (file.is_open())
@@ -42,7 +42,7 @@ Time Customer::getTimeFromFile()
 
 void Customer::setTimeToFile(Time time)
 {
-    // lock_guard<mutex> lock(customer);
+    // lock_guard<mutex> lock(cus);
     fstream file("./time/" + getId() + ".txt", ios::out);
     if (file.is_open())
     {
@@ -68,10 +68,11 @@ void Customer::showMyInfo()
 
 bool Customer::isLocked()
 {
+    lock_guard<mutex> lock(cus);
     fstream file("./account/account.txt", ios::in);
     if (!file.is_open())
     {
-        cout << "Không thể mở file account" << endl;
+        cout << "Không thể mở file account trong isLocked ở file customer.cpp" << endl;
         return false;
     }
     string line;
@@ -144,6 +145,7 @@ bool getCustomerFromFile(Customer &customer)
 
 void updateCustomerToFile(Customer &customer)
 {
+    lock_guard<mutex> lock(cus);
     fstream file("./data/customer.txt", ios::in);
     if (!file.is_open())
     {

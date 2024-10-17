@@ -56,6 +56,42 @@ Day Day::operator-(const Day &other)
     return temp;
 }
 
+Day &Day::operator++()
+{
+    time++;
+    if (time == Time(24, 0, 0))
+    {
+        time = Time(0, 0, 0);
+        date++;
+    }
+    return *this;
+}
+
+Day &Day::operator--()
+{
+    time--;
+    if (time == Time(0, 0, 0))
+    {
+        time = Time(23, 59, 59);
+        date--;
+    }
+    return *this;
+}
+
+Day Day::operator--(int)
+{
+    Day temp = *this;
+    --*this;
+    return temp;
+}
+
+Day Day::operator++(int)
+{
+    Day temp = *this;
+    ++*this;
+    return temp;
+}
+
 Date Day::getDate() { return date; }
 
 Time Day::getTime() { return time; }

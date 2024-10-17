@@ -85,18 +85,48 @@ Time operator--(Time &time, int)
 Time Time::operator+(const Time &time)
 {
     Time temp;
-    temp.second = (second + time.second) % 60;
-    temp.minute = (minute + time.minute + (second + time.second) / 60) % 60;
-    temp.hour = hour + time.hour + (minute + time.minute + (second + time.second) / 60) / 60;
+
+    temp.second = second + time.second;
+    if (temp.second >= 60)
+    {
+        temp.second -= 60;
+        minute++;
+    }
+
+    temp.minute = minute + time.minute;
+    if (temp.minute >= 60)
+    {
+        temp.minute -= 60;
+        hour++;
+    }
+
+    temp.hour = hour + time.hour;
+
     return temp;
 }
 
 Time Time::operator-(const Time &time)
 {
     Time temp;
-    temp.second = (second - time.second + 60) % 60;
-    temp.minute = (minute - time.minute + (second - time.second + 60) / 60 + 60) % 60;
-    temp.hour = hour - time.hour + (minute - time.minute + (second - time.second + 60) / 60 + 60) / 60;
+
+    if (second < time.second)
+    {
+        temp.second = (second + 60) - time.second;
+        minute--;
+    }
+    else
+        temp.second = second - time.second;
+
+    if (minute < time.minute)
+    {
+        temp.minute = (minute + 60) - time.minute;
+        hour--;
+    }
+    else
+        temp.minute = minute - time.minute;
+
+    temp.hour = hour - time.hour;
+
     return temp;
 }
 

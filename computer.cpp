@@ -1,7 +1,7 @@
 #include "computer.h"
-// #include <mutex>
+#include <mutex>
 
-// mutex computer;
+mutex com;
 
 Computer::Computer(string id, bool status, string customerUsingName, Time usageTime)
     : id(id), status(status), customerUsingName(customerUsingName), usageTime(usageTime) {}
@@ -22,7 +22,7 @@ Time Computer::getUsageTime() { return usageTime; }
 
 Time Computer::getUsageTimeFromFile()
 {
-    // lock_guard<mutex> lock(computer);
+    lock_guard<mutex> lock(com);
     Time time;
     fstream file("./time/" + id + ".txt", ios::in);
     if (file.is_open())
@@ -43,7 +43,7 @@ void Computer::setCustomerUsingName(string customerUsingName) { this->customerUs
 
 void Computer::setUsageTimeToFile(Time time)
 {
-    // lock_guard<mutex> lock(computer);
+    lock_guard<mutex> lock(com);
     fstream file("./time/" + id + ".txt", ios::out);
     if (file.is_open())
     {
@@ -64,6 +64,7 @@ ostream &operator<<(ostream &os, Computer &computer)
 
 bool getComputerFromFile(Computer &computer)
 {
+    lock_guard<mutex> lock(com);
     fstream file("./data/computer.txt", ios::in);
     if (!file.is_open())
     {
@@ -95,6 +96,7 @@ bool getComputerFromFile(Computer &computer)
 
 void updateComputerToFile(Computer &computer)
 {
+    lock_guard<mutex> lock(com);
     fstream file("./data/computer.txt", ios::in);
     if (!file.is_open())
     {

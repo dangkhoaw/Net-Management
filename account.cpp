@@ -123,7 +123,7 @@ void updateAccountToFile(Account &account)
     fstream file(path, ios::in);
     if (!file.is_open())
     {
-        cout << "Không thể mở file account" << endl;
+        cout << "Không thể mở file account trong updateAccountToFile ở file account.cpp" << endl;
         return;
     }
     string tempPath = "./account/temp.txt";
@@ -169,7 +169,7 @@ bool getAccountFromFile(Account &account)
     fstream file(path, ios::in);
     if (!file.is_open())
     {
-        cout << "Không thể mở file account" << endl;
+        cout << "Không thể mở file account trong getAccountFromFile ở file account.cpp" << endl;
         return false;
     }
     string line;
@@ -207,7 +207,7 @@ bool checkAccount(Account &account)
     fstream file(path, ios::in);
     if (!file.is_open())
     {
-        cout << "Không thể mở file account" << endl;
+        cout << "Không thể mở file account trong checkAccount ở file account.cpp" << endl;
         return false;
     }
     string line;

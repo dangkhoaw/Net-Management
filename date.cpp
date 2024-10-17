@@ -12,7 +12,36 @@ ostream &operator<<(ostream &os, const Date &date)
 
 istream &operator>>(istream &is, Date &date)
 {
-    is >> date.day >> date.month >> date.year;
+    cout << "Nhập vào ngày, tháng, năm dưới dạng (dd/mm/yyyy): ";
+    string temp;
+    is >> temp;
+
+    stringstream ss(temp);
+    string day, month, year;
+    getline(ss, day, '/');
+    getline(ss, month, '/');
+    getline(ss, year);
+
+    date.day = stoi(day);
+    date.month = stoi(month);
+    date.year = stoi(year);
+
+    while (!date.isValid())
+    {
+        temp.clear();
+        cout << "Ngày tháng năm không hợp lệ, vui lòng nhập lại: ";
+        is >> temp;
+        stringstream ss(temp);
+        string day, month, year;
+        getline(ss, day, '/');
+        getline(ss, month, '/');
+        getline(ss, year);
+
+        date.day = stoi(day);
+        date.month = stoi(month);
+        date.year = stoi(year);
+    }
+
     return is;
 }
 
@@ -165,7 +194,7 @@ int Date::getDaysInMonth()
 
 bool Date::isValid()
 {
-    return day >= 1 && day <= getDaysInMonth() && month >= 1 && month <= 12 && year >= 2024;
+    return day >= 1 && day <= getDaysInMonth() && month >= 1 && month <= 12 && year >= 1;
 }
 
 Date Date::getCurrentDate()

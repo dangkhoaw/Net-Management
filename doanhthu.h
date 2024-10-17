@@ -15,31 +15,29 @@ private:
 public:
     DoanhThu(Date date = Date(), double totalMoney = 0);
     ~DoanhThu();
+
     friend ostream &operator<<(ostream &os, const DoanhThu &doanhThu);
     friend istream &operator>>(istream &is, DoanhThu &doanhThu);
-    // friend bool operator==(const DoanhThu &doanhThu1, const DoanhThu &doanhThu2);
-    // friend bool operator!=(const DoanhThu &doanhThu1, const DoanhThu &doanhThu2);
-    // void addDoanhThu();
-    vector<DoanhThu> getDoanhThu();
-    void updateDoanhThu(DoanhThu &doanhThu);
     DoanhThu operator+(double money);
     DoanhThu operator-(double money);
     DoanhThu operator+(const DoanhThu &other);
     DoanhThu operator-(const DoanhThu &other);
-    Date getDate();
-    Date getCurrentDate();
-    double getTotalMoney();
-    void getTotalMoneyFromFile();
 
-    Date inputDate();
-    Date switchStringToDate(string date);
+    vector<DoanhThu> getDoanhThu();
+    DoanhThu getDoanhThuByDate(Date &date);
+    DoanhThu getDoanhThuByMonth(Date &date);
+    DoanhThu getDoanhThuByYear(Date &date);
+    void updateDoanhThu(DoanhThu &doanhThu);
+    Date getDate();
+    double getTotalMoney();
+
     void setDate(Date date);
     void setTotalMoney(double totalMoney);
-    bool checkDayMonthYear(Date date);
+    bool checkDate(Date &date);
     bool isValid();
-    void viewRevenueDay();
-    void viewRevenueMonth();
-    void viewRevenueYear();
+    void viewRevenueDay(Date &date);
+    void viewRevenueMonth(Date &date);
+    void viewRevenueYear(Date &date);
 };
 
 #endif

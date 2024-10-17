@@ -25,6 +25,10 @@ public:
     Day operator-(int day);
     Day operator+(const Day &other);
     Day operator-(const Day &other);
+    Day &operator++();
+    Day &operator--();
+    Day operator++(int);
+    Day operator--(int);
 
     Date getDate();
     Time getTime();

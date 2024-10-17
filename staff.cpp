@@ -1,6 +1,7 @@
 #include "staff.h"
 #include "function.h"
 #include "mtime.h"
+#include "doanhthu.h"
 #include <string>
 #include <iomanip>
 #include <ctime>
@@ -108,13 +109,13 @@ void Staff::viewComputerStatus()
 
 void Staff::topUpAccount()
 {
-    DoanhThu doanhThu;
-    doanhThu.setDate(doanhThu.getCurrentDate());
-    doanhThu.getTotalMoneyFromFile();
     system("cls");
     ShowCursor(true);
     string userName;
     Customer customer;
+    Date currentDate = Date().getCurrentDate();
+    DoanhThu doanhThu = DoanhThu().getDoanhThuByDate(currentDate);
+    doanhThu.setDate(currentDate);
     int count = 0;
 
     while (true)
@@ -155,14 +156,16 @@ void Staff::topUpAccount()
         Gotoxy(0, 1);
         cout << "Nhập số tiền cần nạp (10k/h): ";
         cin >> amount;
-        doanhThu.operator+(amount);
-        doanhThu.updateDoanhThu(doanhThu);
+
         if (amount < 1000)
         {
             MessageBoxW(NULL, L"Số tiền được nhập phải là số nguyên dương và lớn hơn 1000", L"Thông báo", MB_ICONWARNING);
         }
     } while (amount < 1000);
     cin.ignore();
+    doanhThu = doanhThu + amount;
+    doanhThu.updateDoanhThu(doanhThu);
+
     customer.setUserName(userName);
     getCustomerFromFile(customer);
 

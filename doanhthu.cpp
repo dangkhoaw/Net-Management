@@ -1,11 +1,7 @@
 #include "doanhthu.h"
 #include "function.h"
 
-DoanhThu::DoanhThu(Date date, double totalMoney)
-{
-    this->date = date;
-    this->totalMoney = totalMoney;
-}
+DoanhThu::DoanhThu(Date date, double totalMoney) : date(date), totalMoney(totalMoney) {}
 
 DoanhThu::~DoanhThu() {}
 
@@ -24,7 +20,7 @@ istream &operator>>(istream &is, DoanhThu &doanhThu)
 vector<DoanhThu> DoanhThu::getDoanhThu()
 {
     vector<DoanhThu> doanhthus;
-    fstream file("./data/doanhthu_nam2024.txt", ios::in);
+    fstream file("./data/doanhthu.txt", ios::in);
     if (!file.is_open())
     {
         cout << "Không thể mở file doanh thu" << endl;
@@ -58,7 +54,7 @@ vector<DoanhThu> DoanhThu::getDoanhThu()
 void DoanhThu::updateDoanhThu(DoanhThu &doanhThu)
 {
     vector<DoanhThu> doanhthus = getDoanhThu();
-    fstream file("./data/doanhthu_nam2024.txt", ios::out);
+    fstream file("./data/doanhthu.txt", ios::out);
     if (!file.is_open())
     {
         cout << "Không thể mở file doanh thu" << endl;
@@ -81,76 +77,119 @@ void DoanhThu::updateDoanhThu(DoanhThu &doanhThu)
     }
     file.close();
 }
-void DoanhThu::viewRevenueDay() // chỗ ni cần thêm dk
-{
-    time_t now = time(0);
-    tm *ltm = localtime(&now);
-    if (ltm->tm_mday == this->getDate().getDay())
-    {
-        system("cls");
-        this->getTotalMoneyFromFile();
-        cout << "Doanh thu ngay hom nay: " << this->getTotalMoney() << endl;
-    }
-    else if (ltm->tm_mday == this->getDate().getDay() + 1)
-    {
-        system("cls");
-        this->setDate(this->getDate());
-        this->getTotalMoneyFromFile();
-        cout << "Doanh thu ngay hom qua: " << this->getTotalMoney() << endl;
-    }
-    else
-    {
 
-        if (!date.isValid() || !checkDayMonthYear(date))
-        {
-            cout << "Ngày không hợp lệ hoặc ngày không thể lớn hơn ngày hiện tại" << endl;
-            ShowCursor(false);
-            return;
-        }
-        this->setDate(date);
-        this->getTotalMoneyFromFile();
-        cout << "Doanh thu ngay " << date << " : " << this->getTotalMoney() << endl;
-    }
-    pressKeyQ();
-    ShowCursor(false);
-}
-bool DoanhThu::checkDayMonthYear(Date date)
+void DoanhThu::viewRevenueDay(Date &date)
 {
-    Date date_start(16, 10, 2024);
+    system("cls");
+
+    if (!checkDate(date))
+    {
+        cout << "Không có dữ liệu doanh thu cho ngày này" << endl;
+        ShowCursor(false);
+        pressKeyQ();
+        return;
+    }
+
+    *this = getDoanhThuByDate(date);
+    cout << "Doanh thu ngày " << date << " là: " << totalMoney << endl;
+
+    ShowCursor(false);
+    pressKeyQ();
+}
+
+void DoanhThu::viewRevenueMonth(Date &date)
+{
+    system("cls");
+
+    if (!checkDate(date))
+    {
+        cout << "Không có dữ liệu doanh thu cho tháng này" << endl;
+        ShowCursor(false);
+        pressKeyQ();
+        return;
+    }
+
+    *this = getDoanhThuByMonth(date);
+    cout << "Doanh thu tháng " << setfill('0') << setw(2) << date.getMonth() << "/" << date.getYear() << " là: " << totalMoney << endl;
+
+    ShowCursor(false);
+    pressKeyQ();
+}
+
+void DoanhThu::viewRevenueYear(Date &date)
+{
+    system("cls");
+
+    if (!checkDate(date))
+    {
+        cout << "Không có dữ liệu doanh thu cho năm này" << endl;
+        ShowCursor(false);
+        pressKeyQ();
+        return;
+    }
+
+    *this = getDoanhThuByYear(date);
+    cout << "Doanh thu năm " << date.getYear() << " là: " << totalMoney << endl;
+
+    ShowCursor(false);
+    pressKeyQ();
+}
+
+DoanhThu DoanhThu::getDoanhThuByDate(Date &date)
+{
+    vector<DoanhThu> doanhthus = getDoanhThu();
+    for (DoanhThu doanhThu : doanhthus)
+    {
+        if (doanhThu.getDate() == date)
+        {
+            return doanhThu;
+        }
+    }
+    return DoanhThu();
+}
+
+DoanhThu DoanhThu::getDoanhThuByMonth(Date &date)
+{
+    vector<DoanhThu> doanhthus = getDoanhThu();
+    DoanhThu doanhThu;
+    for (DoanhThu d : doanhthus)
+    {
+        if (d.getDate().getMonth() == date.getMonth() && d.getDate().getYear() == date.getYear())
+        {
+            doanhThu = doanhThu + d.getTotalMoney();
+        }
+    }
+    return doanhThu;
+}
+
+DoanhThu DoanhThu::getDoanhThuByYear(Date &date)
+{
+    vector<DoanhThu> doanhthus = getDoanhThu();
+    DoanhThu doanhThu;
+    for (DoanhThu d : doanhthus)
+    {
+        if (d.getDate().getYear() == date.getYear())
+        {
+            doanhThu = doanhThu + d.getTotalMoney();
+        }
+    }
+    return doanhThu;
+}
+
+bool DoanhThu::checkDate(Date &date)
+{
+    Date dateStart(16, 10, 2024);
     time_t now = time(0);
     tm *ltm = localtime(&now);
-    if (ltm->tm_year + 1900 >= date.getYear() && date.getYear() >= date_start.getYear())
+    if (ltm->tm_year + 1900 >= date.getYear() && date.getYear() >= dateStart.getYear())
     {
-        if (ltm->tm_mon + 1 >= date.getMonth() >= date_start.getMonth())
+        if (ltm->tm_mon + 1 >= date.getMonth() && date.getMonth() >= dateStart.getMonth())
         {
-            if (ltm->tm_mday >= date.getDay() >= date_start.getDay())
+            if (ltm->tm_mday >= date.getDay() && date.getDay() >= dateStart.getDay())
                 return true;
         }
     }
     return false;
-}
-Date DoanhThu::switchStringToDate(string date)
-{
-    string dateArr[3];
-    stringstream ssDate(date);
-
-    for (int i = 0; i < 3; i++)
-    {
-        getline(ssDate, dateArr[i], '/');
-    }
-
-    Date dateObj(stoi(dateArr[0]), stoi(dateArr[1]), stoi(dateArr[2]));
-    return dateObj;
-}
-
-Date DoanhThu::inputDate()
-{
-    system("cls");
-    ShowCursor(true);
-    string date;
-    cout << "Nhập vào ngày tháng năm dưới dạng (dd/mm/yyyy): ";
-    cin >> date;
-    return switchStringToDate(date);
 }
 
 DoanhThu DoanhThu::operator+(double money)
@@ -187,20 +226,6 @@ double DoanhThu::getTotalMoney()
     return this->totalMoney;
 }
 
-void DoanhThu::getTotalMoneyFromFile()
-{
-
-    vector<DoanhThu> doanhthus = getDoanhThu();
-
-    for (DoanhThu doanhThu : doanhthus)
-    {
-        if (doanhThu.getDate() == this->date)
-        {
-            this->totalMoney = doanhThu.getTotalMoney();
-            break;
-        }
-    }
-}
 void DoanhThu::setDate(Date date)
 {
     this->date = date;
@@ -214,10 +239,4 @@ void DoanhThu::setTotalMoney(double totalMoney)
 bool DoanhThu::isValid()
 {
     return this->date.isValid();
-}
-Date DoanhThu::getCurrentDate()
-{
-    time_t now = time(0);
-    tm *ltm = localtime(&now);
-    return Date(ltm->tm_mday, ltm->tm_mon + 1, ltm->tm_year + 1900);
 }

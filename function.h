@@ -60,5 +60,7 @@ void pressKeyQ();
 void toUpper(string &str);
 bool isNumber(const string &str);
 bool isPhoneNumber(const string &str);
+void inputMonthAndYear(int &month, int &year);
+void inputYear(int &year);
 
 #endif

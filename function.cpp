@@ -158,13 +158,13 @@ void optionMenu(string typeMenu, int option)
         switch (option)
         {
         case 1:
-            cout << "Xem doanh thu hôm nay" << endl;
+            cout << "Doanh thu hôm nay" << endl;
             break;
         case 2:
-            cout << "Xem doanh thu hôm qua" << endl;
+            cout << "Doanh thu hôm qua" << endl;
             break;
         case 3:
-            cout << "Xem doanh thu ngày khác" << endl;
+            cout << "Doanh thu ngày khác" << endl;
             break;
         case 4:
             cout << "Thoát" << endl;
@@ -176,13 +176,13 @@ void optionMenu(string typeMenu, int option)
         switch (option)
         {
         case 1:
-            cout << "Xem doanh thu tháng này" << endl;
+            cout << "Doanh thu tháng này" << endl;
             break;
         case 2:
-            cout << "Xem doanh thu tháng trước" << endl;
+            cout << "Doanh thu tháng trước" << endl;
             break;
         case 3:
-            cout << "Xem doanh thu tháng khác" << endl;
+            cout << "Doanh thu tháng khác" << endl;
             break;
         case 4:
             cout << "Thoát" << endl;
@@ -194,13 +194,13 @@ void optionMenu(string typeMenu, int option)
         switch (option)
         {
         case 1:
-            cout << "Xem doanh thu năm nay" << endl;
+            cout << "Doanh thu năm nay" << endl;
             break;
         case 2:
-            cout << "Xem doanh thu năm trước" << endl;
+            cout << "Doanh thu năm trước" << endl;
             break;
         case 3:
-            cout << "Xem doanh thu năm khác" << endl;
+            cout << "Doanh thu năm khác" << endl;
             break;
         case 4:
             cout << "Thoát" << endl;
@@ -224,6 +224,7 @@ void printMenuOption(string typeMenu, int option, bool isSelected)
 
 void showMenu(string typeMenu, int selectOption)
 {
+    static int preSelectOption = -1;
     if (typeMenu == "staff")
     {
         Gotoxy(0, 0);
@@ -253,12 +254,17 @@ void showMenu(string typeMenu, int selectOption)
     }
     else if (typeMenu == "customer")
     {
-        lock_guard<mutex> lock(mtx);
-        for (int i = 1; i <= 4; i++)
+        if (preSelectOption != selectOption)
         {
-            Gotoxy(0, i + 4);
-            bool isSelected = (i == selectOption);
-            printMenuOption(typeMenu, i, isSelected);
+            lock_guard<mutex> lock(mtx);
+            for (int i = 1; i <= 4; i++)
+            {
+                ClearLine(i + 3);
+                Gotoxy(0, i + 3);
+                bool isSelected = (i == selectOption);
+                printMenuOption(typeMenu, i, isSelected);
+            }
+            preSelectOption = selectOption;
         }
     }
     else if (typeMenu == "revenue")
@@ -436,7 +442,6 @@ void menuStaff(Staff &staff)
             break;
         }
     }
-    ShowCursor(true);
 }
 
 void menuCustomer(Customer &customer, Computer &computer)
@@ -463,6 +468,7 @@ void menuCustomer(Customer &customer, Computer &computer)
             customer.setStatus(false);
             customer.setCurrentComputerID("");
             customer.setPassword(Base64(customer.getPassword()).encode());
+            customer.setLocked(true);
             updateCustomerToFile(customer);
             updateAccountToFile(customer);
             computer.setStatus(false);
@@ -514,13 +520,13 @@ void menuCustomer(Customer &customer, Computer &computer)
                     computer.setUsageTimeToFile(Time());
                     updateComputerToFile(computer);
                     system("cls");
-                    ShowCursor(true);
                     break;
                 }
             default:
                 break;
             }
         }
+        Sleep(80);
     }
     threadShowTimeCustomer.join();
     threadShowTimeComputer.join();
@@ -559,7 +565,6 @@ void menuRevenue(Staff &staff)
                 break;
             case 4:
                 system("cls");
-                ShowCursor(true);
                 return;
             }
 
@@ -573,7 +578,7 @@ void menuRevenue(Staff &staff)
 void menuRevenueDay(Staff &staff)
 {
     DoanhThu doanhThu;
-    doanhThu.setDate(doanhThu.getCurrentDate());
+    Date date;
     system("cls");
     SetConsoleTitle(TEXT("Menu doanh thu theo ngày"));
     ShowCursor(false);
@@ -594,36 +599,39 @@ void menuRevenueDay(Staff &staff)
             switch (selectOption)
             {
             case 1:
-                doanhThu.setDate(doanhThu.getCurrentDate());
-                doanhThu.viewRevenueDay();
+                date = Date().getCurrentDate();
+                doanhThu.viewRevenueDay(date);
                 break;
             case 2:
-                doanhThu.setDate(doanhThu.getDate() - 1);
-                doanhThu.viewRevenueDay();
+                date = Date().getCurrentDate() - 1;
+                doanhThu.viewRevenueDay(date);
                 break;
             case 3:
-                doanhThu.setDate(doanhThu.inputDate());
-                doanhThu.viewRevenueDay();
+                ShowCursor(true);
+                system("cls");
+                cin >> date;
+                doanhThu.viewRevenueDay(date);
+                ShowCursor(false);
                 break;
             case 4:
                 system("cls");
-                ShowCursor(true);
                 return;
             }
         default:
             break;
         }
     }
-    ShowCursor(true);
 }
 
 void menuRevenueMonth(Staff &staff)
 {
-
     system("cls");
     SetConsoleTitle(TEXT("Menu doanh thu theo tháng"));
     ShowCursor(false);
     int selectOption = 1;
+    DoanhThu doanhThu;
+    Date date;
+    int month, year;
     while (true)
     {
         showMenu("revenueMonth", selectOption);
@@ -640,30 +648,40 @@ void menuRevenueMonth(Staff &staff)
             switch (selectOption)
             {
             case 1:
+                date = Date().getCurrentDate();
+                doanhThu.viewRevenueMonth(date);
                 break;
             case 2:
+                date = Date().getCurrentDate() - Date(0, 1, 0);
+                doanhThu.viewRevenueMonth(date);
                 break;
             case 3:
+                ShowCursor(true);
+                system("cls");
+                inputMonthAndYear(month, year);
+                date.setMonth(month);
+                date.setYear(year);
+                doanhThu.viewRevenueMonth(date);
                 break;
             case 4:
                 system("cls");
-                ShowCursor(true);
                 return;
             }
         default:
             break;
         }
     }
-    ShowCursor(true);
 }
 
 void menuRevenueYear(Staff &staff)
 {
-
     system("cls");
     SetConsoleTitle(TEXT("Menu doanh thu theo năm"));
     ShowCursor(false);
     int selectOption = 1;
+    DoanhThu doanhThu;
+    Date date;
+    int year;
     while (true)
     {
         showMenu("revenueYear", selectOption);
@@ -680,32 +698,35 @@ void menuRevenueYear(Staff &staff)
             switch (selectOption)
             {
             case 1:
+                date = Date().getCurrentDate();
+                doanhThu.viewRevenueYear(date);
                 break;
             case 2:
+                date = Date().getCurrentDate() - Date(0, 0, 1);
+                doanhThu.viewRevenueYear(date);
                 break;
             case 3:
+                ShowCursor(true);
+                system("cls");
+                inputYear(year);
+                date.setYear(year);
+                doanhThu.viewRevenueYear(date);
                 break;
             case 4:
                 system("cls");
-                ShowCursor(true);
                 return;
             }
         default:
             break;
         }
     }
-    ShowCursor(true);
 }
 /*------------------------------------TIME------------------------------------*/
 void showRemainingTimeOfCustomer(Customer *customer)
 {
+    Time currentTime = customer->getTimeFromFile();
     while (showRemainingTime)
     {
-        Time currentTime = customer->getTimeFromFile();
-        currentTime--;
-        customer->setTimeToFile(currentTime);
-        customer->setTime(currentTime);
-
         if (!isChangingPassword && !isViewingInfo)
         {
             lock_guard<mutex> lock(mtx);
@@ -721,34 +742,33 @@ void showRemainingTimeOfCustomer(Customer *customer)
             MessageBoxW(NULL, L"Hết thời gian sử dụng!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
             break;
         }
+        currentTime--;
+        customer->setTimeToFile(currentTime);
+        customer->setTime(currentTime);
         this_thread::sleep_for(chrono::seconds(1));
     }
     ShowCursor(true);
-    return;
 }
 
 void showUsageTimeOfComputer(Computer *computer)
 {
+    Time usageTime;
+
     while (showUsageTime)
     {
-        Time currentTime = computer->getUsageTime();
-        currentTime++;
-        computer->setUsageTime(currentTime);
-        computer->setUsageTimeToFile(currentTime);
-
         if (!isChangingPassword && !isViewingInfo)
         {
             lock_guard<mutex> lock(mtx);
-            ClearLine(1);
             Gotoxy(0, 1);
-            cout << "Thời gian sử dụng: " << currentTime;
+            cout << "Thời gian sử dụng: " << usageTime;
+            computer->setUsageTimeToFile(usageTime);
+            computer->setUsageTime(usageTime);
             Gotoxy(0, 2);
             cout << "Bạn đang sử dụng máy: " << computer->getId();
         }
-
+        usageTime++;
         this_thread::sleep_for(chrono::seconds(1));
     }
-    return;
 }
 
 /*------------------------------------ACCOUNT------------------------------------*/
@@ -1112,4 +1132,46 @@ bool isPhoneNumber(const string &str)
             return isNumber(str);
     }
     return false;
+}
+
+void inputMonthAndYear(int &month, int &year)
+{
+    string temp;
+    cout << "Nhập tháng và năm theo định dạng (mm/yyyy): ";
+    cin >> temp;
+
+    stringstream ss(temp);
+    getline(ss, temp, '/');
+    month = stoi(temp);
+    getline(ss, temp);
+    year = stoi(temp);
+
+    while (month < 1 || month > 12 || year <= 0)
+    {
+        cout << "Nhập sai định dạng!" << endl;
+        cout << "Nhập tháng và năm theo định dạng (mm/yyyy): ";
+        cin >> temp;
+        stringstream ss(temp);
+        getline(ss, temp, '/');
+        month = stoi(temp);
+        getline(ss, temp);
+        year = stoi(temp);
+    }
+}
+
+void inputYear(int &year)
+{
+    string temp;
+    while (true)
+    {
+        cout << "Nhập năm: ";
+        cin >> temp;
+        if (isNumber(temp))
+        {
+            year = stoi(temp);
+            if (year > 0)
+                break;
+        }
+        cout << "Nhập sai định dạng!" << endl;
+    }
 }
