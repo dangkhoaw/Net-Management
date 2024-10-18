@@ -58,9 +58,15 @@ void removeComputerFromFile(Computer &computer);
 void enterPassword(string &password);
 void pressKeyQ();
 void toUpper(string &str);
+void toLower(string &str);
 bool isNumber(const string &str);
+bool isString(const string &str);
 bool isPhoneNumber(const string &str);
+bool isExistPhoneNumber(const string &str);
 void inputMonthAndYear(int &month, int &year);
 void inputYear(int &year);
+string trim(string &str);
+string removeSpecialCharacter(string &str);
+string toName(string &str);
 
 #endif

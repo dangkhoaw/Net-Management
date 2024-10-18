@@ -12,36 +12,28 @@ ostream &operator<<(ostream &os, const Date &date)
 
 istream &operator>>(istream &is, Date &date)
 {
-    cout << "Nhập vào ngày, tháng, năm dưới dạng (dd/mm/yyyy): ";
-    string temp;
-    is >> temp;
-
-    stringstream ss(temp);
-    string day, month, year;
-    getline(ss, day, '/');
-    getline(ss, month, '/');
-    getline(ss, year);
-
-    date.day = stoi(day);
-    date.month = stoi(month);
-    date.year = stoi(year);
-
-    while (!date.isValid())
+    while (true)
     {
-        temp.clear();
-        cout << "Ngày tháng năm không hợp lệ, vui lòng nhập lại: ";
+        cout << "Nhập vào ngày, tháng, năm dưới dạng (dd/mm/yyyy): ";
+        string temp;
         is >> temp;
-        stringstream ss(temp);
-        string day, month, year;
-        getline(ss, day, '/');
-        getline(ss, month, '/');
-        getline(ss, year);
 
-        date.day = stoi(day);
-        date.month = stoi(month);
-        date.year = stoi(year);
+        int pos1 = temp.find('/');
+        int pos2 = temp.find('/', pos1 + 1);
+        if (pos1 == -1 || pos2 == -1 || pos1 == 0 || pos2 == temp.size() - 1 || temp.find('/', pos2 + 1) != -1 || pos1 == pos2 - 1) // kiểm tra xem có phải là dd/mm/yyyy không
+        {
+            cout << "Nhập sai định dạng!" << endl;
+            continue;
+        }
+
+        date.day = stoi(temp.substr(0, pos1));
+        date.month = stoi(temp.substr(pos1 + 1, pos2 - pos1 - 1));
+        date.year = stoi(temp.substr(pos2 + 1));
+
+        if (date.isValid())
+            break;
+        cout << "Ngày tháng năm không hợp lệ!" << endl;
     }
-
     return is;
 }
 

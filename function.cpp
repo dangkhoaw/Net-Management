@@ -1111,11 +1111,30 @@ void toUpper(string &str)
     }
 }
 
+void toLower(string &str)
+{
+    for (int i = 0; i < str.size(); i++)
+    {
+        if (str[i] >= 'A' && str[i] <= 'Z')
+            str[i] += 32;
+    }
+}
+
 bool isNumber(const string &str)
 {
     for (int i = 0; i < str.size(); i++)
     {
         if (str[i] < '0' || str[i] > '9')
+            return false;
+    }
+    return true;
+}
+
+bool isString(const string &str)
+{
+    for (int i = 0; i < str.size(); i++)
+    {
+        if (!(isalpha(str[i]) || str[i] != ' '))
             return false;
     }
     return true;
@@ -1134,28 +1153,59 @@ bool isPhoneNumber(const string &str)
     return false;
 }
 
+bool isExistPhoneNumber(const string &phone)
+{
+    fstream file("./data/customer.txt", ios::in);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file customer" << endl;
+        return false;
+    }
+    string line;
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        string id, name, username, phoneStr, balance, currentComputerID;
+        getline(ss, id, '|');
+        getline(ss, name, '|');
+        getline(ss, username, '|');
+        getline(ss, phoneStr, '|');
+        getline(ss, balance, '|');
+        getline(ss, currentComputerID);
+        if (phoneStr == phone)
+        {
+            file.close();
+            return true;
+        }
+    }
+    file.close();
+    return false;
+}
+
 void inputMonthAndYear(int &month, int &year)
 {
-    string temp;
-    cout << "Nhập tháng và năm theo định dạng (mm/yyyy): ";
-    cin >> temp;
-
-    stringstream ss(temp);
-    getline(ss, temp, '/');
-    month = stoi(temp);
-    getline(ss, temp);
-    year = stoi(temp);
-
-    while (month < 1 || month > 12 || year <= 0)
+    while (true)
     {
-        cout << "Nhập sai định dạng!" << endl;
-        cout << "Nhập tháng và năm theo định dạng (mm/yyyy): ";
+        string temp;
+        cout << "Nhập tháng, năm theo định dạng (mm/yyyy): ";
         cin >> temp;
-        stringstream ss(temp);
-        getline(ss, temp, '/');
-        month = stoi(temp);
-        getline(ss, temp);
-        year = stoi(temp);
+
+        int pos = temp.find('/');
+        if (pos == -1 || pos == 0 || pos == temp.size() - 1 || temp.find('/', pos + 1) != -1)
+        {
+            cout << "Nhập sai định dạng!" << endl;
+            continue;
+        }
+
+        month = stoi(temp.substr(0, pos));
+        year = stoi(temp.substr(pos + 1));
+
+        if (month < 1 || month > 12 || year <= 0)
+        {
+            cout << "Nhập sai định dạng!" << endl;
+            continue;
+        }
+        break;
     }
 }
 
@@ -1174,4 +1224,45 @@ void inputYear(int &year)
         }
         cout << "Nhập sai định dạng!" << endl;
     }
+}
+
+string trim(string &str)
+{
+    while (str[0] == ' ')
+        str.erase(0, 1); // Xóa 1 ký tự từ vị trí 0
+    while (str[str.size() - 1] == ' ')
+        str.erase(str.size() - 1, 1);
+
+    for (int i = 0; i < str.size(); i++)
+    {
+        if (str[i] == ' ' && str[i + 1] == ' ')
+        {
+            str.erase(i, 1);
+            i--;
+        }
+    }
+    return str;
+}
+
+string removeSpecialCharacter(string &str)
+{
+    for (int i = 0; i < str.size(); i++)
+    {
+        if ((str[i] >= 'a' && str[i] <= 'z') || (str[i] >= 'A' && str[i] <= 'Z') || isNumber(str.substr(i, 1)))
+            str[i] = ' ';
+    }
+    return str;
+}
+
+string toName(string &str)
+{
+    str = removeSpecialCharacter(str);
+    str = trim(str);
+    toLower(str);
+    for (int i = 0; i < str.size(); i++)
+    {
+        if (i == 0 || (i > 0 && str[i - 1] == ' '))
+            str[i] -= 32;
+    }
+    return str;
 }
