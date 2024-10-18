@@ -23,54 +23,79 @@ void Account::setId(string id) { this->id = id; }
 
 istream &operator>>(istream &is, Account &account)
 {
-    cout << "Username: ";
-    is >> account.username;
-    cout << "Password: ";
-    enterPassword(account.password);
+    int count = 0;
+    while (count < 3)
+    {
+        system("cls");
+        cout << "┌───────────────────────────────────┐" << endl
+             << "│               LOGIN              │" << endl
+             << "├───────────────────────────────────┤" << endl
+             << "│Username:                          │" << endl
+             << "├───────────────────────────────────┤" << endl
+             << "│Password:                          │" << endl
+             << "└───────────────────────────────────┘" << endl;
+
+        while (account.username.empty())
+        {
+            Gotoxy(11, 3);
+            getline(is, account.username);
+        }
+
+        while (account.password.empty())
+        {
+            Gotoxy(11, 5);
+            enterPassword(account.password);
+        }
+
+        if (checkAccount(account))
+        {
+            if (account.isLocked)
+            {
+                Gotoxy(0, 7);
+                cout << "Tài khoản đã bị khóa!" << endl;
+                account.username.clear();
+                account.password.clear();
+                Sleep(555);
+                continue;
+            }
+            if (account.status)
+            {
+                Gotoxy(0, 7);
+                cout << "Tài khoản đã đăng nhập ở máy khác!" << endl;
+                account.username.clear();
+                account.password.clear();
+                count++;
+                Sleep(555);
+                continue;
+            }
+            else
+            {
+                Gotoxy(0, 7);
+                cout << "Đăng nhập thành công!" << endl;
+                return is;
+            }
+        }
+        else
+        {
+            Gotoxy(0, 7);
+            cout << "Đăng nhập thất bại!" << endl;
+            account.username.clear();
+            account.password.clear();
+            count++;
+            Sleep(555);
+        }
+    }
     return is;
 }
 
 bool Account::signIn()
 {
     system("cls");
-    string inputUsername, inputPassword;
-    int count = 0;
-    while (count < 3)
-    {
-        cin >> *this;
-        if (checkAccount(*this))
-        {
-            if (isLocked)
-            {
-                MessageBoxW(NULL, L"Tài khoản đã bị khóa!", L"Thông báo", MB_OK | MB_ICONERROR | MB_TOPMOST);
-                count++;
-                system("cls");
-                continue;
-            }
-            if (status)
-            {
-                MessageBoxW(NULL, L"Tài khoản đã đăng nhập ở máy khác!", L"Thông báo", MB_OK | MB_ICONERROR | MB_TOPMOST);
-                count++;
-                system("cls");
-            }
-            else
-            {
-                // MessageBoxW(NULL, L"Đăng nhập thành công!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
-                system("cls");
-                return true;
-            }
-        }
-        else
-        {
-            // MessageBoxW(NULL, L"Đăng nhập thất bại!", L"Thông báo", MB_OK | MB_ICONERROR | MB_TOPMOST);
-            count++;
-            system("cls");
-        }
-    }
-    MessageBoxW(NULL, L"Đăng nhập sai quá 3 lần!", L"Thông báo", MB_OK | MB_ICONERROR | MB_TOPMOST);
-    Sleep(555);
+    ShowCursor(true);
+    cin >> *this;
     system("cls");
-    return false;
+    ShowCursor(false);
+    return true;
 }
 
 bool Account::changePassword()

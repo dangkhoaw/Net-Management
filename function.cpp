@@ -55,6 +55,15 @@ void ClearLine(SHORT posY)
     }
 }
 
+void ClearLine(SHORT posX, SHORT posY, SHORT length)
+{
+    Gotoxy(posX, posY);
+    for (int i = 0; i < length; i++)
+    {
+        cout << " ";
+    }
+}
+
 /*------------------------------------MENU------------------------------------*/
 void optionMenu(string typeMenu, int option)
 {
@@ -63,19 +72,19 @@ void optionMenu(string typeMenu, int option)
         switch (option)
         {
         case 1:
-            cout << "Quản lí khách hàng" << endl;
+            cout << "       Quản lí khách hàng      ";
             break;
         case 2:
-            cout << "Quản lí máy tính" << endl;
+            cout << "       Quản lí máy tính        ";
             break;
         case 3:
-            cout << "Xem doanh thu" << endl; // ch xong
+            cout << "       Xem doanh thu           ";
             break;
         case 4:
-            cout << "Nạp tiền" << endl; // xong
+            cout << "       Nạp tiền                ";
             break;
         case 5:
-            cout << "Thoát" << endl;
+            cout << "       Đăng xuất               ";
             break;
         }
     }
@@ -84,22 +93,22 @@ void optionMenu(string typeMenu, int option)
         switch (option)
         {
         case 1:
-            cout << "Thêm tài khoản" << endl;
+            cout << "       Thêm tài khoản             ";
             break;
         case 2:
-            cout << "Xóa tài khoản" << endl;
+            cout << "       Xóa tài khoản              ";
             break;
         case 3:
-            cout << "Khóa tài khoản" << endl; // ch xong
+            cout << "       Khóa tài khoản             ";
             break;
         case 4:
-            cout << "Mở khóa tài khoản" << endl; // ch xong
+            cout << "       Mở khóa tài khoản          ";
             break;
         case 5:
-            cout << "Xem thông tin khách hàng" << endl; // ch xong còn cái lịch sử gần nhất
+            cout << "       Xem thông tin khách hàng   ";
             break;
         case 6:
-            cout << "Thoát" << endl;
+            cout << "       Thoát                      ";
             break;
         }
     }
@@ -108,19 +117,19 @@ void optionMenu(string typeMenu, int option)
         switch (option)
         {
         case 1:
-            cout << "Thêm máy tính" << endl;
+            cout << "       Thêm máy tính             ";
             break;
         case 2:
-            cout << "Xóa máy tính" << endl;
+            cout << "       Xóa máy tính              ";
             break;
         case 3:
-            cout << "Sửa thông tin máy tính" << endl; // cần thiết không
+            cout << "       Sửa thông tin máy tính    ";
             break;
         case 4:
-            cout << "Xem trạng thái máy " << endl;
+            cout << "       Xem trạng thái máy        ";
             break;
         case 5:
-            cout << "Thoát" << endl;
+            cout << "       Thoát                     ";
             break;
         }
     }
@@ -129,16 +138,16 @@ void optionMenu(string typeMenu, int option)
         switch (option)
         {
         case 1:
-            cout << "Đổi mật khẩu" << endl;
+            cout << "    Đổi mật khẩu                 ";
             break;
         case 2:
-            cout << "Xem thông tin cá nhân" << endl;
+            cout << "    Xem thông tin cá nhân        ";
             break;
         case 3:
-            cout << "Menu đồ ăn/thức uống" << endl;
+            cout << "    Đặt món ăn                   ";
             break;
         case 4:
-            cout << "Thoát";
+            cout << "    Đăng xuất                    ";
             break;
         }
     }
@@ -156,7 +165,7 @@ void optionMenu(string typeMenu, int option)
             cout << "Đặt" << endl;
             break;
         case 4:
-            cout << "Thoát";
+            cout << " Thoát";
             break;
         }
     }
@@ -184,7 +193,7 @@ void optionMenu(string typeMenu, int option)
             cout << "Cơm cuộn" << endl;
             break;
         case 7:
-            cout << "Thoát" << endl;
+            cout << " Thoát" << endl;
             break;
         }
     }
@@ -209,8 +218,9 @@ void optionMenu(string typeMenu, int option)
             break;
         case 6:
             cout << "Bò húc" << endl;
+            break;
         case 7:
-            cout << "Thoát" << endl;
+            cout << " Thoát" << endl;
             break;
         }
     }
@@ -228,7 +238,7 @@ void optionMenu(string typeMenu, int option)
             cout << "nhiều hơn" << endl;
             break;
         case 4:
-            cout << "Thoát" << endl;
+            cout << " Thoát" << endl;
         }
     }
     else if (typeMenu == "reOrder")
@@ -242,7 +252,7 @@ void optionMenu(string typeMenu, int option)
             cout << "Xóa" << endl;
             break;
         case 3:
-            cout << "Thoát" << endl;
+            cout << " Thoát" << endl;
         }
     }
     else if (typeMenu == "revenue")
@@ -250,16 +260,16 @@ void optionMenu(string typeMenu, int option)
         switch (option)
         {
         case 1:
-            cout << "Xem doanh thu theo ngày" << endl;
+            cout << " Xem doanh thu theo ngày" << endl;
             break;
         case 2:
-            cout << "Xem doanh thu theo tháng" << endl;
+            cout << " Xem doanh thu theo tháng" << endl;
             break;
         case 3:
-            cout << "Xem doanh thu theo năm" << endl;
+            cout << " Xem doanh thu theo năm" << endl;
             break;
         case 4:
-            cout << "Thoát" << endl;
+            cout << " Thoát" << endl;
             break;
         }
     }
@@ -268,16 +278,16 @@ void optionMenu(string typeMenu, int option)
         switch (option)
         {
         case 1:
-            cout << "Doanh thu hôm nay" << endl;
+            cout << " Doanh thu hôm nay" << endl;
             break;
         case 2:
-            cout << "Doanh thu hôm qua" << endl;
+            cout << " Doanh thu hôm qua" << endl;
             break;
         case 3:
-            cout << "Doanh thu ngày khác" << endl;
+            cout << " Doanh thu ngày khác" << endl;
             break;
         case 4:
-            cout << "Thoát" << endl;
+            cout << " Thoát" << endl;
             break;
         }
     }
@@ -286,16 +296,16 @@ void optionMenu(string typeMenu, int option)
         switch (option)
         {
         case 1:
-            cout << "Doanh thu tháng này" << endl;
+            cout << " Doanh thu tháng này" << endl;
             break;
         case 2:
-            cout << "Doanh thu tháng trước" << endl;
+            cout << " Doanh thu tháng trước" << endl;
             break;
         case 3:
-            cout << "Doanh thu tháng khác" << endl;
+            cout << " Doanh thu tháng khác" << endl;
             break;
         case 4:
-            cout << "Thoát" << endl;
+            cout << " Thoát" << endl;
             break;
         }
     }
@@ -304,16 +314,16 @@ void optionMenu(string typeMenu, int option)
         switch (option)
         {
         case 1:
-            cout << "Doanh thu năm nay" << endl;
+            cout << " Doanh thu năm nay" << endl;
             break;
         case 2:
-            cout << "Doanh thu năm trước" << endl;
+            cout << " Doanh thu năm trước" << endl;
             break;
         case 3:
-            cout << "Doanh thu năm khác" << endl;
+            cout << " Doanh thu năm khác" << endl;
             break;
         case 4:
-            cout << "Thoát" << endl;
+            cout << " Thoát" << endl;
             break;
         }
     }
@@ -334,48 +344,78 @@ void printMenuOption(string typeMenu, int option, bool isSelected)
 
 void showMenu(string typeMenu, int selectOption)
 {
-    static int preSelectOption = -1;
+    // static int preSelectOption = -1;
     if (typeMenu == "staff")
     {
         Gotoxy(0, 0);
+        cout << "┌────────────────────────────────┐" << endl;
         for (int i = 1; i <= MENUSTAFF; i++)
         {
+            Gotoxy(0, i);
+            cout << "│";
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
+            cout << "│" << endl;
         }
+        cout << "└────────────────────────────────┘" << endl;
     }
     else if (typeMenu == "customerManger")
     {
         Gotoxy(0, 0);
+        cout << "┌───────────────────────────────────┐" << endl;
         for (int i = 1; i <= MENUCUSTOMERMANAGER; i++)
         {
+            Gotoxy(0, i);
+            cout << "│";
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
+            cout << "│" << endl;
         }
+        cout << "└───────────────────────────────────┘" << endl;
     }
     else if (typeMenu == "computerManager")
     {
         Gotoxy(0, 0);
+        cout << "┌──────────────────────────────────┐" << endl;
         for (int i = 1; i <= MENUCOMPUTERMANAGER; i++)
         {
+            Gotoxy(0, i);
+            cout << "│";
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
+            cout << "│" << endl;
         }
+        cout << "└──────────────────────────────────┘" << endl;
     }
     else if (typeMenu == "customer")
     {
-        if (preSelectOption != selectOption)
+        lock_guard<mutex> lock(mtx);
+        Gotoxy(0, 0);
+        cout << "┌──────────────────────────────────┐" << endl;
+        Gotoxy(0, 4);
+        cout << "├──────────────────────────────────┤" << endl;
+        Gotoxy(0, 1);
+        cout << "│";
+        Gotoxy(0, 2);
+        cout << "│";
+        Gotoxy(0, 3);
+        cout << "│";
+        Gotoxy(35, 1);
+        cout << "│";
+        Gotoxy(35, 2);
+        cout << "│";
+        Gotoxy(35, 3);
+        cout << "│";
+        for (int i = 1; i <= MENUCUSTOMER; i++)
         {
-            lock_guard<mutex> lock(mtx);
-            for (int i = 1; i <= MENUCUSTOMER; i++)
-            {
-                ClearLine(i + 3);
-                Gotoxy(0, i + 3);
-                bool isSelected = (i == selectOption);
-                printMenuOption(typeMenu, i, isSelected);
-            }
-            preSelectOption = selectOption;
+            Gotoxy(0, i + 4);
+            cout << "│";
+            bool isSelected = (i == selectOption);
+            printMenuOption(typeMenu, i, isSelected);
+            cout << "│" << endl;
         }
+        Gotoxy(0, 9);
+        cout << "└──────────────────────────────────┘" << endl;
     }
     else if (typeMenu == "MenuDish")
     {
@@ -609,88 +649,69 @@ void menuCustomer(Customer &customer, Computer &computer)
     ShowCursor(false);
     int selectOption = 1;
 
-    // Gotoxy(0, 3);
-    // cout << "───────────────────────────";
-
     thread threadShowTimeCustomer(showRemainingTimeOfCustomer, &customer);
     thread threadShowTimeComputer(showUsageTimeOfComputer, &computer);
 
     while (showRemainingTime)
     {
         showMenu("customer", selectOption);
-        if (customer.isLocked())
+        int key = _getch();
+        switch (key)
         {
-            system("cls");
-            showRemainingTime = false;
-            showUsageTime = false;
-            customer.setStatus(false);
-            customer.setCurrentComputerID("");
-            customer.setPassword(Base64(customer.getPassword()).encode());
-            customer.setLocked(true);
-            updateCustomerToFile(customer);
-            updateAccountToFile(customer);
-            computer.setStatus(false);
-            computer.setCustomerUsingName("");
-            computer.setUsageTimeToFile(Time());
-            updateComputerToFile(computer);
-            MessageBoxW(NULL, L"Tài khoản của bạn đã bị khóa", L"Thông báo", MB_OK | MB_ICONERROR | MB_TOPMOST);
-            ShowCursor(true);
-            system("cls");
+        case KEY_UP:
+            selectOption = (selectOption == 1) ? MENUCUSTOMER : selectOption - 1;
             break;
-        }
-        if (_kbhit())
-        {
-            int key = _getch();
-            switch (key)
+        case KEY_DOWN:
+            selectOption = (selectOption == MENUCUSTOMER) ? 1 : selectOption + 1;
+            break;
+        case KEY_ENTER:
+            switch (selectOption)
             {
-            case KEY_UP:
-                selectOption = (selectOption == 1) ? MENUCUSTOMER : selectOption - 1;
+            case 1:
+                isChangingPassword = true;
+                customer.changePassword();
+                isChangingPassword = false;
                 break;
-            case KEY_DOWN:
-                selectOption = (selectOption == MENUCUSTOMER) ? 1 : selectOption + 1;
+            case 2:
+                isViewingInfo = true;
+                customer.showMyInfo();
+                isViewingInfo = false;
                 break;
-            case KEY_ENTER:
-                switch (selectOption)
-                {
-                case 1:
-                    isChangingPassword = true;
-                    customer.changePassword();
-                    isChangingPassword = false;
-                    break;
-                case 2:
-                    isViewingInfo = true;
-                    customer.showMyInfo();
-                    isViewingInfo = false;
-                    break;
-                case 3:
-                    isOrdering = true;
-                    menuDish(customer);
-                    isOrdering = false;
+            case 3:
+                isOrdering = true;
+                menuDish(customer);
+                isOrdering = false;
 
-                    break;
-                case 4:
-                    showUsageTime = false;
-                    showRemainingTime = false;
-                    customer.setStatus(false);
-                    customer.setCurrentComputerID("");
-                    customer.setPassword(Base64(customer.getPassword()).encode());
-                    updateCustomerToFile(customer);
-                    updateAccountToFile(customer);
-                    computer.setStatus(false);
-                    computer.setCustomerUsingName("");
-                    computer.setUsageTimeToFile(Time());
-                    updateComputerToFile(computer);
-                    system("cls");
-                    break;
-                }
-            default:
+                break;
+            case 4:
+                showUsageTime = false;
+                showRemainingTime = false;
+                customer.setStatus(false);
+                customer.setCurrentComputerID("");
+                customer.setPassword(Base64(customer.getPassword()).encode());
+                updateCustomerToFile(customer);
+                updateAccountToFile(customer);
+                computer.setStatus(false);
+                computer.setCustomerUsingName("");
+                computer.setUsageTimeToFile(Time());
+                updateComputerToFile(computer);
+                system("cls");
                 break;
             }
+        default:
+            break;
         }
-        Sleep(80);
+        Sleep(50);
     }
-    threadShowTimeCustomer.join();
-    threadShowTimeComputer.join();
+    if (threadShowTimeComputer.joinable())
+    {
+        threadShowTimeComputer.join();
+    }
+    if (threadShowTimeCustomer.joinable())
+    {
+        threadShowTimeCustomer.join();
+    }
+
     ShowCursor(true);
 }
 
@@ -893,9 +914,8 @@ void showRemainingTimeOfCustomer(Customer *customer)
         // nếu không thì in ra cái khung thời gian
         {
             lock_guard<mutex> lock(mtx);
-            ClearLine(0);
-            Gotoxy(0, 0);
-            cout << "Thời gian còn lại: " << currentTime;
+            Gotoxy(0, 1);
+            cout << "    Thời gian còn lại: " << currentTime << "     ";
         }
 
         if (currentTime.isZero())
@@ -921,12 +941,12 @@ void showUsageTimeOfComputer(Computer *computer)
         if (!isChangingPassword && !isViewingInfo && !isOrdering) // nếu mấy này không chạy thì in ra khung thời gian
         {
             lock_guard<mutex> lock(mtx);
-            Gotoxy(0, 1);
-            cout << "Thời gian sử dụng: " << usageTime;
+            Gotoxy(0, 2);
+            cout << "    Thời gian sử dụng: " << usageTime << "     ";
             computer->setUsageTimeToFile(usageTime);
             computer->setUsageTime(usageTime);
-            Gotoxy(0, 2);
-            cout << "Bạn đang sử dụng máy: " << computer->getId();
+            Gotoxy(0, 3);
+            cout << "    Bạn đang sử dụng máy: " << computer->getId() << "     ";
         }
         usageTime++;
         this_thread::sleep_for(chrono::seconds(1));
@@ -1513,7 +1533,7 @@ void setOrderedToFile(Customer &customer, string nameFood, int quantity)
 /*------------------------------------OTHER------------------------------------*/
 void enterPassword(string &password)
 {
-    password = "";
+    password.clear();
     int i = 0;
     while (true)
     {

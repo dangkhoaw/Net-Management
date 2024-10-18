@@ -1,7 +1,5 @@
 #include "staff.h"
 #include "function.h"
-#include "mtime.h"
-#include "doanhthu.h"
 #include <string>
 #include <iomanip>
 #include <ctime>

@@ -19,6 +19,7 @@ using namespace std;
 void ShowCursor(bool CursorVisibility);
 void Gotoxy(SHORT posX, SHORT posY);
 void ClearLine(SHORT posY);
+void ClearLine(SHORT posX, SHORT posY, SHORT length);
 /*------------------------------------MENU------------------------------------*/
 void printMenuOption(string typeMenu, int option, bool isSelected);
 void showMenu(string typeMenu, int selectOption);

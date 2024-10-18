@@ -4,6 +4,8 @@
 #include "customer.h"
 #include <vector>
 #include "computer.h"
+#include "mtime.h"
+#include "doanhthu.h"
 
 using namespace std;
 
