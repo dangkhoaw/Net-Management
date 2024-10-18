@@ -16,9 +16,9 @@ private:
     History history;
 
 public:
+    int firstOrder[6] = {0}; // để lưu món đó có đặt chưa
     Customer(string username = "", string password = "", string role = "", string id = "", bool status = false, bool isFirstLogin = true, bool isLocked = false, string name = "", string phone = "", float balance = 0, Time time = Time());
     ~Customer();
-
     string getPhone();
     string getName();
     Time getTime();
@@ -38,6 +38,10 @@ public:
     void showMyInfo();
     void addHistory();
     bool isLocked();
+
+    int inPutAmountOrder();
+    void orderFood(string nameFood, int quantity);
+    void orderDrink(string nameDrink, int quantity);
 
     friend ostream &operator<<(ostream &os, Customer &customer);
     friend bool getCustomerFromFile(Customer &customer);
