@@ -31,6 +31,11 @@ void menuRevenue(Staff &staff);
 void menuRevenueMonth(Staff &staff);
 void menuRevenueYear(Staff &staff);
 void menuRevenueDay(Staff &staff);
+void menuDish(Customer &customer);
+void menuFood(Customer &customer);
+void menuQuantity(Customer &customer, string nameFood);
+void menuDrink(Customer &customer);
+void setOrderedToFile(Customer &customer, string name, int quantity);
 /*------------------------------------TIME------------------------------------*/
 void showRemainingTimeOfCustomer(Customer *customer);
 void showUsageTimeOfComputer(Computer *computer);
@@ -43,6 +48,9 @@ bool isValidUsername(string &username);
 bool addCustomerToFile(Customer &customer);
 void generateID(Account &account);
 bool checkFirstLogin(Account &account);
+bool checkIsOrder(Customer &customer, string nameFood);
+void makeFileOrdered(Customer &customer);
+
 /*------------------------------------COMPUTER------------------------------------*/
 int getNumberOfComputers();
 void updateNumberOfComputers(int &count);
@@ -68,5 +76,6 @@ void inputYear(int &year);
 string trim(string &str);
 string removeSpecialCharacter(string &str);
 string toName(string &str);
+bool isFileEmpty(const string &filename);
 
 #endif

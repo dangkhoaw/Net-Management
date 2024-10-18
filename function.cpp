@@ -7,11 +7,18 @@ bool showRemainingTime = true;
 bool showUsageTime = true;
 bool isChangingPassword = false;
 bool isViewingInfo = false;
+bool isOrdering = false;
+bool firstOrder = true;
 
 const int MENUSTAFF = 5;
 const int MENUCUSTOMERMANAGER = 6;
 const int MENUCOMPUTERMANAGER = 5;
 const int MENUCUSTOMER = 4;
+const int MENUDISH = 4;
+const int MENUFOOD = 7;
+const int MENUDRINK = 7;
+const int MENUQUANTITY = 4;
+const int MENUREVENUE = 4;
 
 mutex mtx;
 
@@ -128,11 +135,114 @@ void optionMenu(string typeMenu, int option)
             cout << "Xem thông tin cá nhân" << endl;
             break;
         case 3:
-            cout << " menu đồ ăn/thức uống" << endl;
+            cout << "Menu đồ ăn/thức uống" << endl;
             break;
         case 4:
             cout << "Thoát";
             break;
+        }
+    }
+    else if (typeMenu == "MenuDish")
+    {
+        switch (option)
+        {
+        case 1:
+            cout << "Thức ăn" << endl;
+            break;
+        case 2:
+            cout << "Nước uống" << endl;
+            break;
+        case 3:
+            cout << "Đặt" << endl;
+            break;
+        case 4:
+            cout << "Thoát";
+            break;
+        }
+    }
+    else if (typeMenu == "Thức ăn")
+    {
+
+        switch (option)
+        {
+        case 1:
+            cout << "Bánh mì thịt nướng" << endl;
+            break;
+        case 2:
+            cout << "Mì tôm trứng" << endl;
+            break;
+        case 3:
+            cout << "Cơm gà nướng" << endl;
+            break;
+        case 4:
+            cout << "Cơm gà chiên nước mắm" << endl;
+            break;
+        case 5:
+            cout << "xúc xích" << endl;
+            break;
+        case 6:
+            cout << "Cơm cuộn" << endl;
+            break;
+        case 7:
+            cout << "Thoát" << endl;
+            break;
+        }
+    }
+    else if (typeMenu == "Nước uống")
+    {
+        switch (option)
+        {
+        case 1:
+            cout << "Coca lon" << endl;
+            break;
+        case 2:
+            cout << "Nước suối" << endl;
+            break;
+        case 3:
+            cout << "Caffee đen" << endl;
+            break;
+        case 4:
+            cout << "Caffee sữa" << endl;
+            break;
+        case 5:
+            cout << "Nước cam" << endl;
+            break;
+        case 6:
+            cout << "Bò húc" << endl;
+        case 7:
+            cout << "Thoát" << endl;
+            break;
+        }
+    }
+    else if (typeMenu == "quantity")
+    {
+        switch (option)
+        {
+        case 1:
+            cout << "1" << endl;
+            break;
+        case 2:
+            cout << "2" << endl;
+            break;
+        case 3:
+            cout << "nhiều hơn" << endl;
+            break;
+        case 4:
+            cout << "Thoát" << endl;
+        }
+    }
+    else if (typeMenu == "reOrder")
+    {
+        switch (option)
+        {
+        case 1:
+            cout << "Sửa số lượng" << endl;
+            break;
+        case 2:
+            cout << "Xóa" << endl;
+            break;
+        case 3:
+            cout << "Thoát" << endl;
         }
     }
     else if (typeMenu == "revenue")
@@ -228,7 +338,7 @@ void showMenu(string typeMenu, int selectOption)
     if (typeMenu == "staff")
     {
         Gotoxy(0, 0);
-        for (int i = 1; i <= 5; i++)
+        for (int i = 1; i <= MENUSTAFF; i++)
         {
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
@@ -237,7 +347,7 @@ void showMenu(string typeMenu, int selectOption)
     else if (typeMenu == "customerManger")
     {
         Gotoxy(0, 0);
-        for (int i = 1; i <= 6; i++)
+        for (int i = 1; i <= MENUCUSTOMERMANAGER; i++)
         {
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
@@ -246,7 +356,7 @@ void showMenu(string typeMenu, int selectOption)
     else if (typeMenu == "computerManager")
     {
         Gotoxy(0, 0);
-        for (int i = 1; i <= 5; i++)
+        for (int i = 1; i <= MENUCOMPUTERMANAGER; i++)
         {
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
@@ -257,7 +367,7 @@ void showMenu(string typeMenu, int selectOption)
         if (preSelectOption != selectOption)
         {
             lock_guard<mutex> lock(mtx);
-            for (int i = 1; i <= 4; i++)
+            for (int i = 1; i <= MENUCUSTOMER; i++)
             {
                 ClearLine(i + 3);
                 Gotoxy(0, i + 3);
@@ -267,10 +377,58 @@ void showMenu(string typeMenu, int selectOption)
             preSelectOption = selectOption;
         }
     }
+    else if (typeMenu == "MenuDish")
+    {
+
+        Gotoxy(0, 0);
+        for (int i = 1; i <= MENUDISH; i++)
+        {
+            bool isSelected = (i == selectOption);
+            printMenuOption(typeMenu, i, isSelected);
+        }
+    }
+    else if (typeMenu == "Thức ăn")
+    {
+
+        Gotoxy(0, 0);
+        for (int i = 1; i <= MENUFOOD; i++)
+        {
+            bool isSelected = (i == selectOption);
+            printMenuOption(typeMenu, i, isSelected);
+        }
+    }
+    else if (typeMenu == "Nước uống")
+    {
+        Gotoxy(0, 0);
+        for (int i = 1; i <= MENUDRINK; i++)
+        {
+            bool isSelected = (i == selectOption);
+            printMenuOption(typeMenu, i, isSelected);
+        }
+    }
+    else if (typeMenu == "quantity")
+    {
+
+        Gotoxy(0, 0);
+        for (int i = 1; i <= MENUQUANTITY; i++)
+        {
+            bool isSelected = (i == selectOption);
+            printMenuOption(typeMenu, i, isSelected);
+        }
+    }
+    else if (typeMenu == "reOrder")
+    {
+        Gotoxy(0, 0);
+        for (int i = 1; i <= 3; i++)
+        {
+            bool isSelected = (i == selectOption);
+            printMenuOption(typeMenu, i, isSelected);
+        }
+    }
     else if (typeMenu == "revenue")
     {
         Gotoxy(0, 0);
-        for (int i = 1; i <= 4; i++)
+        for (int i = 1; i <= MENUREVENUE; i++)
         {
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
@@ -505,7 +663,10 @@ void menuCustomer(Customer &customer, Computer &computer)
                     isViewingInfo = false;
                     break;
                 case 3:
-                    // menuDish(customer);
+                    isOrdering = true;
+                    menuDish(customer);
+                    isOrdering = false;
+
                     break;
                 case 4:
                     showUsageTime = false;
@@ -546,22 +707,23 @@ void menuRevenue(Staff &staff)
         switch (key)
         {
         case KEY_UP:
-            selectOption = (selectOption == 1) ? 4 : selectOption - 1;
+            selectOption = (selectOption == 1) ? MENUREVENUE : selectOption - 1;
             break;
         case KEY_DOWN:
-            selectOption = (selectOption == 4) ? 1 : selectOption + 1;
+            selectOption = (selectOption == MENUREVENUE) ? 1 : selectOption + 1;
             break;
         case KEY_ENTER:
             switch (selectOption)
             {
             case 1:
-                menuRevenueDay(staff);
+                menuRevenueDay(staff); // méo cần thietes stafff
                 break;
             case 2:
                 menuRevenueMonth(staff);
                 break;
             case 3:
                 menuRevenueYear(staff);
+
                 break;
             case 4:
                 system("cls");
@@ -727,7 +889,8 @@ void showRemainingTimeOfCustomer(Customer *customer)
     Time currentTime = customer->getTimeFromFile();
     while (showRemainingTime)
     {
-        if (!isChangingPassword && !isViewingInfo)
+        if (!isChangingPassword && !isViewingInfo && !isOrdering) // nếu mà mấy cái này đang chạy thì không cần in ra cái khung thời gina
+        // nếu không thì in ra cái khung thời gian
         {
             lock_guard<mutex> lock(mtx);
             ClearLine(0);
@@ -753,10 +916,9 @@ void showRemainingTimeOfCustomer(Customer *customer)
 void showUsageTimeOfComputer(Computer *computer)
 {
     Time usageTime;
-
     while (showUsageTime)
     {
-        if (!isChangingPassword && !isViewingInfo)
+        if (!isChangingPassword && !isViewingInfo && !isOrdering) // nếu mấy này không chạy thì in ra khung thời gian
         {
             lock_guard<mutex> lock(mtx);
             Gotoxy(0, 1);
@@ -1064,6 +1226,289 @@ void removeComputerFromFile(Computer &computer)
         MessageBoxW(NULL, L"Không tìm thấy máy", L"Thông báo", MB_OK | MB_ICONWARNING);
     }
 }
+void makeFileOrdered(Customer &customer)
+{
+    if (firstOrder)
+    {
+        fstream file("./data/" + customer.getId() + "_ordered.txt", ios::out);
+        if (!file.is_open())
+        {
+            cout << "Không thể mở file ordered" << endl;
+            return;
+        }
+        file.close();
+        firstOrder = false;
+    }
+}
+
+void menuQuantity(Customer &customer, string nameFood)
+{
+    system("cls");
+    SetConsoleTitle(TEXT("Menu số lượng"));
+    ShowCursor(false);
+    int selectOption = 1;
+    makeFileOrdered(customer);
+    if (checkIsOrder(customer, nameFood) == false)
+    {
+        while (true)
+        {
+            showMenu("quantity", selectOption);
+            int key = _getch();
+            switch (key)
+            {
+            case KEY_UP:
+                selectOption = (selectOption == 1) ? MENUQUANTITY : selectOption - 1;
+                break;
+            case KEY_DOWN:
+                selectOption = (selectOption == MENUQUANTITY) ? 1 : selectOption + 1;
+                break;
+            case KEY_ENTER:
+                switch (selectOption)
+                {
+                case 1:
+                    customer.orderFood(nameFood, 1);
+                    return;
+                case 2:
+                    customer.orderFood(nameFood, 2);
+                    return;
+                case 3:
+                    customer.orderFood(nameFood, customer.inPutAmountOrder());
+                    return;
+                case 4:
+                    system("cls");
+                    return;
+                }
+            default:
+                break;
+            }
+        }
+        ShowCursor(true);
+    }
+    else
+    {
+        while (true)
+        {
+            showMenu("reOrder", selectOption);
+            int key = _getch();
+            switch (key)
+            {
+            case KEY_UP:
+                selectOption = (selectOption == 1) ? 3 : selectOption - 1;
+                break;
+            case KEY_DOWN:
+                selectOption = (selectOption == 3) ? 1 : selectOption + 1;
+                break;
+            case KEY_ENTER:
+                switch (selectOption)
+                {
+                case 1:
+                    customer.orderFood(nameFood, customer.inPutAmountOrder());
+                    return;
+                case 2:
+                    setOrderedToFile(customer, nameFood, 0);
+                    return;
+                    ;
+                case 3:
+                    system("cls");
+                    return;
+                }
+            default:
+                break;
+            }
+        }
+        ShowCursor(true);
+    }
+}
+void menuFood(Customer &customer)
+{
+    system("cls");
+    SetConsoleTitle(TEXT("Menu thức ăn"));
+    ShowCursor(false);
+    int selectOption = 1;
+    while (true)
+    {
+        showMenu("Thức ăn", selectOption);
+        int key = _getch();
+        switch (key)
+        {
+        case KEY_UP:
+            selectOption = (selectOption == 1) ? MENUFOOD : selectOption - 1;
+            break;
+        case KEY_DOWN:
+            selectOption = (selectOption == MENUFOOD) ? 1 : selectOption + 1;
+            break;
+        case KEY_ENTER:
+            switch (selectOption)
+            {
+            case 1:
+                menuQuantity(customer, "Bánh mì thịt nướng");
+                break;
+            case 2:
+                menuQuantity(customer, "Mì tôm trứng");
+                break;
+            case 3:
+                menuQuantity(customer, "Cơm gà nướng");
+                break;
+            case 4:
+                menuQuantity(customer, "Cơm gà chiên nước mắm");
+                break;
+            case 5:
+                menuQuantity(customer, "xúc xích");
+                break;
+            case 6:
+                menuQuantity(customer, "cơm cuộn");
+                break;
+
+            case 7:
+                system("cls");
+                return;
+            }
+        default:
+            break;
+        }
+        ShowCursor(true);
+    }
+}
+void menuDish(Customer &customer)
+{
+    system("cls");
+    SetConsoleTitle(TEXT("Menu thức ăn/nước uống"));
+    ShowCursor(false);
+    int selectOption = 1;
+    while (true)
+    {
+        showMenu("MenuDish", selectOption);
+        int key = _getch();
+        switch (key)
+        {
+        case KEY_UP:
+            selectOption = (selectOption == 1) ? MENUDISH : selectOption - 1;
+            break;
+        case KEY_DOWN:
+            selectOption = (selectOption == MENUDISH) ? 1 : selectOption + 1;
+            break;
+        case KEY_ENTER:
+            switch (selectOption)
+            {
+            case 1:
+                menuFood(customer);
+                break;
+            case 2:
+                // menuDrink(customer);
+                // break;
+            case 3:
+                // customer.orderDish();
+                break;
+            case 4:
+                system("cls");
+                ShowCursor(true);
+                return;
+            }
+        default:
+            break;
+        }
+    }
+    ShowCursor(true);
+}
+bool checkIsOrder(Customer &customer, string nameFood)
+{
+    fstream file("./data/" + customer.getId() + "_ordered.txt", ios::in);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file ordered" << endl;
+        return false;
+    }
+    string line;
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        string name;
+        int quantity;
+        getline(ss, name, '|');
+        ss >> quantity;
+        if (name == nameFood)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+void setOrderedToFile(Customer &customer, string nameFood, int quantity)
+{
+
+    fstream file("./data/" + customer.getId() + "_ordered.txt", ios::in);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file ordered" << endl;
+        return;
+    }
+    string tempPath = "./data/temp.txt";
+    fstream tempFile(tempPath, ios::out);
+    if (!tempFile.is_open())
+    {
+        cout << "Không thể mở file temp" << endl;
+        return;
+    }
+
+    if (isFileEmpty("./data/" + customer.getId() + "_ordered.txt")) // nếu file rỗng
+    {
+        tempFile << nameFood << '|' << quantity << endl;
+        file.close();
+        tempFile.close();
+        system(("del .\\data\\" + customer.getId() + "_ordered.txt").c_str());
+        system(("ren .\\data\\temp.txt " + customer.getId() + "_ordered.txt").c_str());
+        return;
+    }
+    if (quantity == 0) // xóa món ăn khỏi file
+    {
+        string line;
+        while (getline(file, line))
+        {
+            stringstream ss(line);
+            string name;
+            int quantity;
+            getline(ss, name, '|');
+            ss >> quantity;
+            if (name != nameFood)
+            {
+                tempFile << name << '|' << quantity << endl;
+            }
+        }
+        file.close();
+        tempFile.close();
+        system(("del .\\data\\" + customer.getId() + "_ordered.txt").c_str());
+        system(("ren .\\data\\temp.txt " + customer.getId() + "_ordered.txt").c_str());
+        cout << "Đã xóa món ăn khỏi danh sách đặt" << endl;
+        pressKeyQ();
+        return;
+    }
+
+    else // nếu file không rỗng
+    {
+        string line;
+        bool check = false;
+        while (getline(file, line))
+        {
+            stringstream ss(line);
+            string nameFood_infile;
+            int quantity_infile;
+            getline(ss, nameFood_infile, '|');
+            ss >> quantity_infile;
+            if (nameFood_infile == nameFood)
+            {
+                check = true;
+                quantity_infile = quantity;
+            }
+            tempFile << nameFood_infile << '|' << quantity_infile << endl;
+        }
+        if (!check)
+            tempFile << nameFood << '|' << quantity << endl;
+        file.close();
+        tempFile.close();
+        system(("del .\\data\\" + customer.getId() + "_ordered.txt").c_str());
+        system(("ren .\\data\\temp.txt " + customer.getId() + "_ordered.txt").c_str());
+    }
+}
 
 /*------------------------------------OTHER------------------------------------*/
 void enterPassword(string &password)
@@ -1265,4 +1710,10 @@ string toName(string &str)
             str[i] -= 32;
     }
     return str;
+}
+
+bool isFileEmpty(const string &filename)
+{
+    ifstream file(filename);
+    return file.peek() == EOF;
 }

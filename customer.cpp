@@ -208,3 +208,59 @@ istream &operator>>(istream &is, Customer &customer)
     generateID(customer);
     return is;
 }
+int Customer::inPutAmountOrder()
+{
+    system("cls");
+    ShowCursor(true);
+    int amount;
+    do
+    {
+        cout << "Nhập số lượng: ";
+        cin >> amount;
+        if (amount < 0)
+        {
+            cout << "Số lượng không hợp lệ" << endl;
+        }
+    } while (amount < 0);
+    return amount;
+}
+void Customer::orderFood(string nameFood, int quantity)
+{
+    system("cls");
+    ShowCursor(true);
+    if (quantity == 0)
+        return;
+    int price;
+    if (nameFood == "Bánh mì thịt nướng")
+        price = 15000 * quantity;
+    else if (nameFood == "Mì tôm trứng")
+        price = 15000 * quantity;
+    else if (nameFood == "Cơm gà nướng")
+        price = 25000 * quantity;
+    else if (nameFood == "Cơm gà chiên nước mắm")
+        price = 25000 * quantity;
+    else if (nameFood == "xúc xích")
+        price = 10000 * quantity;
+    else if (nameFood == "Cơm cuộn")
+        price = 15000 * quantity;
+
+    if (balance < price)
+    {
+        cout << "Số dư không đủ,vui lòng nhập lại" << endl;
+        return;
+    }
+    setOrderedToFile(*this, nameFood, quantity);
+    cout << "Đã thêm món" << endl;
+    pressKeyQ();
+    // cout << "Số tiền cần thanh toán: " << price << endl;
+    // cout << "Bạn có muốn đặt món ? (Y/N): ";//   update bằng cái đóng khung lồng kính + báo giá từng món
+    // char c;
+    // cin >> c;
+    // if (c == 'Y' || c == 'y')
+    // {
+    //     balance -= price;
+    //     // cout << "Thanh toán thành công" << endl;
+    //     // cout << "Số dư còn lại: " << balance << endl;
+    //     updateCustomerToFile(*this);
+    // }
+}
