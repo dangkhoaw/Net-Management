@@ -3,7 +3,13 @@
 #include "mtime.h"
 #include "base64.h"
 /*
-                               
+                                    
+ https://chromedino.com/
+ https://play2048.co/
+ https://flappybird.io/
+ https://freepacman.org/
+ https://minesweeperonline.com/
+ https://supermario-game.com/vi
 */
 using namespace std;
 

@@ -1,5 +1,6 @@
 #include "function.h"
 #include "base64.h"
+#include "game.h"
 #include <mutex>
 #include <chrono>
 
@@ -8,12 +9,14 @@ bool showUsageTime = true;
 bool isChangingPassword = false;
 bool isViewingInfo = false;
 bool isOrdering = false;
+bool isSelectingGame = false;
 bool firstOrder = true;
 
 const int MENUSTAFF = 5;
 const int MENUCUSTOMERMANAGER = 6;
 const int MENUCOMPUTERMANAGER = 5;
-const int MENUCUSTOMER = 4;
+const int MENUCUSTOMER = 5;
+const int MENUGAME = 7;
 const int MENUDISH = 4;
 const int MENUFOOD = 7;
 const int MENUDRINK = 7;
@@ -72,7 +75,7 @@ void optionMenu(string typeMenu, int option)
         switch (option)
         {
         case 1:
-            cout << "       Quản lí khách hàng      ";
+            cout << "       Quản lí khách hàng      ";
             break;
         case 2:
             cout << "       Quản lí máy tính        ";
@@ -147,7 +150,37 @@ void optionMenu(string typeMenu, int option)
             cout << "    Đặt món ăn                   ";
             break;
         case 4:
+            cout << "    Chơi game                    ";
+            break;
+        case 5:
             cout << "    Đăng xuất                    ";
+            break;
+        }
+    }
+    else if (typeMenu == "game")
+    {
+        switch (option)
+        {
+        case 1:
+            cout << "      T-Rex Dinosaurs        ";
+            break;
+        case 2:
+            cout << "      2048                   ";
+            break;
+        case 3:
+            cout << "      Flappy Bird            ";
+            break;
+        case 4:
+            cout << "      Pacman                 ";
+            break;
+        case 5:
+            cout << "      Minesweeper (Dò mìn)   ";
+            break;
+        case 6:
+            cout << "      Super Mario            ";
+            break;
+        case 7:
+            cout << "      Thoát                  ";
             break;
         }
     }
@@ -414,8 +447,22 @@ void showMenu(string typeMenu, int selectOption)
             printMenuOption(typeMenu, i, isSelected);
             cout << "│" << endl;
         }
-        Gotoxy(0, 9);
+        Gotoxy(0, 10);
         cout << "└──────────────────────────────────┘" << endl;
+    }
+    else if (typeMenu == "game")
+    {
+        Gotoxy(0, 0);
+        cout << "┌──────────────────────────────┐" << endl;
+        for (int i = 1; i <= MENUGAME; i++)
+        {
+            Gotoxy(0, i);
+            cout << "│";
+            bool isSelected = (i == selectOption);
+            printMenuOption(typeMenu, i, isSelected);
+            cout << "│" << endl;
+        }
+        cout << "└──────────────────────────────┘" << endl;
     }
     else if (typeMenu == "MenuDish")
     {
@@ -644,7 +691,6 @@ void menuStaff(Staff &staff)
 
 void menuCustomer(Customer &customer, Computer &computer)
 {
-    // MessageBoxW(NULL, L"Chào mừng bạn đến với tiệm Internet", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
     SetConsoleTitle(TEXT("Menu khách hàng"));
     ShowCursor(false);
     int selectOption = 1;
@@ -681,9 +727,13 @@ void menuCustomer(Customer &customer, Computer &computer)
                 isOrdering = true;
                 menuDish(customer);
                 isOrdering = false;
-
                 break;
             case 4:
+                isSelectingGame = true;
+                menuGame();
+                isSelectingGame = false;
+                break;
+            case 5:
                 showUsageTime = false;
                 showRemainingTime = false;
                 customer.setStatus(false);
@@ -701,7 +751,6 @@ void menuCustomer(Customer &customer, Computer &computer)
         default:
             break;
         }
-        Sleep(50);
     }
     if (threadShowTimeComputer.joinable())
     {
@@ -712,6 +761,69 @@ void menuCustomer(Customer &customer, Computer &computer)
         threadShowTimeCustomer.join();
     }
 
+    ShowCursor(true);
+}
+
+void menuGame()
+{
+    system("cls");
+    SetConsoleTitle(TEXT("Menu game"));
+    ShowCursor(false);
+    int selectOption = 1;
+    Game game;
+    while (true)
+    {
+        showMenu("game", selectOption);
+        int key = _getch();
+        switch (key)
+        {
+        case KEY_UP:
+            selectOption = (selectOption == 1) ? MENUGAME : selectOption - 1;
+            break;
+        case KEY_DOWN:
+            selectOption = (selectOption == MENUGAME) ? 1 : selectOption + 1;
+            break;
+        case KEY_ENTER:
+            switch (selectOption)
+            {
+            case 1:
+                game.setName("T-Rex Dinosaurs");
+                game.playGame();
+                system("cls");
+                return;
+            case 2:
+                game.setName("2048");
+                game.playGame();
+                system("cls");
+                return;
+            case 3:
+                game.setName("FlappyBird");
+                game.playGame();
+                system("cls");
+                return;
+            case 4:
+                game.setName("pacman");
+                game.playGame();
+                system("cls");
+                return;
+            case 5:
+                game.setName("minesweeper");
+                game.playGame();
+                system("cls");
+                return;
+            case 6:
+                game.setName("supermario");
+                game.playGame();
+                system("cls");
+                return;
+            case 7:
+                system("cls");
+                return;
+            }
+        default:
+            break;
+        }
+    }
     ShowCursor(true);
 }
 
@@ -910,12 +1022,11 @@ void showRemainingTimeOfCustomer(Customer *customer)
     Time currentTime = customer->getTimeFromFile();
     while (showRemainingTime)
     {
-        if (!isChangingPassword && !isViewingInfo && !isOrdering) // nếu mà mấy cái này đang chạy thì không cần in ra cái khung thời gina
-        // nếu không thì in ra cái khung thời gian
+        if (!isChangingPassword && !isViewingInfo && !isOrdering && !isSelectingGame) // nếu mấy này không chạy thì in ra khung thời gian
         {
             lock_guard<mutex> lock(mtx);
-            Gotoxy(0, 1);
-            cout << "    Thời gian còn lại: " << currentTime << "     ";
+            Gotoxy(1, 1);
+            cout << "   Thời gian còn lại: " << currentTime << "    ";
         }
 
         if (currentTime.isZero())
@@ -938,15 +1049,15 @@ void showUsageTimeOfComputer(Computer *computer)
     Time usageTime;
     while (showUsageTime)
     {
-        if (!isChangingPassword && !isViewingInfo && !isOrdering) // nếu mấy này không chạy thì in ra khung thời gian
+        if (!isChangingPassword && !isViewingInfo && !isOrdering && !isSelectingGame) // nếu mấy này không chạy thì in ra khung thời gian
         {
             lock_guard<mutex> lock(mtx);
-            Gotoxy(0, 2);
-            cout << "    Thời gian sử dụng: " << usageTime << "     ";
+            Gotoxy(1, 2);
+            cout << "   Thời gian sử dụng: " << usageTime << "    ";
             computer->setUsageTimeToFile(usageTime);
             computer->setUsageTime(usageTime);
-            Gotoxy(0, 3);
-            cout << "    Bạn đang sử dụng máy: " << computer->getId() << "     ";
+            Gotoxy(1, 3);
+            cout << "   Bạn đang sử dụng máy: " << computer->getId() << "    ";
         }
         usageTime++;
         this_thread::sleep_for(chrono::seconds(1));

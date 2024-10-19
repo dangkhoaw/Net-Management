@@ -36,6 +36,7 @@ void menuDish(Customer &customer);
 void menuFood(Customer &customer);
 void menuQuantity(Customer &customer, string nameFood);
 void menuDrink(Customer &customer);
+void menuGame();
 void setOrderedToFile(Customer &customer, string name, int quantity);
 /*------------------------------------TIME------------------------------------*/
 void showRemainingTimeOfCustomer(Customer *customer);
