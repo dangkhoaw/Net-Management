@@ -6,7 +6,7 @@
 
 using namespace std;
 
-Staff::Staff(string username, string password, string role, string id, bool status, bool isFirstLogin) : Account(username, password, role, id, status, isFirstLogin) {}
+Staff::Staff(string username, string password, string role, string id, string status, string isFirstLogin, string isLocked) : Account(username, password, role, id, status, isFirstLogin, isLocked) {}
 
 void Staff::addAccount()
 {
@@ -56,6 +56,11 @@ void Staff::removeComputer()
 }
 void Staff::viewComputerStatus()
 {
+    /*
+    MÁY         TRẠNG THÁI             KHÁCH HÀNG          THỜI GIAN SỬ DỤNG
+    COM01       Đang sử dụng           dangkhoaw              00:10:00
+    COM02       Trống                                         00:00:00
+    */
     system("cls");
     vector<Computer> prevComputers;
     Gotoxy(0, 0);
@@ -78,7 +83,7 @@ void Staff::viewComputerStatus()
                 Gotoxy(0, i + 1);
                 cout << computers[i].getId();
                 Gotoxy(10, i + 1);
-                if (computers[i].getStatus())
+                if (computers[i].getStatus() == "Using")
                     cout << "Đang sử dụng";
                 else
                     cout << "Trống";
@@ -123,12 +128,12 @@ void Staff::topUpAccount()
 
         Gotoxy(0, 3);
 
-        cout << "(Nhập sai 3 lần sẽ thoát: " << count - 1 << " lần nhập sai)";
+        cout << "(Nhập sai 3 lần sẽ thoát: " << count << " lần nhập sai)";
 
         ClearLine(0);
         Gotoxy(0, 0);
         cout << "Tên đăng nhập: ";
-        getline(cin, userName);
+        cin >> userName;
 
         if (isValidUsername(userName))
         {
@@ -196,12 +201,12 @@ void Staff::lockAccount()
 
         Gotoxy(0, 3);
 
-        cout << "(Nhập sai 3 lần sẽ thoát: " << count - 1 << " lần nhập sai)";
+        cout << "(Nhập sai 3 lần sẽ thoát: " << count << " lần nhập sai)";
 
         ClearLine(0);
         Gotoxy(0, 0);
         cout << "Tên đăng nhập: ";
-        getline(cin, userName);
+        cin >> userName;
 
         if (isValidUsername(userName))
         {
@@ -225,7 +230,7 @@ void Staff::lockAccount()
     account.setUserName(userName);
     getAccountFromFile(account);
 
-    if (account.getIsLocked())
+    if (account.getIsLocked() == "Locked")
     {
         cout << "Tài khoản đã bị khóa" << endl;
         pressKeyQ();
@@ -233,7 +238,7 @@ void Staff::lockAccount()
         return;
     }
 
-    account.setLocked(true);
+    account.setLocked("Locked");
     updateAccountToFile(account);
 
     cout << "Khóa tài khoản thành công" << endl;

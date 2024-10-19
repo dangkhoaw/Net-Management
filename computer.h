@@ -11,22 +11,21 @@ using namespace std;
 class Computer
 {
 private:
-    string id, customerUsingName;
-    bool status;
+    string id, customerUsingName, status;
     Time usageTime;
 
 public:
-    Computer(string id = "", bool status = false, string customerUsingName = "", Time usageTime = Time());
+    Computer(string id = "", string status = "", string customerUsingName = "", Time usageTime = Time());
     ~Computer();
 
     string getId();
     Time getUsageTime();
     string getCustomerUsingName();
-    bool getStatus();
+    string getStatus();
     Time getUsageTimeFromFile();
 
     void setId(string id);
-    void setStatus(bool status);
+    void setStatus(string status);
     void setCustomerUsingName(string customerUsingName);
     void setUsageTime(Time usageTime);
     void setUsageTimeToFile(Time usageTime);

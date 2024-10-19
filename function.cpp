@@ -56,6 +56,7 @@ void ClearLine(SHORT posY)
     {
         cout << " ";
     }
+    Gotoxy(0, posY);
 }
 
 void ClearLine(SHORT posX, SHORT posY, SHORT length)
@@ -65,6 +66,7 @@ void ClearLine(SHORT posX, SHORT posY, SHORT length)
     {
         cout << " ";
     }
+    Gotoxy(posX, posY);
 }
 
 /*------------------------------------MENU------------------------------------*/
@@ -827,7 +829,8 @@ void menuStaff(Staff &staff)
                 staff.topUpAccount();
                 break;
             case 5:
-                staff.setStatus(false);
+                staff.setStatus("Offline");
+                staff.setLocked("Unlocked");
                 staff.setPassword(Base64(staff.getPassword()).encode());
                 updateAccountToFile(staff);
                 system("cls");
@@ -888,12 +891,13 @@ void menuCustomer(Customer &customer, Computer &computer)
                 system(("del .\\data\\" + customer.getId() + "_ordered.txt").c_str());
                 showUsageTime = false;
                 showRemainingTime = false;
-                customer.setStatus(false);
+                customer.setStatus("Offline");
                 customer.setCurrentComputerID("");
+                customer.setLocked("Unlocked");
                 customer.setPassword(Base64(customer.getPassword()).encode());
                 updateCustomerToFile(customer);
                 updateAccountToFile(customer);
-                computer.setStatus(false);
+                computer.setStatus("Available");
                 computer.setCustomerUsingName("");
                 computer.setUsageTimeToFile(Time());
                 updateComputerToFile(computer);
@@ -1171,9 +1175,9 @@ void menuRevenueYear(Staff &staff)
 /*------------------------------------TIME------------------------------------*/
 void showRemainingTimeOfCustomer(Customer *customer)
 {
-    Time currentTime = customer->getTimeFromFile();
     while (showRemainingTime)
     {
+        Time currentTime = customer->getTimeFromFile();
         if (!isChangingPassword && !isViewingInfo && !isOrdering && !isSelectingGame) // nếu mấy này không chạy thì in ra khung thời gian
         {
             lock_guard<mutex> lock(mtx);
@@ -1323,9 +1327,9 @@ bool addCustomerToFile(Customer &customer)
 
 bool checkFirstLogin(Account &account)
 {
-    if (account.getIsFirstLogin())
+    if (account.getIsFirstLogin() == "FirstLogin")
     {
-        account.setIsFirstLogin(false);
+        account.setIsFirstLogin("NotFirstLogin");
         return true;
     }
     return false;
@@ -1386,12 +1390,12 @@ void generateIDComputer(Computer &computer)
     count++;
     stringstream ss;
     ss << setw(2) << setfill('0') << count;
-    string id = "CID" + ss.str();
+    string id = "COM" + ss.str();
     computer.setId(id);
     updateNumberOfComputers(count);
 }
 
-vector<Computer> getComputersByStatus(bool status)
+vector<Computer> getComputersByStatus(string status)
 {
     vector<Computer> computers;
     fstream file("./data/computer.txt", ios::in);
@@ -1408,9 +1412,9 @@ vector<Computer> getComputersByStatus(bool status)
         getline(ss, id, '|');
         getline(ss, statusStr, '|');
         getline(ss, customerUsingName);
-        if (status == (statusStr == "1" ? true : false))
+        if (statusStr == status)
         {
-            Computer computer(id, statusStr == "1" ? true : false, customerUsingName);
+            Computer computer(id, status, customerUsingName);
             computers.push_back(computer);
         }
     }
@@ -1431,11 +1435,11 @@ vector<Computer> getComputers()
     while (getline(file, line))
     {
         stringstream ss(line);
-        string id, statusStr, customerUsingName;
+        string id, status, customerUsingName;
         getline(ss, id, '|');
-        getline(ss, statusStr, '|');
+        getline(ss, status, '|');
         getline(ss, customerUsingName);
-        Computer computer(id, statusStr == "1" ? true : false, customerUsingName);
+        Computer computer(id, status, customerUsingName);
         computer.setUsageTime(computer.getUsageTimeFromFile());
         computers.push_back(computer);
     }
@@ -1445,7 +1449,7 @@ vector<Computer> getComputers()
 
 void assignRandomComputer(Customer &customer, Computer &computer)
 {
-    vector<Computer> computers = getComputersByStatus(false);
+    vector<Computer> computers = getComputersByStatus("Available");
     if (computers.size() == 0)
     {
         MessageBoxW(NULL, L"Hiện tại không có máy trống!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
@@ -1455,7 +1459,7 @@ void assignRandomComputer(Customer &customer, Computer &computer)
     int randomIndex = rand() % computers.size();
     computer = computers[randomIndex];
     computer.setCustomerUsingName(customer.getUserName());
-    computer.setStatus(true);
+    computer.setStatus("Using");
     updateComputerToFile(computer);
 
     customer.setCurrentComputerID(computer.getId());
@@ -1466,7 +1470,7 @@ void removeComputerFromFile(Computer &computer)
 {
     if (getComputerFromFile(computer))
     {
-        if (computer.getStatus())
+        if (computer.getStatus() == "Using")
         {
             MessageBoxW(NULL, L"Máy đang sử dụng không thể xóa", L"Thông báo", MB_OK | MB_ICONWARNING);
             return;

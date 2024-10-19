@@ -1,15 +1,12 @@
 #include "customer.h"
 #include "base64.h"
 #include "function.h"
-#include <mutex>
+// #include <mutex>
 
-mutex cus;
+// mutex cus;
 
-Customer::Customer(string username, string password, string role,
-                   string id, bool status, bool isFirstLogin, bool isLocked,
-                   string name, string phone, float balance, Time time, int moneyforOrder)
-    : Account(username, password, role, id, status, isFirstLogin, isLocked),
-      name(name), phone(phone), balance(balance), time(time), moneyforOrder(moneyforOrder) {}
+Customer::Customer(string username, string password, string role, string id, string status, string isFirstLogin, string isLocked, string name, string phone, float balance, Time time, int moneyforOrder)
+    : Account(username, password, role, id, status, isFirstLogin, isLocked), name(name), phone(phone), balance(balance), time(time), moneyforOrder(moneyforOrder) {}
 Customer::~Customer() {}
 
 string Customer::getName() { return name; }
@@ -27,7 +24,7 @@ void Customer::setCurrentComputerID(string id) { currentComputerID = id; }
 
 Time Customer::getTimeFromFile()
 {
-    lock_guard<mutex> lock(cus);
+    // lock_guard<mutex> lock(cus);
     Time time;
     fstream file("./time/" + getId() + ".txt", ios::in);
     if (file.is_open())
@@ -51,10 +48,6 @@ void Customer::setTimeToFile(Time time)
         file << time;
         file.close();
     }
-    else
-    {
-        cout << "Không thể mở file t/g customer" << endl;
-    }
 }
 
 void Customer::showMyInfo()
@@ -70,11 +63,11 @@ void Customer::showMyInfo()
 
 bool Customer::isLocked()
 {
-    lock_guard<mutex> lock(cus);
+    // lock_guard<mutex> lock(cus);
     fstream file("./account/account.txt", ios::in);
     if (!file.is_open())
     {
-        cout << "Không thể mở file account trong isLocked ở file customer.cpp" << endl;
+        // cout << "Không thể mở file account trong isLocked ở file customer.cpp" << endl;
         return false;
     }
     string line;
@@ -92,7 +85,7 @@ bool Customer::isLocked()
 
         if (username == this->username)
         {
-            if (isLocked == "1")
+            if (isLocked == "Locked")
             {
                 file.close();
                 return true;
@@ -147,7 +140,7 @@ bool getCustomerFromFile(Customer &customer)
 
 void updateCustomerToFile(Customer &customer)
 {
-    lock_guard<mutex> lock(cus);
+    // lock_guard<mutex> lock(cus);
     fstream file("./data/customer.txt", ios::in);
     if (!file.is_open())
     {
@@ -271,7 +264,6 @@ void Customer::order(string nameRefreshment, int quantity)
 
 void Customer::order()
 {
-
     system("cls");
     ShowCursor(false);
     this->balance -= getTotalPrice();

@@ -12,7 +12,7 @@ using namespace std;
 class Staff : public Account
 {
 public:
-    Staff(string username = "", string password = "", string role = "", string id = "", bool status = false, bool isFirstLogin = true);
+    Staff(string username = "", string password = "", string role = "", string id = "", string status = "", string isFirstLogin = "", string isLocked = "");
 
     void viewComputerStatus();
     void topUpAccount();

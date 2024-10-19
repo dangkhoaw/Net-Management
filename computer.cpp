@@ -3,7 +3,7 @@
 
 mutex com;
 
-Computer::Computer(string id, bool status, string customerUsingName, Time usageTime)
+Computer::Computer(string id, string status, string customerUsingName, Time usageTime)
     : id(id), status(status), customerUsingName(customerUsingName), usageTime(usageTime) {}
 
 Computer::~Computer() {}
@@ -12,9 +12,9 @@ string Computer::getId() { return id; }
 
 void Computer::setId(string id) { this->id = id; }
 
-bool Computer::getStatus() { return status; }
+string Computer::getStatus() { return status; }
 
-void Computer::setStatus(bool status) { this->status = status; }
+void Computer::setStatus(string status) { this->status = status; }
 
 void Computer::setUsageTime(Time usageTime) { this->usageTime = usageTime; }
 
@@ -81,7 +81,7 @@ bool getComputerFromFile(Computer &computer)
         getline(ss, customerUsingName);
         if (id == computer.id)
         {
-            computer.status = status == "1" ? true : false;
+            computer.status = status;
             computer.customerUsingName = customerUsingName;
 
             computer.usageTime = computer.getUsageTimeFromFile();
@@ -126,7 +126,7 @@ void updateComputerToFile(Computer &computer)
         else
         {
             temp.id = id;
-            temp.status = status == "1" ? true : false;
+            temp.status = status;
             temp.customerUsingName = customerUsingName;
         }
         tempFile << temp << endl;

@@ -3,7 +3,7 @@
 #include "mtime.h"
 #include "base64.h"
 /*
-                                        
+                                         
 */
 using namespace std;
 
@@ -16,17 +16,18 @@ int main(int argc, char const *argv[])
     if (account.signIn())
     {
         getAccountFromFile(account);
-        account.setStatus(true);
+        account.setStatus("Online");
+        account.setLocked("Unlocked");
         updateAccountToFile(account);
         account.setPassword(Base64(account.getPassword()).decode());
         if (account.getRole() == "staff")
         {
-            Staff staff(account.getUserName(), account.getPassword(), account.getRole(), account.getId(), account.getStatus(), account.getIsFirstLogin());
+            Staff staff(account.getUserName(), account.getPassword(), account.getRole(), account.getId(), account.getStatus(), account.getIsFirstLogin(), account.getIsLocked());
             menuStaff(staff);
         }
         else if (account.getRole() == "customer")
         {
-            Customer customer(account.getUserName(), account.getPassword(), account.getRole(), account.getId(), account.getStatus(), account.getIsFirstLogin());
+            Customer customer(account.getUserName(), account.getPassword(), account.getRole(), account.getId(), account.getStatus(), account.getIsFirstLogin(), account.getIsLocked());
             getCustomerFromFile(customer);
             Computer computer;
             assignRandomComputer(customer, computer);
@@ -38,7 +39,7 @@ int main(int argc, char const *argv[])
                     if (account.changePassword())
                     {
                         customer.setPassword(account.getPassword());
-                        customer.setIsFirstLogin(false);
+                        customer.setIsFirstLogin("NotFirstLogin");
                         break;
                     }
                 }

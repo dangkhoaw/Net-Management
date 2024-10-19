@@ -2,24 +2,32 @@
 #include "function.h"
 #include "base64.h"
 
-Account::Account(string username, string password, string role, string id, bool status, bool isFirstLogin, bool isLocked) : username(username), password(password), role(role), id(id), status(status), isFirstLogin(isFirstLogin), isLocked(isLocked) {}
+Account::Account(string username, string password, string role, string id, string status, string isFirstLogin, string isLocked)
+{
+    this->username = username;
+    this->password = password;
+    this->role = role;
+    this->id = id;
+    this->status = status;
+    this->isFirstLogin = isFirstLogin;
+    this->isLocked = isLocked;
+}
 
 Account::~Account() {}
 void Account::setRole(string role) { this->role = role; }
 void Account::setPassword(string password) { this->password = password; }
 void Account::setUserName(string username) { this->username = username; }
+void Account::setStatus(string status) { this->status = status; }
+void Account::setIsFirstLogin(string isFirstLogin) { this->isFirstLogin = isFirstLogin; }
+void Account::setLocked(string isLocked) { this->isLocked = isLocked; }
+void Account::setId(string id) { this->id = id; }
 string Account::getRole() { return role; }
 string Account::getUserName() { return username; }
 string Account::getPassword() { return password; }
 string Account::getId() { return id; }
-bool Account::getIsFirstLogin() { return isFirstLogin; }
-bool Account::getIsLocked() { return isLocked; }
-void Account::setIsFirstLogin(bool isFirstLogin) { this->isFirstLogin = isFirstLogin; }
-bool Account::getStatus() { return status; }
-void Account::setStatus(bool status) { this->status = status; }
-void Account::setLocked(bool isLocked) { this->isLocked = isLocked; }
-
-void Account::setId(string id) { this->id = id; }
+string Account::getStatus() { return status; }
+string Account::getIsFirstLogin() { return isFirstLogin; }
+string Account::getIsLocked() { return isLocked; }
 
 istream &operator>>(istream &is, Account &account)
 {
@@ -49,7 +57,7 @@ istream &operator>>(istream &is, Account &account)
 
         if (checkAccount(account))
         {
-            if (account.isLocked)
+            if (account.isLocked == "Locked")
             {
                 Gotoxy(0, 7);
                 cout << "Tài khoản đã bị khóa!" << endl;
@@ -58,7 +66,7 @@ istream &operator>>(istream &is, Account &account)
                 Sleep(555);
                 continue;
             }
-            if (account.status)
+            if (account.status == "Online")
             {
                 Gotoxy(0, 7);
                 cout << "Tài khoản đã đăng nhập ở máy khác!" << endl;
@@ -167,15 +175,9 @@ void updateAccountToFile(Account &account)
         getline(ss, temp.username, '|');
         getline(ss, temp.password, '|');
         getline(ss, temp.role, '|');
-        string status;
-        getline(ss, status, '|');
-        temp.status = status == "1" ? true : false;
-        string isFirstLogin;
-        getline(ss, isFirstLogin, '|');
-        temp.isFirstLogin = isFirstLogin == "1" ? true : false;
-        string isLocked;
-        getline(ss, isLocked);
-        temp.isLocked = isLocked == "1" ? true : false;
+        getline(ss, temp.status, '|');
+        getline(ss, temp.isFirstLogin, '|');
+        getline(ss, temp.isLocked);
         if (temp.id == account.id)
         {
             temp = account;
@@ -206,15 +208,9 @@ bool getAccountFromFile(Account &account)
         getline(ss, temp.username, '|');
         getline(ss, temp.password, '|');
         getline(ss, temp.role, '|');
-        string status;
-        getline(ss, status, '|');
-        temp.status = status == "1" ? true : false;
-        string isFirstLogin;
-        getline(ss, isFirstLogin, '|');
-        temp.isFirstLogin = isFirstLogin == "1" ? true : false;
-        string isLocked;
-        getline(ss, isLocked);
-        temp.isLocked = isLocked == "1" ? true : false;
+        getline(ss, temp.status, '|');
+        getline(ss, temp.isFirstLogin, '|');
+        getline(ss, temp.isLocked);
         if (temp.username == account.username)
         {
             account = temp;
@@ -244,15 +240,9 @@ bool checkAccount(Account &account)
         getline(ss, temp.username, '|');
         getline(ss, temp.password, '|');
         getline(ss, temp.role, '|');
-        string status;
-        getline(ss, status, '|');
-        temp.status = status == "1" ? true : false;
-        string isFirstLogin;
-        getline(ss, isFirstLogin, '|');
-        temp.isFirstLogin = isFirstLogin == "1" ? true : false;
-        string isLocked;
-        getline(ss, isLocked);
-        temp.isLocked = isLocked == "1" ? true : false;
+        getline(ss, temp.status, '|');
+        getline(ss, temp.isFirstLogin, '|');
+        getline(ss, temp.isLocked);
         if (temp.username == account.username && temp.password == Base64(account.password).encode())
         {
             account = temp;

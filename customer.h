@@ -17,7 +17,7 @@ private:
     History history;
 
 public:
-    Customer(string username = "", string password = "", string role = "", string id = "", bool status = false, bool isFirstLogin = true, bool isLocked = false, string name = "", string phone = "", float balance = 0, Time time = Time(), int moneyforOrder = 0);
+    Customer(string username = "", string password = "", string role = "", string id = "", string status = "", string isFirstLogin = "", string isLocked = "", string name = "", string phone = "", float balance = 0, Time time = Time(), int moneyforOrder = 0);
     ~Customer();
     string getPhone();
     string getName();

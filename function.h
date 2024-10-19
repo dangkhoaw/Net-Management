@@ -59,7 +59,7 @@ int getNumberOfComputers();
 void updateNumberOfComputers(int &count);
 bool addNewComputerToFile(Computer &computer);
 void generateIDComputer(Computer &computer);
-vector<Computer> getComputersByStatus(bool status);
+vector<Computer> getComputersByStatus(string status);
 vector<Computer> getComputers();
 void assignRandomComputer(Customer &customer, Computer &computer);
 void removeComputerFromFile(Computer &computer);

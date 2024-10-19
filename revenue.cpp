@@ -95,6 +95,33 @@ void Revenue::viewRevenueDay(Date &date)
 
     ShowCursor(false);
     pressKeyQ();
+
+    // /*
+    // ┌──────────────────────────────────┐  ┌─────────────────────────────────────────────┐
+    // │       Doanh thu hôm nay         │  │ Doanh thu ngày 16/10/2024: 10000 (VND)      │
+    // │       Doanh thu hôm qua         │  └─────────────────────────────────────────────┘
+    // │       Doanh thu ngày khác       │
+    // │       Thoát                     │
+    // └──────────────────────────────────┘
+    // */
+
+    // if (!checkDate(date))
+    // {
+    //     cout << "Không có dữ liệu doanh thu cho ngày này" << endl;
+    //     ShowCursor(false);
+    //     pressKeyQ();
+    //     return;
+    // }
+
+    // *this = getDoanhThuByDate(date);
+    // ClearLine(38, 0, 50);
+    // cout << "┌─────────────────────────────────────────────┐";
+    // ClearLine(38, 1, 50);
+    // cout << "│ Doanh thu ngày " << date << " là: " << totalMoney << " (VND)";
+    // Gotoxy(38 + 46, 1);
+    // cout << "│";
+    // ClearLine(38, 2, 50);
+    // cout << "└─────────────────────────────────────────────┘";
 }
 
 void Revenue::viewRevenueMonth(Date &date)
