@@ -7,19 +7,21 @@ mutex cus;
 
 Customer::Customer(string username, string password, string role,
                    string id, bool status, bool isFirstLogin, bool isLocked,
-                   string name, string phone, float balance, Time time)
+                   string name, string phone, float balance, Time time, int moneyforOrder)
     : Account(username, password, role, id, status, isFirstLogin, isLocked),
-      name(name), phone(phone), balance(balance), time(time) {}
+      name(name), phone(phone), balance(balance), time(time), moneyforOrder(moneyforOrder) {}
 Customer::~Customer() {}
 
 string Customer::getName() { return name; }
 string Customer::getPhone() { return phone; }
 Time Customer::getTime() { return time; }
 float Customer::getBalance() { return balance; }
+int Customer::getMoneyforOrder() { return moneyforOrder; }
 string Customer::getCurrentComputerID() { return currentComputerID; }
 void Customer::setTime(Time time) { this->time = time; }
 void Customer::setPhone(string phone) { this->phone = phone; }
 void Customer::setName(string name) { this->name = name; }
+void Customer::setmoneyforOrder(int moneyforOrder) { this->moneyforOrder = moneyforOrder; }
 void Customer::setBalance(float balance) { this->balance = balance; }
 void Customer::setCurrentComputerID(string id) { currentComputerID = id; }
 
@@ -224,43 +226,83 @@ int Customer::inPutAmountOrder()
     } while (amount < 0);
     return amount;
 }
-void Customer::orderFood(string nameFood, int quantity)
+void Customer::order(string nameRefreshment, int quantity)
 {
     system("cls");
     ShowCursor(true);
-    if (quantity == 0)
-        return;
-    int price;
-    if (nameFood == "Bánh mì thịt nướng")
+    int price = 0;
+    if (nameRefreshment == "Bánh mì thịt nướng")
         price = 15000 * quantity;
-    else if (nameFood == "Mì tôm trứng")
+    else if (nameRefreshment == "Mì tôm trứng")
         price = 15000 * quantity;
-    else if (nameFood == "Cơm gà nướng")
+    else if (nameRefreshment == "Cơm gà nướng")
         price = 25000 * quantity;
-    else if (nameFood == "Cơm gà chiên nước mắm")
+    else if (nameRefreshment == "Cơm gà chiên nước mắm")
         price = 25000 * quantity;
-    else if (nameFood == "xúc xích")
+    else if (nameRefreshment == "Xúc xích")
         price = 10000 * quantity;
-    else if (nameFood == "Cơm cuộn")
+    else if (nameRefreshment == "Cơm cuộn")
         price = 15000 * quantity;
-
-    if (balance < price)
+    else if (nameRefreshment == "Nước suối")
+        price = 5000 * quantity;
+    else if (nameRefreshment == "Nước cam")
+        price = 10000 * quantity;
+    else if (nameRefreshment == "Bò húc")
+        price = 15000 * quantity;
+    else if (nameRefreshment == "Caffee sữa")
+        price = 15000 * quantity;
+    else if (nameRefreshment == "Caffee đen")
+        price = 10000 * quantity;
+    else if (nameRefreshment == "Coca lon")
+        price = 10000 * quantity;
+    setOrderedToFile(*this, nameRefreshment, quantity, price);
+    this->moneyforOrder += price;
+    if (this->balance < this->moneyforOrder)
     {
-        cout << "Số dư không đủ,vui lòng nhập lại" << endl;
+        this->moneyforOrder -= price;
+        system("cls");
+        cout << "Số dư không đủ" << endl;
+        pressKeyQ();
         return;
     }
-    setOrderedToFile(*this, nameFood, quantity);
     cout << "Đã thêm món" << endl;
     pressKeyQ();
-    // cout << "Số tiền cần thanh toán: " << price << endl;
-    // cout << "Bạn có muốn đặt món ? (Y/N): ";//   update bằng cái đóng khung lồng kính + báo giá từng món
-    // char c;
-    // cin >> c;
-    // if (c == 'Y' || c == 'y')
-    // {
-    //     balance -= price;
-    //     // cout << "Thanh toán thành công" << endl;
-    //     // cout << "Số dư còn lại: " << balance << endl;
-    //     updateCustomerToFile(*this);
-    // }
+}
+
+void Customer::order()
+{
+
+    system("cls");
+    ShowCursor(false);
+    this->balance -= getTotalPrice();
+    this->moneyforOrder = 0;
+    updateCustomerToFile(*this);
+    system(("del .\\data\\" + getId() + "_ordered.txt").c_str());
+    cout << " Đang chuẩn bị, vui lòng chờ trong giây lát..!" << endl;
+    Sleep(3000);
+    return;
+}
+int Customer::getTotalPrice()
+{
+    fstream file("./data/" + (*this).getId() + "_ordered.txt", ios::in);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file ordered" << endl;
+        return 0;
+    }
+    string line;
+    int total = 0;
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        string name;
+        int quantity;
+        int price;
+        getline(ss, name, '|');
+        getline(ss, line, '|');
+        quantity = stoi(line);
+        ss >> price;
+        total += quantity * price;
+    }
+    return total;
 }

@@ -37,6 +37,8 @@ void menuQuantity(Customer &customer, string nameFood);
 void menuDrink(Customer &customer);
 void menuGame();
 void setOrderedToFile(Customer &customer, string name, int quantity);
+void setOrderedToFile(Customer &customer, string name, int quantity, int price);
+void printItemsOrdered(Customer &customer);
 /*------------------------------------TIME------------------------------------*/
 void showRemainingTimeOfCustomer(Customer *customer);
 void showUsageTimeOfComputer(Computer *computer);
