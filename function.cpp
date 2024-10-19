@@ -72,6 +72,15 @@ void optionMenu(string typeMenu, int option)
 {
     if (typeMenu == "staff")
     {
+        /*
+        ┌──────────────────────────────────┐
+        │    Quản lí khách hàng           │
+        │    Quản lí máy tính             │
+        │    Xem doanh thu                │
+        │    Nạp tiền                     │
+        │    Đăng xuất                    │
+        └──────────────────────────────────┘
+        */
         switch (option)
         {
         case 1:
@@ -93,6 +102,16 @@ void optionMenu(string typeMenu, int option)
     }
     else if (typeMenu == "customerManger")
     {
+        /*
+        ┌───────────────────────────────────┐
+        │       Thêm tài khoản             │
+        │       Xóa tài khoản              │
+        │       Khóa tài khoản             │
+        │       Mở khóa tài khoản          │
+        │       Xem thông tin khách hàng   │
+        │       Thoát                      │
+        └───────────────────────────────────┘
+        */
         switch (option)
         {
         case 1:
@@ -117,6 +136,15 @@ void optionMenu(string typeMenu, int option)
     }
     else if (typeMenu == "computerManager")
     {
+        /*
+        ┌──────────────────────────────────┐
+        │       Thêm máy tính             │
+        │       Xóa máy tính              │
+        │       Sửa thông tin máy tính    │
+        │       Xem trạng thái máy        │
+        │       Thoát                     │
+        └──────────────────────────────────┘
+        */
         switch (option)
         {
         case 1:
@@ -138,6 +166,19 @@ void optionMenu(string typeMenu, int option)
     }
     else if (typeMenu == "customer")
     {
+        /*
+        ┌──────────────────────────────────┐
+        │   Thời gian còn lại: 16:50:39    │
+        │   Thời gian sử dụng: 00:00:07    │
+        │   Bạn đang sử dụng máy: COM01    │
+        ├──────────────────────────────────┤
+        │    Đổi mật khẩu                 │
+        │    Xem thông tin cá nhân        │
+        │    Đặt món ăn                   │
+        │    Chơi game                    │
+        │    Đăng xuất                    │
+        └──────────────────────────────────┘
+        */
         switch (option)
         {
         case 1:
@@ -184,76 +225,105 @@ void optionMenu(string typeMenu, int option)
             break;
         }
     }
-    else if (typeMenu == "MenuDish")
+    else if (typeMenu == "dish")
     {
+        /*
+        ┌──────────────────────────────┐
+        │         Thức ăn             │
+        │         Nước uống           │
+        │         Đặt                 │
+        │         Thoát               │
+        └──────────────────────────────┘
+        */
         switch (option)
         {
         case 1:
-            cout << "Thức ăn" << endl;
+            cout << "         Thức ăn             ";
             break;
         case 2:
-            cout << "Nước uống" << endl;
+            cout << "         Nước uống           ";
             break;
         case 3:
-            cout << "Đặt" << endl;
+            cout << "         Đặt                 ";
             break;
         case 4:
-            cout << " Thoát";
+            cout << "         Thoát               ";
             break;
         }
     }
-    else if (typeMenu == "Thức ăn")
+    else if (typeMenu == "food")
     {
-
+        /*
+        ┌──────────────────────────────┐
+        │     Bánh mì thịt nướng       │
+        │     Mì tôm trứng             │
+        │     Cơm gà nướng             │
+        │     Cơm gà chiên nước mắm    │
+        │     Xúc xích                 │
+        │     Cơm cuộn                 │
+        │      Thoát                  │
+        └──────────────────────────────┘
+        */
         switch (option)
         {
         case 1:
-            cout << "Bánh mì thịt nướng" << endl;
+            cout << "     Bánh mì thịt nướng       ";
             break;
         case 2:
-            cout << "Mì tôm trứng" << endl;
+            cout << "     Mì tôm trứng             ";
             break;
         case 3:
-            cout << "Cơm gà nướng" << endl;
+            cout << "     Cơm gà nướng             ";
             break;
         case 4:
-            cout << "Cơm gà chiên nước mắm" << endl;
+            cout << "     Cơm gà chiên nước mắm    ";
             break;
         case 5:
-            cout << "xúc xích" << endl;
+            cout << "     Xúc xích                 ";
             break;
         case 6:
-            cout << "Cơm cuộn" << endl;
+            cout << "     Cơm cuộn                 ";
             break;
         case 7:
-            cout << " Thoát" << endl;
+            cout << "      Thoát                  ";
             break;
         }
     }
-    else if (typeMenu == "Nước uống")
+    else if (typeMenu == "drink")
     {
+        /*
+        ┌──────────────────────────────┐
+        │        Coca lon              │
+        │        Nước suối             │
+        │        Caffee đen            │
+        │        Caffee sữa            │
+        │        Nước cam              │
+        │        Bò húc                │
+        │         Thoát               │
+        └──────────────────────────────┘
+        */
         switch (option)
         {
         case 1:
-            cout << "Coca lon" << endl;
+            cout << "        Coca lon              ";
             break;
         case 2:
-            cout << "Nước suối" << endl;
+            cout << "        Nước suối             ";
             break;
         case 3:
-            cout << "Caffee đen" << endl;
+            cout << "        Caffee đen            ";
             break;
         case 4:
-            cout << "Caffee sữa" << endl;
+            cout << "        Caffee sữa            ";
             break;
         case 5:
-            cout << "Nước cam" << endl;
+            cout << "        Nước cam              ";
             break;
         case 6:
-            cout << "Bò húc" << endl;
+            cout << "        Bò húc                ";
             break;
         case 7:
-            cout << " Thoát" << endl;
+            cout << "         Thoát               ";
             break;
         }
     }
@@ -276,87 +346,127 @@ void optionMenu(string typeMenu, int option)
     }
     else if (typeMenu == "reOrder")
     {
+        /*
+        ┌──────────────────────────────┐
+        │        Sửa số lượng          │
+        │        Xóa                   │
+        │         Thoát               │
+        └──────────────────────────────┘
+        */
         switch (option)
         {
         case 1:
-            cout << "Sửa số lượng" << endl;
+            cout << "        Sửa số lượng          ";
             break;
         case 2:
-            cout << "Xóa" << endl;
+            cout << "        Xóa                   ";
             break;
         case 3:
-            cout << " Thoát" << endl;
+            cout << "         Thoát               ";
+            break;
         }
     }
     else if (typeMenu == "revenue")
     {
+        /*
+        ┌──────────────────────────────────┐
+        │     Xem doanh thu theo ngày     │
+        │     Xem doanh thu theo tháng    │
+        │     Xem doanh thu theo năm      │
+        │     Thoát                       │
+        └──────────────────────────────────┘
+        */
         switch (option)
         {
         case 1:
-            cout << " Xem doanh thu theo ngày" << endl;
+            cout << "     Xem doanh thu theo ngày     ";
             break;
         case 2:
-            cout << " Xem doanh thu theo tháng" << endl;
+            cout << "     Xem doanh thu theo tháng    ";
             break;
         case 3:
-            cout << " Xem doanh thu theo năm" << endl;
+            cout << "     Xem doanh thu theo năm      ";
             break;
         case 4:
-            cout << " Thoát" << endl;
+            cout << "     Thoát                       ";
             break;
         }
     }
     else if (typeMenu == "revenueDay")
     {
+        /*
+        ┌──────────────────────────────────┐
+        │       Doanh thu hôm nay         │
+        │       Doanh thu hôm qua         │
+        │       Doanh thu ngày khác       │
+        │       Thoát                     │
+        └──────────────────────────────────┘
+        */
         switch (option)
         {
         case 1:
-            cout << " Doanh thu hôm nay" << endl;
+            cout << "       Doanh thu hôm nay         ";
             break;
         case 2:
-            cout << " Doanh thu hôm qua" << endl;
+            cout << "       Doanh thu hôm qua         ";
             break;
         case 3:
-            cout << " Doanh thu ngày khác" << endl;
+            cout << "       Doanh thu ngày khác       ";
             break;
         case 4:
-            cout << " Thoát" << endl;
+            cout << "       Thoát                     ";
             break;
         }
     }
     else if (typeMenu == "revenueMonth")
     {
+        /*
+        ┌──────────────────────────────────┐
+        │      Doanh thu tháng này        │
+        │      Doanh thu tháng trước      │
+        │      Doanh thu tháng khác       │
+        │      Thoát                      │
+        └──────────────────────────────────┘
+        */
         switch (option)
         {
         case 1:
-            cout << " Doanh thu tháng này" << endl;
+            cout << "      Doanh thu tháng này        ";
             break;
         case 2:
-            cout << " Doanh thu tháng trước" << endl;
+            cout << "      Doanh thu tháng trước      ";
             break;
         case 3:
-            cout << " Doanh thu tháng khác" << endl;
+            cout << "      Doanh thu tháng khác       ";
             break;
         case 4:
-            cout << " Thoát" << endl;
+            cout << "      Thoát                      ";
             break;
         }
     }
     else if (typeMenu == "revenueYear")
     {
+        /*
+        ┌──────────────────────────────────┐
+        │      Doanh thu năm nay          │
+        │      Doanh thu năm trước        │
+        │      Doanh thu năm khác         │
+        │      Thoát                      │
+        └──────────────────────────────────┘
+        */
         switch (option)
         {
         case 1:
-            cout << " Doanh thu năm nay" << endl;
+            cout << "      Doanh thu năm nay          ";
             break;
         case 2:
-            cout << " Doanh thu năm trước" << endl;
+            cout << "      Doanh thu năm trước        ";
             break;
         case 3:
-            cout << " Doanh thu năm khác" << endl;
+            cout << "      Doanh thu năm khác         ";
             break;
         case 4:
-            cout << " Thoát" << endl;
+            cout << "      Thoát                      ";
             break;
         }
     }
@@ -377,7 +487,6 @@ void printMenuOption(string typeMenu, int option, bool isSelected)
 
 void showMenu(string typeMenu, int selectOption)
 {
-    // static int preSelectOption = -1;
     if (typeMenu == "staff")
     {
         Gotoxy(0, 0);
@@ -464,34 +573,47 @@ void showMenu(string typeMenu, int selectOption)
         }
         cout << "└──────────────────────────────┘" << endl;
     }
-    else if (typeMenu == "MenuDish")
+    else if (typeMenu == "dish")
     {
-
         Gotoxy(0, 0);
+        cout << "┌──────────────────────────────┐" << endl;
         for (int i = 1; i <= MENUDISH; i++)
         {
+            Gotoxy(0, i);
+            cout << "│";
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
+            cout << "│" << endl;
         }
+        cout << "└──────────────────────────────┘" << endl;
     }
-    else if (typeMenu == "Thức ăn")
+    else if (typeMenu == "food")
     {
-
         Gotoxy(0, 0);
+        cout << "┌──────────────────────────────┐" << endl;
         for (int i = 1; i <= MENUFOOD; i++)
         {
+            Gotoxy(0, i);
+            cout << "│";
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
+            cout << "│" << endl;
         }
+        cout << "└──────────────────────────────┘" << endl;
     }
-    else if (typeMenu == "Nước uống")
+    else if (typeMenu == "drink")
     {
         Gotoxy(0, 0);
+        cout << "┌──────────────────────────────┐" << endl;
         for (int i = 1; i <= MENUDRINK; i++)
         {
+            Gotoxy(0, i);
+            cout << "│";
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
+            cout << "│" << endl;
         }
+        cout << "└──────────────────────────────┘" << endl;
     }
     else if (typeMenu == "quantity")
     {
@@ -506,57 +628,86 @@ void showMenu(string typeMenu, int selectOption)
     else if (typeMenu == "reOrder")
     {
         Gotoxy(0, 0);
+        cout << "┌──────────────────────────────────┐" << endl;
         for (int i = 1; i <= 3; i++)
         {
+            Gotoxy(0, i);
+            cout << "│";
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
+            cout << "│" << endl;
         }
+        cout << "└──────────────────────────────────┘" << endl;
     }
     else if (typeMenu == "revenue")
     {
         Gotoxy(0, 0);
+        cout << "┌──────────────────────────────────┐" << endl;
         for (int i = 1; i <= MENUREVENUE; i++)
         {
+            Gotoxy(0, i);
+            cout << "│";
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
+            cout << "│" << endl;
         }
+        cout << "└──────────────────────────────────┘" << endl;
     }
-
     else if (typeMenu == "revenueDay")
     {
         Gotoxy(0, 0);
+        cout << "┌──────────────────────────────────┐" << endl;
         for (int i = 1; i <= 4; i++)
         {
+            Gotoxy(0, i);
+            cout << "│";
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
+            cout << "│" << endl;
         }
+        cout << "└──────────────────────────────────┘" << endl;
     }
     else if (typeMenu == "revenueMonth")
     {
         Gotoxy(0, 0);
+        cout << "┌──────────────────────────────────┐" << endl;
         for (int i = 1; i <= 4; i++)
         {
+            Gotoxy(0, i);
+            cout << "│";
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
+            cout << "│" << endl;
         }
+        cout << "└──────────────────────────────────┘" << endl;
     }
     else if (typeMenu == "revenueYear")
     {
         Gotoxy(0, 0);
+        cout << "┌──────────────────────────────────┐" << endl;
         for (int i = 1; i <= 4; i++)
         {
+            Gotoxy(0, i);
+            cout << "│";
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
+            cout << "│" << endl;
         }
+        cout << "└──────────────────────────────────┘" << endl;
     }
     else if (typeMenu == "dish")
     {
         Gotoxy(0, 0);
-        for (int i = 1; i <= 9; i++) // để hỏi đầu bếp khoa
+        cout << "┌──────────────────────────────┐" << endl;
+        for (int i = 1; i <= 9; i++)
         {
+            Gotoxy(0, i);
+            cout << "│";
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
+            cout << "│" << endl;
         }
+        cout << "└──────────────────────────────┘" << endl;
     }
 }
 
@@ -572,10 +723,10 @@ void customerManagementMenu(Staff &staff)
         switch (key)
         {
         case KEY_UP:
-            selectOption = (selectOption == 1) ? 6 : selectOption - 1;
+            selectOption = (selectOption == 1) ? MENUCUSTOMERMANAGER : selectOption - 1;
             break;
         case KEY_DOWN:
-            selectOption = (selectOption == 6) ? 1 : selectOption + 1;
+            selectOption = (selectOption == MENUCUSTOMERMANAGER) ? 1 : selectOption + 1;
             break;
         case KEY_ENTER:
             switch (selectOption)
@@ -591,7 +742,7 @@ void customerManagementMenu(Staff &staff)
             // mở khóa tài khoản
             case 5:
             // xem thông tin khách hàng
-            case 6:
+            case MENUCUSTOMERMANAGER:
                 system("cls");
                 return;
             }
@@ -872,7 +1023,7 @@ void menuRevenue(Staff &staff)
 
 void menuRevenueDay(Staff &staff)
 {
-    DoanhThu doanhThu;
+    Revenue revenue;
     Date date;
     system("cls");
     SetConsoleTitle(TEXT("Menu doanh thu theo ngày"));
@@ -895,17 +1046,17 @@ void menuRevenueDay(Staff &staff)
             {
             case 1:
                 date = Date().getCurrentDate();
-                doanhThu.viewRevenueDay(date);
+                revenue.viewRevenueDay(date);
                 break;
             case 2:
                 date = Date().getCurrentDate() - 1;
-                doanhThu.viewRevenueDay(date);
+                revenue.viewRevenueDay(date);
                 break;
             case 3:
                 ShowCursor(true);
                 system("cls");
                 cin >> date;
-                doanhThu.viewRevenueDay(date);
+                revenue.viewRevenueDay(date);
                 ShowCursor(false);
                 break;
             case 4:
@@ -924,7 +1075,7 @@ void menuRevenueMonth(Staff &staff)
     SetConsoleTitle(TEXT("Menu doanh thu theo tháng"));
     ShowCursor(false);
     int selectOption = 1;
-    DoanhThu doanhThu;
+    Revenue revenue;
     Date date;
     int month, year;
     while (true)
@@ -944,11 +1095,11 @@ void menuRevenueMonth(Staff &staff)
             {
             case 1:
                 date = Date().getCurrentDate();
-                doanhThu.viewRevenueMonth(date);
+                revenue.viewRevenueMonth(date);
                 break;
             case 2:
                 date = Date().getCurrentDate() - Date(0, 1, 0);
-                doanhThu.viewRevenueMonth(date);
+                revenue.viewRevenueMonth(date);
                 break;
             case 3:
                 ShowCursor(true);
@@ -956,7 +1107,7 @@ void menuRevenueMonth(Staff &staff)
                 inputMonthAndYear(month, year);
                 date.setMonth(month);
                 date.setYear(year);
-                doanhThu.viewRevenueMonth(date);
+                revenue.viewRevenueMonth(date);
                 break;
             case 4:
                 system("cls");
@@ -974,7 +1125,7 @@ void menuRevenueYear(Staff &staff)
     SetConsoleTitle(TEXT("Menu doanh thu theo năm"));
     ShowCursor(false);
     int selectOption = 1;
-    DoanhThu doanhThu;
+    Revenue revenue;
     Date date;
     int year;
     while (true)
@@ -994,18 +1145,18 @@ void menuRevenueYear(Staff &staff)
             {
             case 1:
                 date = Date().getCurrentDate();
-                doanhThu.viewRevenueYear(date);
+                revenue.viewRevenueYear(date);
                 break;
             case 2:
                 date = Date().getCurrentDate() - Date(0, 0, 1);
-                doanhThu.viewRevenueYear(date);
+                revenue.viewRevenueYear(date);
                 break;
             case 3:
                 ShowCursor(true);
                 system("cls");
                 inputYear(year);
                 date.setYear(year);
-                doanhThu.viewRevenueYear(date);
+                revenue.viewRevenueYear(date);
                 break;
             case 4:
                 system("cls");
@@ -1458,7 +1609,7 @@ void menuFood(Customer &customer)
     int selectOption = 1;
     while (true)
     {
-        showMenu("Thức ăn", selectOption);
+        showMenu("food", selectOption);
         int key = _getch();
         switch (key)
         {
@@ -1508,7 +1659,7 @@ void menuDish(Customer &customer)
     int selectOption = 1;
     while (true)
     {
-        showMenu("MenuDish", selectOption);
+        showMenu("dish", selectOption);
         int key = _getch();
         switch (key)
         {

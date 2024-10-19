@@ -1,4 +1,4 @@
-#include "staff.h"
+// #include "staff.h"
 #include "function.h"
 #include <string>
 #include <iomanip>
@@ -112,8 +112,8 @@ void Staff::topUpAccount()
     string userName;
     Customer customer;
     Date currentDate = Date().getCurrentDate();
-    DoanhThu doanhThu = DoanhThu().getDoanhThuByDate(currentDate);
-    doanhThu.setDate(currentDate);
+    Revenue revenue = Revenue().getDoanhThuByDate(currentDate);
+    revenue.setDate(currentDate);
     int count = 0;
 
     while (true)
@@ -161,8 +161,8 @@ void Staff::topUpAccount()
         }
     } while (amount < 1000);
     cin.ignore();
-    doanhThu = doanhThu + amount;
-    doanhThu.updateDoanhThu(doanhThu);
+    revenue = revenue + amount;
+    revenue.updateDoanhThu(revenue);
 
     customer.setUserName(userName);
     getCustomerFromFile(customer);

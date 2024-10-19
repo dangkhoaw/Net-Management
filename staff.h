@@ -5,7 +5,7 @@
 #include <vector>
 #include "computer.h"
 #include "mtime.h"
-#include "doanhthu.h"
+#include "revenue.h"
 
 using namespace std;
 

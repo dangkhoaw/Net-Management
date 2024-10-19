@@ -6,8 +6,7 @@
 #include "mtime.h"
 #include "staff.h"
 #include "account.h"
-#include "doanhthu.h"
-// #include "dish.h"
+#include "revenue.h"
 
 #define KEY_UP 72
 #define KEY_DOWN 80

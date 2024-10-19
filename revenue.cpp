@@ -1,25 +1,25 @@
-#include "doanhthu.h"
+#include "revenue.h"
 #include "function.h"
 
-DoanhThu::DoanhThu(Date date, double totalMoney) : date(date), totalMoney(totalMoney) {}
+Revenue::Revenue(Date date, double totalMoney) : date(date), totalMoney(totalMoney) {}
 
-DoanhThu::~DoanhThu() {}
+Revenue::~Revenue() {}
 
-ostream &operator<<(ostream &os, const DoanhThu &doanhThu)
+ostream &operator<<(ostream &os, const Revenue &doanhThu)
 {
     os << doanhThu.date << "|" << doanhThu.totalMoney;
     return os;
 }
 
-istream &operator>>(istream &is, DoanhThu &doanhThu)
+istream &operator>>(istream &is, Revenue &doanhThu)
 {
     is >> doanhThu.date >> doanhThu.totalMoney;
     return is;
 }
 
-vector<DoanhThu> DoanhThu::getDoanhThu()
+vector<Revenue> Revenue::getDoanhThu()
 {
-    vector<DoanhThu> doanhthus;
+    vector<Revenue> doanhthus;
     fstream file("./data/doanhthu.txt", ios::in);
     if (!file.is_open())
     {
@@ -44,16 +44,16 @@ vector<DoanhThu> DoanhThu::getDoanhThu()
         }
 
         Date dateObj(stoi(dateArr[0]), stoi(dateArr[1]), stoi(dateArr[2]));
-        DoanhThu doanhThu(dateObj, stod(totalMoney));
+        Revenue doanhThu(dateObj, stod(totalMoney));
         doanhthus.push_back(doanhThu);
     }
     file.close();
     return doanhthus;
 }
 
-void DoanhThu::updateDoanhThu(DoanhThu &doanhThu)
+void Revenue::updateDoanhThu(Revenue &doanhThu)
 {
-    vector<DoanhThu> doanhthus = getDoanhThu();
+    vector<Revenue> doanhthus = getDoanhThu();
     fstream file("./data/doanhthu.txt", ios::out);
     if (!file.is_open())
     {
@@ -62,7 +62,7 @@ void DoanhThu::updateDoanhThu(DoanhThu &doanhThu)
     }
 
     bool check = false;
-    for (DoanhThu d : doanhthus)
+    for (Revenue d : doanhthus)
     {
         if (d.getDate() == doanhThu.getDate())
         {
@@ -78,7 +78,7 @@ void DoanhThu::updateDoanhThu(DoanhThu &doanhThu)
     file.close();
 }
 
-void DoanhThu::viewRevenueDay(Date &date)
+void Revenue::viewRevenueDay(Date &date)
 {
     system("cls");
 
@@ -97,7 +97,7 @@ void DoanhThu::viewRevenueDay(Date &date)
     pressKeyQ();
 }
 
-void DoanhThu::viewRevenueMonth(Date &date)
+void Revenue::viewRevenueMonth(Date &date)
 {
     system("cls");
 
@@ -116,7 +116,7 @@ void DoanhThu::viewRevenueMonth(Date &date)
     pressKeyQ();
 }
 
-void DoanhThu::viewRevenueYear(Date &date)
+void Revenue::viewRevenueYear(Date &date)
 {
     system("cls");
 
@@ -135,24 +135,24 @@ void DoanhThu::viewRevenueYear(Date &date)
     pressKeyQ();
 }
 
-DoanhThu DoanhThu::getDoanhThuByDate(Date &date)
+Revenue Revenue::getDoanhThuByDate(Date &date)
 {
-    vector<DoanhThu> doanhthus = getDoanhThu();
-    for (DoanhThu doanhThu : doanhthus)
+    vector<Revenue> doanhthus = getDoanhThu();
+    for (Revenue doanhThu : doanhthus)
     {
         if (doanhThu.getDate() == date)
         {
             return doanhThu;
         }
     }
-    return DoanhThu();
+    return Revenue();
 }
 
-DoanhThu DoanhThu::getDoanhThuByMonth(Date &date)
+Revenue Revenue::getDoanhThuByMonth(Date &date)
 {
-    vector<DoanhThu> doanhthus = getDoanhThu();
-    DoanhThu doanhThu;
-    for (DoanhThu d : doanhthus)
+    vector<Revenue> doanhthus = getDoanhThu();
+    Revenue doanhThu;
+    for (Revenue d : doanhthus)
     {
         if (d.getDate().getMonth() == date.getMonth() && d.getDate().getYear() == date.getYear())
         {
@@ -162,11 +162,11 @@ DoanhThu DoanhThu::getDoanhThuByMonth(Date &date)
     return doanhThu;
 }
 
-DoanhThu DoanhThu::getDoanhThuByYear(Date &date)
+Revenue Revenue::getDoanhThuByYear(Date &date)
 {
-    vector<DoanhThu> doanhthus = getDoanhThu();
-    DoanhThu doanhThu;
-    for (DoanhThu d : doanhthus)
+    vector<Revenue> doanhthus = getDoanhThu();
+    Revenue doanhThu;
+    for (Revenue d : doanhthus)
     {
         if (d.getDate().getYear() == date.getYear())
         {
@@ -176,7 +176,7 @@ DoanhThu DoanhThu::getDoanhThuByYear(Date &date)
     return doanhThu;
 }
 
-bool DoanhThu::checkDate(Date &date)
+bool Revenue::checkDate(Date &date)
 {
     Date dateStart(16, 10, 2024);
     time_t now = time(0);
@@ -192,51 +192,51 @@ bool DoanhThu::checkDate(Date &date)
     return false;
 }
 
-DoanhThu DoanhThu::operator+(double money)
+Revenue Revenue::operator+(double money)
 {
     this->totalMoney += money;
     return *this;
 }
 
-DoanhThu DoanhThu::operator-(double money)
+Revenue Revenue::operator-(double money)
 {
     this->totalMoney -= money;
     return *this;
 }
 
-DoanhThu DoanhThu::operator+(const DoanhThu &other)
+Revenue Revenue::operator+(const Revenue &other)
 {
     this->totalMoney += other.totalMoney;
     return *this;
 }
 
-DoanhThu DoanhThu::operator-(const DoanhThu &other)
+Revenue Revenue::operator-(const Revenue &other)
 {
     this->totalMoney -= other.totalMoney;
     return *this;
 }
 
-Date DoanhThu::getDate()
+Date Revenue::getDate()
 {
     return this->date;
 }
 
-double DoanhThu::getTotalMoney()
+double Revenue::getTotalMoney()
 {
     return this->totalMoney;
 }
 
-void DoanhThu::setDate(Date date)
+void Revenue::setDate(Date date)
 {
     this->date = date;
 }
 
-void DoanhThu::setTotalMoney(double totalMoney)
+void Revenue::setTotalMoney(double totalMoney)
 {
     this->totalMoney = totalMoney;
 }
 
-bool DoanhThu::isValid()
+bool Revenue::isValid()
 {
     return this->date.isValid();
 }
