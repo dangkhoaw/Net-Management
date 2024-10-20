@@ -35,14 +35,16 @@ public:
     void setTimeToFile(Time time);
 
     friend istream &operator>>(istream &is, Customer &customer);
-
     void showMyInfo();
     void addHistory();
     bool isLocked();
+
     int inPutAmountOrder();
-    void order(string nameRefreshment, int quantity);
+    void order(string nameRefreshment, int quantity, bool isOrder_again);
     void order();
     int getTotalPrice();
+    int getPriceOfRefreshment(string nameRefreshment, int quantity);
+
     friend ostream &operator<<(ostream &os, Customer &customer);
     friend bool getCustomerFromFile(Customer &customer);
     friend void updateCustomerToFile(Customer &customer);

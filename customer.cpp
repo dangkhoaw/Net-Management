@@ -212,52 +212,77 @@ int Customer::inPutAmountOrder()
     {
         cout << "Nhập số lượng: ";
         cin >> amount;
-        if (amount < 0)
+        if (amount <= 0)
         {
             cout << "Số lượng không hợp lệ" << endl;
         }
-    } while (amount < 0);
+    } while (amount <= 0);
     return amount;
 }
-void Customer::order(string nameRefreshment, int quantity)
+void Customer::order(string nameRefreshment, int quantity, bool isOrder_again)
 {
     system("cls");
     ShowCursor(true);
-    int price = 0;
-    if (nameRefreshment == "Bánh mì thịt nướng")
-        price = 15000 * quantity;
-    else if (nameRefreshment == "Mì tôm trứng")
-        price = 15000 * quantity;
-    else if (nameRefreshment == "Cơm gà nướng")
-        price = 25000 * quantity;
-    else if (nameRefreshment == "Cơm gà chiên nước mắm")
-        price = 25000 * quantity;
-    else if (nameRefreshment == "Xúc xích")
-        price = 10000 * quantity;
-    else if (nameRefreshment == "Cơm cuộn")
-        price = 15000 * quantity;
-    else if (nameRefreshment == "Nước suối")
-        price = 5000 * quantity;
-    else if (nameRefreshment == "Nước cam")
-        price = 10000 * quantity;
-    else if (nameRefreshment == "Bò húc")
-        price = 15000 * quantity;
-    else if (nameRefreshment == "Caffee sữa")
-        price = 15000 * quantity;
-    else if (nameRefreshment == "Caffee đen")
-        price = 10000 * quantity;
-    else if (nameRefreshment == "Coca lon")
-        price = 10000 * quantity;
-    setOrderedToFile(*this, nameRefreshment, quantity, price);
-    this->moneyforOrder += price;
+    int price = getPriceOfRefreshment(nameRefreshment, quantity);
+    string name;
+    int quantity_infile, price_infile;
+    if (isOrder_again)
+    {
+        fstream file("./data/" + getId() + "_ordered.txt", ios::in);
+        if (!file.is_open())
+        {
+            cout << "Không thể mở file ordered" << endl;
+            return;
+        }
+        string line;
+        while (getline(file, line))
+        {
+            stringstream ss(line);
+            getline(ss, name, '|');
+            getline(ss, line, '|');
+            quantity_infile = stoi(line);
+            getline(ss, line, '|');
+            price_infile = stoi(line);
+            if (name == nameRefreshment)
+            {
+                break;
+            }
+        }
+        if (quantity_infile > quantity)
+        {
+            this->setmoneyforOrder(this->getMoneyforOrder() - (price_infile - price));
+        }
+        else if (quantity_infile < quantity)
+        {
+            this->setmoneyforOrder(this->getMoneyforOrder() + (price - price_infile));
+        }
+        else
+        {
+            return;
+        }
+        file.close();
+    }
+    else
+    {
+        this->moneyforOrder += price;
+    }
     if (this->balance < this->moneyforOrder)
     {
-        this->moneyforOrder -= price;
+        if (isOrder_again)
+        {
+            if (quantity_infile < quantity)
+                this->setmoneyforOrder(this->getMoneyforOrder() - (price - price_infile));
+        }
+        else
+        {
+            this->moneyforOrder -= price;
+        }
         system("cls");
         cout << "Số dư không đủ" << endl;
         pressKeyQ();
         return;
     }
+    setOrderedToFile(*this, nameRefreshment, quantity, price);
     cout << "Đã thêm món" << endl;
     pressKeyQ();
 }
@@ -297,4 +322,33 @@ int Customer::getTotalPrice()
         total += quantity * price;
     }
     return total;
+}
+int Customer::getPriceOfRefreshment(string nameRefreshment, int quantity)
+{
+    int price = 0;
+    if (nameRefreshment == "Bánh mì thịt nướng")
+        price = 15000 * quantity;
+    else if (nameRefreshment == "Mì tôm trứng")
+        price = 15000 * quantity;
+    else if (nameRefreshment == "Cơm gà nướng")
+        price = 25000 * quantity;
+    else if (nameRefreshment == "Cơm gà chiên nước mắm")
+        price = 25000 * quantity;
+    else if (nameRefreshment == "Xúc xích")
+        price = 10000 * quantity;
+    else if (nameRefreshment == "Cơm cuộn")
+        price = 15000 * quantity;
+    else if (nameRefreshment == "Nước suối")
+        price = 5000 * quantity;
+    else if (nameRefreshment == "Nước cam")
+        price = 10000 * quantity;
+    else if (nameRefreshment == "Bò húc")
+        price = 15000 * quantity;
+    else if (nameRefreshment == "Caffee sữa")
+        price = 15000 * quantity;
+    else if (nameRefreshment == "Caffee đen")
+        price = 10000 * quantity;
+    else if (nameRefreshment == "Coca lon")
+        price = 10000 * quantity;
+    return price;
 }

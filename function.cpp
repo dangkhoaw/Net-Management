@@ -331,6 +331,16 @@ void optionMenu(string typeMenu, int option)
     }
     else if (typeMenu == "quantity")
     {
+        /*
+
+                ┌──────────────────────────────┐
+
+                │        1                     │
+                │        2                     │
+                │        Nhiều hơn             │
+                │         Thoát               │
+                └──────────────────────────────┘
+        */
         switch (option)
         {
         case 1:
@@ -621,8 +631,11 @@ void showMenu(string typeMenu, int selectOption)
     {
 
         Gotoxy(0, 0);
+        cout << "┌──────────────────────────────┐" << endl;
+
         for (int i = 1; i <= MENUQUANTITY; i++)
         {
+            Gotoxy(0, i);
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
         }
@@ -1534,8 +1547,9 @@ void menuQuantity(Customer &customer, string nameRefreshment)
     SetConsoleTitle(TEXT("Menu số lượng"));
     ShowCursor(false);
     int selectOption = 1;
-    if (checkIsOrder(customer, nameRefreshment) == false)
+    if (!checkIsOrdered(customer, nameRefreshment))
     {
+
         while (true)
         {
             showMenu("quantity", selectOption);
@@ -1552,13 +1566,13 @@ void menuQuantity(Customer &customer, string nameRefreshment)
                 switch (selectOption)
                 {
                 case 1:
-                    customer.order(nameRefreshment, 1);
+                    customer.order(nameRefreshment, 1, 0);
                     return;
                 case 2:
-                    customer.order(nameRefreshment, 2);
+                    customer.order(nameRefreshment, 2, 0);
                     return;
                 case 3:
-                    customer.order(nameRefreshment, customer.inPutAmountOrder());
+                    customer.order(nameRefreshment, customer.inPutAmountOrder(), 0);
                     return;
                 case 4:
                     system("cls");
@@ -1568,6 +1582,7 @@ void menuQuantity(Customer &customer, string nameRefreshment)
                 break;
             }
         }
+        ShowCursor(true);
     }
     else
     {
@@ -1587,7 +1602,7 @@ void menuQuantity(Customer &customer, string nameRefreshment)
                 switch (selectOption)
                 {
                 case 1:
-                    customer.order(nameRefreshment, customer.inPutAmountOrder());
+                    customer.order(nameRefreshment, customer.inPutAmountOrder(), 1);
                     return;
                 case 2:
                     setOrderedToFile(customer, nameRefreshment, 0, 0);
@@ -1601,6 +1616,7 @@ void menuQuantity(Customer &customer, string nameRefreshment)
                 break;
             }
         }
+        ShowCursor(true);
     }
 }
 void menuDrink(Customer &customer)
@@ -1651,6 +1667,7 @@ void menuDrink(Customer &customer)
             break;
         }
     }
+    ShowCursor(true);
 }
 void menuFood(Customer &customer)
 {
@@ -1699,6 +1716,7 @@ void menuFood(Customer &customer)
             break;
         }
     }
+    ShowCursor(true);
 }
 void menuDish(Customer &customer)
 {
@@ -1708,6 +1726,7 @@ void menuDish(Customer &customer)
     int selectOption = 1;
     while (true)
     {
+        system("cls");
         printItemsOrdered(customer);
         showMenu("dish", selectOption);
         int key = _getch();
@@ -1733,14 +1752,12 @@ void menuDish(Customer &customer)
                 break;
             case 4:
                 system("cls");
-                ShowCursor(true);
                 return;
             }
         default:
             break;
         }
     }
-    ShowCursor(true);
 }
 
 void printItemsOrdered(Customer &customer)
@@ -1752,7 +1769,7 @@ void printItemsOrdered(Customer &customer)
         return;
     }
     string line;
-    int i = 5;
+    int i = 6;
     Gotoxy(0, i);
     cout << "Các món đã đặt" << endl;
     Gotoxy(25, i);
@@ -1782,10 +1799,14 @@ void printItemsOrdered(Customer &customer)
         Gotoxy(30, i);
         cout << "|" << price;
     }
+    Gotoxy(0, i + 1);
+    cout << "Tổng tiền: ";
+    Gotoxy(30, i + 1);
+    cout << "|" << customer.getTotalPrice();
     file.close();
 }
 
-bool checkIsOrder(Customer &customer, string nameRefreshment)
+bool checkIsOrdered(Customer &customer, string nameRefreshment)
 {
     fstream file("./data/" + customer.getId() + "_ordered.txt", ios::in);
     if (!file.is_open())
@@ -1811,98 +1832,90 @@ bool checkIsOrder(Customer &customer, string nameRefreshment)
 void setOrderedToFile(Customer &customer, string nameRefreshment, int quantity, int price)
 {
 
-    if (customer.getMoneyforOrder() + price < customer.getBalance())
+    fstream file("./data/" + customer.getId() + "_ordered.txt", ios::in);
+    if (!file.is_open())
     {
-        fstream file("./data/" + customer.getId() + "_ordered.txt", ios::in);
-        if (!file.is_open())
+        cout << "Không thể mở file ordered" << endl;
+        return;
+    }
+    string tempPath = "./data/temp.txt";
+    fstream tempFile(tempPath, ios::out);
+    if (!tempFile.is_open())
+    {
+        cout << "Không thể mở file temp" << endl;
+        return;
+    }
+    if (isFileEmpty("./data/" + customer.getId() + "_ordered.txt")) // nếu file rỗng, ko caafn thiets
+    {
+        tempFile << nameRefreshment << '|' << quantity << '|' << price << endl;
+        file.close();
+        tempFile.close();
+        system(("del .\\data\\" + customer.getId() + "_ordered.txt").c_str());
+        system(("ren .\\data\\temp.txt " + customer.getId() + "_ordered.txt").c_str());
+        return;
+    }
+    if (quantity == 0) // xóa món ăn khỏi file
+    {
+        string line;
+        while (getline(file, line))
         {
-            cout << "Không thể mở file ordered" << endl;
-            return;
+            stringstream ss(line);
+            string name;
+            int quantity_infile;
+            int price_infile;
+            getline(ss, name, '|');
+            getline(ss, line, '|');
+            quantity_infile = stoi(line);
+            ss >> price_infile;
+            if (name != nameRefreshment)
+            {
+                tempFile << name << '|' << quantity_infile << '|' << price_infile << endl;
+            }
+            else
+            {
+                customer.setmoneyforOrder(customer.getMoneyforOrder() - price_infile);
+            }
         }
-        string tempPath = "./data/temp.txt";
-        fstream tempFile(tempPath, ios::out);
-        if (!tempFile.is_open())
+        file.close();
+        tempFile.close();
+        system(("del .\\data\\" + customer.getId() + "_ordered.txt").c_str());
+        system(("ren .\\data\\temp.txt " + customer.getId() + "_ordered.txt").c_str());
+        cout << "Đã xóa món ăn khỏi danh sách đặt" << endl;
+        pressKeyQ();
+        return;
+    }
+
+    else // sửa số lượng món ăn trong file
+    {
+        string line;
+        bool check = false;
+        while (getline(file, line))
         {
-            cout << "Không thể mở file temp" << endl;
-            return;
+            stringstream ss(line);
+            string nameRefreshment_infile;
+            int quantity_infile;
+            int price_infile;
+            getline(ss, nameRefreshment_infile, '|');
+            getline(ss, line, '|');
+            quantity_infile = stoi(line);
+            ss >> price_infile;
+            if (nameRefreshment_infile == nameRefreshment)
+            {
+
+                check = true;
+                quantity_infile = quantity;
+                price_infile = price;
+            }
+            tempFile << nameRefreshment_infile << '|' << quantity_infile << '|' << price_infile << endl;
         }
-        if (isFileEmpty("./data/" + customer.getId() + "_ordered.txt")) // nếu file rỗng
+        if (!check)
         {
             tempFile << nameRefreshment << '|' << quantity << '|' << price << endl;
-            file.close();
-            tempFile.close();
-            system(("del .\\data\\" + customer.getId() + "_ordered.txt").c_str());
-            system(("ren .\\data\\temp.txt " + customer.getId() + "_ordered.txt").c_str());
-            return;
         }
-        if (quantity == 0) // xóa món ăn khỏi file
-        {
-            string line;
-            while (getline(file, line))
-            {
-                stringstream ss(line);
-                string name;
-                int quantity_infile;
-                int price_infile;
-                getline(ss, name, '|');
-                getline(ss, line, '|');
-                quantity_infile = stoi(line);
-                ss >> price_infile;
-                if (name != nameRefreshment)
-                {
-                    tempFile << name << '|' << quantity_infile << '|' << price_infile << endl;
-                }
-                else
-                {
-                    customer.setmoneyforOrder(customer.getMoneyforOrder() - price_infile);
-                }
-            }
-            file.close();
-            tempFile.close();
-            system(("del .\\data\\" + customer.getId() + "_ordered.txt").c_str());
-            system(("ren .\\data\\temp.txt " + customer.getId() + "_ordered.txt").c_str());
-            cout << "Đã xóa món ăn khỏi danh sách đặt" << endl;
-            pressKeyQ();
-            return;
-        }
-
-        else // sửa số lượng món ăn trong file
-        {
-            string line;
-            bool check = false;
-            while (getline(file, line))
-            {
-                stringstream ss(line);
-                string nameRefreshment_infile;
-                int quantity_infile;
-                int price_infile;
-                getline(ss, nameRefreshment_infile, '|');
-                getline(ss, line, '|');
-                quantity_infile = stoi(line);
-                ss >> price_infile;
-                if (nameRefreshment_infile == nameRefreshment)
-                {
-                    if (quantity_infile > quantity)
-                    {
-                        customer.setmoneyforOrder(customer.getMoneyforOrder() - price_infile - price);
-                    }
-                    else
-                    {
-                        customer.setmoneyforOrder(customer.getMoneyforOrder() + price - price_infile);
-                    }
-                    check = true;
-                    quantity_infile = quantity;
-                    price_infile = price;
-                }
-                tempFile << nameRefreshment_infile << '|' << quantity_infile << '|' << price_infile << endl;
-            }
-            if (!check)
-                tempFile << nameRefreshment << '|' << quantity << '|' << price << endl;
-            file.close();
-            tempFile.close();
-            system(("del .\\data\\" + customer.getId() + "_ordered.txt").c_str());
-            system(("ren .\\data\\temp.txt " + customer.getId() + "_ordered.txt").c_str());
-        }
+        file.close();
+        tempFile.close();
+        system(("del .\\data\\" + customer.getId() + "_ordered.txt").c_str());
+        system(("ren .\\data\\temp.txt " + customer.getId() + "_ordered.txt").c_str());
     }
 }
 

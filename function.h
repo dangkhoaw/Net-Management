@@ -36,7 +36,6 @@ void menuFood(Customer &customer);
 void menuQuantity(Customer &customer, string nameFood);
 void menuDrink(Customer &customer);
 void menuGame();
-void setOrderedToFile(Customer &customer, string name, int quantity);
 void setOrderedToFile(Customer &customer, string name, int quantity, int price);
 void printItemsOrdered(Customer &customer);
 /*------------------------------------TIME------------------------------------*/
@@ -51,7 +50,7 @@ bool isValidUsername(string &username);
 bool addCustomerToFile(Customer &customer);
 void generateID(Account &account);
 bool checkFirstLogin(Account &account);
-bool checkIsOrder(Customer &customer, string nameFood);
+bool checkIsOrdered(Customer &customer, string nameFood);
 void makeFileOrdered(Customer &customer);
 
 /*------------------------------------COMPUTER------------------------------------*/
