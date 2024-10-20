@@ -151,3 +151,33 @@ bool operator!=(const Time &time1, const Time &time2)
 {
     return !(time1 == time2);
 }
+
+void Time::setHour(int hour)
+{
+    this->hour = hour;
+}
+
+void Time::setMinute(int minute)
+{
+    this->minute = minute;
+}
+
+void Time::setSecond(int second)
+{
+    this->second = second;
+}
+
+int Time::getHour()
+{
+    return hour;
+}
+
+int Time::getMinute()
+{
+    return minute;
+}
+
+int Time::getSecond()
+{
+    return second;
+}

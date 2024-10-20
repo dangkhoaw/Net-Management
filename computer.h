@@ -15,7 +15,7 @@ private:
     Time usageTime;
 
 public:
-    Computer(string id = "", string status = "", string customerUsingName = "", Time usageTime = Time());
+    Computer(string id = "", string status = "Available", string customerUsingName = "", Time usageTime = Time());
     ~Computer();
 
     string getId();

@@ -124,6 +124,10 @@ void Staff::viewComputerStatus()
             {
                 break;
             }
+            else
+            {
+                continue;
+            }
         }
         Sleep(1000);
     }

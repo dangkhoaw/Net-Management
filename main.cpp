@@ -17,17 +17,16 @@ int main(int argc, char const *argv[])
     {
         getAccountFromFile(account);
         account.setStatus("Online");
-        account.setLocked("Unlocked");
         updateAccountToFile(account);
         account.setPassword(Base64(account.getPassword()).decode());
         if (account.getRole() == "staff")
         {
-            Staff staff(account.getUserName(), account.getPassword(), account.getRole(), account.getId(), account.getStatus(), account.getIsFirstLogin(), account.getIsLocked());
+            Staff staff(account.getUserName(), account.getPassword(), account.getRole(), account.getId(), account.getStatus(), account.getIsFirstLogin());
             menuStaff(staff);
         }
         else if (account.getRole() == "customer")
         {
-            Customer customer(account.getUserName(), account.getPassword(), account.getRole(), account.getId(), account.getStatus(), account.getIsFirstLogin(), account.getIsLocked());
+            Customer customer(account.getUserName(), account.getPassword(), account.getRole(), account.getId(), account.getStatus(), account.getIsFirstLogin());
             getCustomerFromFile(customer);
             Computer computer;
             assignRandomComputer(customer, computer);
@@ -39,7 +38,6 @@ int main(int argc, char const *argv[])
                     if (account.changePassword())
                     {
                         customer.setPassword(account.getPassword());
-                        customer.setIsFirstLogin("NotFirstLogin");
                         break;
                     }
                 }

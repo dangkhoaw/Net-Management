@@ -33,6 +33,12 @@ public:
     friend istream &operator>>(istream &is, Time &time);
     friend bool operator==(const Time &time1, const Time &time2);
     friend bool operator!=(const Time &time1, const Time &time2);
+    void setHour(int hour);
+    void setMinute(int minute);
+    void setSecond(int second);
+    int getHour();
+    int getMinute();
+    int getSecond();
 };
 
 #endif
