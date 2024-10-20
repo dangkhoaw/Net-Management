@@ -57,20 +57,23 @@ void Staff::removeComputer()
 void Staff::viewComputerStatus()
 {
     /*
-    MÁY         TRẠNG THÁI             KHÁCH HÀNG          THỜI GIAN SỬ DỤNG
-    COM01       Đang sử dụng           dangkhoaw              00:10:00
-    COM02       Trống                                         00:00:00
+      ┌──────────┬────────────────────┬──────────────────────────┬──────────────────────┐
+      │   MÁY    │    TRẠNG THÁI      │      KHÁCH HÀNG          │   THỜI GIAN SỬ DỤNG  │
+      ├──────────┼────────────────────┼──────────────────────────┼──────────────────────┤
+      │  COM01   │    Đang sử dụng    │      dangkhoaw           │       00:30:00       │
+      │  COM02   │      Trống         │         -                │          -           │
+      │  COM03   │      Trống         │         -                │          -           │
+      │  COM04   │      Trống         │      grayzy              │          -           │
+      └──────────┴────────────────────┴──────────────────────────┴──────────────────────┘
     */
     system("cls");
     vector<Computer> prevComputers;
     Gotoxy(0, 0);
-    cout << "MÁY";
-    Gotoxy(10, 0);
-    cout << "TRẠNG THÁI";
-    Gotoxy(30, 0);
-    cout << "KHÁCH HÀNG";
-    Gotoxy(50, 0);
-    cout << "THỜI GIAN SỬ DỤNG";
+    cout << "┌──────────┬────────────────────┬──────────────────────────┬──────────────────────┐" << endl;
+    Gotoxy(0, 1);
+    cout << "│   MÁY    │     TRẠNG THÁI     │        KHÁCH HÀNG        │   THỜI GIAN SỬ DỤNG  │" << endl;
+    Gotoxy(0, 2);
+    cout << "├──────────┼────────────────────┼──────────────────────────┼──────────────────────┤" << endl;
     while (true)
     {
         vector<Computer> computers = getComputers();
@@ -79,23 +82,40 @@ void Staff::viewComputerStatus()
         {
             if (prevComputers.empty() || prevComputers[i].getUsageTime() != computers[i].getUsageTime())
             {
-                ClearLine(i + 1);
-                Gotoxy(0, i + 1);
-                cout << computers[i].getId();
-                Gotoxy(10, i + 1);
-                if (computers[i].getStatus() == "Using")
-                    cout << "Đang sử dụng";
+                ClearLine(i + 3);
+                Gotoxy(0, i + 3);
+                cout << "│  " << computers[i].getId() << "   ";
+                Gotoxy(11, i + 3);
+                (computers[i].getStatus() == "Using") ? cout << "│    Đang sử dụng" : cout << "│       Trống";
+
+                if (computers[i].getCustomerUsingName() == "")
+                {
+                    Gotoxy(32, i + 3);
+                    cout << "│             -";
+                }
                 else
-                    cout << "Trống";
-                Gotoxy(30, i + 1);
-                cout << computers[i].getCustomerUsingName();
-                Gotoxy(54, i + 1);
-                cout << computers[i].getUsageTime();
+                {
+                    Gotoxy(32, i + 3);
+                    cout << "│        " << computers[i].getCustomerUsingName();
+                }
+                if (computers[i].getUsageTime().isZero())
+                {
+                    Gotoxy(59, i + 3);
+                    cout << "│           -";
+                }
+                else
+                {
+                    Gotoxy(59, i + 3);
+                    cout << "│       " << computers[i].getUsageTime();
+                }
+                Gotoxy(82, i + 3);
+                cout << "│";
             }
         }
         prevComputers = computers;
-
-        Gotoxy(0, computers.size() + 2);
+        Gotoxy(0, computers.size() + 3);
+        cout << "└──────────┴────────────────────┴──────────────────────────┴──────────────────────┘" << endl;
+        Gotoxy(0, computers.size() + 5);
         cout << "(Nhấn phím q để thoát)";
         if (_kbhit())
         {
