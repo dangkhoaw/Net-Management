@@ -5,8 +5,8 @@
 
 // mutex cus;
 
-Customer::Customer(string username, string password, string role, string id, string status, string isFirstLogin, string isLocked, string name, string phone, float balance, Time time, int moneyforOrder)
-    : Account(username, password, role, id, status, isFirstLogin, isLocked), name(name), phone(phone), balance(balance), time(time), moneyforOrder(moneyforOrder) {}
+Customer::Customer(string username, string password, string role, string id, string status, string isFirstLogin, string isLocked, string name, string phone, float balance, Time time, int moneyforOrder, Dish dish)
+    : Account(username, password, role, id, status, isFirstLogin, isLocked), name(name), phone(phone), balance(balance), time(time), moneyforOrder(moneyforOrder), dish(dish) {}
 Customer::~Customer() {}
 
 string Customer::getName() { return name; }
@@ -230,44 +230,24 @@ void Customer::order(string nameRefreshment, int quantity, bool isOrder_again)
 {
     system("cls");
     ShowCursor(true);
+    Dish dish;
     int price = getPriceOfRefreshment(nameRefreshment, quantity);
-    string name;
-    int quantity_infile, price_infile;
+
     if (isOrder_again)
     {
-        fstream file("./data/" + getId() + "_ordered.txt", ios::in);
-        if (!file.is_open())
+        dish.getDishFromFile(this->getId(), nameRefreshment);
+        if (dish.getCount() > quantity)
         {
-            cout << "Không thể mở file ordered" << endl;
-            return;
+            this->moneyforOrder - (dish.getPrice() - price);
         }
-        string line;
-        while (getline(file, line))
+        else if (dish.getCount() < quantity)
         {
-            stringstream ss(line);
-            getline(ss, name, '|');
-            getline(ss, line, '|');
-            quantity_infile = stoi(line);
-            getline(ss, line, '|');
-            price_infile = stoi(line);
-            if (name == nameRefreshment)
-            {
-                break;
-            }
-        }
-        if (quantity_infile > quantity)
-        {
-            this->setmoneyforOrder(this->getMoneyforOrder() - (price_infile - price));
-        }
-        else if (quantity_infile < quantity)
-        {
-            this->setmoneyforOrder(this->getMoneyforOrder() + (price - price_infile));
+            this->moneyforOrder + (price - dish.getPrice());
         }
         else
         {
             return;
         }
-        file.close();
     }
     else
     {
@@ -277,8 +257,8 @@ void Customer::order(string nameRefreshment, int quantity, bool isOrder_again)
     {
         if (isOrder_again)
         {
-            if (quantity_infile < quantity)
-                this->setmoneyforOrder(this->getMoneyforOrder() - (price - price_infile));
+            if (dish.getCount() < quantity)
+                this->moneyforOrder - (price - dish.getPrice());
         }
         else
         {
@@ -289,7 +269,8 @@ void Customer::order(string nameRefreshment, int quantity, bool isOrder_again)
         pressKeyQ();
         return;
     }
-    setOrderedToFile(*this, nameRefreshment, quantity, price);
+    Dish dish_temp(nameRefreshment, quantity, price);
+    addAndUpdateDishToFile(this->getId(), dish_temp);
     cout << "Đã thêm món" << endl;
     pressKeyQ();
 }
@@ -298,17 +279,18 @@ void Customer::order()
 {
     system("cls");
     ShowCursor(false);
-    this->balance -= getTotalPrice();
+    this->balance -= (float)this->getTotalPrice();
     this->moneyforOrder = 0;
     updateCustomerToFile(*this);
     system(("del .\\data\\" + getId() + "_ordered.txt").c_str());
     cout << " Đang chuẩn bị, vui lòng chờ trong giây lát..!" << endl;
-    Sleep(3000);
+    Sleep(2500);
+    system("cls");
     return;
 }
 int Customer::getTotalPrice()
 {
-    fstream file("./data/" + (*this).getId() + "_ordered.txt", ios::in);
+    fstream file("./data/" + this->getId() + "_ordered.txt", ios::in);
     if (!file.is_open())
     {
         cout << "Không thể mở file ordered" << endl;
@@ -326,7 +308,7 @@ int Customer::getTotalPrice()
         getline(ss, line, '|');
         quantity = stoi(line);
         ss >> price;
-        total += quantity * price;
+        total += price;
     }
     return total;
 }

@@ -1,9 +1,7 @@
 #ifndef DISH
-#define DISH
+#define DISH 1
 
 #include <iostream>
-#include <fstream>
-#include "customer.h"
 using namespace std;
 
 class Dish
@@ -13,7 +11,7 @@ private:
     int price, count;
 
 public:
-    Dish(string name = "", float price = 0, int count = 0);
+    Dish(string name = "", int count = 0, float price = 0);
     ~Dish();
 
     string getName();
@@ -27,10 +25,9 @@ public:
     friend ostream &operator<<(ostream &os, const Dish &dish);
     friend istream &operator>>(istream &is, Dish &dish);
 
-    Dish getDishFromFile(string name);
-    void addDishToFile();
-    void removeDishFromFile();
-    void updateDishToFile();
+    Dish getDishFromFile(string id_cus, string name);
+    friend void addAndUpdateDishToFile(string id_cus, Dish &dish);
+    friend void removeDishFromFile(string id_cus, int &moneyForOrderOfCus, Dish &dish);
 };
 
 #endif
