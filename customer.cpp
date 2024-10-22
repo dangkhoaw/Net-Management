@@ -188,16 +188,25 @@ void updateCustomerToFile(Customer &customer)
 
 istream &operator>>(istream &is, Customer &customer)
 {
-    is.ignore();
     cout << "Tên khách hàng: ";
-    getline(is, customer.name);
-    cout << "Số điện thoại: ";
-    is >> customer.phone;
-    is.ignore();
+    enterLetter(customer.name);
+    toName(customer.name);
+    while (true)
+    {
+        cout << "Số điện thoại: ";
+        enterNumber(customer.phone, 10);
+        if (isExistPhoneNumber(customer.phone))
+            cout << "Số điện thoại đã tồn tại" << endl;
+        else if (!isPhoneNumber(customer.phone))
+            cout << "Số điện thoại không hợp lệ" << endl;
+        else
+            break;
+    }
+
     while (true)
     {
         cout << "Tên đăng nhập: ";
-        getline(is, customer.username);
+        enterString(customer.username);
         if (!isValidUsername(customer.username))
             cout << "Tên đăng nhập đã tồn tại" << endl;
         else
@@ -208,6 +217,8 @@ istream &operator>>(istream &is, Customer &customer)
     cout << "Mật khẩu: 123456" << endl;
     customer.role = "customer";
     generateID(customer);
+    ShowCursor(false);
+    pressKeyQ();
     return is;
 }
 int Customer::inPutAmountOrder()

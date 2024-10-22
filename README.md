@@ -12,7 +12,9 @@
 
 ## Requirements
 
-- **g++** phiên bản **4.8** trở lên để hỗ trợ chuẩn **C++11** (hoặc cao hơn), đảm bảo tính năng `thread` hoạt động.
+- **g++** phiên bản **4.8** trở lên để hỗ trợ chuẩn **C++11** (hoặc cao hơn), đảm bảo tính năng `thread` hoạt động. Bạn có thể cài đặt g++ thông qua [MSYS2](https://www.msys2.org/)
+
+- Font chữ **CaskaydiaCove Nerd Font** để hiển thị icon trong chương trình. Bạn có thể tải font chữ tại [đây](https://www.nerdfonts.com/font-downloads)
 
 ## Usage
 

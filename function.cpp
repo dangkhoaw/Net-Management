@@ -334,7 +334,6 @@ void optionMenu(string typeMenu, int option)
         /*
 
                 ┌──────────────────────────────┐
-
                 │        1                     │
                 │        2                     │
                 │        Nhiều hơn             │
@@ -856,85 +855,6 @@ void menuStaff(Staff &staff)
     }
 }
 
-void menuCustomer(Customer &customer, Computer &computer)
-{
-    SetConsoleTitle(TEXT("Menu khách hàng"));
-    ShowCursor(false);
-    int selectOption = 1;
-
-    thread threadShowTimeCustomer(showRemainingTimeOfCustomer, &customer);
-    thread threadShowTimeComputer(showUsageTimeOfComputer, &computer);
-    makeFileOrdered(customer);
-    while (showRemainingTime)
-    {
-        showMenu("customer", selectOption);
-        int key = _getch();
-        switch (key)
-        {
-        case KEY_UP:
-            selectOption = (selectOption == 1) ? MENUCUSTOMER : selectOption - 1;
-            break;
-        case KEY_DOWN:
-            selectOption = (selectOption == MENUCUSTOMER) ? 1 : selectOption + 1;
-            break;
-        case KEY_ENTER:
-            switch (selectOption)
-            {
-            case 1:
-                isChangingPassword = true;
-                customer.changePassword();
-                isChangingPassword = false;
-                break;
-            case 2:
-                isViewingInfo = true;
-                customer.showMyInfo();
-                isViewingInfo = false;
-                break;
-            case 3:
-                isOrdering = true;
-                menuDish(customer);
-                isOrdering = false;
-                break;
-            case 4:
-                isSelectingGame = true;
-                menuGame();
-                isSelectingGame = false;
-                break;
-            case 5:
-                system(("if exist .\\data\\" + customer.getId() + "_ordered.txt del .\\data\\" + customer.getId() + "_ordered.txt").c_str());
-                showUsageTime = false;
-                showRemainingTime = false;
-                customer.setBalance(customer.getTime());
-                customer.setTimeToFile(Time());
-                customer.setStatus("Offline");
-                customer.setCurrentComputerID("");
-                customer.setLocked("Unlocked");
-                customer.setPassword(Base64(customer.getPassword()).encode());
-                updateCustomerToFile(customer);
-                updateAccountToFile(customer);
-                computer.setStatus("Available");
-                computer.setCustomerUsingName("");
-                computer.setUsageTimeToFile(Time());
-                updateComputerToFile(computer);
-                system("cls");
-                break;
-            }
-        default:
-            break;
-        }
-    }
-    if (threadShowTimeComputer.joinable())
-    {
-        threadShowTimeComputer.join();
-    }
-    if (threadShowTimeCustomer.joinable())
-    {
-        threadShowTimeCustomer.join();
-    }
-
-    ShowCursor(true);
-}
-
 void menuGame()
 {
     system("cls");
@@ -1187,6 +1107,91 @@ void menuRevenueYear(Staff &staff)
         }
     }
 }
+
+void menuCustomer(Customer &customer, Computer &computer)
+{
+    SetConsoleTitle(TEXT("Menu khách hàng"));
+    ShowCursor(false);
+    int selectOption = 1;
+
+    thread threadShowTimeCustomer(showRemainingTimeOfCustomer, &customer);
+    thread threadShowTimeComputer(showUsageTimeOfComputer, &computer);
+
+    makeFileOrdered(customer);
+    while (showRemainingTime)
+    {
+        showMenu("customer", selectOption);
+        if (_kbhit())
+        {
+            int key = _getch();
+            switch (key)
+            {
+            case KEY_UP:
+                selectOption = (selectOption == 1) ? MENUCUSTOMER : selectOption - 1;
+                break;
+            case KEY_DOWN:
+                selectOption = (selectOption == MENUCUSTOMER) ? 1 : selectOption + 1;
+                break;
+            case KEY_ENTER:
+                switch (selectOption)
+                {
+                case 1:
+                    isChangingPassword = true;
+                    customer.changePassword();
+                    isChangingPassword = false;
+                    break;
+                case 2:
+                    isViewingInfo = true;
+                    customer.showMyInfo();
+                    isViewingInfo = false;
+                    break;
+                case 3:
+                    isOrdering = true;
+                    menuDish(customer);
+                    isOrdering = false;
+                    break;
+                case 4:
+                    isSelectingGame = true;
+                    menuGame();
+                    isSelectingGame = false;
+                    break;
+                case 5:
+                    showUsageTime = false;
+                    showRemainingTime = false;
+                    break;
+                }
+            default:
+                break;
+            }
+        }
+    }
+    if (threadShowTimeComputer.joinable())
+    {
+        threadShowTimeComputer.join();
+    }
+    if (threadShowTimeCustomer.joinable())
+    {
+        threadShowTimeCustomer.join();
+    }
+
+    system("cls");
+    system(("if exist .\\data\\" + customer.getId() + "_ordered.txt del .\\data\\" + customer.getId() + "_ordered.txt").c_str());
+    customer.setBalance(customer.getTime());
+    customer.setTimeToFile(Time());
+    customer.setStatus("Offline");
+    customer.setCurrentComputerID("");
+    customer.setLocked("Unlocked");
+    customer.setPassword(Base64(customer.getPassword()).encode());
+    updateCustomerToFile(customer);
+    updateAccountToFile(customer);
+    computer.setStatus("Available");
+    computer.setCustomerUsingName("");
+    computer.setUsageTimeToFile(Time());
+    updateComputerToFile(computer);
+
+    ShowCursor(true);
+}
+
 /*------------------------------------TIME------------------------------------*/
 void showRemainingTimeOfCustomer(Customer *customer)
 {
@@ -1952,6 +1957,7 @@ void enterPassword(string &password)
             cout << "•";
         }
     }
+    cout << endl;
 }
 
 string formatMoney(float money)
@@ -2126,20 +2132,22 @@ string removeSpecialCharacter(string &str)
 {
     for (int i = 0; i < str.size(); i++)
     {
-        if ((str[i] >= 'a' && str[i] <= 'z') || (str[i] >= 'A' && str[i] <= 'Z') || isNumber(str.substr(i, 1)))
-            str[i] = ' ';
+        if (!((str[i] >= 'a' && str[i] <= 'z') || (str[i] >= 'A' && str[i] <= 'Z') || str[i] == ' '))
+        {
+            str.erase(i, 1);
+            i--;
+        }
     }
     return str;
 }
 
 string toName(string &str)
 {
-    str = removeSpecialCharacter(str);
     str = trim(str);
     toLower(str);
     for (int i = 0; i < str.size(); i++)
     {
-        if (i == 0 || (i > 0 && str[i - 1] == ' '))
+        if ((i == 0 || (i > 0 && str[i - 1] == ' ')) && str[i] >= 'a' && str[i] <= 'z')
             str[i] -= 32;
     }
     return str;
@@ -2149,4 +2157,106 @@ bool isFileEmpty(const string &filename)
 {
     ifstream file(filename);
     return file.peek() == EOF;
+}
+
+void enterString(string &str, int length)
+{
+    str.clear();
+    char ch;
+    while (true)
+    {
+        ch = _getch();
+        if (ch == KEY_ENTER)
+        {
+            if (!str.empty())
+                break;
+        }
+        else if (ch == KEY_BACKSPACE)
+        {
+            if (!str.empty())
+            {
+                cout << "\b \b";
+                str.pop_back();
+            }
+        }
+        else
+        {
+            if (length == 0 || str.size() < length)
+            {
+                cout << ch;
+                str += ch;
+            }
+        }
+    }
+    cout << endl;
+}
+
+void enterLetter(string &str, int length)
+{
+    str.clear();
+    char ch;
+    while (true)
+    {
+        ch = _getch();
+        if (ch == KEY_ENTER)
+        {
+            if (!str.empty())
+                break;
+        }
+        else if (ch == KEY_BACKSPACE)
+        {
+            if (!str.empty())
+            {
+                cout << "\b \b";
+                str.pop_back();
+            }
+        }
+        else
+        {
+            if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || ch == ' ')
+            {
+                if (length == 0 || str.size() < length)
+                {
+                    cout << ch;
+                    str += ch;
+                }
+            }
+        }
+    }
+    cout << endl;
+}
+
+void enterNumber(string &num, int length)
+{
+    num.clear();
+    char ch;
+    while (true)
+    {
+        ch = _getch();
+        if (ch == KEY_ENTER)
+        {
+            if (!num.empty())
+                break;
+        }
+        else if (ch == KEY_BACKSPACE)
+        {
+            if (!num.empty())
+            {
+                cout << "\b \b";
+                num.pop_back();
+            }
+        }
+        else
+        {
+            if (ch >= '0' && ch <= '9')
+            {
+                if (length == 0 || num.size() < length)
+                {
+                    cout << ch;
+                    num += ch;
+                }
+            }
+        }
+    }
+    cout << endl;
 }

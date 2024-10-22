@@ -80,5 +80,8 @@ string trim(string &str);
 string removeSpecialCharacter(string &str);
 string toName(string &str);
 bool isFileEmpty(const string &filename);
+void enterString(string &str, int length = 0);
+void enterLetter(string &str, int length = 0);
+void enterNumber(string &num, int length = 0);
 
 #endif

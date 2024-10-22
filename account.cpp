@@ -2,16 +2,7 @@
 #include "function.h"
 #include "base64.h"
 
-Account::Account(string username, string password, string role, string id, string status, string isFirstLogin, string isLocked)
-{
-    this->username = username;
-    this->password = password;
-    this->role = role;
-    this->id = id;
-    this->status = status;
-    this->isFirstLogin = isFirstLogin;
-    this->isLocked = isLocked;
-}
+Account::Account(string username, string password, string role, string id, string status, string isFirstLogin, string isLocked) : username(username), password(password), role(role), id(id), status(status), isFirstLogin(isFirstLogin), isLocked(isLocked) {}
 
 Account::~Account() {}
 void Account::setRole(string role) { this->role = role; }
@@ -43,17 +34,11 @@ istream &operator>>(istream &is, Account &account)
              << "│Password:                          │" << endl
              << "└───────────────────────────────────┘" << endl;
 
-        while (account.username.empty())
-        {
-            Gotoxy(11, 3);
-            getline(is, account.username);
-        }
+        Gotoxy(11, 3);
+        enterString(account.username);
 
-        while (account.password.empty())
-        {
-            Gotoxy(11, 5);
-            enterPassword(account.password);
-        }
+        Gotoxy(11, 5);
+        enterPassword(account.password);
 
         if (checkAccount(account))
         {
@@ -80,6 +65,7 @@ istream &operator>>(istream &is, Account &account)
             {
                 Gotoxy(0, 7);
                 cout << "Đăng nhập thành công!" << endl;
+                Sleep(555);
                 return is;
             }
         }
@@ -113,7 +99,6 @@ bool Account::changePassword()
     string passwd, newPassword, rePassword;
     cout << "Mật khẩu cũ: ";
     enterPassword(passwd);
-    cout << endl;
     if (passwd != password)
     {
         MessageBoxW(NULL, L"Mật khẩu không đúng!", L"Thông báo", MB_OK | MB_ICONERROR | MB_TOPMOST);
@@ -132,7 +117,7 @@ bool Account::changePassword()
         }
         break;
     }
-    cout << "\nNhập lại mật khẩu: ";
+    cout << "Nhập lại mật khẩu: ";
     enterPassword(rePassword);
     if (newPassword != rePassword)
     {

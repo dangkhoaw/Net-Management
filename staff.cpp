@@ -16,7 +16,6 @@ void Staff::addAccount()
     cin >> customer;
     addCustomerToFile(customer);
     addNewAccountToFile(customer);
-    MessageBoxW(NULL, L"Thêm tài khoản thành công", L"Thông báo", MB_OK);
     system("cls");
     ShowCursor(false);
 }
@@ -46,7 +45,7 @@ void Staff::removeComputer()
     ShowCursor(true);
     string idComputer;
     cout << "Nhập id máy cần xóa: ";
-    cin >> idComputer;
+    enterString(idComputer); // TEST
     toUpper(idComputer);
     Computer computer;
     computer.setId(idComputer);
@@ -54,6 +53,7 @@ void Staff::removeComputer()
     ShowCursor(false);
     system("cls");
 }
+
 void Staff::viewComputerStatus()
 {
     /*
@@ -157,7 +157,7 @@ void Staff::topUpAccount()
         ClearLine(0);
         Gotoxy(0, 0);
         cout << "Tên đăng nhập: ";
-        cin >> userName;
+        enterString(userName); // TEST
 
         if (isValidUsername(userName))
         {
@@ -230,7 +230,7 @@ void Staff::lockAccount()
         ClearLine(0);
         Gotoxy(0, 0);
         cout << "Tên đăng nhập: ";
-        cin >> userName;
+        enterString(userName); // TEST
 
         if (isValidUsername(userName))
         {
