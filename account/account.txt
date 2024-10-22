@@ -6,4 +6,4 @@ UID0004|quocnguyen|MTIzNDU2|customer|Offline|FirstLogin|Unlocked
 UID0005|qn|MTIzNDU2|customer|Offline|FirstLogin|Unlocked
 UID0006|qnuyen|MTIzNDU2|customer|Offline|FirstLogin|Unlocked
 UID0007|dangkhoa|MTIzNDU2|customer|Offline|FirstLogin|Unlocked
-UID0008|khoad|MTIzNDU2|customer|Offline|FirstLogin|Unlocked
+UID0008|vanphat|MTIzNDU2|customer|Offline|FirstLogin|Unlocked

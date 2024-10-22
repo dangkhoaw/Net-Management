@@ -4,7 +4,7 @@
 #include "account.h"
 #include "history.h"
 #include "computer.h"
-
+#include "dish.h"
 using namespace std;
 
 class Customer : public Account
@@ -12,12 +12,13 @@ class Customer : public Account
 private:
     float balance;
     int moneyforOrder;
+    Dish dish;
     string name, phone, currentComputerID;
     Time time;
     History history;
 
 public:
-    Customer(string username = "", string password = "", string role = "", string id = "", string status = "Offline", string isFirstLogin = "FirstLogin", string isLocked = "Unlocked", string name = "", string phone = "", float balance = 0, Time time = Time(), int moneyforOrder = 0);
+    Customer(string username = "", string password = "", string role = "", string id = "", string status = "Offline", string isFirstLogin = "FirstLogin", string isLocked = "Unlocked", string name = "", string phone = "", float balance = 0, Time time = Time(), int moneyforOrder = 0, Dish dish = Dish());
     ~Customer();
     string getPhone();
     string getName();

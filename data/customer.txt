@@ -1,8 +1,8 @@
-UID0001|Dang Khoa|dangkhoaw|0906457124|260978|
+UID0001|Dang Khoa|dangkhoaw|0906457124|205850|
 UID0002|dangkhoaw|khoadang|2005|99266.7|
 UID0003|Dang Dang Khoa|khoadn1109|0935023651|0|
 UID0004|Nguyen Quoc Nguyen|quocnguyen|0935462509|0|
 UID0005|Quoc Nguyen|qn|0906457125|0|
 UID0006|Quoc Nguyen|qnuyen|0905236178|0|
 UID0007|Dang Khoa|dangkhoa|0907491112|0|
-UID0008|Van Phat|khoad|0935022250|0|
+UID0008|Van Phat|vanphat|0935022250|0|
