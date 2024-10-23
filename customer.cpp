@@ -221,7 +221,7 @@ istream &operator>>(istream &is, Customer &customer)
     pressKeyQ();
     return is;
 }
-int Customer::inPutAmountOrder()
+int Customer::enterAmountOrder()
 {
     system("cls");
     ShowCursor(true);
@@ -264,7 +264,7 @@ void Customer::order(string nameRefreshment, int quantity, bool isOrder_again)
     {
         this->moneyforOrder += price;
     }
-    if (this->balance < this->moneyforOrder)
+    if (this->balance + 5000 < this->moneyforOrder)
     {
         if (isOrder_again)
         {
@@ -275,15 +275,12 @@ void Customer::order(string nameRefreshment, int quantity, bool isOrder_again)
         {
             this->moneyforOrder -= price;
         }
-        system("cls");
-        cout << "Số dư không đủ" << endl;
-        pressKeyQ();
+        MessageBoxW(NULL, L"Số dư không đủ!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
         return;
     }
     Dish dish_temp(nameRefreshment, quantity, price);
     addAndUpdateDishToFile(this->getId(), dish_temp);
-    cout << "Đã thêm món" << endl;
-    pressKeyQ();
+    MessageBoxW(NULL, L"Đã thêm món..!", L"Thông báo", MB_OK);
 }
 
 void Customer::order()
@@ -294,9 +291,7 @@ void Customer::order()
     this->moneyforOrder = 0;
     updateCustomerToFile(*this);
     system(("del .\\data\\" + getId() + "_ordered.txt").c_str());
-    cout << " Đang chuẩn bị, vui lòng chờ trong giây lát..!" << endl;
-    Sleep(2500);
-    system("cls");
+    MessageBoxW(NULL, L"Đang chuẩn bị, vui lòng chờ trong giây lát..!", L"Thông báo", MB_OK);
     return;
 }
 int Customer::getTotalPrice()

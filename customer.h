@@ -41,7 +41,7 @@ public:
     void addHistory();
     bool isLocked();
 
-    int inPutAmountOrder();
+    int enterAmountOrder();
     void order(string nameRefreshment, int quantity, bool isOrder_again);
     void order();
     int getTotalPrice();

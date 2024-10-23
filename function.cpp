@@ -335,7 +335,9 @@ void optionMenu(string typeMenu, int option)
         /*
 
                 ┌──────────────────────────────┐
-                │        1                     │
+                |        Số lượng              |
+                ├──────────────────────────────┤
+                |        1                     |
                 │        2                     │
                 │        Nhiều hơn             │
                 │         Thoát               │
@@ -344,16 +346,16 @@ void optionMenu(string typeMenu, int option)
         switch (option)
         {
         case 1:
-            cout << "1" << endl;
+            cout << "        1                 " << endl;
             break;
         case 2:
-            cout << "2" << endl;
+            cout << "        2                 " << endl;
             break;
         case 3:
-            cout << "Nhiều hơn" << endl;
+            cout << "        Nhiều hơn         " << endl;
             break;
         case 4:
-            cout << " Thoát" << endl;
+            cout << "         Thoát           " << endl;
         }
     }
     else if (typeMenu == "reOrder")
@@ -361,7 +363,7 @@ void optionMenu(string typeMenu, int option)
         /*
         ┌──────────────────────────────┐
         │        Sửa số lượng          │
-        │        Xóa                   │
+        │        Xóa món               │
         │         Thoát               │
         └──────────────────────────────┘
         */
@@ -629,19 +631,39 @@ void showMenu(string typeMenu, int selectOption)
     }
     else if (typeMenu == "quantity")
     {
+        /*
 
+                  ┌────────────────────────────┐
+                  |        Số lượng            |
+                  ├────────────────────────────┤
+                  |        1                   |
+                  │        2                   │
+                  │        Nhiều hơn           │
+                  │         Thoát             │
+                  └────────────────────────────┘
+          */
         Gotoxy(0, 0);
+        cout << "┌──────────────────────────┐";
+        Gotoxy(0, 1);
+        cout << "│        Số lượng          │";
+        Gotoxy(0, 2);
+        cout << "├──────────────────────────┤";
         for (int i = 1; i <= MENUQUANTITY; i++)
         {
-            Gotoxy(0, i);
+            Gotoxy(0, i + 2);
+            cout << "│";
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
+            Gotoxy(27, i + 2);
+            cout << "│";
         }
+        cout << endl
+             << "└─────────────────────────-┘" << endl;
     }
     else if (typeMenu == "reOrder")
     {
         Gotoxy(0, 0);
-        cout << "┌──────────────────────────────────┐" << endl;
+        cout << "┌──────────────────────────────┐" << endl;
         for (int i = 1; i <= 3; i++)
         {
             Gotoxy(0, i);
@@ -650,12 +672,12 @@ void showMenu(string typeMenu, int selectOption)
             printMenuOption(typeMenu, i, isSelected);
             cout << "│" << endl;
         }
-        cout << "└──────────────────────────────────┘" << endl;
+        cout << "└──────────────────────────────┘" << endl;
     }
     else if (typeMenu == "revenue")
     {
         Gotoxy(0, 0);
-        cout << "┌──────────────────────────────────┐" << endl;
+        cout << "┌─────────────────────────────────┐" << endl;
         for (int i = 1; i <= MENUREVENUE; i++)
         {
             Gotoxy(0, i);
@@ -664,7 +686,7 @@ void showMenu(string typeMenu, int selectOption)
             printMenuOption(typeMenu, i, isSelected);
             cout << "│" << endl;
         }
-        cout << "└──────────────────────────────────┘" << endl;
+        cout << "└─────────────────────────────────┘" << endl;
     }
     else if (typeMenu == "revenueDay")
     {
@@ -1193,6 +1215,7 @@ void menuCustomer(Customer &customer, Computer &computer)
 /*------------------------------------TIME------------------------------------*/
 void showRemainingTimeOfCustomer(Customer *customer)
 {
+    float moneyOneSecond = 10000 / 3600;
     while (showRemainingTime)
     {
         Time currentTime = customer->getTimeFromFile();
@@ -1210,9 +1233,7 @@ void showRemainingTimeOfCustomer(Customer *customer)
             MessageBoxW(NULL, L"Hết thời gian sử dụng!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
             break;
         }
-        float moneyOneSecond = 10000 / 3600;
         customer->setBalance(customer->getBalance() - moneyOneSecond);
-        // updateCustomerToFile(*customer);// đây là chỗ update balance đâyyyy
         currentTime--;
         customer->setTimeToFile(currentTime);
         customer->setTime(currentTime);
@@ -1585,7 +1606,7 @@ void menuQuantity(Customer &customer, string nameRefreshment)
                     customer.order(nameRefreshment, 2, 0);
                     return;
                 case 3:
-                    customer.order(nameRefreshment, customer.inPutAmountOrder(), 0);
+                    customer.order(nameRefreshment, customer.enterAmountOrder(), 0);
                     return;
                 case 4:
                     system("cls");
@@ -1617,7 +1638,7 @@ void menuQuantity(Customer &customer, string nameRefreshment)
                 switch (selectOption)
                 {
                 case 1:
-                    customer.order(nameRefreshment, customer.inPutAmountOrder(), 1);
+                    customer.order(nameRefreshment, customer.enterAmountOrder(), 1);
                     return;
                 case 2:
                     removeDishFromFile(customer.getId(), moneyForOrderOfCus, dish);
@@ -1740,9 +1761,9 @@ void menuDish(Customer &customer)
     ShowCursor(false);
     int selectOption = 1;
     makeFileOrdered(customer);
+    MessageBoxW(NULL, L"Số dư sau khi mua phải trên 5.000 đồng!", L"Yêu cầu", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
     while (true)
     {
-
         printItemsOrdered(customer);
         showMenu("dish", selectOption);
         int key = _getch();
