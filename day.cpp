@@ -6,7 +6,7 @@ Day::~Day() {}
 
 ostream &operator<<(ostream &os, const Day &day)
 {
-    os << day.date << " " << day.time;
+    os << day.time << "-" << day.date;
     return os;
 }
 
@@ -105,7 +105,7 @@ bool Day::isValid() { return date.isValid() && time.isValid(); }
 Day Day::getCurrentDay()
 {
     Day temp;
-    temp.date = temp.date.getCurrentDate();
     temp.time = temp.time.getCurrentTime();
+    temp.date = temp.date.getCurrentDate();
     return temp;
 }

@@ -15,10 +15,10 @@ private:
     Dish dish;
     string name, phone, currentComputerID;
     Time time;
-    History history;
+    History history_recently;
 
 public:
-    Customer(string username = "", string password = "", string role = "", string id = "", string status = "Offline", string isFirstLogin = "FirstLogin", string isLocked = "Unlocked", string name = "", string phone = "", float balance = 0, Time time = Time(), int moneyforOrder = 0, Dish dish = Dish());
+    Customer(string username = "", string password = "", string role = "", string id = "", string status = "Offline", string isFirstLogin = "FirstLogin", string isLocked = "Unlocked", string name = "", string phone = "", float balance = 0, Time time = Time(), int moneyforOrder = 0, Dish dish = Dish(), string currentComputerID = "", History history_recently = History());
     ~Customer();
     string getPhone();
     string getName();
@@ -35,11 +35,13 @@ public:
     void setBalance(float balance);
     void setBalance(Time time);
     void setTimeToFile(Time time);
-
+    void setHistory(History history);
     friend istream &operator>>(istream &is, Customer &customer);
     void showMyInfo();
-    void addHistory();
     bool isLocked();
+
+    void addHistoryToFile(History &history);
+    void showHistory();
 
     int enterAmountOrder();
     void order(string nameRefreshment, int quantity, bool isOrder_again);

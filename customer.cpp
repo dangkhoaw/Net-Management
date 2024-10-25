@@ -5,8 +5,8 @@
 
 // mutex cus;
 
-Customer::Customer(string username, string password, string role, string id, string status, string isFirstLogin, string isLocked, string name, string phone, float balance, Time time, int moneyforOrder, Dish dish)
-    : Account(username, password, role, id, status, isFirstLogin, isLocked), name(name), phone(phone), balance(balance), time(time), moneyforOrder(moneyforOrder), dish(dish) {}
+Customer::Customer(string username, string password, string role, string id, string status, string isFirstLogin, string isLocked, string name, string phone, float balance, Time time, int moneyforOrder, Dish dish, string currentComputerID, History history_recently)
+    : Account(username, password, role, id, status, isFirstLogin, isLocked), name(name), phone(phone), balance(balance), time(time), moneyforOrder(moneyforOrder), dish(dish), currentComputerID(currentComputerID), history_recently(history_recently) {}
 Customer::~Customer() {}
 
 string Customer::getName() { return name; }
@@ -25,6 +25,7 @@ void Customer::setBalance(Time time)
     float cost = 10000;
     this->balance = (float(time.getHour()) + float(time.getMinute()) / 60 + float(time.getSecond()) / 3600) * cost;
 }
+void Customer::setHistory(History history) { this->history_recently = history; }
 void Customer::setCurrentComputerID(string id) { currentComputerID = id; }
 
 Time Customer::getTimeFromFile()
@@ -63,9 +64,64 @@ void Customer::showMyInfo()
     cout << "Tên khách hàng: " << name << endl;
     cout << "Số điện thoại: " << phone << endl;
     cout << "Số dư: " << formatMoney(balance) << " (VNĐ)" << endl;
+    showHistory();
     pressKeyQ();
 }
+void Customer::showHistory()
+{
+    fstream file("./data/history.txt", ios::in);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file history" << endl;
+        return;
+    }
+    string line;
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        string id, day;
+        getline(ss, id, '|');
+        getline(ss, day);
+        if (id == this->getId())
+        {
 
+            cout << "Lịch sử gần đây: ";
+            cout << day << endl;
+            return;
+        }
+    }
+    file.close();
+}
+
+void Customer::addHistoryToFile(History &history_recently)
+{
+    fstream file("./data/history.txt", ios::in);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file history" << endl;
+        return;
+    }
+    fstream tempFile("./data/temp.txt", ios::app);
+    if (!tempFile.is_open())
+    {
+        cout << "Không thể mở file temp" << endl;
+        return;
+    }
+    tempFile << history_recently.getCustomerID() << "|" << history_recently.getDay() << endl;
+    string line;
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        string id, day;
+        getline(ss, id, '|');
+        getline(ss, day);
+        tempFile << line << endl;
+    }
+    file.close();
+    tempFile.close();
+    system("del .\\data\\history.txt");
+    system("ren .\\data\\temp.txt history.txt");
+}
 bool Customer::isLocked()
 {
     // lock_guard<mutex> lock(cus);
@@ -240,7 +296,7 @@ int Customer::enterAmountOrder()
 void Customer::order(string nameRefreshment, int quantity, bool isOrder_again)
 {
     system("cls");
-    ShowCursor(true);
+    ShowCursor(false);
     Dish dish;
     int price = getPriceOfRefreshment(nameRefreshment, quantity);
 
@@ -280,9 +336,8 @@ void Customer::order(string nameRefreshment, int quantity, bool isOrder_again)
     }
     Dish dish_temp(nameRefreshment, quantity, price);
     addAndUpdateDishToFile(this->getId(), dish_temp);
-    MessageBoxW(NULL, L"Đã thêm món..!", L"Thông báo", MB_OK);
+    MessageBoxW(NULL, L"    Đã thêm món..!    ", L"Thông báo", MB_OK);
 }
-
 void Customer::order()
 {
     system("cls");

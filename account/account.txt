@@ -1,9 +1,2 @@
 ADMIN|admin|YWRtaW4=|staff|Offline|NotFirstLogin|Unlocked
-UID0001|dangkhoaw|MTIzNDU2|customer|Online|NotFirstLogin|Unlocked
-UID0002|khoadang|MTIzNDU2|customer|Offline|NotFirstLogin|Unlocked
-UID0003|khoadn1109|MTIzNDU2|customer|Offline|FirstLogin|Unlocked
-UID0004|quocnguyen|MTIzNDU2|customer|Offline|FirstLogin|Unlocked
-UID0005|qn|MTIzNDU2|customer|Offline|FirstLogin|Unlocked
-UID0006|qnuyen|MTIzNDU2|customer|Offline|FirstLogin|Unlocked
-UID0007|dangkhoa|MTIzNDU2|customer|Offline|FirstLogin|Unlocked
-UID0008|vanphat|MTIzNDU2|customer|Offline|FirstLogin|Unlocked
+UID0001|grayzy|MTIzNDU2Nw==|customer|Offline|FirstLogin|Unlocked

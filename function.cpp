@@ -4,6 +4,7 @@
 #include <mutex>
 #include <chrono>
 #include "dish.h"
+#include "history.h"
 
 bool showRemainingTime = true;
 bool showUsageTime = true;
@@ -777,7 +778,7 @@ void customerManagementMenu(Staff &staff)
             // mở khóa tài khoản
             case 5:
             // xem thông tin khách hàng
-            case MENUCUSTOMERMANAGER:
+            case 6:
                 system("cls");
                 return;
             }
@@ -1134,6 +1135,7 @@ void menuCustomer(Customer &customer, Computer &computer)
     SetConsoleTitle(TEXT("Menu khách hàng"));
     ShowCursor(false);
     int selectOption = 1;
+    History history(Day().getCurrentDay(), customer.getId());
 
     thread threadShowTimeCustomer(showRemainingTimeOfCustomer, &customer);
     thread threadShowTimeComputer(showUsageTimeOfComputer, &computer);
@@ -1176,6 +1178,8 @@ void menuCustomer(Customer &customer, Computer &computer)
                     isSelectingGame = false;
                     break;
                 case 5:
+                    customer.setHistory(history);
+                    customer.addHistoryToFile(history);
                     showUsageTime = false;
                     showRemainingTime = false;
                     break;
@@ -1565,6 +1569,7 @@ void makeFileOrdered(Customer &customer)
 {
     if (firstOrder)
     {
+        MessageBoxW(NULL, L"Số dư sau khi mua phải trên 5.000 đồng!", L"Yêu cầu", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
         fstream file("./data/" + customer.getId() + "_ordered.txt", ios::out);
         if (!file.is_open())
         {
@@ -1572,7 +1577,7 @@ void makeFileOrdered(Customer &customer)
             return;
         }
         file.close();
-        // firstOrder = false;
+        firstOrder = false;
     }
 }
 
@@ -1616,7 +1621,7 @@ void menuQuantity(Customer &customer, string nameRefreshment)
                 break;
             }
         }
-        ShowCursor(true);
+        // ShowCursor(true);
     }
     else
     {
@@ -1652,7 +1657,7 @@ void menuQuantity(Customer &customer, string nameRefreshment)
                 break;
             }
         }
-        ShowCursor(true);
+        // ShowCursor(true);
     }
 }
 void menuDrink(Customer &customer)
@@ -1703,7 +1708,7 @@ void menuDrink(Customer &customer)
             break;
         }
     }
-    ShowCursor(true);
+    // ShowCursor(true);
 }
 void menuFood(Customer &customer)
 {
@@ -1752,7 +1757,7 @@ void menuFood(Customer &customer)
             break;
         }
     }
-    ShowCursor(true);
+    // ShowCursor(true);
 }
 void menuDish(Customer &customer)
 {
@@ -1761,7 +1766,6 @@ void menuDish(Customer &customer)
     ShowCursor(false);
     int selectOption = 1;
     makeFileOrdered(customer);
-    MessageBoxW(NULL, L"Số dư sau khi mua phải trên 5.000 đồng!", L"Yêu cầu", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
     while (true)
     {
         printItemsOrdered(customer);
@@ -1788,6 +1792,7 @@ void menuDish(Customer &customer)
                 customer.order();
                 return;
             case 4:
+                customer.setmoneyforOrder(customer.getMoneyforOrder() - customer.getTotalPrice());
                 system("cls");
                 return;
             }
@@ -1805,18 +1810,31 @@ void printItemsOrdered(Customer &customer)
         cout << "Không thể mở file ordered" << endl;
         return;
     }
+
     Gotoxy(0, 6);
     int temp_balance = customer.getBalance();
-    cout << "Số dư hiện tại: " << adjustingFormMoney(temp_balance);
-    string line;
+    cout << "Số dư hiện tại: " << adjustingFormMoney(temp_balance) << endl;
+
+    // Bắt đầu in khung
     int i = 7;
     ClearLine(i);
-    cout << "Các món đã đặt" << endl;
-    Gotoxy(25, i);
-    cout << "|SL";
-    Gotoxy(30, i);
-    cout << "|Giá" << endl;
-
+    cout << "┌───────────────────────────────────────────────┐" << endl;
+    ClearLine(i + 1);
+    Gotoxy(0, i + 1);
+    cout << "│               Các món đã đặt                  │" << endl;
+    i += 2;
+    ClearLine(i);
+    Gotoxy(0, i);
+    cout << "├────────────────────────┬──────┬───────────────┤" << endl;
+    i++;
+    ClearLine(i);
+    Gotoxy(0, i);
+    cout << "│ Tên món                │ SL   │ Giá           │" << endl;
+    i++;
+    ClearLine(i);
+    Gotoxy(0, i);
+    cout << "├────────────────────────┼──────┼───────────────┤" << endl;
+    string line;
     while (getline(file, line))
     {
         i++;
@@ -1831,18 +1849,38 @@ void printItemsOrdered(Customer &customer)
         ss >> price;
 
         ClearLine(i);
-        cout << name;
-        Gotoxy(25, i);
-        cout << "|" << quantity;
-        Gotoxy(30, i);
-        cout << "|" << adjustingFormMoney(price);
+        Gotoxy(0, i);
+        cout << "│ " << name;
+        Gotoxy(25, i); // Căn chỉnh cho tên món
+        cout << "│ " << quantity;
+        Gotoxy(32, i);
+        cout << "│ " << adjustingFormMoney(price);
+        Gotoxy(48, i);
+        cout << "│" << endl; // Đóng đường viền của hàng
     }
-    ClearLine(i + 1);
-    cout << "Tổng tiền: ";
-    Gotoxy(30, i + 1);
-    cout << "|" << adjustingFormMoney(customer.getTotalPrice());
+
+    i++;
+    ClearLine(i);
+    Gotoxy(0, i);
+    cout << "├────────────────────────┴──────┴───────────────┤" << endl;
+
+    i++;
+    ClearLine(i);
+    Gotoxy(0, i);
+    cout << "│ Tổng tiền: ";
+    Gotoxy(34, i);
+    cout << adjustingFormMoney(customer.getTotalPrice());
+    Gotoxy(48, i); // 42 lucs ban dau
+    cout << "│" << endl;
+
+    i++;
+    ClearLine(i);
+    Gotoxy(0, i);
+    cout << "└───────────────────────────────────────────────┘" << endl;
+
     file.close();
 }
+
 string adjustingFormMoney(int money)
 {
     money = (money / 1000) * 1000;

@@ -10,21 +10,20 @@ class History
 {
 private:
     Day day;
-    // string computerID, customerID;
+    string customerID;
 
 public:
-    // History(Day day = Day(), string computerID = "", string customerID = "");
-    // ~History();
+    History(Day day = Day(), string customerID = "");
+    ~History();
 
-    // friend ostream &operator<<(ostream &os, const History &history);
-    // friend istream &operator>>(istream &is, History &history);
+    friend ostream &operator<<(ostream &os, const History &history);
+    friend istream &operator>>(istream &is, History &history);
 
-    // Day getDay();
-    // string getComputerID();
-    // string getCustomerID();
-    // void setDay(Day day);
-    // void setComputerID(string computerID);
-    // void setCustomerID(string customerID);
+    Day getDay();
+    string getCustomerID();
+
+    void setDay(Day day);
+    void setCustomerID(string customerID);
 };
 
 #endif
