@@ -273,19 +273,19 @@ void Staff::viewCustomersInfo()
             {
                 ClearLine(i + 3);
                 Gotoxy(0, i + 3);
-                cout << "│  " << customers[i].getId() << "   ";
+                cout << "│ " << customers[i].getId();
                 Gotoxy(11, i + 3);
-                cout << "│    " << customers[i].getName();
+                cout << "│  " << customers[i].getName();
                 Gotoxy(32, i + 3);
-                cout << "│        " << customers[i].getUserName();
+                cout << "│      " << customers[i].getUserName();
                 Gotoxy(55, i + 3);
-                cout << "│       " << customers[i].getPhone();
+                cout << "│     " << customers[i].getPhone();
                 Gotoxy(78, i + 3);
                 cout << "│       " << customers[i].getStatus();
                 Gotoxy(101, i + 3);
                 if (customers[i].getCurrentComputerID() == "")
                 {
-                    cout << "│        -";
+                    cout << "│          -";
                 }
                 else
                 {

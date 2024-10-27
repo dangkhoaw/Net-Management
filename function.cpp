@@ -395,16 +395,16 @@ void optionMenu(string typeMenu, int option)
         switch (option)
         {
         case 1:
-            cout << "     Xem doanh thu theo ngày     ";
+            cout << "     Xem doanh thu theo ngày    ";
             break;
         case 2:
-            cout << "     Xem doanh thu theo tháng    ";
+            cout << "     Xem doanh thu theo tháng   ";
             break;
         case 3:
-            cout << "     Xem doanh thu theo năm      ";
+            cout << "     Xem doanh thu theo năm     ";
             break;
         case 4:
-            cout << "     Thoát                       ";
+            cout << "     Thoát                      ";
             break;
         }
     }
@@ -1590,18 +1590,18 @@ vector<Customer> getCustomers()
     while (getline(file, line))
     {
         stringstream ss(line);
-        string id, name, username, phone, status, currentComputerID;
-        float balance;
+        string id, name, username, phone, status, currentComputerID, balance;
         getline(ss, id, '|');
         getline(ss, name, '|');
         getline(ss, username, '|');
         getline(ss, phone, '|');
-        ss >> balance;
+        getline(ss, balance, '|');
         getline(ss, currentComputerID);
         Customer customer;
         customer.setId(id);
         customer.setName(name);
         customer.setUserName(username);
+        customer.setBalance(stof(balance));
         customer.setCurrentComputerID(currentComputerID);
         customer.setPhone(phone);
         getAccountFromFile(customer);
@@ -1851,7 +1851,8 @@ void printItemsOrdered(Customer &customer)
 
         Gotoxy(0, 6);
         int temp_balance = customer.getBalance();
-        cout << "Số dư hiện tại: " << adjustingFormMoney(temp_balance) << endl;
+        // cout << "Số dư hiện tại: " << adjustingFormMoney(temp_balance) << endl;
+        cout << "Số dư hiện tại: " << formatMoney(temp_balance) << endl;
         int i = 7;
         ClearLine(i);
         cout << "┌───────────────────────────────────────────────┐" << endl;
