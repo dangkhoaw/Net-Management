@@ -44,6 +44,15 @@ Time Customer::getTimeFromFile()
     }
     return time;
 }
+Time Customer::MoneyToTime(float balance)
+{
+    Time time;
+    float cost = 10000;
+    time.setHour(balance / cost);
+    time.setMinute((balance - time.getHour() * cost) / cost * 60);
+    time.setSecond((balance - time.getHour() * cost - time.getMinute() * cost / 60) * 3600);
+    return time;
+}
 
 void Customer::setTimeToFile(Time time)
 {
@@ -320,7 +329,7 @@ void Customer::order(string nameRefreshment, int quantity, bool isOrder_again)
     {
         this->moneyforOrder += price;
     }
-    if (this->balance + 5000 < this->moneyforOrder)
+    if (this->balance < this->moneyforOrder + 5000)
     {
         if (isOrder_again)
         {
@@ -343,6 +352,8 @@ void Customer::order()
     system("cls");
     ShowCursor(false);
     this->balance -= (float)this->getTotalPrice();
+    this->setTime(this->getTimeFromFile() - MoneyToTime(this->getTotalPrice()));
+    this->setTimeToFile(this->getTime()); // đoạn ni cần không
     this->moneyforOrder = 0;
     updateCustomerToFile(*this);
     system(("del .\\data\\" + getId() + "_ordered.txt").c_str());

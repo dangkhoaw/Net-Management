@@ -52,6 +52,7 @@ void generateID(Account &account);
 bool checkFirstLogin(Account &account);
 bool checkIsOrdered(Customer &customer, string nameFood);
 void makeFileOrdered(Customer &customer);
+vector<Customer> getCustomers();
 
 /*------------------------------------COMPUTER------------------------------------*/
 int getNumberOfComputers();

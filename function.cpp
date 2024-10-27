@@ -13,6 +13,7 @@ bool isViewingInfo = false;
 bool isOrdering = false;
 bool isSelectingGame = false;
 bool firstOrder = true;
+bool isChangedOrder = true;
 
 const int MENUSTAFF = 5;
 const int MENUCUSTOMERMANAGER = 6;
@@ -777,7 +778,7 @@ void customerManagementMenu(Staff &staff)
             case 4:
             // mở khóa tài khoản
             case 5:
-            // xem thông tin khách hàng
+                staff.viewCustomersInfo();
             case 6:
                 system("cls");
                 return;
@@ -1373,12 +1374,7 @@ bool addCustomerToFile(Customer &customer)
 
 bool checkFirstLogin(Account &account)
 {
-    if (account.getIsFirstLogin() == "FirstLogin")
-    {
-        account.setIsFirstLogin("NotFirstLogin");
-        return true;
-    }
-    return false;
+    return account.getIsFirstLogin() == "FirstLogin";
 }
 
 /*------------------------------------COMPUTER------------------------------------*/
@@ -1580,13 +1576,47 @@ void makeFileOrdered(Customer &customer)
         firstOrder = false;
     }
 }
-
+vector<Customer> getCustomers()
+{
+    vector<Customer> customers;
+    fstream file("./data/customer.txt", ios::in);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file customer" << endl;
+        return customers;
+    }
+    string line;
+    Customer customer;
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        string id, name, username, phone, status, currentComputerID;
+        float balance;
+        getline(ss, id, '|');
+        getline(ss, name, '|');
+        getline(ss, username, '|');
+        getline(ss, phone, '|');
+        ss >> balance;
+        getline(ss, currentComputerID);
+        Customer customer;
+        customer.setId(id);
+        customer.setName(name);
+        customer.setUserName(username);
+        customer.setCurrentComputerID(currentComputerID);
+        customer.setPhone(phone);
+        getAccountFromFile(customer);
+        customers.push_back(customer);
+    }
+    file.close();
+    return customers;
+}
 void menuQuantity(Customer &customer, string nameRefreshment)
 {
     system("cls");
     SetConsoleTitle(TEXT("Menu số lượng"));
     ShowCursor(false);
     int selectOption = 1;
+    isChangedOrder = true;
     if (!checkIsOrdered(customer, nameRefreshment))
     {
         while (true)
@@ -1701,6 +1731,7 @@ void menuDrink(Customer &customer)
                 menuQuantity(customer, "Bò húc");
                 break;
             case 7:
+                isChangedOrder = true;
                 system("cls");
                 return;
             }
@@ -1750,6 +1781,7 @@ void menuFood(Customer &customer)
                 menuQuantity(customer, "Cơm cuộn");
                 break;
             case 7:
+                isChangedOrder = true;
                 system("cls");
                 return;
             }
@@ -1789,9 +1821,12 @@ void menuDish(Customer &customer)
                 menuDrink(customer);
                 break;
             case 3:
+                isChangedOrder = true;
+                firstOrder = true;
                 customer.order();
                 return;
             case 4:
+                isChangedOrder = true;
                 customer.setmoneyforOrder(customer.getMoneyforOrder() - customer.getTotalPrice());
                 system("cls");
                 return;
@@ -1804,81 +1839,83 @@ void menuDish(Customer &customer)
 
 void printItemsOrdered(Customer &customer)
 {
-    fstream file("./data/" + customer.getId() + "_ordered.txt", ios::in);
-    if (!file.is_open())
+
+    if (isChangedOrder)
     {
-        cout << "Không thể mở file ordered" << endl;
-        return;
-    }
+        fstream file("./data/" + customer.getId() + "_ordered.txt", ios::in);
+        if (!file.is_open())
+        {
+            cout << "Không thể mở file ordered" << endl;
+            return;
+        }
 
-    Gotoxy(0, 6);
-    int temp_balance = customer.getBalance();
-    cout << "Số dư hiện tại: " << adjustingFormMoney(temp_balance) << endl;
-
-    // Bắt đầu in khung
-    int i = 7;
-    ClearLine(i);
-    cout << "┌───────────────────────────────────────────────┐" << endl;
-    ClearLine(i + 1);
-    Gotoxy(0, i + 1);
-    cout << "│               Các món đã đặt                  │" << endl;
-    i += 2;
-    ClearLine(i);
-    Gotoxy(0, i);
-    cout << "├────────────────────────┬──────┬───────────────┤" << endl;
-    i++;
-    ClearLine(i);
-    Gotoxy(0, i);
-    cout << "│ Tên món                │ SL   │ Giá           │" << endl;
-    i++;
-    ClearLine(i);
-    Gotoxy(0, i);
-    cout << "├────────────────────────┼──────┼───────────────┤" << endl;
-    string line;
-    while (getline(file, line))
-    {
-        i++;
-        stringstream ss(line);
-        string name;
-        int quantity;
-        int price;
-
-        getline(ss, name, '|');
-        ss >> quantity;
-        ss.ignore();
-        ss >> price;
-
+        Gotoxy(0, 6);
+        int temp_balance = customer.getBalance();
+        cout << "Số dư hiện tại: " << adjustingFormMoney(temp_balance) << endl;
+        int i = 7;
+        ClearLine(i);
+        cout << "┌───────────────────────────────────────────────┐" << endl;
+        ClearLine(i + 1);
+        Gotoxy(0, i + 1);
+        cout << "│               Các món đã đặt                  │" << endl;
+        i += 2;
         ClearLine(i);
         Gotoxy(0, i);
-        cout << "│ " << name;
-        Gotoxy(25, i); // Căn chỉnh cho tên món
-        cout << "│ " << quantity;
-        Gotoxy(32, i);
-        cout << "│ " << adjustingFormMoney(price);
+        cout << "├────────────────────────┬──────┬───────────────┤" << endl;
+        i++;
+        ClearLine(i);
+        Gotoxy(0, i);
+        cout << "│ Tên món                │ SL   │ Giá           │" << endl;
+        i++;
+        ClearLine(i);
+        Gotoxy(0, i);
+        cout << "├────────────────────────┼──────┼───────────────┤" << endl;
+        string line;
+
+        while (getline(file, line))
+        {
+            i++;
+            stringstream ss(line);
+            string name;
+            int quantity;
+            int price;
+
+            getline(ss, name, '|');
+            ss >> quantity;
+            ss.ignore();
+            ss >> price;
+
+            ClearLine(i);
+            Gotoxy(0, i);
+            cout << "│ " << name;
+            Gotoxy(25, i);
+            cout << "│ " << quantity;
+            Gotoxy(32, i);
+            cout << "│ " << adjustingFormMoney(price);
+            Gotoxy(48, i);
+            cout << "│" << endl;
+        }
+
+        i++;
+        ClearLine(i);
+        Gotoxy(0, i);
+        cout << "├────────────────────────┴──────┴───────────────┤" << endl;
+
+        i++;
+        ClearLine(i);
+        Gotoxy(0, i);
+        cout << "│ Tổng tiền: ";
+        Gotoxy(34, i);
+        cout << adjustingFormMoney(customer.getTotalPrice());
         Gotoxy(48, i);
-        cout << "│" << endl; // Đóng đường viền của hàng
+        cout << "│" << endl;
+        i++;
+        ClearLine(i);
+        Gotoxy(0, i);
+        cout << "└───────────────────────────────────────────────┘" << endl;
+        isChangedOrder = false;
+        file.close();
     }
-
-    i++;
-    ClearLine(i);
-    Gotoxy(0, i);
-    cout << "├────────────────────────┴──────┴───────────────┤" << endl;
-
-    i++;
-    ClearLine(i);
-    Gotoxy(0, i);
-    cout << "│ Tổng tiền: ";
-    Gotoxy(34, i);
-    cout << adjustingFormMoney(customer.getTotalPrice());
-    Gotoxy(48, i); // 42 lucs ban dau
-    cout << "│" << endl;
-
-    i++;
-    ClearLine(i);
-    Gotoxy(0, i);
-    cout << "└───────────────────────────────────────────────┘" << endl;
-
-    file.close();
 }
 
 string adjustingFormMoney(int money)
@@ -1896,6 +1933,33 @@ string adjustingFormMoney(int money)
     }
     return result;
 }
+vector<Dish> getDishes(string id_cus)
+{
+
+    vector<Dish> dishes;
+    fstream file("./data/" + id_cus + "_ordered.txt", ios::in);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file ordered" << endl;
+        return dishes;
+    }
+    string line;
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        string name;
+        int quantity, price;
+        getline(ss, name, '|');
+        ss >> quantity;
+        ss.ignore();
+        ss >> price;
+        Dish dish(name, quantity, price);
+        dishes.push_back(dish);
+    }
+    file.close();
+    return dishes;
+}
+
 bool checkIsOrdered(Customer &customer, string nameRefreshment)
 {
     fstream file("./data/" + customer.getId() + "_ordered.txt", ios::in);

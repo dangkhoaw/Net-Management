@@ -27,6 +27,7 @@ public:
     float getBalance();
     string getCurrentComputerID();
     Time getTimeFromFile();
+    Time MoneyToTime(float balance);
     void setmoneyforOrder(int moneyforOrder);
     void setName(string name);
     void setCurrentComputerID(string id);
@@ -48,7 +49,6 @@ public:
     void order();
     int getTotalPrice();
     int getPriceOfRefreshment(string nameRefreshment, int quantity);
-
     friend ostream &operator<<(ostream &os, Customer &customer);
     friend bool getCustomerFromFile(Customer &customer);
     friend void updateCustomerToFile(Customer &customer);

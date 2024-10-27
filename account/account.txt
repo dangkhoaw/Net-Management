@@ -1,2 +1,2 @@
 ADMIN|admin|YWRtaW4=|staff|Offline|NotFirstLogin|Unlocked
-UID0001|grayzy|MTIzNDU2Nw==|customer|Offline|FirstLogin|Unlocked
+UID0001|grayzy|MTIzNDU2Nw==|customer|Online|NotFirstLogin|Unlocked

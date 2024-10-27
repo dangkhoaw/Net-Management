@@ -1,6 +1,5 @@
 #include "function.h"
 #include "account.h"
-#include "mtime.h"
 #include "base64.h"
 /*
                                          
@@ -38,6 +37,7 @@ int main(int argc, char const *argv[])
                     if (account.changePassword())
                     {
                         customer.setPassword(account.getPassword());
+                        customer.setIsFirstLogin("NotFirstLogin");
                         break;
                     }
                 }
