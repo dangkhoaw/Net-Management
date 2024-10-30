@@ -37,7 +37,6 @@ void menuQuantity(Customer &customer, string nameFood);
 void menuDrink(Customer &customer);
 void menuGame();
 void printItemsOrdered(Customer &customer);
-string adjustingFormMoney(int money);
 /*------------------------------------TIME------------------------------------*/
 void showRemainingTimeOfCustomer(Customer *customer);
 void showUsageTimeOfComputer(Computer *computer);
@@ -45,9 +44,11 @@ void showUsageTimeOfComputer(Computer *computer);
 void updateNumberOfAccounts(int &count);
 int getNumberOfAccounts();
 bool addNewAccountToFile(Account &account);
+bool removeAccountFromFile(string id_account);
 bool isValidUsername(string &username);
 /*------------------------------------CUSTOMER------------------------------------*/
 bool addCustomerToFile(Customer &customer);
+bool removeCustomerFromFile(string id_customer);
 void generateID(Account &account);
 bool checkFirstLogin(Account &account);
 bool checkIsOrdered(Customer &customer, string nameFood);
@@ -66,6 +67,7 @@ void removeComputerFromFile(Computer &computer);
 /*------------------------------------DISH------------------------------------*/
 // void generateID(Dish &dish);
 /*------------------------------------OTHER------------------------------------*/
+string adjustingFormMoney(int money);
 void enterPassword(string &password);
 string formatMoney(float money);
 void pressKeyQ();

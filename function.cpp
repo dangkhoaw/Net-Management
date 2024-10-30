@@ -772,13 +772,17 @@ void customerManagementMenu(Staff &staff)
                 staff.addAccount();
                 break;
             case 2:
-            // xóa tài khoản
+                staff.removeAccount();
+                break;
             case 3:
                 staff.lockAccount();
+                break;
             case 4:
-            // mở khóa tài khoản
+                // mở khóa tài khoản
+                break;
             case 5:
                 staff.viewCustomersInfo();
+                break;
             case 6:
                 system("cls");
                 return;
@@ -1307,7 +1311,44 @@ bool addNewAccountToFile(Account &account)
     file.close();
     return true;
 }
-
+bool removeAccountFromFile(string id_account)
+{
+    fstream file("./account/account.txt", ios::in);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file account" << endl;
+        return false;
+    }
+    fstream tempFile("./account/temp.txt", ios::out);
+    if (!tempFile.is_open())
+    {
+        cout << "Không thể mở file temp" << endl;
+        return false;
+    }
+    string line;
+    bool isFound = false;
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        string idStr;
+        getline(ss, idStr, '|');
+        if (idStr == id_account)
+        {
+            isFound = true;
+            continue;
+        }
+        tempFile << line << endl;
+    }
+    file.close();
+    tempFile.close();
+    system(("del .\\account\\account.txt"));
+    system(("ren .\\account\\temp.txt account.txt"));
+    /*
+    system("del .\\data\\customer.txt");
+    system("ren .\\data\\temp.txt customer.txt");
+    */
+    return isFound;
+}
 void generateID(Account &account)
 {
     int count = getNumberOfAccounts();
@@ -1370,6 +1411,42 @@ bool addCustomerToFile(Customer &customer)
     file << customer.getTime();
     file.close();
     return true;
+}
+bool removeCustomerFromFile(string id_customer)
+{
+    fstream file("./data/customer.txt", ios::in);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file customer" << endl;
+        return false;
+    }
+    fstream tempFile("./data/temp.txt", ios::out);
+    if (!tempFile.is_open())
+    {
+        cout << "Không thể mở file temp" << endl;
+        return false;
+    }
+    string line;
+    bool isFound = false;
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        string idStr;
+        getline(ss, idStr, '|');
+        if (idStr == id_customer)
+        {
+            isFound = true;
+            continue;
+        }
+        tempFile << line << endl;
+    }
+    file.close();
+    tempFile.close();
+    system("del .\\data\\customer.txt");
+    system("ren .\\data\\temp.txt customer.txt");
+    system(("if exist .\\data\\" + id_customer + "_ordered.txt del .\\data\\" + id_customer + "_ordered.txt").c_str());
+    system(("if exist .\\time\\" + id_customer + ".txt del .\\time\\" + id_customer + ".txt").c_str());
+    return isFound;
 }
 
 bool checkFirstLogin(Account &account)

@@ -19,6 +19,21 @@ void Staff::addAccount()
     system("cls");
     ShowCursor(false);
 }
+void Staff::removeAccount()
+{
+    system("cls");
+    ShowCursor(true);
+    string id_account;
+    cout << "Nhập id tài khoản cần xóa: ";
+    enterString(id_account);
+    toUpper(id_account);
+    removeAccountFromFile(id_account);
+    removeCustomerFromFile(id_account);
+    MessageBoxW(NULL, L"Xóa tài khoản thành công", L"Thông báo", MB_OK);
+
+    ShowCursor(false);
+    system("cls");
+}
 
 void Staff::addComputer()
 {

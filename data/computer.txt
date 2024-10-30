@@ -3,3 +3,4 @@ COM02|Available|
 COM03|Available|
 COM04|Available|
 COM05|Available|
+COM06|Available|

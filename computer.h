@@ -11,6 +11,7 @@ using namespace std;
 class Computer
 {
 private:
+    // thêm loại máy và số lượng máy
     string id, customerUsingName, status;
     Time usageTime;
 

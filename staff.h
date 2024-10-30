@@ -21,6 +21,7 @@ public:
     void viewRevenue();
     void lockAccount();
     void addAccount();
+    void removeAccount();
     void removeComputer();
     void viewListCustomer();
 };

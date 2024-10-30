@@ -137,7 +137,7 @@ void Revenue::viewRevenueMonth(Date &date)
     }
 
     *this = getDoanhThuByMonth(date);
-    cout << "Doanh thu tháng " << setfill('0') << setw(2) << date.getMonth() << "/" << date.getYear() << " là: " << totalMoney << endl;
+    cout << "Doanh thu tháng " << setfill('0') << setw(2) << date.getMonth() << "/" << date.getYear() << " là: " << adjustingFormMoney(int(this->totalMoney)) << endl;
 
     ShowCursor(false);
     pressKeyQ();
@@ -156,7 +156,8 @@ void Revenue::viewRevenueYear(Date &date)
     }
 
     *this = getDoanhThuByYear(date);
-    cout << "Doanh thu năm " << date.getYear() << " là: " << totalMoney << endl;
+
+    cout << "Doanh thu năm " << date.getYear() << " là: " << adjustingFormMoney((int)this->getTotalMoney()) << endl;
 
     ShowCursor(false);
     pressKeyQ();
