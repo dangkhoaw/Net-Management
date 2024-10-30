@@ -12,7 +12,7 @@ History::~History()
 
 ostream &operator<<(ostream &os, const History &history)
 {
-    os << history.day << " " << history.customerID;
+    os << history.customerID << "|" << history.day;
     return os;
 }
 

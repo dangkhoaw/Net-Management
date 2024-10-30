@@ -1,11 +1,9 @@
 #ifndef STAFF
 #define STAFF 1
 
-#include "customer.h"
+#include "account.h"
 #include <vector>
-#include "computer.h"
-#include "mtime.h"
-#include "revenue.h"
+#include <iostream>
 
 using namespace std;
 

@@ -3,7 +3,6 @@
 
 #include "account.h"
 #include "history.h"
-#include "computer.h"
 #include "dish.h"
 using namespace std;
 
@@ -15,10 +14,10 @@ private:
     Dish dish;
     string name, phone, currentComputerID;
     Time time;
-    History history_recently;
+    History historyRecently;
 
 public:
-    Customer(string username = "", string password = "", string role = "", string id = "", string status = "Offline", string isFirstLogin = "FirstLogin", string isLocked = "Unlocked", string name = "", string phone = "", float balance = 0, Time time = Time(), int moneyforOrder = 0, Dish dish = Dish(), string currentComputerID = "", History history_recently = History());
+    Customer(string username = "", string password = "", string role = "", string id = "", string status = "Offline", string isFirstLogin = "FirstLogin", string isLocked = "Unlocked", string name = "", string phone = "", float balance = 0, Time time = Time(), int moneyforOrder = 0, Dish dish = Dish(), string currentComputerID = "", History historyRecently = History());
     ~Customer();
     string getPhone();
     string getName();
@@ -38,6 +37,7 @@ public:
     void setTimeToFile(Time time);
     void setHistory(History history);
     friend istream &operator>>(istream &is, Customer &customer);
+
     void showMyInfo();
     bool isLocked();
 

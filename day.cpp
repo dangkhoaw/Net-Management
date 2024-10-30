@@ -6,7 +6,7 @@ Day::~Day() {}
 
 ostream &operator<<(ostream &os, const Day &day)
 {
-    os << day.time << "-" << day.date;
+    os << day.time << " " << day.date;
     return os;
 }
 

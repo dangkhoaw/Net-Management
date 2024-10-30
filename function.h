@@ -1,12 +1,13 @@
 #ifndef FUNCTION
 #define FUNCTION 1
 
-#include <thread>
+#include <windows.h>
 #include <vector>
 #include "mtime.h"
 #include "staff.h"
 #include "account.h"
-#include "revenue.h"
+#include "customer.h"
+#include "computer.h"
 
 #define KEY_UP 72
 #define KEY_DOWN 80

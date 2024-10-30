@@ -3,7 +3,6 @@
 
 #include <iostream>
 #include <fstream>
-#include <windows.h> // Đừng động vào :'))
 #include <sstream>
 
 using namespace std;

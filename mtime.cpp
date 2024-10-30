@@ -1,4 +1,8 @@
 #include "mtime.h"
+#include <conio.h>
+#include <sstream>
+#include <iomanip>
+#include <ctime>
 
 Time::Time(int hour, int minute, int second) : colon(':')
 {

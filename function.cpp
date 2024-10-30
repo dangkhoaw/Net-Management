@@ -1,10 +1,13 @@
 #include "function.h"
+#include "revenue.h"
 #include "base64.h"
 #include "game.h"
+#include <thread>
 #include <mutex>
 #include <chrono>
 #include "dish.h"
 #include "history.h"
+#include <conio.h>
 
 bool showRemainingTime = true;
 bool showUsageTime = true;
@@ -1929,7 +1932,7 @@ void printItemsOrdered(Customer &customer)
         Gotoxy(0, 6);
         int temp_balance = customer.getBalance();
         // cout << "Số dư hiện tại: " << adjustingFormMoney(temp_balance) << endl;
-        cout << "Số dư hiện tại: " << formatMoney(temp_balance) << endl;
+        cout << "Số dư hiện tại: " << formatMoney(temp_balance) << " (VNĐ)" << endl;
         int i = 7;
         ClearLine(i);
         cout << "┌───────────────────────────────────────────────┐" << endl;

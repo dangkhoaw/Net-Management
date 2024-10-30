@@ -1,5 +1,7 @@
 #include "computer.h"
+#include <fstream>
 #include <mutex>
+#include <sstream>
 
 mutex com;
 

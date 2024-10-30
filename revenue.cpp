@@ -1,5 +1,5 @@
-#include "revenue.h"
 #include "function.h"
+#include "revenue.h"
 
 Revenue::Revenue(Date date, double totalMoney) : date(date), totalMoney(totalMoney) {}
 
@@ -91,7 +91,7 @@ void Revenue::viewRevenueDay(Date &date)
     }
 
     *this = getDoanhThuByDate(date);
-    cout << "Doanh thu ngày " << date << " là: " << totalMoney << endl;
+    cout << "Doanh thu ngày " << date << " là: " << formatMoney((unsigned int)this->totalMoney) << " (VNĐ)" << endl;
 
     ShowCursor(false);
     pressKeyQ();
@@ -137,7 +137,7 @@ void Revenue::viewRevenueMonth(Date &date)
     }
 
     *this = getDoanhThuByMonth(date);
-    cout << "Doanh thu tháng " << setfill('0') << setw(2) << date.getMonth() << "/" << date.getYear() << " là: " << adjustingFormMoney(int(this->totalMoney)) << endl;
+    cout << "Doanh thu tháng " << setfill('0') << setw(2) << date.getMonth() << "/" << date.getYear() << " là: " << formatMoney((unsigned int)this->totalMoney) << " (VNĐ)" << endl;
 
     ShowCursor(false);
     pressKeyQ();
@@ -157,7 +157,7 @@ void Revenue::viewRevenueYear(Date &date)
 
     *this = getDoanhThuByYear(date);
 
-    cout << "Doanh thu năm " << date.getYear() << " là: " << adjustingFormMoney((int)this->getTotalMoney()) << endl;
+    cout << "Doanh thu năm " << date.getYear() << " là: " << formatMoney((unsigned int)this->totalMoney) << " (VNĐ)" << endl;
 
     ShowCursor(false);
     pressKeyQ();

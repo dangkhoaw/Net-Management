@@ -1,5 +1,5 @@
-#include "account.h"
 #include "function.h"
+#include "account.h"
 #include "base64.h"
 
 Account::Account(string username, string password, string role, string id, string status, string isFirstLogin, string isLocked) : username(username), password(password), role(role), id(id), status(status), isFirstLogin(isFirstLogin), isLocked(isLocked) {}

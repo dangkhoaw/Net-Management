@@ -2,7 +2,6 @@
 #define REVENUE 1
 
 #include "day.h"
-#include <iostream>
 #include <vector>
 
 using namespace std;

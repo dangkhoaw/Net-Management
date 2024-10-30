@@ -1,7 +1,6 @@
 #ifndef HISTORY
 #define HISTORY 1
 
-#include <iostream>
 #include "day.h"
 
 using namespace std;

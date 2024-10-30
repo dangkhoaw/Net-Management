@@ -1,12 +1,11 @@
-#include "customer.h"
-#include "base64.h"
 #include "function.h"
-// #include <mutex>
+#include "base64.h"
+#include <mutex>
 
-// mutex cus;
+mutex cus;
 
-Customer::Customer(string username, string password, string role, string id, string status, string isFirstLogin, string isLocked, string name, string phone, float balance, Time time, int moneyforOrder, Dish dish, string currentComputerID, History history_recently)
-    : Account(username, password, role, id, status, isFirstLogin, isLocked), name(name), phone(phone), balance(balance), time(time), moneyforOrder(moneyforOrder), dish(dish), currentComputerID(currentComputerID), history_recently(history_recently) {}
+Customer::Customer(string username, string password, string role, string id, string status, string isFirstLogin, string isLocked, string name, string phone, float balance, Time time, int moneyforOrder, Dish dish, string currentComputerID, History historyRecently)
+    : Account(username, password, role, id, status, isFirstLogin, isLocked), name(name), phone(phone), balance(balance), time(time), moneyforOrder(moneyforOrder), dish(dish), currentComputerID(currentComputerID), historyRecently(historyRecently) {}
 Customer::~Customer() {}
 
 string Customer::getName() { return name; }
@@ -25,12 +24,12 @@ void Customer::setBalance(Time time)
     float cost = 10000;
     this->balance = (float(time.getHour()) + float(time.getMinute()) / 60 + float(time.getSecond()) / 3600) * cost;
 }
-void Customer::setHistory(History history) { this->history_recently = history; }
+void Customer::setHistory(History history) { this->historyRecently = history; }
 void Customer::setCurrentComputerID(string id) { currentComputerID = id; }
 
 Time Customer::getTimeFromFile()
 {
-    // lock_guard<mutex> lock(cus);
+    lock_guard<mutex> lock(cus);
     Time time;
     fstream file("./time/" + getId() + ".txt", ios::in);
     if (file.is_open())
@@ -56,7 +55,7 @@ Time Customer::MoneyToTime(float balance)
 
 void Customer::setTimeToFile(Time time)
 {
-    // lock_guard<mutex> lock(cus);
+    lock_guard<mutex> lock(cus);
     fstream file("./time/" + getId() + ".txt", ios::out);
     if (file.is_open())
     {
@@ -93,16 +92,14 @@ void Customer::showHistory()
         getline(ss, day);
         if (id == this->getId())
         {
-
-            cout << "Lịch sử gần đây: ";
-            cout << day << endl;
+            cout << "Lịch sử đăng nhập gần đây: " << day << endl;
             return;
         }
     }
     file.close();
 }
 
-void Customer::addHistoryToFile(History &history_recently)
+void Customer::addHistoryToFile(History &historyRecently)
 {
     fstream file("./data/history.txt", ios::in);
     if (!file.is_open())
@@ -116,7 +113,7 @@ void Customer::addHistoryToFile(History &history_recently)
         cout << "Không thể mở file temp" << endl;
         return;
     }
-    tempFile << history_recently.getCustomerID() << "|" << history_recently.getDay() << endl;
+    tempFile << historyRecently.getCustomerID() << "|" << historyRecently.getDay() << endl;
     string line;
     while (getline(file, line))
     {
@@ -131,9 +128,10 @@ void Customer::addHistoryToFile(History &history_recently)
     system("del .\\data\\history.txt");
     system("ren .\\data\\temp.txt history.txt");
 }
+
 bool Customer::isLocked()
 {
-    // lock_guard<mutex> lock(cus);
+    lock_guard<mutex> lock(cus);
     fstream file("./account/account.txt", ios::in);
     if (!file.is_open())
     {
@@ -211,7 +209,7 @@ bool getCustomerFromFile(Customer &customer)
 
 void updateCustomerToFile(Customer &customer)
 {
-    // lock_guard<mutex> lock(cus);
+    lock_guard<mutex> lock(cus);
     fstream file("./data/customer.txt", ios::in);
     if (!file.is_open())
     {

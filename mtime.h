@@ -2,11 +2,6 @@
 #define MY_TIME 1
 
 #include <iostream>
-#include <windows.h> // Đừng động vào :'))
-#include <conio.h>
-#include <sstream>
-#include <iomanip>
-#include <ctime>
 
 using namespace std;
 

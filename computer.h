@@ -2,8 +2,6 @@
 #define COMPUTER 1
 
 #include <iostream>
-#include "account.h"
-#include "history.h"
 #include "mtime.h"
 
 using namespace std;
