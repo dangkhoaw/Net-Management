@@ -251,39 +251,59 @@ void updateCustomerToFile(Customer &customer)
 
 istream &operator>>(istream &is, Customer &customer)
 {
-    cout << "Tên khách hàng: ";
+    Gotoxy(0, 0);
+    cout << "┌─────────────────────────────────────────────┐" << endl;
+    cout << "│ Tên khách hàng:                             │" << endl;
+    cout << "│ Số điện thoại:                              │" << endl;
+    cout << "│ Tên đăng nhập:                              │" << endl;
+    cout << "└─────────────────────────────────────────────┘" << endl;
+
+    Gotoxy(18, 1);
     enterLetter(customer.name);
     toName(customer.name);
+
     while (true)
     {
-        cout << "Số điện thoại: ";
+        Gotoxy(17, 2);
         enterNumber(customer.phone, 10);
         if (isExistPhoneNumber(customer.phone))
-            cout << "Số điện thoại đã tồn tại" << endl;
+        {
+            MessageBoxW(NULL, L"Số điện thoại đã tồn tại", L"Thông báo", MB_OK | MB_ICONWARNING | MB_TOPMOST);
+            ClearLine(17, 2, 19);
+        }
         else if (!isPhoneNumber(customer.phone))
-            cout << "Số điện thoại không hợp lệ" << endl;
+        {
+            MessageBoxW(NULL, L"Số điện thoại không hợp lệ", L"Thông báo", MB_OK | MB_ICONWARNING | MB_TOPMOST);
+            ClearLine(17, 2, 19);
+        }
         else
             break;
     }
 
     while (true)
     {
-        cout << "Tên đăng nhập: ";
+        Gotoxy(17, 3);
         enterString(customer.username);
         if (!isValidUsername(customer.username))
-            cout << "Tên đăng nhập đã tồn tại" << endl;
+        {
+            MessageBoxW(NULL, L"Tài khoản đã tồn tại", L"Thông báo", MB_OK | MB_ICONWARNING | MB_TOPMOST);
+            ClearLine(17, 3, 18);
+        }
         else
             break;
     }
+    ClearLine(4);
+    cout << "│ Mật khẩu: 123456                            │" << endl;
+    cout << "└─────────────────────────────────────────────┘" << endl;
 
     customer.password = "123456";
-    cout << "Mật khẩu: 123456" << endl;
     customer.role = "customer";
     generateID(customer);
     ShowCursor(false);
     pressKeyQ();
     return is;
 }
+
 int Customer::enterAmountOrder()
 {
     system("cls");
@@ -300,14 +320,15 @@ int Customer::enterAmountOrder()
     } while (amount <= 0);
     return amount;
 }
-void Customer::order(string nameRefreshment, int quantity, bool isOrder_again)
+
+void Customer::order(string nameRefreshment, int quantity, bool orderAgain)
 {
     system("cls");
     ShowCursor(false);
     Dish dish;
     int price = getPriceOfRefreshment(nameRefreshment, quantity);
 
-    if (isOrder_again)
+    if (orderAgain)
     {
         dish.getDishFromFile(this->getId(), nameRefreshment);
         if (dish.getCount() > quantity)
@@ -329,7 +350,7 @@ void Customer::order(string nameRefreshment, int quantity, bool isOrder_again)
     }
     if (this->balance < this->moneyforOrder + 5000)
     {
-        if (isOrder_again)
+        if (orderAgain)
         {
             if (dish.getCount() < quantity)
                 this->moneyforOrder - (price - dish.getPrice());
@@ -345,6 +366,7 @@ void Customer::order(string nameRefreshment, int quantity, bool isOrder_again)
     addAndUpdateDishToFile(this->getId(), dish_temp);
     MessageBoxW(NULL, L"    Đã thêm món..!    ", L"Thông báo", MB_OK);
 }
+
 void Customer::order()
 {
     system("cls");
@@ -358,6 +380,7 @@ void Customer::order()
     MessageBoxW(NULL, L"Đang chuẩn bị, vui lòng chờ trong giây lát..!", L"Thông báo", MB_OK);
     return;
 }
+
 int Customer::getTotalPrice()
 {
     fstream file("./data/" + this->getId() + "_ordered.txt", ios::in);
@@ -382,6 +405,7 @@ int Customer::getTotalPrice()
     }
     return total;
 }
+
 int Customer::getPriceOfRefreshment(string nameRefreshment, int quantity)
 {
     int price = 0;

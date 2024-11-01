@@ -80,15 +80,6 @@ void optionMenu(string typeMenu, int option)
 {
     if (typeMenu == "staff")
     {
-        /*
-        ┌──────────────────────────────────┐
-        │    Quản lí khách hàng           │
-        │    Quản lí máy tính             │
-        │    Xem doanh thu                │
-        │    Nạp tiền                     │
-        │    Đăng xuất                    │
-        └──────────────────────────────────┘
-        */
         switch (option)
         {
         case 1:
@@ -110,16 +101,6 @@ void optionMenu(string typeMenu, int option)
     }
     else if (typeMenu == "customerManger")
     {
-        /*
-        ┌───────────────────────────────────┐
-        │       Thêm tài khoản             │
-        │       Xóa tài khoản              │
-        │       Khóa tài khoản             │
-        │       Mở khóa tài khoản          │
-        │       Xem thông tin khách hàng   │
-        │       Thoát                      │
-        └───────────────────────────────────┘
-        */
         switch (option)
         {
         case 1:
@@ -144,15 +125,6 @@ void optionMenu(string typeMenu, int option)
     }
     else if (typeMenu == "computerManager")
     {
-        /*
-        ┌──────────────────────────────────┐
-        │       Thêm máy tính             │
-        │       Xóa máy tính              │
-        │       Sửa thông tin máy tính    │
-        │       Xem trạng thái máy        │
-        │       Thoát                     │
-        └──────────────────────────────────┘
-        */
         switch (option)
         {
         case 1:
@@ -174,19 +146,6 @@ void optionMenu(string typeMenu, int option)
     }
     else if (typeMenu == "customer")
     {
-        /*
-        ┌──────────────────────────────────┐
-        │   Thời gian còn lại: 16:50:39    │
-        │   Thời gian sử dụng: 00:00:07    │
-        │   Bạn đang sử dụng máy: COM01    │
-        ├──────────────────────────────────┤
-        │    Đổi mật khẩu                 │
-        │    Xem thông tin cá nhân        │
-        │    Đặt món ăn                   │
-        │    Chơi game                    │
-        │    Đăng xuất                    │
-        └──────────────────────────────────┘
-        */
         switch (option)
         {
         case 1:
@@ -235,14 +194,6 @@ void optionMenu(string typeMenu, int option)
     }
     else if (typeMenu == "dish")
     {
-        /*
-        ┌──────────────────────────────┐
-        │         Thức ăn             │
-        │         Nước uống           │
-        │         Đặt                 │
-        │         Thoát               │
-        └──────────────────────────────┘
-        */
         switch (option)
         {
         case 1:
@@ -261,17 +212,6 @@ void optionMenu(string typeMenu, int option)
     }
     else if (typeMenu == "food")
     {
-        /*
-        ┌──────────────────────────────┐
-        │     Bánh mì thịt nướng       │
-        │     Mì tôm trứng             │
-        │     Cơm gà nướng             │
-        │     Cơm gà chiên nước mắm    │
-        │     Xúc xích                 │
-        │     Cơm cuộn                 │
-        │      Thoát                  │
-        └──────────────────────────────┘
-        */
         switch (option)
         {
         case 1:
@@ -299,17 +239,6 @@ void optionMenu(string typeMenu, int option)
     }
     else if (typeMenu == "drink")
     {
-        /*
-        ┌──────────────────────────────┐
-        │        Coca lon              │
-        │        Nước suối             │
-        │        Caffee đen            │
-        │        Caffee sữa            │
-        │        Nước cam              │
-        │        Bò húc                │
-        │         Thoát               │
-        └──────────────────────────────┘
-        */
         switch (option)
         {
         case 1:
@@ -337,17 +266,6 @@ void optionMenu(string typeMenu, int option)
     }
     else if (typeMenu == "quantity")
     {
-        /*
-
-                ┌──────────────────────────────┐
-                |        Số lượng              |
-                ├──────────────────────────────┤
-                |        1                     |
-                │        2                     │
-                │        Nhiều hơn             │
-                │         Thoát               │
-                └──────────────────────────────┘
-        */
         switch (option)
         {
         case 1:
@@ -365,13 +283,6 @@ void optionMenu(string typeMenu, int option)
     }
     else if (typeMenu == "reOrder")
     {
-        /*
-        ┌──────────────────────────────┐
-        │        Sửa số lượng          │
-        │        Xóa món               │
-        │         Thoát               │
-        └──────────────────────────────┘
-        */
         switch (option)
         {
         case 1:
@@ -387,14 +298,6 @@ void optionMenu(string typeMenu, int option)
     }
     else if (typeMenu == "revenue")
     {
-        /*
-        ┌──────────────────────────────────┐
-        │     Xem doanh thu theo ngày     │
-        │     Xem doanh thu theo tháng    │
-        │     Xem doanh thu theo năm      │
-        │     Thoát                       │
-        └──────────────────────────────────┘
-        */
         switch (option)
         {
         case 1:
@@ -413,14 +316,6 @@ void optionMenu(string typeMenu, int option)
     }
     else if (typeMenu == "revenueDay")
     {
-        /*
-        ┌──────────────────────────────────┐
-        │       Doanh thu hôm nay         │
-        │       Doanh thu hôm qua         │
-        │       Doanh thu ngày khác       │
-        │       Thoát                     │
-        └──────────────────────────────────┘
-        */
         switch (option)
         {
         case 1:
@@ -439,14 +334,6 @@ void optionMenu(string typeMenu, int option)
     }
     else if (typeMenu == "revenueMonth")
     {
-        /*
-        ┌──────────────────────────────────┐
-        │      Doanh thu tháng này        │
-        │      Doanh thu tháng trước      │
-        │      Doanh thu tháng khác       │
-        │      Thoát                      │
-        └──────────────────────────────────┘
-        */
         switch (option)
         {
         case 1:
@@ -465,14 +352,6 @@ void optionMenu(string typeMenu, int option)
     }
     else if (typeMenu == "revenueYear")
     {
-        /*
-        ┌──────────────────────────────────┐
-        │      Doanh thu năm nay          │
-        │      Doanh thu năm trước        │
-        │      Doanh thu năm khác         │
-        │      Thoát                      │
-        └──────────────────────────────────┘
-        */
         switch (option)
         {
         case 1:

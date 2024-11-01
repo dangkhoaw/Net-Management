@@ -61,7 +61,7 @@ void Staff::removeComputer()
     ShowCursor(true);
     string idComputer;
     cout << "Nhập id máy cần xóa: ";
-    enterString(idComputer); // TEST
+    enterString(idComputer);
     toUpper(idComputer);
     Computer computer;
     computer.setId(idComputer);
@@ -268,9 +268,6 @@ void Staff::topUpAccount()
 }
 void Staff::viewCustomersInfo()
 {
-    // làm như bên viewComputerStatus
-    // view id , tên , tên đăng nhập , số điện thoại , trạng thái ,  máy tính đang sử dung (nếu không có thì là -)
-
     system("cls");
     vector<Customer> prevCustomers;
     Gotoxy(0, 0);
@@ -351,11 +348,11 @@ void Staff::lockAccount()
         ClearLine(0);
         Gotoxy(0, 0);
         cout << "Tên đăng nhập: ";
-        enterString(userName); // TEST
+        enterString(userName);
 
         if (isValidUsername(userName))
         {
-            if (++count == 4)
+            if (++count == 3)
             {
                 system("cls");
                 cout << "Nhập sai 3 lần. Hãy thử lại sau" << endl;

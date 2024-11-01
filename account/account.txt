@@ -1,3 +1,4 @@
 ADMIN|admin|YWRtaW4=|staff|Offline|NotFirstLogin|Unlocked
 UID0001|grayzy|MTIzNDU2Nw==|customer|Offline|NotFirstLogin|Unlocked
 UID0002|dangkhoaw|MjAwNQ==|customer|Offline|NotFirstLogin|Unlocked
+UID0005|khoadang|MTIzNDU2|customer|Offline|FirstLogin|Unlocked
