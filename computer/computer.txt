@@ -4,3 +4,7 @@ COM03|Available|
 COM04|Available|
 COM05|Available|
 COM06|Available|
+COM07|Available|
+COM08|Available|
+COM09|Available|
+COM10|Available|

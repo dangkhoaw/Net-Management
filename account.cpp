@@ -137,104 +137,119 @@ bool Account::changePassword()
 
 void updateAccountToFile(Account &account)
 {
-    string path = "./account/account.txt";
-    fstream file(path, ios::in);
-    if (!file.is_open())
+    try
     {
-        cout << "Không thể mở file account trong updateAccountToFile ở file account.cpp" << endl;
-        return;
-    }
-    string tempPath = "./account/temp.txt";
-    fstream tempFile(tempPath, ios::out);
-    if (!tempFile.is_open())
-    {
-        cout << "Không thể mở file temp" << endl;
-        return;
-    }
-    Account temp;
-    string line;
-    while (getline(file, line))
-    {
-        stringstream ss(line);
-        getline(ss, temp.id, '|');
-        getline(ss, temp.username, '|');
-        getline(ss, temp.password, '|');
-        getline(ss, temp.role, '|');
-        getline(ss, temp.status, '|');
-        getline(ss, temp.isFirstLogin, '|');
-        getline(ss, temp.isLocked);
-        if (temp.id == account.id)
+        fstream file("./account/account.txt", ios::in);
+        if (!file.is_open())
         {
-            temp = account;
+            throw "Không thể mở file account.txt";
         }
-        tempFile << temp.id << '|' << temp.username << '|' << temp.password << '|' << temp.role << '|' << temp.status << '|' << temp.isFirstLogin << '|' << temp.isLocked << endl;
+        fstream tempFile("./account/temp.txt", ios::out);
+        if (!tempFile.is_open())
+        {
+            throw "Không thể tạo file temp.txt";
+        }
+        Account temp;
+        string line;
+        while (getline(file, line))
+        {
+            stringstream ss(line);
+            getline(ss, temp.id, '|');
+            getline(ss, temp.username, '|');
+            getline(ss, temp.password, '|');
+            getline(ss, temp.role, '|');
+            getline(ss, temp.status, '|');
+            getline(ss, temp.isFirstLogin, '|');
+            getline(ss, temp.isLocked);
+            if (temp.id == account.id)
+            {
+                temp = account;
+            }
+            tempFile << temp.id << '|' << temp.username << '|' << temp.password << '|' << temp.role << '|' << temp.status << '|' << temp.isFirstLogin << '|' << temp.isLocked << endl;
+        }
+        file.close();
+        tempFile.close();
+        system("del .\\account\\account.txt");
+        system("ren .\\account\\temp.txt account.txt");
     }
-    file.close();
-    tempFile.close();
-    system("del .\\account\\account.txt");
-    system("ren .\\account\\temp.txt account.txt");
+    catch (const string &error)
+    {
+        cerr << error << endl;
+    }
 }
 
 bool getAccountFromFile(Account &account)
 {
-    string path = "./account/account.txt";
-    fstream file(path, ios::in);
-    if (!file.is_open())
+    try
     {
-        cout << "Không thể mở file account trong getAccountFromFile ở file account.cpp" << endl;
+        fstream file("./account/account.txt", ios::in);
+        if (!file.is_open())
+        {
+            throw "Không thể mở file account";
+        }
+        string line;
+        Account temp;
+        while (getline(file, line))
+        {
+            stringstream ss(line);
+            getline(ss, temp.id, '|');
+            getline(ss, temp.username, '|');
+            getline(ss, temp.password, '|');
+            getline(ss, temp.role, '|');
+            getline(ss, temp.status, '|');
+            getline(ss, temp.isFirstLogin, '|');
+            getline(ss, temp.isLocked);
+            if (temp.username == account.username)
+            {
+                account = temp;
+                file.close();
+                return true;
+            }
+        }
+        file.close();
         return false;
     }
-    string line;
-    Account temp;
-    while (getline(file, line))
+    catch (const string &error)
     {
-        stringstream ss(line);
-        getline(ss, temp.id, '|');
-        getline(ss, temp.username, '|');
-        getline(ss, temp.password, '|');
-        getline(ss, temp.role, '|');
-        getline(ss, temp.status, '|');
-        getline(ss, temp.isFirstLogin, '|');
-        getline(ss, temp.isLocked);
-        if (temp.username == account.username)
-        {
-            account = temp;
-            file.close();
-            return true;
-        }
+        cerr << error << endl;
+        return false;
     }
-    file.close();
-    return false;
 }
 
 bool checkAccount(Account &account)
 {
-    string path = "./account/account.txt";
-    fstream file(path, ios::in);
-    if (!file.is_open())
+    try
     {
-        cout << "Không thể mở file account trong checkAccount ở file account.cpp" << endl;
+        fstream file("./account/account.txt", ios::in);
+        if (!file.is_open())
+        {
+            throw "Không thể mở file account.txt";
+        }
+        string line;
+        Account temp;
+        while (getline(file, line))
+        {
+            stringstream ss(line);
+            getline(ss, temp.id, '|');
+            getline(ss, temp.username, '|');
+            getline(ss, temp.password, '|');
+            getline(ss, temp.role, '|');
+            getline(ss, temp.status, '|');
+            getline(ss, temp.isFirstLogin, '|');
+            getline(ss, temp.isLocked);
+            if (temp.username == account.username && temp.password == Base64(account.password).encode())
+            {
+                account = temp;
+                file.close();
+                return true;
+            }
+        }
+        file.close();
         return false;
     }
-    string line;
-    Account temp;
-    while (getline(file, line))
+    catch (const string &error)
     {
-        stringstream ss(line);
-        getline(ss, temp.id, '|');
-        getline(ss, temp.username, '|');
-        getline(ss, temp.password, '|');
-        getline(ss, temp.role, '|');
-        getline(ss, temp.status, '|');
-        getline(ss, temp.isFirstLogin, '|');
-        getline(ss, temp.isLocked);
-        if (temp.username == account.username && temp.password == Base64(account.password).encode())
-        {
-            account = temp;
-            file.close();
-            return true;
-        }
+        cerr << error << endl;
+        return false;
     }
-    file.close();
-    return false;
 }

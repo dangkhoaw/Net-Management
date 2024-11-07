@@ -20,7 +20,7 @@ istream &operator>>(istream &is, Revenue &doanhThu)
 vector<Revenue> Revenue::getDoanhThu()
 {
     vector<Revenue> doanhthus;
-    fstream file("./data/doanhthu.txt", ios::in);
+    fstream file("./data/revenue.txt", ios::in);
     if (!file.is_open())
     {
         cout << "Không thể mở file doanh thu" << endl;
@@ -54,7 +54,7 @@ vector<Revenue> Revenue::getDoanhThu()
 void Revenue::updateDoanhThu(Revenue &doanhThu)
 {
     vector<Revenue> doanhthus = getDoanhThu();
-    fstream file("./data/doanhthu.txt", ios::out);
+    fstream file("./data/revenue.txt", ios::out);
     if (!file.is_open())
     {
         cout << "Không thể mở file doanh thu" << endl;

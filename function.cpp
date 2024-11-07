@@ -1017,558 +1017,6 @@ void menuRevenueYear(Staff &staff)
     }
 }
 
-void menuCustomer(Customer &customer, Computer &computer)
-{
-    SetConsoleTitle(TEXT("Menu khách hàng"));
-    ShowCursor(false);
-    int selectOption = 1;
-    History history(Day().getCurrentDay(), customer.getId());
-
-    thread threadShowTimeCustomer(showRemainingTimeOfCustomer, &customer);
-    thread threadShowTimeComputer(showUsageTimeOfComputer, &computer);
-
-    while (showRemainingTime)
-    {
-        showMenu("customer", selectOption);
-        if (_kbhit())
-        {
-            int key = _getch();
-            switch (key)
-            {
-            case KEY_UP:
-                selectOption = (selectOption == 1) ? MENUCUSTOMER : selectOption - 1;
-                break;
-            case KEY_DOWN:
-                selectOption = (selectOption == MENUCUSTOMER) ? 1 : selectOption + 1;
-                break;
-            case KEY_ENTER:
-                switch (selectOption)
-                {
-                case 1:
-                    isChangingPassword = true;
-                    customer.changePassword();
-                    isChangingPassword = false;
-                    break;
-                case 2:
-                    isViewingInfo = true;
-                    customer.showMyInfo();
-                    isViewingInfo = false;
-                    break;
-                case 3:
-                    isOrdering = true;
-                    menuDish(customer);
-                    isOrdering = false;
-                    break;
-                case 4:
-                    isSelectingGame = true;
-                    menuGame();
-                    isSelectingGame = false;
-                    break;
-                case 5:
-                    customer.setHistory(history);
-                    customer.addHistoryToFile(history);
-                    showUsageTime = false;
-                    showRemainingTime = false;
-                    break;
-                }
-            default:
-                break;
-            }
-        }
-    }
-    if (threadShowTimeComputer.joinable())
-    {
-        threadShowTimeComputer.join();
-    }
-    if (threadShowTimeCustomer.joinable())
-    {
-        threadShowTimeCustomer.join();
-    }
-
-    system("cls");
-    system(("if exist .\\data\\" + customer.getId() + "_ordered.txt del .\\data\\" + customer.getId() + "_ordered.txt").c_str());
-    // customer.setBalance(customer.getTime());
-    customer.setTimeToFile(Time());
-    customer.setStatus("Offline");
-    customer.setCurrentComputerID("");
-    (customer.isLocked()) ? customer.setLocked("Locked") : customer.setLocked("Unlocked");
-    customer.setPassword(Base64(customer.getPassword()).encode());
-    updateCustomerToFile(customer);
-    updateAccountToFile(customer);
-    computer.setStatus("Available");
-    computer.setCustomerUsingName("");
-    computer.setUsageTimeToFile(Time());
-    updateComputerToFile(computer);
-
-    ShowCursor(true);
-}
-
-/*------------------------------------TIME------------------------------------*/
-void showRemainingTimeOfCustomer(Customer *customer)
-{
-    float moneyOneSecond = 10000 / 3600;
-    while (showRemainingTime)
-    {
-        Time currentTime = customer->getTimeFromFile();
-        if (!isChangingPassword && !isViewingInfo && !isOrdering && !isSelectingGame) // nếu mấy này không chạy thì in ra khung thời gian
-        {
-            lock_guard<mutex> lock(mtx);
-            Gotoxy(1, 1);
-            cout << "   Thời gian còn lại: " << currentTime << "    ";
-        }
-
-        if (currentTime.isZero())
-        {
-            showRemainingTime = false;
-            showUsageTime = false;
-            MessageBoxW(NULL, L"Hết thời gian sử dụng!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
-            break;
-        }
-        customer->setBalance(customer->getBalance() - moneyOneSecond);
-        currentTime--;
-        customer->setTimeToFile(currentTime);
-        customer->setTime(currentTime);
-        this_thread::sleep_for(chrono::seconds(1));
-    }
-    ShowCursor(true);
-}
-
-void showUsageTimeOfComputer(Computer *computer)
-{
-    Time usageTime;
-    while (showUsageTime)
-    {
-        if (!isChangingPassword && !isViewingInfo && !isOrdering && !isSelectingGame) // nếu mấy này không chạy thì in ra khung thời gian
-        {
-            lock_guard<mutex> lock(mtx);
-            Gotoxy(1, 2);
-            cout << "   Thời gian sử dụng: " << usageTime << "    ";
-            computer->setUsageTimeToFile(usageTime);
-            computer->setUsageTime(usageTime);
-            Gotoxy(1, 3);
-            cout << "   Bạn đang sử dụng máy: " << computer->getId() << "    ";
-        }
-        usageTime++;
-        this_thread::sleep_for(chrono::seconds(1));
-    }
-}
-
-/*------------------------------------ACCOUNT------------------------------------*/
-void updateNumberOfAccounts(int &count)
-{
-    fstream file("./account/count.txt", ios::out);
-    if (!file.is_open())
-    {
-        cout << "Không thể mở file count" << endl;
-        return;
-    }
-    file << count;
-    file.close();
-}
-
-int getNumberOfAccounts()
-{
-    int count;
-    fstream file("./account/count.txt", ios::in);
-    if (!file.is_open())
-    {
-        cout << "Không thể mở file count" << endl;
-        return -1;
-    }
-    file >> count;
-    file.close();
-    return count;
-}
-
-bool addNewAccountToFile(Account &account)
-{
-    string path1 = "./account/account.txt"; // đưa vào file account
-    fstream file(path1, ios::app);
-    if (!file.is_open())
-    {
-        cout << "Không thể mở file account" << endl;
-        return false;
-    }
-    file << account.getId() << '|' << account.getUserName() << '|' << Base64(account.getPassword()).encode() << '|' << account.getRole() << '|' << account.getStatus() << '|' << account.getIsFirstLogin() << '|' << account.getIsLocked() << endl;
-    file.close();
-    return true;
-}
-bool removeAccountFromFile(string id_account)
-{
-    fstream file("./account/account.txt", ios::in);
-    if (!file.is_open())
-    {
-        cout << "Không thể mở file account" << endl;
-        return false;
-    }
-    fstream tempFile("./account/temp.txt", ios::out);
-    if (!tempFile.is_open())
-    {
-        cout << "Không thể mở file temp" << endl;
-        return false;
-    }
-    string line;
-    bool isFound = false;
-    while (getline(file, line))
-    {
-        stringstream ss(line);
-        string idStr;
-        getline(ss, idStr, '|');
-        if (idStr == id_account)
-        {
-            isFound = true;
-            continue;
-        }
-        tempFile << line << endl;
-    }
-    file.close();
-    tempFile.close();
-    system(("del .\\account\\account.txt"));
-    system(("ren .\\account\\temp.txt account.txt"));
-    /*
-    system("del .\\data\\customer.txt");
-    system("ren .\\data\\temp.txt customer.txt");
-    */
-    return isFound;
-}
-void generateID(Account &account)
-{
-    int count = getNumberOfAccounts();
-    count++;
-    stringstream ss;
-    ss << setw(4) << setfill('0') << count;
-    string id = "UID" + ss.str();
-    account.setId(id);
-    updateNumberOfAccounts(count);
-}
-
-bool isValidUsername(string &username)
-{
-    if (username == "admin")
-        return false;
-
-    fstream file("./account/account.txt", ios::in);
-    if (!file.is_open())
-    {
-        cout << "Không thể mở file account" << endl;
-        return false;
-    }
-    string line;
-    while (getline(file, line))
-    {
-        stringstream ss(line);
-        string id, usrname;
-        getline(ss, id, '|');
-        getline(ss, usrname, '|');
-        if (usrname == username)
-        {
-            file.close();
-            return false;
-        }
-    }
-    file.close();
-    return true;
-}
-
-/*------------------------------------STAFF------------------------------------*/
-
-/*------------------------------------CUSTOMER------------------------------------*/
-bool addCustomerToFile(Customer &customer)
-{
-    string path1 = "./data/customer.txt"; // đưa vào file customer
-    fstream file(path1, ios::app);
-    if (!file.is_open())
-    {
-        cout << "Không thể mở file customer" << endl;
-        return false;
-    }
-    file << customer.getId() << '|' << customer.getName() << '|' << customer.getUserName() << '|' << customer.getPhone() << '|' << customer.getBalance() << '|' << customer.getCurrentComputerID() << endl;
-    file.close();
-    file.open("./time/" + customer.getId() + ".txt", ios::out);
-    if (!file.is_open())
-    {
-        cout << "Không thể mở file t/g customer" << endl;
-        return false;
-    }
-    file << customer.getTime();
-    file.close();
-    return true;
-}
-bool removeCustomerFromFile(string id_customer)
-{
-    fstream file("./data/customer.txt", ios::in);
-    if (!file.is_open())
-    {
-        cout << "Không thể mở file customer" << endl;
-        return false;
-    }
-    fstream tempFile("./data/temp.txt", ios::out);
-    if (!tempFile.is_open())
-    {
-        cout << "Không thể mở file temp" << endl;
-        return false;
-    }
-    string line;
-    bool isFound = false;
-    while (getline(file, line))
-    {
-        stringstream ss(line);
-        string idStr;
-        getline(ss, idStr, '|');
-        if (idStr == id_customer)
-        {
-            isFound = true;
-            continue;
-        }
-        tempFile << line << endl;
-    }
-    file.close();
-    tempFile.close();
-    system("del .\\data\\customer.txt");
-    system("ren .\\data\\temp.txt customer.txt");
-    system(("if exist .\\data\\" + id_customer + "_ordered.txt del .\\data\\" + id_customer + "_ordered.txt").c_str());
-    system(("if exist .\\time\\" + id_customer + ".txt del .\\time\\" + id_customer + ".txt").c_str());
-    return isFound;
-}
-
-bool checkFirstLogin(Account &account)
-{
-    return account.getIsFirstLogin() == "FirstLogin";
-}
-
-/*------------------------------------COMPUTER------------------------------------*/
-int getNumberOfComputers()
-{
-    int count;
-    fstream file("./data/countComputer.txt", ios::in);
-    if (!file.is_open())
-    {
-        cout << "Không thể mở file countComputer" << endl;
-        return -1;
-    }
-    file >> count;
-    file.close();
-    return count;
-}
-
-void updateNumberOfComputers(int &count)
-{
-    fstream file("./data/countComputer.txt", ios::out);
-    if (!file.is_open())
-    {
-        cout << "Không thể mở file countComputer" << endl;
-        return;
-    }
-    file << count;
-    file.close();
-}
-
-bool addNewComputerToFile(Computer &computer)
-{
-    string path1 = "./data/computer.txt"; // đưa vào file computer
-    fstream file(path1, ios::app);
-    if (!file.is_open())
-    {
-        cout << "Không thể mở file computer" << endl;
-        return false;
-    }
-    file << computer.getId() << '|' << computer.getStatus() << '|' << computer.getCustomerUsingName() << endl;
-    file.close();
-
-    file.open("./time/" + computer.getId() + ".txt", ios::out);
-    if (!file.is_open())
-    {
-        cout << "Không thể mở file t/g computer" << endl;
-        return false;
-    }
-    file << computer.getUsageTime();
-    return true;
-}
-
-void generateIDComputer(Computer &computer)
-{
-    int count = getNumberOfComputers();
-    count++;
-    stringstream ss;
-    ss << setw(2) << setfill('0') << count;
-    string id = "COM" + ss.str();
-    computer.setId(id);
-    updateNumberOfComputers(count);
-}
-
-vector<Computer> getComputersByStatus(string status)
-{
-    vector<Computer> computers;
-    fstream file("./data/computer.txt", ios::in);
-    if (!file.is_open())
-    {
-        cout << "Không thể mở file computer" << endl;
-        return computers;
-    }
-    string line;
-    while (getline(file, line))
-    {
-        stringstream ss(line);
-        string id, statusStr, customerUsingName;
-        getline(ss, id, '|');
-        getline(ss, statusStr, '|');
-        getline(ss, customerUsingName);
-        if (statusStr == status)
-        {
-            Computer computer(id, status, customerUsingName);
-            computers.push_back(computer);
-        }
-    }
-    file.close();
-    return computers;
-}
-
-vector<Computer> getComputers()
-{
-    vector<Computer> computers;
-    fstream file("./data/computer.txt", ios::in);
-    if (!file.is_open())
-    {
-        cout << "Không thể mở file computer" << endl;
-        return computers;
-    }
-    string line;
-    while (getline(file, line))
-    {
-        stringstream ss(line);
-        string id, status, customerUsingName;
-        getline(ss, id, '|');
-        getline(ss, status, '|');
-        getline(ss, customerUsingName);
-        Computer computer(id, status, customerUsingName);
-        computer.setUsageTime(computer.getUsageTimeFromFile());
-        computers.push_back(computer);
-    }
-    file.close();
-    return computers;
-}
-
-void assignRandomComputer(Customer &customer, Computer &computer)
-{
-    vector<Computer> computers = getComputersByStatus("Available");
-    if (computers.size() == 0)
-    {
-        MessageBoxW(NULL, L"Hiện tại không có máy trống!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
-        return;
-    }
-    srand(time(NULL));
-    int randomIndex = rand() % computers.size();
-    computer = computers[randomIndex];
-    computer.setCustomerUsingName(customer.getUserName());
-    computer.setStatus("Using");
-    updateComputerToFile(computer);
-
-    float balance = customer.getBalance();
-    float cost = 10000;
-    int seconds = int(balance / cost * 3600);
-    Time time(0, 0, seconds);
-    customer.setTimeToFile(time);
-    customer.setTime(time);
-    customer.setCurrentComputerID(computer.getId());
-    updateCustomerToFile(customer);
-}
-
-void removeComputerFromFile(Computer &computer)
-{
-    if (getComputerFromFile(computer))
-    {
-        if (computer.getStatus() == "Using")
-        {
-            MessageBoxW(NULL, L"Máy đang sử dụng không thể xóa", L"Thông báo", MB_OK | MB_ICONWARNING);
-            return;
-        }
-        fstream file("./data/computer.txt", ios::in);
-        if (!file.is_open())
-        {
-            cout << "Không thể mở file computer" << endl;
-            return;
-        }
-
-        fstream tempFile("./data/temp.txt", ios::out);
-        if (!tempFile.is_open())
-        {
-            cout << "Không thể mở file temp" << endl;
-            return;
-        }
-
-        string line;
-        while (getline(file, line))
-        {
-            stringstream ss(line);
-            string id;
-            getline(ss, id, '|');
-            if (id != computer.getId())
-            {
-                tempFile << line << endl;
-            }
-        }
-        file.close();
-        tempFile.close();
-        system("del .\\data\\computer.txt");
-        system("ren .\\data\\temp.txt computer.txt");
-        string time = "del .\\time\\" + computer.getId() + ".txt";
-        system(time.c_str());
-        MessageBoxW(NULL, L"Xóa máy thành công", L"Thông báo", MB_OK);
-    }
-    else
-    {
-        MessageBoxW(NULL, L"Không tìm thấy máy", L"Thông báo", MB_OK | MB_ICONWARNING);
-    }
-}
-void makeFileOrdered(Customer &customer)
-{
-    if (firstOrder)
-    {
-        MessageBoxW(NULL, L"Số dư sau khi mua phải trên 5.000 đồng!", L"Yêu cầu", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
-        fstream file("./data/" + customer.getId() + "_ordered.txt", ios::out);
-        if (!file.is_open())
-        {
-            cout << "Không thể mở file ordered" << endl;
-            return;
-        }
-        file.close();
-        firstOrder = false;
-    }
-}
-vector<Customer> getCustomers()
-{
-    vector<Customer> customers;
-    fstream file("./data/customer.txt", ios::in);
-    if (!file.is_open())
-    {
-        cout << "Không thể mở file customer" << endl;
-        return customers;
-    }
-    string line;
-    Customer customer;
-    while (getline(file, line))
-    {
-        stringstream ss(line);
-        string id, name, username, phone, status, currentComputerID, balance;
-        getline(ss, id, '|');
-        getline(ss, name, '|');
-        getline(ss, username, '|');
-        getline(ss, phone, '|');
-        getline(ss, balance, '|');
-        getline(ss, currentComputerID);
-        Customer customer;
-        customer.setId(id);
-        customer.setName(name);
-        customer.setUserName(username);
-        customer.setBalance(stof(balance));
-        customer.setCurrentComputerID(currentComputerID);
-        customer.setPhone(phone);
-        getAccountFromFile(customer);
-        customers.push_back(customer);
-    }
-    file.close();
-    return customers;
-}
 void menuQuantity(Customer &customer, string nameRefreshment)
 {
     system("cls");
@@ -1796,9 +1244,557 @@ void menuDish(Customer &customer)
     }
 }
 
+void menuCustomer(Customer &customer, Computer &computer)
+{
+    SetConsoleTitle(TEXT("Menu khách hàng"));
+    ShowCursor(false);
+    int selectOption = 1;
+    History history(Day().getCurrentDay(), customer.getId());
+
+    thread threadShowTimeCustomer(showRemainingTimeOfCustomer, &customer);
+    thread threadShowTimeComputer(showUsageTimeOfComputer, &computer);
+
+    while (showRemainingTime)
+    {
+        showMenu("customer", selectOption);
+        if (_kbhit())
+        {
+            int key = _getch();
+            switch (key)
+            {
+            case KEY_UP:
+                selectOption = (selectOption == 1) ? MENUCUSTOMER : selectOption - 1;
+                break;
+            case KEY_DOWN:
+                selectOption = (selectOption == MENUCUSTOMER) ? 1 : selectOption + 1;
+                break;
+            case KEY_ENTER:
+                switch (selectOption)
+                {
+                case 1:
+                    isChangingPassword = true;
+                    customer.changePassword();
+                    isChangingPassword = false;
+                    break;
+                case 2:
+                    isViewingInfo = true;
+                    customer.showMyInfo();
+                    isViewingInfo = false;
+                    break;
+                case 3:
+                    isOrdering = true;
+                    menuDish(customer);
+                    isOrdering = false;
+                    break;
+                case 4:
+                    isSelectingGame = true;
+                    menuGame();
+                    isSelectingGame = false;
+                    break;
+                case 5:
+                    customer.setHistory(history);
+                    customer.addHistoryToFile(history);
+                    showUsageTime = false;
+                    showRemainingTime = false;
+                    break;
+                }
+            default:
+                break;
+            }
+        }
+    }
+    if (threadShowTimeComputer.joinable())
+    {
+        threadShowTimeComputer.join();
+    }
+    if (threadShowTimeCustomer.joinable())
+    {
+        threadShowTimeCustomer.join();
+    }
+
+    system("cls");
+    system(("if exist .\\data\\" + customer.getId() + "_ordered.txt del .\\data\\" + customer.getId() + "_ordered.txt").c_str());
+    // customer.setBalance(customer.getTime());
+    customer.setTimeToFile(Time());
+    customer.setStatus("Offline");
+    customer.setCurrentComputerID("");
+    (customer.isLocked()) ? customer.setLocked("Locked") : customer.setLocked("Unlocked");
+    customer.setPassword(Base64(customer.getPassword()).encode());
+    updateCustomerToFile(customer);
+    updateAccountToFile(customer);
+    computer.setStatus("Available");
+    computer.setCustomerUsingName("");
+    computer.setUsageTimeToFile(Time());
+    updateComputerToFile(computer);
+
+    ShowCursor(true);
+}
+
+/*------------------------------------TIME------------------------------------*/
+void showRemainingTimeOfCustomer(Customer *customer)
+{
+    float moneyOneSecond = 10000 / 3600;
+    while (showRemainingTime)
+    {
+        Time currentTime = customer->getTimeFromFile();
+        if (!isChangingPassword && !isViewingInfo && !isOrdering && !isSelectingGame) // nếu mấy này không chạy thì in ra khung thời gian
+        {
+            lock_guard<mutex> lock(mtx);
+            Gotoxy(1, 1);
+            cout << "   Thời gian còn lại: " << currentTime << "    ";
+        }
+
+        if (currentTime.isZero())
+        {
+            showRemainingTime = false;
+            showUsageTime = false;
+            MessageBoxW(NULL, L"Hết thời gian sử dụng!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
+            break;
+        }
+        customer->setBalance(customer->getBalance() - moneyOneSecond);
+        currentTime--;
+        customer->setTimeToFile(currentTime);
+        customer->setTime(currentTime);
+        this_thread::sleep_for(chrono::seconds(1));
+    }
+    ShowCursor(true);
+}
+
+void showUsageTimeOfComputer(Computer *computer)
+{
+    Time usageTime;
+    while (showUsageTime)
+    {
+        if (!isChangingPassword && !isViewingInfo && !isOrdering && !isSelectingGame) // nếu mấy này không chạy thì in ra khung thời gian
+        {
+            lock_guard<mutex> lock(mtx);
+            Gotoxy(1, 2);
+            cout << "   Thời gian sử dụng: " << usageTime << "    ";
+            computer->setUsageTimeToFile(usageTime);
+            computer->setUsageTime(usageTime);
+            Gotoxy(1, 3);
+            cout << "   Bạn đang sử dụng máy: " << computer->getId() << "    ";
+        }
+        usageTime++;
+        this_thread::sleep_for(chrono::seconds(1));
+    }
+}
+
+/*------------------------------------ACCOUNT------------------------------------*/
+void updateNumberOfAccounts(int &count)
+{
+    fstream file("./account/count.txt", ios::out);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file count" << endl;
+        return;
+    }
+    file << count;
+    file.close();
+}
+
+int getNumberOfAccounts()
+{
+    int count;
+    fstream file("./account/count.txt", ios::in);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file count" << endl;
+        return -1;
+    }
+    file >> count;
+    file.close();
+    return count;
+}
+
+bool addNewAccountToFile(Account &account)
+{
+    string path1 = "./account/account.txt"; // đưa vào file account
+    fstream file(path1, ios::app);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file account" << endl;
+        return false;
+    }
+    file << account.getId() << '|' << account.getUserName() << '|' << Base64(account.getPassword()).encode() << '|' << account.getRole() << '|' << account.getStatus() << '|' << account.getIsFirstLogin() << '|' << account.getIsLocked() << endl;
+    file.close();
+    return true;
+}
+bool removeAccountFromFile(string id_account)
+{
+    fstream file("./account/account.txt", ios::in);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file account" << endl;
+        return false;
+    }
+    fstream tempFile("./account/temp.txt", ios::out);
+    if (!tempFile.is_open())
+    {
+        cout << "Không thể mở file temp" << endl;
+        return false;
+    }
+    string line;
+    bool isFound = false;
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        string idStr;
+        getline(ss, idStr, '|');
+        if (idStr == id_account)
+        {
+            isFound = true;
+            continue;
+        }
+        tempFile << line << endl;
+    }
+    file.close();
+    tempFile.close();
+    system("del .\\account\\account.txt");
+    system("ren .\\account\\temp.txt account.txt");
+    return isFound;
+}
+void generateID(Account &account)
+{
+    int count = getNumberOfAccounts();
+    count++;
+    stringstream ss;
+    ss << setw(4) << setfill('0') << count;
+    string id = "UID" + ss.str();
+    account.setId(id);
+    updateNumberOfAccounts(count);
+}
+
+bool isValidUsername(string &username)
+{
+    if (username == "admin")
+        return false;
+
+    fstream file("./account/account.txt", ios::in);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file account" << endl;
+        return false;
+    }
+    string line;
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        string id, usrname;
+        getline(ss, id, '|');
+        getline(ss, usrname, '|');
+        if (usrname == username)
+        {
+            file.close();
+            return false;
+        }
+    }
+    file.close();
+    return true;
+}
+
+/*------------------------------------STAFF------------------------------------*/
+
+/*------------------------------------CUSTOMER------------------------------------*/
+bool addCustomerToFile(Customer &customer)
+{
+    string path1 = "./customer/customer.txt"; // đưa vào file customer
+    fstream file(path1, ios::app);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file customer" << endl;
+        return false;
+    }
+    file << customer.getId() << '|' << customer.getName() << '|' << customer.getUserName() << '|' << customer.getPhone() << '|' << customer.getBalance() << '|' << customer.getCurrentComputerID() << endl;
+    file.close();
+    file.open("./time/" + customer.getId() + ".txt", ios::out);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file t/g customer" << endl;
+        return false;
+    }
+    file << customer.getTime();
+    file.close();
+    return true;
+}
+bool removeCustomerFromFile(string id_customer)
+{
+    fstream file("./customer/customer.txt", ios::in);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file customer" << endl;
+        return false;
+    }
+    fstream tempFile("./customer/temp.txt", ios::out);
+    if (!tempFile.is_open())
+    {
+        cout << "Không thể mở file temp" << endl;
+        return false;
+    }
+    string line;
+    bool isFound = false;
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        string idStr;
+        getline(ss, idStr, '|');
+        if (idStr == id_customer)
+        {
+            isFound = true;
+            continue;
+        }
+        tempFile << line << endl;
+    }
+    file.close();
+    tempFile.close();
+    system("del .\\customer\\customer.txt");
+    system("ren .\\customer\\temp.txt customer.txt");
+    system(("if exist .\\data\\" + id_customer + "_ordered.txt del .\\data\\" + id_customer + "_ordered.txt").c_str());
+    system(("if exist .\\time\\" + id_customer + ".txt del .\\time\\" + id_customer + ".txt").c_str());
+    return isFound;
+}
+
+bool checkFirstLogin(Account &account)
+{
+    return account.getIsFirstLogin() == "FirstLogin";
+}
+
+/*------------------------------------COMPUTER------------------------------------*/
+int getNumberOfComputers()
+{
+    int count;
+    fstream file("./computer/count.txt", ios::in);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file countComputer" << endl;
+        return -1;
+    }
+    file >> count;
+    file.close();
+    return count;
+}
+
+void updateNumberOfComputers(int &count)
+{
+    fstream file("./computer/count.txt", ios::out);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file countComputer" << endl;
+        return;
+    }
+    file << count;
+    file.close();
+}
+
+bool addNewComputerToFile(Computer &computer)
+{
+    string path1 = "./computer/computer.txt"; // đưa vào file computer
+    fstream file(path1, ios::app);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file computer" << endl;
+        return false;
+    }
+    file << computer.getId() << '|' << computer.getStatus() << '|' << computer.getCustomerUsingName() << endl;
+    file.close();
+
+    file.open("./time/" + computer.getId() + ".txt", ios::out);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file t/g computer" << endl;
+        return false;
+    }
+    file << computer.getUsageTime();
+    return true;
+}
+
+void generateIDComputer(Computer &computer)
+{
+    int count = getNumberOfComputers();
+    count++;
+    stringstream ss;
+    ss << setw(2) << setfill('0') << count;
+    string id = "COM" + ss.str();
+    computer.setId(id);
+    updateNumberOfComputers(count);
+}
+
+vector<Computer> getComputersByStatus(string status)
+{
+    vector<Computer> computers;
+    fstream file("./computer/computer.txt", ios::in);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file computer" << endl;
+        return computers;
+    }
+    string line;
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        string id, statusStr, customerUsingName;
+        getline(ss, id, '|');
+        getline(ss, statusStr, '|');
+        getline(ss, customerUsingName);
+        if (statusStr == status)
+        {
+            Computer computer(id, status, customerUsingName);
+            computers.push_back(computer);
+        }
+    }
+    file.close();
+    return computers;
+}
+
+vector<Computer> getComputers()
+{
+    vector<Computer> computers;
+    fstream file("./computer/computer.txt", ios::in);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file computer" << endl;
+        return computers;
+    }
+    string line;
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        string id, status, customerUsingName;
+        getline(ss, id, '|');
+        getline(ss, status, '|');
+        getline(ss, customerUsingName);
+        Computer computer(id, status, customerUsingName);
+        computer.setUsageTime(computer.getUsageTimeFromFile());
+        computers.push_back(computer);
+    }
+    file.close();
+    return computers;
+}
+
+void assignRandomComputer(Customer &customer, Computer &computer)
+{
+    vector<Computer> computers = getComputersByStatus("Available");
+    if (computers.size() == 0)
+    {
+        MessageBoxW(NULL, L"Hiện tại không có máy trống!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
+        return;
+    }
+    srand(time(NULL));
+    int randomIndex = rand() % computers.size();
+    computer = computers[randomIndex];
+    computer.setCustomerUsingName(customer.getUserName());
+    computer.setStatus("Using");
+    updateComputerToFile(computer);
+
+    float balance = customer.getBalance();
+    float cost = 10000;
+    int seconds = int(balance / cost * 3600);
+    Time time(0, 0, seconds);
+    customer.setTimeToFile(time);
+    customer.setTime(time);
+    customer.setCurrentComputerID(computer.getId());
+    updateCustomerToFile(customer);
+}
+
+void removeComputerFromFile(Computer &computer)
+{
+    if (getComputerFromFile(computer))
+    {
+        if (computer.getStatus() == "Using")
+        {
+            MessageBoxW(NULL, L"Máy đang sử dụng không thể xóa", L"Thông báo", MB_OK | MB_ICONWARNING);
+            return;
+        }
+        fstream file("./computer/computer.txt", ios::in);
+        if (!file.is_open())
+        {
+            cout << "Không thể mở file computer" << endl;
+            return;
+        }
+
+        fstream tempFile("./computer/temp.txt", ios::out);
+        if (!tempFile.is_open())
+        {
+            cout << "Không thể mở file temp" << endl;
+            return;
+        }
+
+        string line;
+        while (getline(file, line))
+        {
+            stringstream ss(line);
+            string id;
+            getline(ss, id, '|');
+            if (id != computer.getId())
+            {
+                tempFile << line << endl;
+            }
+        }
+        file.close();
+        tempFile.close();
+        system("del .\\computer\\computer.txt");
+        system("ren .\\computer\\temp.txt computer.txt");
+        string time = "del .\\time\\" + computer.getId() + ".txt";
+        system(time.c_str());
+        MessageBoxW(NULL, L"Xóa máy thành công", L"Thông báo", MB_OK);
+    }
+    else
+    {
+        MessageBoxW(NULL, L"Không tìm thấy máy", L"Thông báo", MB_OK | MB_ICONWARNING);
+    }
+}
+void makeFileOrdered(Customer &customer)
+{
+    if (firstOrder)
+    {
+        MessageBoxW(NULL, L"Số dư sau khi mua phải trên 5.000 đồng!", L"Yêu cầu", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
+        fstream file("./data/" + customer.getId() + "_ordered.txt", ios::out);
+        if (!file.is_open())
+        {
+            cout << "Không thể mở file ordered" << endl;
+            return;
+        }
+        file.close();
+        firstOrder = false;
+    }
+}
+vector<Customer> getCustomers()
+{
+    vector<Customer> customers;
+    fstream file("./customer/customer.txt", ios::in);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file customer" << endl;
+        return customers;
+    }
+    string line;
+    Customer customer;
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        string id, name, username, phone, status, currentComputerID, balance;
+        getline(ss, id, '|');
+        getline(ss, name, '|');
+        getline(ss, username, '|');
+        getline(ss, phone, '|');
+        getline(ss, balance, '|');
+        getline(ss, currentComputerID);
+        Customer customer;
+        customer.setId(id);
+        customer.setName(name);
+        customer.setUserName(username);
+        customer.setBalance(stof(balance));
+        customer.setCurrentComputerID(currentComputerID);
+        customer.setPhone(phone);
+        getAccountFromFile(customer);
+        customers.push_back(customer);
+    }
+    file.close();
+    return customers;
+}
+
 void printItemsOrdered(Customer &customer)
 {
-
     if (isChangedOrder)
     {
         fstream file("./data/" + customer.getId() + "_ordered.txt", ios::in);
@@ -1810,7 +1806,6 @@ void printItemsOrdered(Customer &customer)
 
         Gotoxy(0, 6);
         int temp_balance = customer.getBalance();
-        // cout << "Số dư hiện tại: " << adjustingFormMoney(temp_balance) << endl;
         cout << "Số dư hiện tại: " << formatMoney(temp_balance) << " (VNĐ)" << endl;
         int i = 7;
         ClearLine(i);
@@ -1851,7 +1846,7 @@ void printItemsOrdered(Customer &customer)
             Gotoxy(25, i);
             cout << "│ " << quantity;
             Gotoxy(32, i);
-            cout << "│ " << adjustingFormMoney(price);
+            cout << "│ " << formatMoney(price);
             Gotoxy(48, i);
             cout << "│" << endl;
         }
@@ -1866,7 +1861,7 @@ void printItemsOrdered(Customer &customer)
         Gotoxy(0, i);
         cout << "│ Tổng tiền: ";
         Gotoxy(34, i);
-        cout << adjustingFormMoney(customer.getTotalPrice());
+        cout << formatMoney(customer.getTotalPrice());
         Gotoxy(48, i);
         cout << "│" << endl;
         i++;
@@ -1878,21 +1873,6 @@ void printItemsOrdered(Customer &customer)
     }
 }
 
-string adjustingFormMoney(int money)
-{
-    money = (money / 1000) * 1000;
-    string str = to_string(money);
-    string result;
-    int count = 0;
-    for (int i = str.size() - 1; i >= 0; i--)
-    {
-        result = str[i] + result;
-        count++;
-        if (count % 3 == 0 && i != 0)
-            result = "." + result;
-    }
-    return result;
-}
 vector<Dish> getDishes(string id_cus)
 {
 
@@ -2052,7 +2032,7 @@ bool isPhoneNumber(const string &str)
 
 bool isExistPhoneNumber(const string &phone)
 {
-    fstream file("./data/customer.txt", ios::in);
+    fstream file("./customer/customer.txt", ios::in);
     if (!file.is_open())
     {
         cout << "Không thể mở file customer" << endl;

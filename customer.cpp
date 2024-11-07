@@ -29,19 +29,24 @@ void Customer::setCurrentComputerID(string id) { currentComputerID = id; }
 
 Time Customer::getTimeFromFile()
 {
-    lock_guard<mutex> lock(cus);
-    Time time;
-    fstream file("./time/" + getId() + ".txt", ios::in);
-    if (file.is_open())
+    try
     {
+        lock_guard<mutex> lock(cus);
+        Time time;
+        fstream file("./time/" + getId() + ".txt", ios::in);
+        if (!file.is_open())
+        {
+            throw "Không thể mở file t/g customer";
+        }
         file >> time;
         file.close();
+        return time;
     }
-    else
+    catch (const string &error)
     {
-        cout << "Không thể mở file t/g customer" << endl;
+        cerr << error << endl;
+        return Time();
     }
-    return time;
 }
 Time Customer::MoneyToTime(float balance)
 {
@@ -55,20 +60,26 @@ Time Customer::MoneyToTime(float balance)
 
 void Customer::setTimeToFile(Time time)
 {
-    lock_guard<mutex> lock(cus);
-    fstream file("./time/" + getId() + ".txt", ios::out);
-    if (file.is_open())
+    try
     {
+        lock_guard<mutex> lock(cus);
+        fstream file("./time/" + getId() + ".txt", ios::out);
+        if (!file.is_open())
+        {
+            throw "Không thể mở file t/g customer";
+        }
         file << time;
         file.close();
+    }
+    catch (const string &error)
+    {
+        cerr << error << endl;
     }
 }
 
 void Customer::showMyInfo()
 {
     system("cls");
-    setBalance(getTimeFromFile());
-    updateCustomerToFile(*this);
     cout << "Tên khách hàng: " << name << endl;
     cout << "Số điện thoại: " << phone << endl;
     cout << "Số dư: " << formatMoney(balance) << " (VNĐ)" << endl;
@@ -77,176 +88,199 @@ void Customer::showMyInfo()
 }
 void Customer::showHistory()
 {
-    fstream file("./data/history.txt", ios::in);
-    if (!file.is_open())
+    try
     {
-        cout << "Không thể mở file history" << endl;
-        return;
-    }
-    string line;
-    while (getline(file, line))
-    {
-        stringstream ss(line);
-        string id, day;
-        getline(ss, id, '|');
-        getline(ss, day);
-        if (id == this->getId())
+        fstream file("./data/history.txt", ios::in);
+        if (!file.is_open())
         {
-            cout << "Lịch sử đăng nhập gần đây: " << day << endl;
-            return;
+            throw "Không thể mở file history";
         }
+        string line;
+        while (getline(file, line))
+        {
+            stringstream ss(line);
+            string id, day;
+            getline(ss, id, '|');
+            getline(ss, day);
+            if (id == this->getId())
+            {
+                cout << "Lịch sử đăng nhập gần đây: " << day << endl;
+                return;
+            }
+        }
+        file.close();
     }
-    file.close();
+    catch (const string &error)
+    {
+        cerr << error << endl;
+    }
 }
 
 void Customer::addHistoryToFile(History &historyRecently)
 {
-    fstream file("./data/history.txt", ios::in);
-    if (!file.is_open())
+    try
     {
-        cout << "Không thể mở file history" << endl;
-        return;
+        fstream file("./data/history.txt", ios::in);
+        if (!file.is_open())
+        {
+            throw "Không thể mở file history";
+        }
+        fstream tempFile("./data/temp.txt", ios::out);
+        if (!tempFile.is_open())
+        {
+            throw "Không thể mở file temp";
+        }
+        tempFile << historyRecently.getCustomerID() << "|" << historyRecently.getDay() << endl;
+        string line;
+        while (getline(file, line))
+        {
+            tempFile << line << endl;
+        }
+        file.close();
+        tempFile.close();
+        system("del .\\data\\history.txt");
+        system("ren .\\data\\temp.txt history.txt");
     }
-    fstream tempFile("./data/temp.txt", ios::app);
-    if (!tempFile.is_open())
+    catch (const string &error)
     {
-        cout << "Không thể mở file temp" << endl;
-        return;
+        cerr << error << endl;
     }
-    tempFile << historyRecently.getCustomerID() << "|" << historyRecently.getDay() << endl;
-    string line;
-    while (getline(file, line))
-    {
-        stringstream ss(line);
-        string id, day;
-        getline(ss, id, '|');
-        getline(ss, day);
-        tempFile << line << endl;
-    }
-    file.close();
-    tempFile.close();
-    system("del .\\data\\history.txt");
-    system("ren .\\data\\temp.txt history.txt");
 }
 
 bool Customer::isLocked()
 {
-    lock_guard<mutex> lock(cus);
-    fstream file("./account/account.txt", ios::in);
-    if (!file.is_open())
+    try
     {
-        // cout << "Không thể mở file account trong isLocked ở file customer.cpp" << endl;
-        return false;
-    }
-    string line;
-    while (getline(file, line))
-    {
-        stringstream ss(line);
-        string id, username, password, role, status, isFirstLogin, isLocked;
-        getline(ss, id, '|');
-        getline(ss, username, '|');
-        getline(ss, password, '|');
-        getline(ss, role, '|');
-        getline(ss, status, '|');
-        getline(ss, isFirstLogin, '|');
-        getline(ss, isLocked);
-
-        if (username == this->username)
+        fstream file("./account/account.txt", ios::in);
+        if (!file.is_open())
         {
-            if (isLocked == "Locked")
+            throw "Không thể mở file account";
+        }
+        string line;
+        while (getline(file, line))
+        {
+            stringstream ss(line);
+            string id, username, password, role, status, isFirstLogin, isLocked;
+            getline(ss, id, '|');
+            getline(ss, username, '|');
+            getline(ss, password, '|');
+            getline(ss, role, '|');
+            getline(ss, status, '|');
+            getline(ss, isFirstLogin, '|');
+            getline(ss, isLocked);
+
+            if (username == this->username)
             {
-                file.close();
-                return true;
-            }
-            else
-            {
-                file.close();
-                return false;
+                if (isLocked == "Locked")
+                {
+                    file.close();
+                    return true;
+                }
+                else
+                {
+                    file.close();
+                    return false;
+                }
             }
         }
+        file.close();
+        return false;
     }
-    file.close();
-    return false;
+    catch (const string &error)
+    {
+        cerr << error << endl;
+        return false;
+    }
 }
 
 bool getCustomerFromFile(Customer &customer)
 {
-    fstream file("./data/customer.txt", ios::in);
-    if (!file.is_open())
+    try
     {
-        cout << "Không thể mở file customer" << endl;
+        fstream file("./customer/customer.txt", ios::in);
+        if (!file.is_open())
+        {
+            throw "Không thể mở file customer";
+        }
+        string line;
+        Customer temp;
+        while (getline(file, line))
+        {
+            stringstream ss(line);
+            string balance;
+            getline(ss, temp.id, '|');
+            getline(ss, temp.name, '|');
+            getline(ss, temp.username, '|');
+            getline(ss, temp.phone, '|');
+            getline(ss, balance, '|');
+            temp.balance = stof(balance);
+            getline(ss, temp.currentComputerID);
+
+            if (temp.username == customer.username)
+            {
+                customer.id = temp.id;
+                customer.name = temp.name;
+                customer.phone = temp.phone;
+                customer.balance = temp.balance;
+                customer.currentComputerID = temp.currentComputerID;
+                file.close();
+                customer.time = customer.getTimeFromFile();
+                return true;
+            }
+        }
+        file.close();
         return false;
     }
-    string line;
-    Customer temp;
-    while (getline(file, line))
+    catch (const string &error)
     {
-        stringstream ss(line);
-        string balance;
-        getline(ss, temp.id, '|');
-        getline(ss, temp.name, '|');
-        getline(ss, temp.username, '|');
-        getline(ss, temp.phone, '|');
-        getline(ss, balance, '|');
-        temp.balance = stof(balance);
-        getline(ss, temp.currentComputerID);
-
-        if (temp.username == customer.username)
-        {
-            customer.id = temp.id;
-            customer.name = temp.name;
-            customer.phone = temp.phone;
-            customer.balance = temp.balance;
-            customer.currentComputerID = temp.currentComputerID;
-            file.close();
-            customer.time = customer.getTimeFromFile();
-            return true;
-        }
+        cerr << error << endl;
+        return false;
     }
-    file.close();
-    return false;
 }
 
 void updateCustomerToFile(Customer &customer)
 {
-    lock_guard<mutex> lock(cus);
-    fstream file("./data/customer.txt", ios::in);
-    if (!file.is_open())
+    try
     {
-        cout << "Không thể mở file customer" << endl;
-        return;
-    }
-    string tempPath = "./data/temp.txt";
-    fstream tempFile(tempPath, ios::out);
-    if (!tempFile.is_open())
-    {
-        cout << "Không thể mở file temp" << endl;
-        return;
-    }
-    string line;
-    Customer temp;
-    while (getline(file, line))
-    {
-        stringstream ss(line);
-        string balance;
-        getline(ss, temp.id, '|');
-        getline(ss, temp.name, '|');
-        getline(ss, temp.username, '|');
-        getline(ss, temp.phone, '|');
-        getline(ss, balance, '|');
-        temp.balance = stof(balance);
-        getline(ss, temp.currentComputerID);
-
-        if (temp.id == customer.id)
+        fstream file("./customer/customer.txt", ios::in);
+        if (!file.is_open())
         {
-            temp = customer;
+            throw "Không thể mở file customer";
         }
-        tempFile << temp.id << "|" << temp.name << "|" << temp.username << "|" << temp.phone << "|" << temp.balance << "|" << temp.currentComputerID << endl;
+        fstream tempFile("./customer/temp.txt", ios::out);
+        if (!tempFile.is_open())
+        {
+            throw "Không thể mở file temp";
+        }
+        string line;
+        Customer temp;
+        while (getline(file, line))
+        {
+            stringstream ss(line);
+            string balance;
+            getline(ss, temp.id, '|');
+            getline(ss, temp.name, '|');
+            getline(ss, temp.username, '|');
+            getline(ss, temp.phone, '|');
+            getline(ss, balance, '|');
+            temp.balance = stof(balance);
+            getline(ss, temp.currentComputerID);
+
+            if (temp.id == customer.id)
+            {
+                temp = customer;
+            }
+            tempFile << temp.id << "|" << temp.name << "|" << temp.username << "|" << temp.phone << "|" << temp.balance << "|" << temp.currentComputerID << endl;
+        }
+        file.close();
+        tempFile.close();
+        system("del .\\customer\\customer.txt");
+        system("ren .\\customer\\temp.txt customer.txt");
     }
-    file.close();
-    tempFile.close();
-    system("del .\\data\\customer.txt");
-    system("ren .\\data\\temp.txt customer.txt");
+    catch (const string &error)
+    {
+        cerr << error << endl;
+    }
 }
 
 istream &operator>>(istream &is, Customer &customer)

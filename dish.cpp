@@ -89,7 +89,6 @@ void addAndUpdateDishToFile(string id_cus, Dish &dish) // truyền id vô
         ss >> price_infile;
         if (nameRefreshment_infile == dish.getName())
         {
-
             check = true;
             quantity_infile = dish.getCount();
             price_infile = dish.getPrice();
@@ -145,5 +144,4 @@ void removeDishFromFile(string id_cus, int &moneyForOrderOfCus, Dish &dish)
     system(("del .\\data\\" + id_cus + "_ordered.txt").c_str());
     system(("ren .\\data\\temp.txt " + id_cus + "_ordered.txt").c_str());
     cout << "Đã xóa món ăn khỏi danh sách đặt" << endl;
-    // pressKeyQ();
 }

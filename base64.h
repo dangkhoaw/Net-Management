@@ -11,10 +11,10 @@ private:
     string str;
 
 public:
-    Base64(const string);
+    Base64(const string &);
 
     /// @brief Mã hóa
-    /// @return
+    /// @return Chuỗi được mã hóa
     string encode();
 
     /// @brief Giải mã

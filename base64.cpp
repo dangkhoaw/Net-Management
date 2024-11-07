@@ -1,11 +1,6 @@
-/*
-Usage:
-    string encoded = Base64("string to encode").encode();
-    string decoded = Base64("string to decode").decode();
-*/
 #include "base64.h"
 
-Base64::Base64(const string str) : str(str) {}
+Base64::Base64(const string &str) : str(str) {}
 
 string Base64::encode()
 {

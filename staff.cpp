@@ -70,59 +70,8 @@ void Staff::removeComputer()
     system("cls");
 }
 
-/*
-while (getline(file, line))
-    {
-        i++;
-        stringstream ss(line);
-        string name;
-        int quantity;
-        int price;
-
-        getline(ss, name, '|');
-        ss >> quantity;
-        ss.ignore();
-        ss >> price;
-
-        ClearLine(i);
-        Gotoxy(0, i);
-        cout << "│ " << name;
-        Gotoxy(25, i);
-        cout << "│ " << quantity;
-        Gotoxy(32, i);
-        cout << "│ " << adjustingFormMoney(price);
-        Gotoxy(48, i);
-        cout << "│" << endl;
-    }
-   for (int j = 0; j < dishes.size(); j++)
-    {
-        if (dishes_prev.empty() || dishes[j].getCount() != dishes_prev[j].getCount())
-        {
-
-            ClearLine(i);
-            Gotoxy(0, i);
-            cout << "│ " << dishes[i].getName();
-            Gotoxy(25, i);
-            cout << "│ " << dishes[i].getCount();
-            Gotoxy(32, i);
-            cout << "│ " << adjustingFormMoney(dishes[i].getPrice());
-            Gotoxy(48, i);
-            cout << "│" << endl;
-        }
-    }
-*/
 void Staff::viewComputerStatus()
 {
-    /*
-      ┌──────────┬────────────────────┬──────────────────────────┬──────────────────────┐
-      │   MÁY    │    TRẠNG THÁI      │      KHÁCH HÀNG          │   THỜI GIAN SỬ DỤNG  │
-      ├──────────┼────────────────────┼──────────────────────────┼──────────────────────┤
-      │  COM01   │    Đang sử dụng    │      dangkhoaw           │       00:30:00       │
-      │  COM02   │      Trống         │         -                │          -           │
-      │  COM03   │      Trống         │         -                │          -           │
-      │  COM04   │      Trống         │      grayzy              │          -           │
-      └──────────┴────────────────────┴──────────────────────────┴──────────────────────┘
-    */
     system("cls");
     vector<Computer> prevComputers;
     Gotoxy(0, 0);
@@ -271,11 +220,11 @@ void Staff::viewCustomersInfo()
     system("cls");
     vector<Customer> prevCustomers;
     Gotoxy(0, 0);
-    cout << "┌──────────┬────────────────────┬──────────────────────┬──────────────────────┬──────────────────────┬──────────────────────┐" << endl;
+    cout << "┌──────────┬───────────────────────────────┬──────────────────────┬───────────────────────┬──────────────────────┬──────────────────────┐" << endl;
     Gotoxy(0, 1);
-    cout << "│    ID    │        TÊN         │     TÊN ĐĂNG NHẬP    │    SỐ ĐIỆN THOẠI     │      TRẠNG THÁI      │   MÁY ĐANG SỬ DỤNG   │" << endl;
+    cout << "│    ID    │              TÊN              │     TÊN ĐĂNG NHẬP    │     SỐ ĐIỆN THOẠI     │      TRẠNG THÁI      │   MÁY ĐANG SỬ DỤNG   │" << endl;
     Gotoxy(0, 2);
-    cout << "├──────────┼────────────────────┼──────────────────────┼──────────────────────┼──────────────────────┼──────────────────────┤" << endl;
+    cout << "├──────────┼───────────────────────────────┼──────────────────────┼───────────────────────┼──────────────────────┼──────────────────────┤" << endl;
     while (true)
     {
         vector<Customer> customers = getCustomers();
@@ -289,13 +238,13 @@ void Staff::viewCustomersInfo()
                 cout << "│ " << customers[i].getId();
                 Gotoxy(11, i + 3);
                 cout << "│  " << customers[i].getName();
-                Gotoxy(32, i + 3);
+                Gotoxy(32 + 11, i + 3);
                 cout << "│      " << customers[i].getUserName();
-                Gotoxy(55, i + 3);
-                cout << "│     " << customers[i].getPhone();
-                Gotoxy(78, i + 3);
+                Gotoxy(55 + 11, i + 3);
+                cout << "│      " << customers[i].getPhone();
+                Gotoxy(79 + 11, i + 3);
                 cout << "│       " << customers[i].getStatus();
-                Gotoxy(101, i + 3);
+                Gotoxy(102 + 11, i + 3);
                 if (customers[i].getCurrentComputerID() == "")
                 {
                     cout << "│          -";
@@ -304,13 +253,13 @@ void Staff::viewCustomersInfo()
                 {
                     cout << "│        " << customers[i].getCurrentComputerID();
                 }
-                Gotoxy(124, i + 3);
+                Gotoxy(125 + 11, i + 3);
                 cout << "│";
             }
         }
         prevCustomers = customers;
         Gotoxy(0, customers.size() + 3);
-        cout << "└──────────┴────────────────────┴──────────────────────┴──────────────────────┴──────────────────────┴──────────────────────┘" << endl;
+        cout << "└──────────┴───────────────────────────────┴──────────────────────┴───────────────────────┴──────────────────────┴──────────────────────┘" << endl;
         Gotoxy(0, customers.size() + 5);
         cout << "(Nhấn phím q để thoát)";
         if (_kbhit())
@@ -327,6 +276,7 @@ void Staff::viewCustomersInfo()
         }
         Sleep(1000);
     }
+    system("cls");
 }
 void Staff::lockAccount()
 {

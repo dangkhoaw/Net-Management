@@ -68,7 +68,6 @@ void removeComputerFromFile(Computer &computer);
 /*------------------------------------DISH------------------------------------*/
 // void generateID(Dish &dish);
 /*------------------------------------OTHER------------------------------------*/
-string adjustingFormMoney(int money);
 void enterPassword(string &password);
 string formatMoney(float money);
 void pressKeyQ();

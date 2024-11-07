@@ -24,19 +24,24 @@ Time Computer::getUsageTime() { return usageTime; }
 
 Time Computer::getUsageTimeFromFile()
 {
-    lock_guard<mutex> lock(com);
-    Time time;
-    fstream file("./time/" + id + ".txt", ios::in);
-    if (file.is_open())
+    try
     {
+        lock_guard<mutex> lock(com);
+        Time time;
+        fstream file("./time/" + id + ".txt", ios::in);
+        if (!file.is_open())
+        {
+            throw "Không thể mở file t/g computer";
+        }
         file >> time;
         file.close();
+        return time;
     }
-    else
+    catch (const string error)
     {
-        cout << "Không thể mở file t/g computer" << endl;
+        cerr << error << endl;
+        return Time();
     }
-    return time;
 }
 
 string Computer::getCustomerUsingName() { return customerUsingName; }
@@ -67,7 +72,7 @@ ostream &operator<<(ostream &os, Computer &computer)
 bool getComputerFromFile(Computer &computer)
 {
     lock_guard<mutex> lock(com);
-    fstream file("./data/computer.txt", ios::in);
+    fstream file("./computer/computer.txt", ios::in);
     if (!file.is_open())
     {
         cout << "Không thể mở file computer" << endl;
@@ -99,13 +104,13 @@ bool getComputerFromFile(Computer &computer)
 void updateComputerToFile(Computer &computer)
 {
     lock_guard<mutex> lock(com);
-    fstream file("./data/computer.txt", ios::in);
+    fstream file("./computer/computer.txt", ios::in);
     if (!file.is_open())
     {
         cout << "Không thể mở file computer" << endl;
         return;
     }
-    string tempPath = "./data/temp.txt";
+    string tempPath = "./computer/temp.txt";
     fstream tempFile(tempPath, ios::out);
     if (!tempFile.is_open())
     {
@@ -135,6 +140,6 @@ void updateComputerToFile(Computer &computer)
     }
     file.close();
     tempFile.close();
-    system("del data\\computer.txt");
-    system("ren data\\temp.txt computer.txt");
+    system("del computer\\computer.txt");
+    system("ren computer\\temp.txt computer.txt");
 }
