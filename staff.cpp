@@ -73,7 +73,7 @@ void Staff::removeComputer()
 void Staff::viewComputerStatus()
 {
     system("cls");
-    vector<Computer> prevComputers;
+    List<Computer> prevComputers;
     Gotoxy(0, 0);
     cout << "┌──────────┬────────────────────┬──────────────────────────┬──────────────────────┐" << endl;
     Gotoxy(0, 1);
@@ -82,7 +82,7 @@ void Staff::viewComputerStatus()
     cout << "├──────────┼────────────────────┼──────────────────────────┼──────────────────────┤" << endl;
     while (true)
     {
-        vector<Computer> computers = getComputers();
+        List<Computer> computers = getComputers();
 
         for (int i = 0; i < computers.size(); i++)
         {
@@ -127,13 +127,9 @@ void Staff::viewComputerStatus()
         {
             char key = _getch();
             if (key == 'q')
-            {
                 break;
-            }
             else
-            {
                 continue;
-            }
         }
         Sleep(1000);
     }
@@ -183,19 +179,22 @@ void Staff::topUpAccount()
             break;
         }
     }
-    float amount;
+    string money;
+    double amount;
     do
     {
         Gotoxy(0, 1);
         cout << "Nhập số tiền cần nạp (10k/h): ";
-        cin >> amount;
+        enterNumber(money);
+
+        amount = stod(money);
 
         if (amount < 1000)
         {
             MessageBoxW(NULL, L"Số tiền được nhập phải là số nguyên dương và lớn hơn 1000", L"Thông báo", MB_ICONWARNING);
         }
     } while (amount < 1000);
-    cin.ignore();
+
     revenue = revenue + amount;
     revenue.updateDoanhThu(revenue);
 
@@ -218,7 +217,7 @@ void Staff::topUpAccount()
 void Staff::viewCustomersInfo()
 {
     system("cls");
-    vector<Customer> prevCustomers;
+    List<Customer> prevCustomers;
     Gotoxy(0, 0);
     cout << "┌──────────┬───────────────────────────────┬──────────────────────┬───────────────────────┬──────────────────────┬──────────────────────┐" << endl;
     Gotoxy(0, 1);
@@ -227,7 +226,7 @@ void Staff::viewCustomersInfo()
     cout << "├──────────┼───────────────────────────────┼──────────────────────┼───────────────────────┼──────────────────────┼──────────────────────┤" << endl;
     while (true)
     {
-        vector<Customer> customers = getCustomers();
+        List<Customer> customers = getCustomers();
 
         for (int i = 0; i < customers.size(); i++)
         {
@@ -266,13 +265,9 @@ void Staff::viewCustomersInfo()
         {
             char key = _getch();
             if (key == 'q')
-            {
                 break;
-            }
             else
-            {
                 continue;
-            }
         }
         Sleep(1000);
     }

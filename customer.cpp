@@ -48,15 +48,6 @@ Time Customer::getTimeFromFile()
         return Time();
     }
 }
-Time Customer::MoneyToTime(float balance)
-{
-    Time time;
-    float cost = 10000;
-    time.setHour(balance / cost);
-    time.setMinute((balance - time.getHour() * cost) / cost * 60);
-    time.setSecond((balance - time.getHour() * cost - time.getMinute() * cost / 60) * 3600);
-    return time;
-}
 
 void Customer::setTimeToFile(Time time)
 {
@@ -75,6 +66,16 @@ void Customer::setTimeToFile(Time time)
     {
         cerr << error << endl;
     }
+}
+
+Time Customer::MoneyToTime(float balance)
+{
+    Time time;
+    float cost = 10000;
+    time.setHour(balance / cost);
+    time.setMinute((balance - time.getHour() * cost) / cost * 60);
+    time.setSecond((balance - time.getHour() * cost - time.getMinute() * cost / 60) * 3600);
+    return time;
 }
 
 void Customer::showMyInfo()

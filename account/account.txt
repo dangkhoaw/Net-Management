@@ -1,5 +1,5 @@
 ADMIN|admin|YWRtaW4=|staff|Offline|NotFirstLogin|Unlocked
 UID0001|dangkhoaw|MTIzNDU2|customer|Offline|NotFirstLogin|Unlocked
 UID0002|grayzy|MTIzNDU2|customer|Offline|FirstLogin|Unlocked
-UID0003|qn|MTIzNDU2|customer|Offline|FirstLogin|Unlocked
+UID0003|qn|MjAwNQ==|customer|Offline|NotFirstLogin|Unlocked
 UID0004|tphuong|MTIzNDU=|customer|Offline|NotFirstLogin|Unlocked

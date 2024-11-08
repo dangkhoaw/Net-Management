@@ -1333,7 +1333,6 @@ void menuCustomer(Customer &customer, Computer &computer)
 /*------------------------------------TIME------------------------------------*/
 void showRemainingTimeOfCustomer(Customer *customer)
 {
-    float moneyOneSecond = 10000 / 3600;
     while (showRemainingTime)
     {
         Time currentTime = customer->getTimeFromFile();
@@ -1351,10 +1350,10 @@ void showRemainingTimeOfCustomer(Customer *customer)
             MessageBoxW(NULL, L"Hết thời gian sử dụng!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
             break;
         }
-        customer->setBalance(customer->getBalance() - moneyOneSecond);
+        customer->setBalance(currentTime);
         currentTime--;
-        customer->setTimeToFile(currentTime);
         customer->setTime(currentTime);
+        customer->setTimeToFile(currentTime);
         this_thread::sleep_for(chrono::seconds(1));
     }
     ShowCursor(true);
@@ -1619,9 +1618,9 @@ void generateIDComputer(Computer &computer)
     updateNumberOfComputers(count);
 }
 
-vector<Computer> getComputersByStatus(string status)
+List<Computer> getComputersByStatus(string status)
 {
-    vector<Computer> computers;
+    List<Computer> computers;
     fstream file("./computer/computer.txt", ios::in);
     if (!file.is_open())
     {
@@ -1646,9 +1645,9 @@ vector<Computer> getComputersByStatus(string status)
     return computers;
 }
 
-vector<Computer> getComputers()
+List<Computer> getComputers()
 {
-    vector<Computer> computers;
+    List<Computer> computers;
     fstream file("./computer/computer.txt", ios::in);
     if (!file.is_open())
     {
@@ -1673,7 +1672,7 @@ vector<Computer> getComputers()
 
 void assignRandomComputer(Customer &customer, Computer &computer)
 {
-    vector<Computer> computers = getComputersByStatus("Available");
+    List<Computer> computers = getComputersByStatus("Available");
     if (computers.size() == 0)
     {
         MessageBoxW(NULL, L"Hiện tại không có máy trống!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
@@ -1758,9 +1757,9 @@ void makeFileOrdered(Customer &customer)
         firstOrder = false;
     }
 }
-vector<Customer> getCustomers()
+List<Customer> getCustomers()
 {
-    vector<Customer> customers;
+    List<Customer> customers;
     fstream file("./customer/customer.txt", ios::in);
     if (!file.is_open())
     {
@@ -1873,10 +1872,10 @@ void printItemsOrdered(Customer &customer)
     }
 }
 
-vector<Dish> getDishes(string id_cus)
+List<Dish> getDishes(string id_cus)
 {
 
-    vector<Dish> dishes;
+    List<Dish> dishes;
     fstream file("./data/" + id_cus + "_ordered.txt", ios::in);
     if (!file.is_open())
     {
@@ -2021,7 +2020,7 @@ bool isPhoneNumber(const string &str)
 {
     if (str.size() != 10)
         return false;
-    const vector<string> arr = {"013", "016", "032", "033", "034", "035", "036", "037", "038", "039", "052", "055", "056", "058", "059", "070", "076", "077", "078", "079", "081", "082", "083", "084", "085", "086", "088", "089", "090", "091", "092", "093", "094", "096", "097", "098", "099"};
+    const List<string> arr = {"013", "016", "032", "033", "034", "035", "036", "037", "038", "039", "052", "055", "056", "058", "059", "070", "076", "077", "078", "079", "081", "082", "083", "084", "085", "086", "088", "089", "090", "091", "092", "093", "094", "096", "097", "098", "099"};
     for (int i = 0; i < arr.size(); i++)
     {
         if (str.substr(0, 3) == arr[i])

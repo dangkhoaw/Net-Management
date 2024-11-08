@@ -2,7 +2,7 @@
 #define FUNCTION 1
 
 #include <windows.h>
-#include <vector>
+#include "list.h"
 #include "mtime.h"
 #include "staff.h"
 #include "account.h"
@@ -54,15 +54,15 @@ void generateID(Account &account);
 bool checkFirstLogin(Account &account);
 bool checkIsOrdered(Customer &customer, string nameFood);
 void makeFileOrdered(Customer &customer);
-vector<Customer> getCustomers();
+List<Customer> getCustomers();
 
 /*------------------------------------COMPUTER------------------------------------*/
 int getNumberOfComputers();
 void updateNumberOfComputers(int &count);
 bool addNewComputerToFile(Computer &computer);
 void generateIDComputer(Computer &computer);
-vector<Computer> getComputersByStatus(string status);
-vector<Computer> getComputers();
+List<Computer> getComputersByStatus(string status);
+List<Computer> getComputers();
 void assignRandomComputer(Customer &customer, Computer &computer);
 void removeComputerFromFile(Computer &computer);
 /*------------------------------------DISH------------------------------------*/

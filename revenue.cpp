@@ -17,9 +17,9 @@ istream &operator>>(istream &is, Revenue &doanhThu)
     return is;
 }
 
-vector<Revenue> Revenue::getDoanhThu()
+List<Revenue> Revenue::getDoanhThu()
 {
-    vector<Revenue> doanhthus;
+    List<Revenue> doanhthus;
     fstream file("./data/revenue.txt", ios::in);
     if (!file.is_open())
     {
@@ -53,7 +53,7 @@ vector<Revenue> Revenue::getDoanhThu()
 
 void Revenue::updateDoanhThu(Revenue &doanhThu)
 {
-    vector<Revenue> doanhthus = getDoanhThu();
+    List<Revenue> doanhthus = getDoanhThu();
     fstream file("./data/revenue.txt", ios::out);
     if (!file.is_open())
     {
@@ -62,14 +62,14 @@ void Revenue::updateDoanhThu(Revenue &doanhThu)
     }
 
     bool check = false;
-    for (Revenue d : doanhthus)
+    for (int i = 0; i < doanhthus.size(); i++)
     {
-        if (d.getDate() == doanhThu.getDate())
+        if (doanhthus[i].getDate() == doanhThu.getDate())
         {
             check = true;
-            d = doanhThu;
+            doanhthus[i] = doanhThu;
         }
-        file << d << endl;
+        file << doanhthus[i] << endl;
     }
     if (check == false)
     {
@@ -138,12 +138,12 @@ void Revenue::viewRevenueYear(Date &date)
 
 Revenue Revenue::getDoanhThuByDate(Date &date)
 {
-    vector<Revenue> doanhthus = getDoanhThu();
-    for (Revenue doanhThu : doanhthus)
+    List<Revenue> doanhthus = getDoanhThu();
+    for (Revenue &doanhthu : doanhthus)
     {
-        if (doanhThu.getDate() == date)
+        if (doanhthu.getDate() == date)
         {
-            return doanhThu;
+            return doanhthu;
         }
     }
     return Revenue();
@@ -151,30 +151,28 @@ Revenue Revenue::getDoanhThuByDate(Date &date)
 
 Revenue Revenue::getDoanhThuByMonth(Date &date)
 {
-    vector<Revenue> doanhthus = getDoanhThu();
-    Revenue doanhThu;
-    for (Revenue d : doanhthus)
+    List<Revenue> doanhthus = getDoanhThu();
+    for (Revenue &doanhthu : doanhthus)
     {
-        if (d.getDate().getMonth() == date.getMonth() && d.getDate().getYear() == date.getYear())
+        if (doanhthu.getDate().getMonth() == date.getMonth() && doanhthu.getDate().getYear() == date.getYear())
         {
-            doanhThu = doanhThu + d.getTotalMoney();
+            return doanhthu;
         }
     }
-    return doanhThu;
+    return Revenue();
 }
 
 Revenue Revenue::getDoanhThuByYear(Date &date)
 {
-    vector<Revenue> doanhthus = getDoanhThu();
-    Revenue doanhThu;
-    for (Revenue d : doanhthus)
+    List<Revenue> doanhthus = getDoanhThu();
+    for (Revenue &doanhthu : doanhthus)
     {
-        if (d.getDate().getYear() == date.getYear())
+        if (doanhthu.getDate().getYear() == date.getYear())
         {
-            doanhThu = doanhThu + d.getTotalMoney();
+            return doanhthu;
         }
     }
-    return doanhThu;
+    return Revenue();
 }
 
 bool Revenue::checkDate(Date &date)

@@ -2,7 +2,6 @@
 #define STAFF 1
 
 #include "account.h"
-#include <vector>
 #include <iostream>
 
 using namespace std;

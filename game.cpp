@@ -24,26 +24,26 @@ void Game::playGame()
 {
     if (name == "T-Rex Dinosaurs")
     {
-        system("start chrome https://chromedino.com/");
+        system("start msedge https://chromedino.com/");
     }
     else if (name == "2048")
     {
-        system("start chrome https://play2048.co/");
+        system("start msedge https://play2048.co/");
     }
     else if (name == "FlappyBird")
     {
-        system("start chrome https://flappybird.io/");
+        system("start msedge https://flappybird.io/");
     }
     else if (name == "pacman")
     {
-        system("start chrome https://freepacman.org/");
+        system("start msedge https://freepacman.org/");
     }
     else if (name == "minesweeper")
     {
-        system("start chrome https://minesweeperonline.com/");
+        system("start msedge https://minesweeperonline.com/");
     }
     else if (name == "supermario")
     {
-        system("start chrome https://supermario-game.com/vi");
+        system("start msedge https://supermario-game.com/vi");
     }
 }

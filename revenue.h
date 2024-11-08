@@ -2,7 +2,6 @@
 #define REVENUE 1
 
 #include "day.h"
-#include <vector>
 
 using namespace std;
 class Revenue
@@ -22,7 +21,7 @@ public:
     Revenue operator+(const Revenue &other);
     Revenue operator-(const Revenue &other);
 
-    vector<Revenue> getDoanhThu();
+    List<Revenue> getDoanhThu();
     Revenue getDoanhThuByDate(Date &date);
     Revenue getDoanhThuByMonth(Date &date);
     Revenue getDoanhThuByYear(Date &date);
