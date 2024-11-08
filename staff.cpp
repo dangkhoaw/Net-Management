@@ -180,13 +180,13 @@ void Staff::topUpAccount()
         }
     }
     string money;
-    double amount;
+    double amount = 0;
     do
     {
         Gotoxy(0, 1);
         cout << "Nhập số tiền cần nạp (10k/h): ";
         enterNumber(money);
-
+        // kiểm tra số thực nữa
         amount = stod(money);
 
         if (amount < 1000)

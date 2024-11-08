@@ -1,4 +1,4 @@
-UID0001|Dang Dang Khoa|dangkhoaw|0906457124|508583|
+UID0001|Dang Dang Khoa|dangkhoaw|0906457124|628333|
 UID0002|Tran Nguyen Van Phat|grayzy|0356852247|110000|
 UID0003|Nguyen Quoc Nguyen|qn|0935123456|132519|
 UID0004|Nguyen Thi Thu Phuong|tphuong|0961521940|0|

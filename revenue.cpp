@@ -3,6 +3,7 @@
 
 Revenue::Revenue(Date date, double totalMoney) : date(date), totalMoney(totalMoney) {}
 
+Revenue::Revenue(const Revenue &doanhThu) : date(doanhThu.date), totalMoney(doanhThu.totalMoney) {}
 Revenue::~Revenue() {}
 
 ostream &operator<<(ostream &os, const Revenue &doanhThu)
@@ -139,11 +140,11 @@ void Revenue::viewRevenueYear(Date &date)
 Revenue Revenue::getDoanhThuByDate(Date &date)
 {
     List<Revenue> doanhthus = getDoanhThu();
-    for (Revenue &doanhthu : doanhthus)
+    for (int i = 0; i < doanhthus.size(); i++)
     {
-        if (doanhthu.getDate() == date)
+        if (doanhthus[i].getDate() == date)
         {
-            return doanhthu;
+            return doanhthus[i];
         }
     }
     return Revenue();
@@ -152,11 +153,12 @@ Revenue Revenue::getDoanhThuByDate(Date &date)
 Revenue Revenue::getDoanhThuByMonth(Date &date)
 {
     List<Revenue> doanhthus = getDoanhThu();
-    for (Revenue &doanhthu : doanhthus)
+
+    for (int i = 0; i < doanhthus.size(); i++)
     {
-        if (doanhthu.getDate().getMonth() == date.getMonth() && doanhthu.getDate().getYear() == date.getYear())
+        if (doanhthus[i].getDate().getMonth() == date.getMonth() && doanhthus[i].getDate().getYear() == date.getYear())
         {
-            return doanhthu;
+            return doanhthus[i];
         }
     }
     return Revenue();
@@ -165,30 +167,44 @@ Revenue Revenue::getDoanhThuByMonth(Date &date)
 Revenue Revenue::getDoanhThuByYear(Date &date)
 {
     List<Revenue> doanhthus = getDoanhThu();
-    for (Revenue &doanhthu : doanhthus)
+
+    for (int i = 0; i < doanhthus.size(); i++)
     {
-        if (doanhthu.getDate().getYear() == date.getYear())
+        if (doanhthus[i].getDate().getYear() == date.getYear())
         {
-            return doanhthu;
+            return doanhthus[i];
         }
     }
     return Revenue();
 }
+
+#include <ctime>
 
 bool Revenue::checkDate(Date &date)
 {
     Date dateStart(16, 10, 2024);
     time_t now = time(0);
     tm *ltm = localtime(&now);
-    if (ltm->tm_year + 1900 >= date.getYear() && date.getYear() >= dateStart.getYear())
-    {
-        if (ltm->tm_mon + 1 >= date.getMonth() && date.getMonth() >= dateStart.getMonth())
-        {
-            if (ltm->tm_mday >= date.getDay() && date.getDay() >= dateStart.getDay())
-                return true;
-        }
-    }
-    return false;
+    int currentYear = ltm->tm_year + 1900;
+    int currentMonth = ltm->tm_mon + 1;
+    int currentDay = ltm->tm_mday;
+
+    if (date.getYear() > currentYear || date.getYear() < dateStart.getYear())
+        return false;
+
+    if (date.getYear() == dateStart.getYear() && date.getMonth() < dateStart.getMonth())
+        return false;
+
+    if (date.getYear() == dateStart.getYear() && date.getMonth() == dateStart.getMonth() && date.getDay() < dateStart.getDay())
+        return false;
+
+    if (date.getYear() == currentYear && date.getMonth() > currentMonth)
+        return false;
+
+    if (date.getYear() == currentYear && date.getMonth() == currentMonth && date.getDay() > currentDay)
+        return false;
+
+    return true;
 }
 
 Revenue Revenue::operator+(double money)

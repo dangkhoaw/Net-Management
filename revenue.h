@@ -12,6 +12,7 @@ private:
 
 public:
     Revenue(Date date = Date(), double totalMoney = 0);
+    Revenue(const Revenue &doanhThu);
     ~Revenue();
 
     friend ostream &operator<<(ostream &os, const Revenue &doanhThu);
