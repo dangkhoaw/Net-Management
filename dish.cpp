@@ -2,19 +2,19 @@
 #include <sstream>
 #include <fstream>
 
-Dish::Dish(string name, int count, float price) : name(name), count(count), price(price) {}
+Dish::Dish(string name, int count, double price) : name(name), count(count), price(price) {}
 
 Dish::~Dish() {}
 
 string Dish::getName() { return name; }
 
-float Dish::getPrice() { return price; }
+double Dish::getPrice() { return price; }
 
 int Dish::getCount() { return count; }
 
 void Dish::setName(string name) { this->name = name; }
 
-void Dish::setPrice(float price) { this->price = price; }
+void Dish::setPrice(double price) { this->price = price; }
 
 void Dish::setCount(int count) { this->count = count; }
 

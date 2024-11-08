@@ -69,7 +69,7 @@ void removeComputerFromFile(Computer &computer);
 // void generateID(Dish &dish);
 /*------------------------------------OTHER------------------------------------*/
 void enterPassword(string &password);
-string formatMoney(float money);
+string formatMoney(double money);
 void pressKeyQ();
 void toUpper(string &str);
 void toLower(string &str);
@@ -86,4 +86,5 @@ bool isFileEmpty(const string &filename);
 void enterString(string &str, int length = 0);
 void enterLetter(string &str, int length = 0);
 void enterNumber(string &num, int length = 0);
+void enterMoney(string &num, int length = 0);
 #endif

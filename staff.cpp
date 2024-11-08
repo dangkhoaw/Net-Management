@@ -83,18 +83,18 @@ void Staff::viewComputerStatus()
     while (true)
     {
         List<Computer> computers = getComputers();
-
-        for (int i = 0; i < computers.size(); i++)
+        int i = 0;
+        for (Computer &computer : computers)
         {
-            if (prevComputers.empty() || prevComputers[i].getUsageTime() != computers[i].getUsageTime())
+            if (prevComputers.empty() || prevComputers[i].getUsageTime() != computer.getUsageTime())
             {
                 ClearLine(i + 3);
                 Gotoxy(0, i + 3);
-                cout << "│  " << computers[i].getId() << "   ";
+                cout << "│  " << computer.getId() << "   ";
                 Gotoxy(11, i + 3);
-                (computers[i].getStatus() == "Using") ? cout << "│    Đang sử dụng" : cout << "│       Trống";
+                (computer.getStatus() == "Using") ? cout << "│    Đang sử dụng" : cout << "│       Trống";
 
-                if (computers[i].getCustomerUsingName() == "")
+                if (computer.getCustomerUsingName() == "")
                 {
                     Gotoxy(32, i + 3);
                     cout << "│             -";
@@ -102,9 +102,9 @@ void Staff::viewComputerStatus()
                 else
                 {
                     Gotoxy(32, i + 3);
-                    cout << "│        " << computers[i].getCustomerUsingName();
+                    cout << "│        " << computer.getCustomerUsingName();
                 }
-                if (computers[i].getUsageTime().isZero())
+                if (computer.getUsageTime().isZero())
                 {
                     Gotoxy(59, i + 3);
                     cout << "│           -";
@@ -112,11 +112,12 @@ void Staff::viewComputerStatus()
                 else
                 {
                     Gotoxy(59, i + 3);
-                    cout << "│       " << computers[i].getUsageTime();
+                    cout << "│       " << computer.getUsageTime();
                 }
                 Gotoxy(82, i + 3);
                 cout << "│";
             }
+            i++;
         }
         prevComputers = computers;
         Gotoxy(0, computers.size() + 3);
@@ -185,7 +186,7 @@ void Staff::topUpAccount()
     {
         Gotoxy(0, 1);
         cout << "Nhập số tiền cần nạp (10k/h): ";
-        enterNumber(money);
+        enterMoney(money, 7);
         // kiểm tra số thực nữa
         amount = stod(money);
 
@@ -201,7 +202,7 @@ void Staff::topUpAccount()
     customer.setUserName(userName);
     getCustomerFromFile(customer);
 
-    float minutes = (amount * 60) / 10000;
+    double minutes = (amount * 60) / 10000;
     Time time(0, minutes, 0);
     customer.setTimeToFile(time + customer.getTime());
     customer.setBalance(customer.getBalance() + amount);
@@ -227,34 +228,35 @@ void Staff::viewCustomersInfo()
     while (true)
     {
         List<Customer> customers = getCustomers();
-
-        for (int i = 0; i < customers.size(); i++)
+        int i = 0;
+        for (Customer &customer : customers)
         {
-            if (prevCustomers.empty() || prevCustomers[i].getStatus() != customers[i].getStatus())
+            if (prevCustomers.empty() || prevCustomers[i].getStatus() != customer.getStatus())
             {
                 ClearLine(i + 3);
                 Gotoxy(0, i + 3);
-                cout << "│ " << customers[i].getId();
+                cout << "│ " << customer.getId();
                 Gotoxy(11, i + 3);
-                cout << "│  " << customers[i].getName();
+                cout << "│  " << customer.getName();
                 Gotoxy(32 + 11, i + 3);
-                cout << "│      " << customers[i].getUserName();
+                cout << "│      " << customer.getUserName();
                 Gotoxy(55 + 11, i + 3);
-                cout << "│      " << customers[i].getPhone();
+                cout << "│      " << customer.getPhone();
                 Gotoxy(79 + 11, i + 3);
-                cout << "│       " << customers[i].getStatus();
+                cout << "│       " << customer.getStatus();
                 Gotoxy(102 + 11, i + 3);
-                if (customers[i].getCurrentComputerID() == "")
+                if (customer.getCurrentComputerID() == "")
                 {
                     cout << "│          -";
                 }
                 else
                 {
-                    cout << "│        " << customers[i].getCurrentComputerID();
+                    cout << "│        " << customer.getCurrentComputerID();
                 }
                 Gotoxy(125 + 11, i + 3);
                 cout << "│";
             }
+            i++;
         }
         prevCustomers = customers;
         Gotoxy(0, customers.size() + 3);

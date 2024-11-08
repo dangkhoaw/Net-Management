@@ -12,7 +12,7 @@ private:
     char colon;
 
 public:
-    Time(int hour = 0, int minute = 0, int second = 0);
+    Time(double hour = 0, double minute = 0, double second = 0);
     ~Time();
 
     bool isZero();

@@ -63,15 +63,17 @@ void Revenue::updateDoanhThu(Revenue &doanhThu)
     }
 
     bool check = false;
-    for (int i = 0; i < doanhthus.size(); i++)
+
+    for (Revenue &doanhThuTemp : doanhthus)
     {
-        if (doanhthus[i].getDate() == doanhThu.getDate())
+        if (doanhThuTemp.getDate() == doanhThu.getDate())
         {
             check = true;
-            doanhthus[i] = doanhThu;
+            doanhThuTemp = doanhThu;
         }
-        file << doanhthus[i] << endl;
+        file << doanhThuTemp << endl;
     }
+
     if (check == false)
     {
         file << doanhThu << endl;
@@ -92,7 +94,7 @@ void Revenue::viewRevenueDay(Date &date)
     }
 
     *this = getDoanhThuByDate(date);
-    cout << "Doanh thu ngày " << date << " là: " << formatMoney((unsigned int)this->totalMoney) << " (VNĐ)" << endl;
+    cout << "Doanh thu ngày " << date << " là: " << formatMoney((double)this->totalMoney) << " (VNĐ)" << endl;
 
     ShowCursor(false);
     pressKeyQ();
@@ -111,7 +113,7 @@ void Revenue::viewRevenueMonth(Date &date)
     }
 
     *this = getDoanhThuByMonth(date);
-    cout << "Doanh thu tháng " << setfill('0') << setw(2) << date.getMonth() << "/" << date.getYear() << " là: " << formatMoney((unsigned int)this->totalMoney) << " (VNĐ)" << endl;
+    cout << "Doanh thu tháng " << setfill('0') << setw(2) << date.getMonth() << "/" << date.getYear() << " là: " << formatMoney((double)this->totalMoney) << " (VNĐ)" << endl;
 
     ShowCursor(false);
     pressKeyQ();
@@ -131,7 +133,7 @@ void Revenue::viewRevenueYear(Date &date)
 
     *this = getDoanhThuByYear(date);
 
-    cout << "Doanh thu năm " << date.getYear() << " là: " << formatMoney((unsigned int)this->totalMoney) << " (VNĐ)" << endl;
+    cout << "Doanh thu năm " << date.getYear() << " là: " << formatMoney((double)this->totalMoney) << " (VNĐ)" << endl;
 
     ShowCursor(false);
     pressKeyQ();
@@ -140,11 +142,12 @@ void Revenue::viewRevenueYear(Date &date)
 Revenue Revenue::getDoanhThuByDate(Date &date)
 {
     List<Revenue> doanhthus = getDoanhThu();
-    for (int i = 0; i < doanhthus.size(); i++)
+
+    for (Revenue &doanhThu : doanhthus)
     {
-        if (doanhthus[i].getDate() == date)
+        if (doanhThu.getDate() == date)
         {
-            return doanhthus[i];
+            return doanhThu;
         }
     }
     return Revenue();
@@ -154,35 +157,37 @@ Revenue Revenue::getDoanhThuByMonth(Date &date)
 {
     List<Revenue> doanhthus = getDoanhThu();
 
-    for (int i = 0; i < doanhthus.size(); i++)
+    Revenue doanhThu;
+    for (Revenue &doanhThuTemp : doanhthus)
     {
-        if (doanhthus[i].getDate().getMonth() == date.getMonth() && doanhthus[i].getDate().getYear() == date.getYear())
+        if (doanhThuTemp.getDate().getMonth() == date.getMonth() && doanhThuTemp.getDate().getYear() == date.getYear())
         {
-            return doanhthus[i];
+            doanhThu = doanhThu + doanhThuTemp.getTotalMoney();
         }
     }
-    return Revenue();
+    return doanhThu;
 }
 
 Revenue Revenue::getDoanhThuByYear(Date &date)
 {
     List<Revenue> doanhthus = getDoanhThu();
 
-    for (int i = 0; i < doanhthus.size(); i++)
+    Revenue doanhThu;
+    for (Revenue &doanhThuTemp : doanhthus)
     {
-        if (doanhthus[i].getDate().getYear() == date.getYear())
+        if (doanhThuTemp.getDate().getYear() == date.getYear())
         {
-            return doanhthus[i];
+            doanhThu = doanhThu + doanhThuTemp.getTotalMoney();
         }
     }
-    return Revenue();
+    return doanhThu;
 }
 
 #include <ctime>
 
 bool Revenue::checkDate(Date &date)
 {
-    Date dateStart(16, 10, 2024);
+    Date dateStart(1, 11, 2024);
     time_t now = time(0);
     tm *ltm = localtime(&now);
     int currentYear = ltm->tm_year + 1900;

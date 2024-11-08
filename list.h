@@ -23,6 +23,22 @@ private:
     typedef _Node *Node;
 
 public:
+    class Iterator
+    {
+    private:
+        Node current;
+
+    public:
+        Iterator(Node node) : current(node) {}
+        Iterator &operator++()
+        {
+            current = current->next;
+            return *this;
+        }
+        T &operator*() { return current->data; }
+        bool operator==(const Iterator &it) { return current == it.current; }
+        bool operator!=(const Iterator &it) { return current != it.current; }
+    };
     List();
     ~List();
     List(initializer_list<T>);
@@ -35,8 +51,8 @@ public:
     void clear();
     bool empty() const;
     int size() const;
-    T *begin() const { return &this->head->data; }
-    T *end() const { return &this->tail->data; }
+    Iterator begin() const { return Iterator(this->head); }
+    Iterator end() const { return Iterator(nullptr); }
     T &operator[](int) const;
     List<T> &operator=(const List<T> &list);
 };

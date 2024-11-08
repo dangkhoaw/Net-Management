@@ -9,7 +9,7 @@ using namespace std;
 class Customer : public Account
 {
 private:
-    float balance;
+    double balance;
     int moneyforOrder;
     Dish dish;
     string name, phone, currentComputerID;
@@ -17,22 +17,22 @@ private:
     History historyRecently;
 
 public:
-    Customer(string username = "", string password = "", string role = "", string id = "", string status = "Offline", string isFirstLogin = "FirstLogin", string isLocked = "Unlocked", string name = "", string phone = "", float balance = 0, Time time = Time(), int moneyforOrder = 0, Dish dish = Dish(), string currentComputerID = "", History historyRecently = History());
+    Customer(string username = "", string password = "", string role = "", string id = "", string status = "Offline", string isFirstLogin = "FirstLogin", string isLocked = "Unlocked", string name = "", string phone = "", double balance = 0, Time time = Time(), int moneyforOrder = 0, Dish dish = Dish(), string currentComputerID = "", History historyRecently = History());
     ~Customer();
     string getPhone();
     string getName();
     Time getTime();
     int getMoneyforOrder();
-    float getBalance();
+    double getBalance();
     string getCurrentComputerID();
     Time getTimeFromFile();
-    Time MoneyToTime(float balance);
+    Time MoneyToTime(double balance);
     void setmoneyforOrder(int moneyforOrder);
     void setName(string name);
     void setCurrentComputerID(string id);
     void setPhone(string phone);
     void setTime(Time time);
-    void setBalance(float balance);
+    void setBalance(double balance);
     void setBalance(Time time);
     void setTimeToFile(Time time);
     void setHistory(History history);

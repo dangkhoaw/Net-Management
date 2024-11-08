@@ -4,25 +4,25 @@
 
 mutex cus;
 
-Customer::Customer(string username, string password, string role, string id, string status, string isFirstLogin, string isLocked, string name, string phone, float balance, Time time, int moneyforOrder, Dish dish, string currentComputerID, History historyRecently)
+Customer::Customer(string username, string password, string role, string id, string status, string isFirstLogin, string isLocked, string name, string phone, double balance, Time time, int moneyforOrder, Dish dish, string currentComputerID, History historyRecently)
     : Account(username, password, role, id, status, isFirstLogin, isLocked), name(name), phone(phone), balance(balance), time(time), moneyforOrder(moneyforOrder), dish(dish), currentComputerID(currentComputerID), historyRecently(historyRecently) {}
 Customer::~Customer() {}
 
 string Customer::getName() { return name; }
 string Customer::getPhone() { return phone; }
 Time Customer::getTime() { return time; }
-float Customer::getBalance() { return balance; }
+double Customer::getBalance() { return balance; }
 int Customer::getMoneyforOrder() { return moneyforOrder; }
 string Customer::getCurrentComputerID() { return currentComputerID; }
 void Customer::setTime(Time time) { this->time = time; }
 void Customer::setPhone(string phone) { this->phone = phone; }
 void Customer::setName(string name) { this->name = name; }
 void Customer::setmoneyforOrder(int moneyforOrder) { this->moneyforOrder = moneyforOrder; }
-void Customer::setBalance(float balance) { this->balance = balance; }
+void Customer::setBalance(double balance) { this->balance = balance; }
 void Customer::setBalance(Time time)
 {
-    float cost = 10000;
-    this->balance = (float(time.getHour()) + float(time.getMinute()) / 60 + float(time.getSecond()) / 3600) * cost;
+    double cost = 10000;
+    this->balance = (double(time.getHour()) + double(time.getMinute()) / 60 + double(time.getSecond()) / 3600) * cost;
 }
 void Customer::setHistory(History history) { this->historyRecently = history; }
 void Customer::setCurrentComputerID(string id) { currentComputerID = id; }
@@ -68,10 +68,10 @@ void Customer::setTimeToFile(Time time)
     }
 }
 
-Time Customer::MoneyToTime(float balance)
+Time Customer::MoneyToTime(double balance)
 {
     Time time;
-    float cost = 10000;
+    double cost = 10000;
     time.setHour(balance / cost);
     time.setMinute((balance - time.getHour() * cost) / cost * 60);
     time.setSecond((balance - time.getHour() * cost - time.getMinute() * cost / 60) * 3600);
@@ -406,7 +406,7 @@ void Customer::order()
 {
     system("cls");
     ShowCursor(false);
-    this->balance -= (float)this->getTotalPrice();
+    this->balance -= (double)this->getTotalPrice();
     this->setTime(this->getTimeFromFile() - MoneyToTime(this->getTotalPrice()));
     this->setTimeToFile(this->getTime()); // đoạn ni cần không
     this->moneyforOrder = 0;

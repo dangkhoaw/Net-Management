@@ -8,18 +8,19 @@ class Dish
 {
 private:
     string name;
-    int price, count;
+    double price;
+    int count;
 
 public:
-    Dish(string name = "", int count = 0, float price = 0);
+    Dish(string name = "", int count = 0, double price = 0);
     ~Dish();
 
     string getName();
-    float getPrice();
+    double getPrice();
     int getCount();
 
     void setName(string name);
-    void setPrice(float price);
+    void setPrice(double price);
     void setCount(int count);
 
     friend ostream &operator<<(ostream &os, const Dish &dish);

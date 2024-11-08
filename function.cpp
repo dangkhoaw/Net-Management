@@ -1685,9 +1685,9 @@ void assignRandomComputer(Customer &customer, Computer &computer)
     computer.setStatus("Using");
     updateComputerToFile(computer);
 
-    float balance = customer.getBalance();
-    float cost = 10000;
-    int seconds = int(balance / cost * 3600);
+    double balance = customer.getBalance();
+    double cost = 10000;
+    double seconds = balance / cost * 3600;
     Time time(0, 0, seconds);
     customer.setTimeToFile(time);
     customer.setTime(time);
@@ -1952,7 +1952,7 @@ void enterPassword(string &password)
     cout << endl;
 }
 
-string formatMoney(float money)
+string formatMoney(double money)
 {
     stringstream ss;
     ss << fixed << setprecision(0) << money;
@@ -2020,10 +2020,11 @@ bool isPhoneNumber(const string &str)
 {
     if (str.size() != 10)
         return false;
-    const List<string> arr = {"013", "016", "032", "033", "034", "035", "036", "037", "038", "039", "052", "055", "056", "058", "059", "070", "076", "077", "078", "079", "081", "082", "083", "084", "085", "086", "088", "089", "090", "091", "092", "093", "094", "096", "097", "098", "099"};
-    for (int i = 0; i < arr.size(); i++)
+    const List<string> telephonePrefixes = {"013", "016", "032", "033", "034", "035", "036", "037", "038", "039", "052", "055", "056", "058", "059", "070", "076", "077", "078", "079", "081", "082", "083", "084", "085", "086", "088", "089", "090", "091", "092", "093", "094", "096", "097", "098", "099"};
+
+    for (string &telephonePrefix : telephonePrefixes)
     {
-        if (str.substr(0, 3) == arr[i])
+        if (str.substr(0, 3) == telephonePrefix)
             return isNumber(str);
     }
     return false;
@@ -2205,7 +2206,7 @@ void enterLetter(string &str, int length)
         }
         else
         {
-            if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || ch == ' ')
+            if (isalpha(ch) || ch == ' ')
             {
                 if (length == 0 || str.size() < length)
                 {
@@ -2240,12 +2241,55 @@ void enterNumber(string &num, int length)
         }
         else
         {
-            if (ch >= '0' && ch <= '9')
+            if (isdigit(ch))
             {
                 if (length == 0 || num.size() < length)
                 {
                     cout << ch;
                     num += ch;
+                }
+            }
+        }
+    }
+    cout << endl;
+}
+
+void enterMoney(string &money, int length)
+{
+    money.clear();
+    char ch;
+    while (true)
+    {
+        ch = _getch();
+        if (ch == KEY_ENTER)
+        {
+            if (!money.empty())
+                break;
+        }
+        else if (ch == KEY_BACKSPACE)
+        {
+            if (!money.empty())
+            {
+                if (money.size() == 1)
+                    cout << "\b \b";
+                else
+                    ClearLine(30, 1, formatMoney(stod(money)).size() + 10);
+                money.pop_back();
+                if (!money.empty())
+                    cout << formatMoney(stod(money));
+            }
+        }
+        else
+        {
+            if (isdigit(ch))
+            {
+                if (ch == '0' && money.empty())
+                    continue;
+                if ((length == 0 || money.size() < length))
+                {
+                    money += ch;
+                    ClearLine(30, 1, formatMoney(stod(money)).size() + 10);
+                    cout << formatMoney(stod(money));
                 }
             }
         }

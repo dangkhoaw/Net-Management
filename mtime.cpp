@@ -4,7 +4,7 @@
 #include <iomanip>
 #include <ctime>
 
-Time::Time(int hour, int minute, int second) : colon(':')
+Time::Time(double hour, double minute, double second) : colon(':')
 {
     while (second >= 60)
     {
