@@ -21,7 +21,7 @@
 1. Clone repository này về máy
 
 ```bash
-git clone https://github.com/dangkhoaw/quan-ly-tiem-internet.git
+git clone https://github.com/dangkhoaw/Net-Management.git
 ```
 
 2. Di chuyển vào thư mục chứa mã nguồn

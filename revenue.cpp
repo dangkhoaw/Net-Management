@@ -3,22 +3,22 @@
 
 Revenue::Revenue(Date date, double totalMoney) : date(date), totalMoney(totalMoney) {}
 
-Revenue::Revenue(const Revenue &doanhThu) : date(doanhThu.date), totalMoney(doanhThu.totalMoney) {}
+Revenue::Revenue(const Revenue &revenue) : date(revenue.date), totalMoney(revenue.totalMoney) {}
 Revenue::~Revenue() {}
 
-ostream &operator<<(ostream &os, const Revenue &doanhThu)
+ostream &operator<<(ostream &os, const Revenue &revenue)
 {
-    os << doanhThu.date << "|" << doanhThu.totalMoney;
+    os << revenue.date << "|" << revenue.totalMoney;
     return os;
 }
 
-istream &operator>>(istream &is, Revenue &doanhThu)
+istream &operator>>(istream &is, Revenue &revenue)
 {
-    is >> doanhThu.date >> doanhThu.totalMoney;
+    is >> revenue.date >> revenue.totalMoney;
     return is;
 }
 
-List<Revenue> Revenue::getDoanhThu()
+List<Revenue> Revenue::getRevenue()
 {
     List<Revenue> doanhthus;
     fstream file("./data/revenue.txt", ios::in);
@@ -45,16 +45,16 @@ List<Revenue> Revenue::getDoanhThu()
         }
 
         Date dateObj(stoi(dateArr[0]), stoi(dateArr[1]), stoi(dateArr[2]));
-        Revenue doanhThu(dateObj, stod(totalMoney));
-        doanhthus.push_back(doanhThu);
+        Revenue revenue(dateObj, stod(totalMoney));
+        doanhthus.push_back(revenue);
     }
     file.close();
     return doanhthus;
 }
 
-void Revenue::updateDoanhThu(Revenue &doanhThu)
+void Revenue::updateRevenue(Revenue &revenue)
 {
-    List<Revenue> doanhthus = getDoanhThu();
+    List<Revenue> doanhthus = getRevenue();
     fstream file("./data/revenue.txt", ios::out);
     if (!file.is_open())
     {
@@ -66,17 +66,17 @@ void Revenue::updateDoanhThu(Revenue &doanhThu)
 
     for (Revenue &doanhThuTemp : doanhthus)
     {
-        if (doanhThuTemp.getDate() == doanhThu.getDate())
+        if (doanhThuTemp.getDate() == revenue.getDate())
         {
             check = true;
-            doanhThuTemp = doanhThu;
+            doanhThuTemp = revenue;
         }
         file << doanhThuTemp << endl;
     }
 
     if (check == false)
     {
-        file << doanhThu << endl;
+        file << revenue << endl;
     }
     file.close();
 }
@@ -93,7 +93,7 @@ void Revenue::viewRevenueDay(Date &date)
         return;
     }
 
-    *this = getDoanhThuByDate(date);
+    *this = getRevenueByDate(date);
     cout << "Doanh thu ngày " << date << " là: " << formatMoney((double)this->totalMoney) << " (VNĐ)" << endl;
 
     ShowCursor(false);
@@ -112,7 +112,7 @@ void Revenue::viewRevenueMonth(Date &date)
         return;
     }
 
-    *this = getDoanhThuByMonth(date);
+    *this = getRevenueByMonth(date);
     cout << "Doanh thu tháng " << setfill('0') << setw(2) << date.getMonth() << "/" << date.getYear() << " là: " << formatMoney((double)this->totalMoney) << " (VNĐ)" << endl;
 
     ShowCursor(false);
@@ -131,7 +131,7 @@ void Revenue::viewRevenueYear(Date &date)
         return;
     }
 
-    *this = getDoanhThuByYear(date);
+    *this = getRevenueByYear(date);
 
     cout << "Doanh thu năm " << date.getYear() << " là: " << formatMoney((double)this->totalMoney) << " (VNĐ)" << endl;
 
@@ -139,48 +139,48 @@ void Revenue::viewRevenueYear(Date &date)
     pressKeyQ();
 }
 
-Revenue Revenue::getDoanhThuByDate(Date &date)
+Revenue Revenue::getRevenueByDate(Date &date)
 {
-    List<Revenue> doanhthus = getDoanhThu();
+    List<Revenue> doanhthus = getRevenue();
 
-    for (Revenue &doanhThu : doanhthus)
+    for (Revenue &revenue : doanhthus)
     {
-        if (doanhThu.getDate() == date)
+        if (revenue.getDate() == date)
         {
-            return doanhThu;
+            return revenue;
         }
     }
     return Revenue();
 }
 
-Revenue Revenue::getDoanhThuByMonth(Date &date)
+Revenue Revenue::getRevenueByMonth(Date &date)
 {
-    List<Revenue> doanhthus = getDoanhThu();
+    List<Revenue> doanhthus = getRevenue();
 
-    Revenue doanhThu;
+    Revenue revenue;
     for (Revenue &doanhThuTemp : doanhthus)
     {
         if (doanhThuTemp.getDate().getMonth() == date.getMonth() && doanhThuTemp.getDate().getYear() == date.getYear())
         {
-            doanhThu = doanhThu + doanhThuTemp.getTotalMoney();
+            revenue = revenue + doanhThuTemp.getTotalMoney();
         }
     }
-    return doanhThu;
+    return revenue;
 }
 
-Revenue Revenue::getDoanhThuByYear(Date &date)
+Revenue Revenue::getRevenueByYear(Date &date)
 {
-    List<Revenue> doanhthus = getDoanhThu();
+    List<Revenue> doanhthus = getRevenue();
 
-    Revenue doanhThu;
+    Revenue revenue;
     for (Revenue &doanhThuTemp : doanhthus)
     {
         if (doanhThuTemp.getDate().getYear() == date.getYear())
         {
-            doanhThu = doanhThu + doanhThuTemp.getTotalMoney();
+            revenue = revenue + doanhThuTemp.getTotalMoney();
         }
     }
-    return doanhThu;
+    return revenue;
 }
 
 #include <ctime>

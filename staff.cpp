@@ -144,7 +144,7 @@ void Staff::topUpAccount()
     string userName;
     Customer customer;
     Date currentDate = Date().getCurrentDate();
-    Revenue revenue = Revenue().getDoanhThuByDate(currentDate);
+    Revenue revenue = Revenue().getRevenueByDate(currentDate);
     revenue.setDate(currentDate);
     int count = 0;
 
@@ -196,7 +196,7 @@ void Staff::topUpAccount()
     } while (amount < 1000);
 
     revenue = revenue + amount;
-    revenue.updateDoanhThu(revenue);
+    revenue.updateRevenue(revenue);
 
     customer.setUserName(userName);
     getCustomerFromFile(customer);
@@ -331,25 +331,37 @@ void Staff::lockAccount()
 }
 void Staff::viewTypeOfComputer()
 {
-    /*
-Loại	Dòng máy	Thông tin máy
-
-Loại 1	Cao cấp	     CPU: CPU Intel i9
-                     RAM 32G,
-                     Card đồ họa: VGA GTX 2060 6G GDDR5
-                     Màn hình 27 ICNH 240HZ
-Loại 2	VIP	         CPU Intel i7
-                     RAM 16G
-                     Card đồ họa: VGA GTX 1660 6G DDR5
-                     Màn hình 27 ICNH 144HZ
-Loại 3	Tầm trung	 CPU Intel i5
-                     RAM 8G
-                     Card đồ họa: VGA GTX 1650 4G GDDR5
-                     Màn hình 24 inch
-}
-*/
-
-    // hãy đóng khung như trên
+    system("cls");
+    Gotoxy(0, 0);
+    cout << "┌──────────────┬──────────────────────────────────────────┐" << endl;
+    Gotoxy(0, 1);
+    cout << "│     Loại     │             Thông tin máy                │" << endl;
+    Gotoxy(0, 2);
+    cout << "├──────────────┼──────────────────────────────────────────┤" << endl;
+    Gotoxy(0, 3);
+    cout << "│              │  CPU: Intel® Core™ i9-13900H             │" << endl;
+    Gotoxy(0, 4);
+    cout << "│   Cao cấp    │  RAM: 32G                                │" << endl;
+    Gotoxy(0, 5);
+    cout << "│              │  Card đồ họa: GeForce RTX 4060 Ti        │" << endl;
+    Gotoxy(0, 6);
+    cout << "├──────────────┼──────────────────────────────────────────┤" << endl;
+    Gotoxy(0, 7);
+    cout << "│              │  CPU: Intel® Core™ i7-13700H             │" << endl;
+    Gotoxy(0, 8);
+    cout << "│     VIP      │  RAM: 16G                                │" << endl;
+    Gotoxy(0, 9);
+    cout << "│              │  Card đồ họa: GeForce RTX 3060 Ti        │" << endl;
+    Gotoxy(0, 10);
+    cout << "├──────────────┼──────────────────────────────────────────┤" << endl;
+    Gotoxy(0, 11);
+    cout << "│              │  CPU: Intel® Core™ i5-11500H             │" << endl;
+    Gotoxy(0, 12);
+    cout << "│  Tầm trung   │  RAM: 8G                                 │" << endl;
+    Gotoxy(0, 13);
+    cout << "│              │  Card đồ họa: GeForce RTX 2080 Ti        │" << endl;
+    Gotoxy(0, 14);
+    cout << "└──────────────┴──────────────────────────────────────────┘" << endl;
 }
 void Staff::setRegisteredCusToFile(Customer &customer)
 {
@@ -370,10 +382,11 @@ void Staff::registerComputerForCus()
     Customer customer;
     string usernameCustomer;
     int selectOption;
-    viewTypeOfComputer(); // ch hoàn thành
+    viewTypeOfComputer();
     cout << "Tên đăng nhập: ";
     enterString(usernameCustomer);
-    cout << "Chọn loại:(1,2,3)";
+    // menuSelectComputer(customer);
+    cout << "Chọn loại:(1,2,3)"; // Tạm để v
     cin >> selectOption;
     customer.setUserName(usernameCustomer);
     customer.setTypesOfComputer(selectOption);

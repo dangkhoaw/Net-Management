@@ -6,6 +6,18 @@
 #include "dish.h"
 using namespace std;
 
+/*
+- class Customer:
+    + Bỏ int typeOfComputer, string currentComputerID
+    + Thêm vào Computer computer
+    + Bỏ hàm getTypesOfComputer, getCurrentComputerID, setTypesOfComputer, setCurrentComputerID
+    + Thêm hàm getComputer, setComputer
+
+- class Computer:
+    + Thêm string typeOfComputer
+    + Thêm hàm getTypeOfComputer, setTypeOfComputer
+*/
+
 class Customer : public Account
 {
 private:

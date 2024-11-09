@@ -28,6 +28,7 @@ const int MENUFOOD = 7;
 const int MENUDRINK = 7;
 const int MENUQUANTITY = 4;
 const int MENUREVENUE = 4;
+const int MENUSELECTCOMPUTER = 3;
 
 mutex mtx;
 
@@ -95,10 +96,10 @@ void optionMenu(string typeMenu, int option)
             cout << "       Nạp tiền                ";
             break;
         case 5:
-            cout << "       Đăng kí máy              ";
+            cout << "       Đăng kí máy             ";
             break;
         case 6:
-            cout << "       Xem các loại máy         ";
+            cout << "       Xem các loại máy        ";
             break;
         case 7:
             cout << "       Đăng xuất               ";
@@ -122,7 +123,7 @@ void optionMenu(string typeMenu, int option)
             cout << "       Mở khóa tài khoản          ";
             break;
         case 5:
-            cout << "        Tìm kiếm khách hàng        ";
+            cout << "       Tìm kiếm khách hàng        ";
             break;
         case 6:
             cout << "       Xem thông tin khách hàng   ";
@@ -295,10 +296,10 @@ void optionMenu(string typeMenu, int option)
         switch (option)
         {
         case 1:
-            cout << "        Sửa số lượng          ";
+            cout << "         Sửa số lượng        ";
             break;
         case 2:
-            cout << "        Xóa                   ";
+            cout << "         Xóa                 ";
             break;
         case 3:
             cout << "         Thoát               ";
@@ -371,6 +372,24 @@ void optionMenu(string typeMenu, int option)
             break;
         case 3:
             cout << "      Doanh thu năm khác         ";
+            break;
+        case 4:
+            cout << "      Thoát                      ";
+            break;
+        }
+    }
+    else if (typeMenu == "selectComputer")
+    {
+        switch (option)
+        {
+        case 1:
+            cout << "     Tự bỏ tên máy                ";
+            break;
+        case 2:
+            cout << "     Tự bỏ tên máy                ";
+            break;
+        case 3:
+            cout << "     Tự bỏ tên máy                ";
             break;
         case 4:
             cout << "      Thoát                      ";
@@ -524,17 +543,6 @@ void showMenu(string typeMenu, int selectOption)
     }
     else if (typeMenu == "quantity")
     {
-        /*
-
-                  ┌────────────────────────────┐
-                  |        Số lượng            |
-                  ├────────────────────────────┤
-                  |        1                   |
-                  │        2                   │
-                  │        Nhiều hơn           │
-                  │         Thoát             │
-                  └────────────────────────────┘
-          */
         Gotoxy(0, 0);
         cout << "┌──────────────────────────┐";
         Gotoxy(0, 1);
@@ -637,6 +645,21 @@ void showMenu(string typeMenu, int selectOption)
         }
         cout << "└──────────────────────────────┘" << endl;
     }
+    else if (typeMenu == "selectComputer")
+    {
+        // có chi điều chỉnh lại cho hợp lý
+        Gotoxy(0, 0);
+        cout << "┌──────────────────────────────┐" << endl;
+        for (int i = 1; i <= MENUSELECTCOMPUTER; i++)
+        {
+            Gotoxy(0, i);
+            cout << "│";
+            bool isSelected = (i == selectOption);
+            printMenuOption(typeMenu, i, isSelected);
+            cout << "│" << endl;
+        }
+        cout << "└──────────────────────────────┘" << endl;
+    }
 }
 
 void customerManagementMenu(Staff &staff)
@@ -715,6 +738,7 @@ void computerManagementMenu(Staff &staff)
                 break;
             case 3:
                 // sửa thông tin máy
+                break;
             case 4:
                 staff.viewComputerStatus();
                 break;
@@ -763,6 +787,10 @@ void menuStaff(Staff &staff)
                 break;
             case 5:
                 // staff.registerComputerForCus();
+                break;
+            case 6:
+                staff.viewTypeOfComputer();
+                pressKeyQ();
                 break;
             case 7:
                 staff.setStatus("Offline");
@@ -1073,7 +1101,6 @@ void menuQuantity(Customer &customer, string nameRefreshment)
                 break;
             }
         }
-        // ShowCursor(true);
     }
     else
     {
@@ -1109,7 +1136,6 @@ void menuQuantity(Customer &customer, string nameRefreshment)
                 break;
             }
         }
-        // ShowCursor(true);
     }
 }
 void menuDrink(Customer &customer)
@@ -1161,7 +1187,6 @@ void menuDrink(Customer &customer)
             break;
         }
     }
-    // ShowCursor(true);
 }
 void menuFood(Customer &customer)
 {
@@ -1211,7 +1236,6 @@ void menuFood(Customer &customer)
             break;
         }
     }
-    // ShowCursor(true);
 }
 void menuDish(Customer &customer)
 {
@@ -1250,6 +1274,46 @@ void menuDish(Customer &customer)
             case 4:
                 isChangedOrder = true;
                 customer.setmoneyforOrder(customer.getMoneyforOrder() - customer.getTotalPrice());
+                system("cls");
+                return;
+            }
+        default:
+            break;
+        }
+    }
+}
+
+void menuSelectComputer(Customer &customer)
+{
+    system("cls");
+    SetConsoleTitle(TEXT("Menu chọn máy"));
+    ShowCursor(false);
+    int selectOption = 1;
+    while (true)
+    {
+        showMenu("selectComputer", selectOption);
+        int key = _getch();
+        switch (key)
+        {
+        case KEY_UP:
+            selectOption = (selectOption == 1) ? MENUSELECTCOMPUTER : selectOption - 1;
+            break;
+        case KEY_DOWN:
+            selectOption = (selectOption == MENUSELECTCOMPUTER) ? 1 : selectOption + 1;
+            break;
+        case KEY_ENTER:
+            switch (selectOption)
+            {
+            case 1:
+
+                return;
+            case 2:
+
+                return;
+            case 3:
+
+                return;
+            case 4:
                 system("cls");
                 return;
             }
