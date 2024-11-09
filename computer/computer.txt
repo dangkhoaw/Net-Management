@@ -3,8 +3,8 @@ COM02|Available|
 COM03|Available|
 COM04|Available|
 COM05|Available|
-COM06|Available|
-COM07|Available|
+COM06|Using|grayzyss1
+COM07|Using|grayzyss2
 COM08|Available|
 COM09|Available|
 COM10|Available|

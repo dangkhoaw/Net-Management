@@ -54,6 +54,7 @@ void generateID(Account &account);
 bool checkFirstLogin(Account &account);
 bool checkIsOrdered(Customer &customer, string nameFood);
 void makeFileOrdered(Customer &customer);
+int getTypesOfComputerFromFile(Customer &customer);
 List<Customer> getCustomers();
 
 /*------------------------------------COMPUTER------------------------------------*/
@@ -82,9 +83,9 @@ void inputYear(int &year);
 string trim(string &str);
 string removeSpecialCharacter(string &str);
 string toName(string &str);
-bool isFileEmpty(const string &filename);
 void enterString(string &str, int length = 0);
 void enterLetter(string &str, int length = 0);
 void enterNumber(string &num, int length = 0);
 void enterMoney(string &num, int length = 0);
+
 #endif

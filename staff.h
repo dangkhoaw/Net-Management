@@ -3,7 +3,7 @@
 
 #include "account.h"
 #include <iostream>
-
+#include "customer.h"
 using namespace std;
 
 class Staff : public Account
@@ -21,6 +21,9 @@ public:
     void removeAccount();
     void removeComputer();
     void viewListCustomer();
+    void registerComputerForCus();
+    void setRegisteredCusToFile(Customer &customer);
+    void viewTypeOfComputer();
 };
 
 #endif

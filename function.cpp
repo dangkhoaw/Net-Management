@@ -18,8 +18,8 @@ bool isSelectingGame = false;
 bool firstOrder = true;
 bool isChangedOrder = true;
 
-const int MENUSTAFF = 5;
-const int MENUCUSTOMERMANAGER = 6;
+const int MENUSTAFF = 7;
+const int MENUCUSTOMERMANAGER = 7;
 const int MENUCOMPUTERMANAGER = 5;
 const int MENUCUSTOMER = 5;
 const int MENUGAME = 7;
@@ -95,6 +95,12 @@ void optionMenu(string typeMenu, int option)
             cout << "       Nạp tiền                ";
             break;
         case 5:
+            cout << "       Đăng kí máy              ";
+            break;
+        case 6:
+            cout << "       Xem các loại máy         ";
+            break;
+        case 7:
             cout << "       Đăng xuất               ";
             break;
         }
@@ -116,9 +122,12 @@ void optionMenu(string typeMenu, int option)
             cout << "       Mở khóa tài khoản          ";
             break;
         case 5:
-            cout << "       Xem thông tin khách hàng   ";
+            cout << "        Tìm kiếm khách hàng        ";
             break;
         case 6:
+            cout << "       Xem thông tin khách hàng   ";
+            break;
+        case 7:
             cout << "       Thoát                      ";
             break;
         }
@@ -663,9 +672,12 @@ void customerManagementMenu(Staff &staff)
                 // mở khóa tài khoản
                 break;
             case 5:
+                // staff.searchCustomer();
+                // break;
+            case 6:
                 staff.viewCustomersInfo();
                 break;
-            case 6:
+            case 7:
                 system("cls");
                 return;
             }
@@ -750,6 +762,9 @@ void menuStaff(Staff &staff)
                 staff.topUpAccount();
                 break;
             case 5:
+                // staff.registerComputerForCus();
+                break;
+            case 7:
                 staff.setStatus("Offline");
                 staff.setLocked("Unlocked");
                 staff.setPassword(Base64(staff.getPassword()).encode());
@@ -1250,7 +1265,11 @@ void menuCustomer(Customer &customer, Computer &computer)
     ShowCursor(false);
     int selectOption = 1;
     History history(Day().getCurrentDay(), customer.getId());
-
+    double minutes = (customer.getBalance() * 60) / customer.setMoneyFromTypeOfComputer(getTypesOfComputerFromFile(customer));
+    Time time(0, minutes, 0);
+    customer.setTypesOfComputer(getTypesOfComputerFromFile(customer));
+    customer.setTime(time);
+    customer.setTimeToFile(time);
     thread threadShowTimeCustomer(showRemainingTimeOfCustomer, &customer);
     thread threadShowTimeComputer(showUsageTimeOfComputer, &computer);
 
@@ -1336,7 +1355,7 @@ void showRemainingTimeOfCustomer(Customer *customer)
     while (showRemainingTime)
     {
         Time currentTime = customer->getTimeFromFile();
-        if (!isChangingPassword && !isViewingInfo && !isOrdering && !isSelectingGame) // nếu mấy này không chạy thì in ra khung thời gian
+        if (!isChangingPassword && !isViewingInfo && !isOrdering && !isSelectingGame)
         {
             lock_guard<mutex> lock(mtx);
             Gotoxy(1, 1);
@@ -1350,6 +1369,7 @@ void showRemainingTimeOfCustomer(Customer *customer)
             MessageBoxW(NULL, L"Hết thời gian sử dụng!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
             break;
         }
+
         customer->setBalance(currentTime);
         currentTime--;
         customer->setTime(currentTime);
@@ -1686,7 +1706,7 @@ void assignRandomComputer(Customer &customer, Computer &computer)
     updateComputerToFile(computer);
 
     double balance = customer.getBalance();
-    double cost = 10000;
+    double cost = customer.setMoneyFromTypeOfComputer(getTypesOfComputerFromFile(customer));
     double seconds = balance / cost * 3600;
     Time time(0, 0, seconds);
     customer.setTimeToFile(time);
@@ -1742,6 +1762,7 @@ void removeComputerFromFile(Computer &computer)
         MessageBoxW(NULL, L"Không tìm thấy máy", L"Thông báo", MB_OK | MB_ICONWARNING);
     }
 }
+
 void makeFileOrdered(Customer &customer)
 {
     if (firstOrder)
@@ -1757,6 +1778,30 @@ void makeFileOrdered(Customer &customer)
         firstOrder = false;
     }
 }
+int getTypesOfComputerFromFile(Customer &customer)
+{
+    fstream file("./data/registeredCus.txt", ios::in);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file registerCus" << endl;
+        return -1;
+    }
+    string line;
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        string usernameCustomerInfile;
+        int typesOfComputer;
+        getline(ss, usernameCustomerInfile, '|');
+        ss >> typesOfComputer;
+        if (usernameCustomerInfile == customer.getUserName())
+        {
+            return typesOfComputer;
+        }
+    }
+    return -1;
+}
+
 List<Customer> getCustomers()
 {
     List<Customer> customers;
@@ -2146,12 +2191,6 @@ string toName(string &str)
     return str;
 }
 
-bool isFileEmpty(const string &filename)
-{
-    ifstream file(filename);
-    return file.peek() == EOF;
-}
-
 void enterString(string &str, int length)
 {
     str.clear();
@@ -2273,7 +2312,7 @@ void enterMoney(string &money, int length)
                 if (money.size() == 1)
                     cout << "\b \b";
                 else
-                    ClearLine(30, 1, formatMoney(stod(money)).size() + 10);
+                    ClearLine(30, 1, formatMoney(stod(money)).size() + 3);
                 money.pop_back();
                 if (!money.empty())
                     cout << formatMoney(stod(money));

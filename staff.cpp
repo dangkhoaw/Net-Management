@@ -187,7 +187,6 @@ void Staff::topUpAccount()
         Gotoxy(0, 1);
         cout << "Nhập số tiền cần nạp (10k/h): ";
         enterMoney(money, 7);
-        // kiểm tra số thực nữa
         amount = stod(money);
 
         if (amount < 1000)
@@ -202,11 +201,7 @@ void Staff::topUpAccount()
     customer.setUserName(userName);
     getCustomerFromFile(customer);
 
-    double minutes = (amount * 60) / 10000;
-    Time time(0, minutes, 0);
-    customer.setTimeToFile(time + customer.getTime());
     customer.setBalance(customer.getBalance() + amount);
-
     updateCustomerToFile(customer);
 
     cout << "\nNạp tiền thành công" << endl;
@@ -333,4 +328,58 @@ void Staff::lockAccount()
     cout << "Khóa tài khoản thành công" << endl;
     pressKeyQ();
     ShowCursor(false);
+}
+void Staff::viewTypeOfComputer()
+{
+    /*
+Loại	Dòng máy	Thông tin máy
+
+Loại 1	Cao cấp	     CPU: CPU Intel i9
+                     RAM 32G,
+                     Card đồ họa: VGA GTX 2060 6G GDDR5
+                     Màn hình 27 ICNH 240HZ
+Loại 2	VIP	         CPU Intel i7
+                     RAM 16G
+                     Card đồ họa: VGA GTX 1660 6G DDR5
+                     Màn hình 27 ICNH 144HZ
+Loại 3	Tầm trung	 CPU Intel i5
+                     RAM 8G
+                     Card đồ họa: VGA GTX 1650 4G GDDR5
+                     Màn hình 24 inch
+}
+*/
+
+    // hãy đóng khung như trên
+}
+void Staff::setRegisteredCusToFile(Customer &customer)
+{
+    fstream file;
+    file.open("./data/registeredCus.txt", ios::app);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file registeredCus" << endl;
+        return;
+    }
+    file << customer.getUserName() << "|" << customer.getTypesOfComputer() << endl;
+    file.close();
+}
+void Staff::registerComputerForCus()
+{
+    system("cls");
+    ShowCursor(true);
+    Customer customer;
+    string usernameCustomer;
+    int selectOption;
+    viewTypeOfComputer(); // ch hoàn thành
+    cout << "Tên đăng nhập: ";
+    enterString(usernameCustomer);
+    cout << "Chọn loại:(1,2,3)";
+    cin >> selectOption;
+    customer.setUserName(usernameCustomer);
+    customer.setTypesOfComputer(selectOption);
+    setRegisteredCusToFile(customer);
+    cout << "Đăng kí máy thành công" << endl;
+    pressKeyQ();
+    ShowCursor(false);
+    system("cls");
 }

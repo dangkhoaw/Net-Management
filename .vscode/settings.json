@@ -12,7 +12,7 @@
     "vector": "cpp"
   },
   "code-runner.executorMap": {
-    "cpp": "cd $dir && g++ *.cpp -o main && ./main"
+    "cpp": "cd $dir && g++ *.cpp -o Net_Management && ./Net_Management"
   },
   "code-runner.runInTerminal": true
 }

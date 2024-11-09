@@ -10,7 +10,7 @@ class Customer : public Account
 {
 private:
     double balance;
-    int moneyforOrder;
+    int moneyforOrder, typeOfComputer;
     Dish dish;
     string name, phone, currentComputerID;
     Time time;
@@ -23,11 +23,13 @@ public:
     string getName();
     Time getTime();
     int getMoneyforOrder();
+    int getTypesOfComputer();
     double getBalance();
     string getCurrentComputerID();
     Time getTimeFromFile();
     Time MoneyToTime(double balance);
     void setmoneyforOrder(int moneyforOrder);
+    void setTypesOfComputer(int type);
     void setName(string name);
     void setCurrentComputerID(string id);
     void setPhone(string phone);
@@ -43,7 +45,7 @@ public:
 
     void addHistoryToFile(History &history);
     void showHistory();
-
+    double setMoneyFromTypeOfComputer(int type);
     int enterAmountOrder();
     void order(string nameRefreshment, int quantity, bool isOrder_again);
     void order();

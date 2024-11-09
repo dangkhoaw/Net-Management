@@ -10,7 +10,7 @@ class Computer
 {
 private:
     // thêm loại máy và số lượng máy
-    string id, customerUsingName, status;
+    string id, customerUsingName, status, typeOfComputer;
     Time usageTime;
 
 public:

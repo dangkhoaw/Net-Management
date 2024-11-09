@@ -33,13 +33,13 @@ cd quan-ly-tiem-internet
 3. Biên dịch chuơng trình
 
 ```bash
-g++ -std=c++11 *.cpp -o main
+g++ -std=c++11 *.cpp -o Net_Management
 ```
 
 4. Chạy chương trình
 
 ```bash
-./main
+./Net_Management
 ```
 
 > [!TIP]

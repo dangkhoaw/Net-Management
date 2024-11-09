@@ -11,17 +11,19 @@ Customer::~Customer() {}
 string Customer::getName() { return name; }
 string Customer::getPhone() { return phone; }
 Time Customer::getTime() { return time; }
+int Customer::getTypesOfComputer() { return typeOfComputer; }
 double Customer::getBalance() { return balance; }
 int Customer::getMoneyforOrder() { return moneyforOrder; }
 string Customer::getCurrentComputerID() { return currentComputerID; }
 void Customer::setTime(Time time) { this->time = time; }
 void Customer::setPhone(string phone) { this->phone = phone; }
 void Customer::setName(string name) { this->name = name; }
+void Customer::setTypesOfComputer(int type) { this->typeOfComputer = type; }
 void Customer::setmoneyforOrder(int moneyforOrder) { this->moneyforOrder = moneyforOrder; }
 void Customer::setBalance(double balance) { this->balance = balance; }
 void Customer::setBalance(Time time)
 {
-    double cost = 10000;
+    double cost = setMoneyFromTypeOfComputer(this->getTypesOfComputer());
     this->balance = (double(time.getHour()) + double(time.getMinute()) / 60 + double(time.getSecond()) / 3600) * cost;
 }
 void Customer::setHistory(History history) { this->historyRecently = history; }
@@ -71,7 +73,7 @@ void Customer::setTimeToFile(Time time)
 Time Customer::MoneyToTime(double balance)
 {
     Time time;
-    double cost = 10000;
+    double cost = setMoneyFromTypeOfComputer(this->getTypesOfComputer());
     time.setHour(balance / cost);
     time.setMinute((balance - time.getHour() * cost) / cost * 60);
     time.setSecond((balance - time.getHour() * cost - time.getMinute() * cost / 60) * 3600);
@@ -338,7 +340,23 @@ istream &operator>>(istream &is, Customer &customer)
     pressKeyQ();
     return is;
 }
-
+double Customer::setMoneyFromTypeOfComputer(int type)
+{
+    double cost = 0;
+    if (type == 1)
+    {
+        cost = 20000;
+    }
+    else if (type == 2)
+    {
+        cost = 15000;
+    }
+    else if (type == 3)
+    {
+        cost = 10000;
+    }
+    return cost;
+}
 int Customer::enterAmountOrder()
 {
     system("cls");
