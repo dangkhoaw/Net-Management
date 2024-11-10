@@ -37,7 +37,7 @@ void menuFood(Customer &customer);
 void menuQuantity(Customer &customer, string nameFood);
 void menuDrink(Customer &customer);
 void menuGame();
-void menuSelectComputer(Customer &customer);
+string menuSelectTypeOfComputer();
 void printItemsOrdered(Customer &customer);
 /*------------------------------------TIME------------------------------------*/
 void showRemainingTimeOfCustomer(Customer *customer);
@@ -55,13 +55,13 @@ void generateID(Account &account);
 bool checkFirstLogin(Account &account);
 bool checkIsOrdered(Customer &customer, string nameFood);
 void makeFileOrdered(Customer &customer);
-int getTypesOfComputerFromFile(Customer &customer);
+string getTypesOfComputerFromFile(Customer &customer);
 List<Customer> getCustomers();
 
 /*------------------------------------COMPUTER------------------------------------*/
 int getNumberOfComputers();
-void updateNumberOfComputers(int &count);
-bool addNewComputerToFile(Computer &computer);
+bool addNewComputerToFile(Computer &computer); // setnewcomputer cho hay , tự dưng get rồi mà sài add
+void updateCountOfComputerToFile(string typeOfComputer, int count = 1);
 void generateIDComputer(Computer &computer);
 List<Computer> getComputersByStatus(string status);
 List<Computer> getComputers();

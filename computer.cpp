@@ -13,9 +13,11 @@ Computer::~Computer() {}
 string Computer::getId() { return id; }
 
 void Computer::setId(string id) { this->id = id; }
+void Computer::setTypeOfComputer(string typesOfComputer) { this->typesOfComputer = typesOfComputer; }
 
 string Computer::getStatus() { return status; }
 
+string Computer::getTypeOfComputer() { return typesOfComputer; }
 void Computer::setStatus(string status) { this->status = status; }
 
 void Computer::setUsageTime(Time usageTime) { this->usageTime = usageTime; }
@@ -82,15 +84,16 @@ bool getComputerFromFile(Computer &computer)
     while (getline(file, line))
     {
         stringstream ss(line);
-        string id, status, customerUsingName;
+        string id, status, customerUsingName, typesOfComputer;
         getline(ss, id, '|');
+        getline(ss, typesOfComputer, '|');
         getline(ss, status, '|');
         getline(ss, customerUsingName);
         if (id == computer.id)
         {
             computer.status = status;
             computer.customerUsingName = customerUsingName;
-
+            computer.typesOfComputer = typesOfComputer;
             computer.usageTime = computer.getUsageTimeFromFile();
 
             file.close();
@@ -122,8 +125,9 @@ void updateComputerToFile(Computer &computer)
     while (getline(file, line))
     {
         stringstream ss(line);
-        string id, status, customerUsingName;
+        string id, status, customerUsingName, typesOfComputer;
         getline(ss, id, '|');
+        getline(ss, typesOfComputer, '|');
         getline(ss, status, '|');
         getline(ss, customerUsingName);
         if (id == computer.id)
@@ -133,6 +137,7 @@ void updateComputerToFile(Computer &computer)
         else
         {
             temp.id = id;
+            temp.typesOfComputer = typesOfComputer;
             temp.status = status;
             temp.customerUsingName = customerUsingName;
         }

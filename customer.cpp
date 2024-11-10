@@ -4,30 +4,37 @@
 
 mutex cus;
 
-Customer::Customer(string username, string password, string role, string id, string status, string isFirstLogin, string isLocked, string name, string phone, double balance, Time time, int moneyforOrder, Dish dish, string currentComputerID, History historyRecently)
-    : Account(username, password, role, id, status, isFirstLogin, isLocked), name(name), phone(phone), balance(balance), time(time), moneyforOrder(moneyforOrder), dish(dish), currentComputerID(currentComputerID), historyRecently(historyRecently) {}
+Customer::Customer(string username, string password, string role, string id, string status, string isFirstLogin, string isLocked, string name, string phone, double balance, Time time, int moneyforOrder, Dish dish, Computer computer, History historyRecently)
+    : Account(username, password, role, id, status, isFirstLogin, isLocked), name(name), phone(phone), balance(balance), time(time), moneyforOrder(moneyforOrder), dish(dish), computer(computer), historyRecently(historyRecently) {}
 Customer::~Customer() {}
 
 string Customer::getName() { return name; }
 string Customer::getPhone() { return phone; }
 Time Customer::getTime() { return time; }
-int Customer::getTypesOfComputer() { return typeOfComputer; }
 double Customer::getBalance() { return balance; }
+string Customer::getTypeOfComputer() { return computer.getTypeOfComputer(); }
+string Customer::getCurrentComputerID() { return computer.getId(); }
 int Customer::getMoneyforOrder() { return moneyforOrder; }
-string Customer::getCurrentComputerID() { return currentComputerID; }
 void Customer::setTime(Time time) { this->time = time; }
 void Customer::setPhone(string phone) { this->phone = phone; }
+void Customer::setTypeOfComputer(string typeOfComputer)
+{
+    computer.setTypeOfComputer(typeOfComputer);
+}
+void Customer::setCurrentComputerID(string currentComputerID)
+{
+    computer.setId(currentComputerID);
+}
+
 void Customer::setName(string name) { this->name = name; }
-void Customer::setTypesOfComputer(int type) { this->typeOfComputer = type; }
 void Customer::setmoneyforOrder(int moneyforOrder) { this->moneyforOrder = moneyforOrder; }
 void Customer::setBalance(double balance) { this->balance = balance; }
 void Customer::setBalance(Time time)
 {
-    double cost = setMoneyFromTypeOfComputer(this->getTypesOfComputer());
+    double cost = setMoneyFromTypeOfComputer(this->computer.getTypeOfComputer());
     this->balance = (double(time.getHour()) + double(time.getMinute()) / 60 + double(time.getSecond()) / 3600) * cost;
 }
 void Customer::setHistory(History history) { this->historyRecently = history; }
-void Customer::setCurrentComputerID(string id) { currentComputerID = id; }
 
 Time Customer::getTimeFromFile()
 {
@@ -73,7 +80,7 @@ void Customer::setTimeToFile(Time time)
 Time Customer::MoneyToTime(double balance)
 {
     Time time;
-    double cost = setMoneyFromTypeOfComputer(this->getTypesOfComputer());
+    double cost = setMoneyFromTypeOfComputer(this->computer.getTypeOfComputer());
     time.setHour(balance / cost);
     time.setMinute((balance - time.getHour() * cost) / cost * 60);
     time.setSecond((balance - time.getHour() * cost - time.getMinute() * cost / 60) * 3600);
@@ -210,14 +217,14 @@ bool getCustomerFromFile(Customer &customer)
         while (getline(file, line))
         {
             stringstream ss(line);
-            string balance;
+            string balance, idComputer;
             getline(ss, temp.id, '|');
             getline(ss, temp.name, '|');
             getline(ss, temp.username, '|');
             getline(ss, temp.phone, '|');
             getline(ss, balance, '|');
             temp.balance = stof(balance);
-            getline(ss, temp.currentComputerID);
+            getline(ss, idComputer);
 
             if (temp.username == customer.username)
             {
@@ -225,7 +232,7 @@ bool getCustomerFromFile(Customer &customer)
                 customer.name = temp.name;
                 customer.phone = temp.phone;
                 customer.balance = temp.balance;
-                customer.currentComputerID = temp.currentComputerID;
+                customer.computer.setId(idComputer);
                 file.close();
                 customer.time = customer.getTimeFromFile();
                 return true;
@@ -260,20 +267,20 @@ void updateCustomerToFile(Customer &customer)
         while (getline(file, line))
         {
             stringstream ss(line);
-            string balance;
+            string balance, idComputer;
             getline(ss, temp.id, '|');
             getline(ss, temp.name, '|');
             getline(ss, temp.username, '|');
             getline(ss, temp.phone, '|');
             getline(ss, balance, '|');
             temp.balance = stof(balance);
-            getline(ss, temp.currentComputerID);
-
+            getline(ss, idComputer);
+            temp.computer.setId(idComputer);
             if (temp.id == customer.id)
             {
                 temp = customer;
             }
-            tempFile << temp.id << "|" << temp.name << "|" << temp.username << "|" << temp.phone << "|" << temp.balance << "|" << temp.currentComputerID << endl;
+            tempFile << temp.id << "|" << temp.name << "|" << temp.username << "|" << temp.phone << "|" << temp.balance << "|" << temp.computer.getId() << endl;
         }
         file.close();
         tempFile.close();
@@ -340,18 +347,18 @@ istream &operator>>(istream &is, Customer &customer)
     pressKeyQ();
     return is;
 }
-double Customer::setMoneyFromTypeOfComputer(int type)
+double Customer::setMoneyFromTypeOfComputer(string type)
 {
     double cost = 0;
-    if (type == 1)
+    if (type == "1")
     {
         cost = 20000;
     }
-    else if (type == 2)
+    else if (type == "2")
     {
         cost = 15000;
     }
-    else if (type == 3)
+    else if (type == "3")
     {
         cost = 10000;
     }

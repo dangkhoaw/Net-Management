@@ -9,8 +9,7 @@ using namespace std;
 class Computer
 {
 private:
-    // thêm loại máy và số lượng máy
-    string id, customerUsingName, status, typeOfComputer;
+    string id, customerUsingName, status, typesOfComputer; //
     Time usageTime;
 
 public:
@@ -22,7 +21,8 @@ public:
     string getCustomerUsingName();
     string getStatus();
     Time getUsageTimeFromFile();
-
+    string getTypeOfComputer();
+    void setTypeOfComputer(string typesOfComputer);
     void setId(string id);
     void setStatus(string status);
     void setCustomerUsingName(string customerUsingName);

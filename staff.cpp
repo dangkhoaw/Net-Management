@@ -40,17 +40,17 @@ void Staff::addComputer()
 {
     system("cls");
     ShowCursor(true);
-    int amountOfComputer;
-    cout << "Nhập số lượng máy tính cần thêm: ";
-    cin >> amountOfComputer;
-    cin.ignore();
-
-    for (int i = 0; i < amountOfComputer; i++)
+    string typeOfComputer = menuSelectTypeOfComputer();
+    if (typeOfComputer == "") // fix cho ni lai cho ro rang khoa oi
     {
-        Computer computer;
-        generateIDComputer(computer);
-        addNewComputerToFile(computer);
+        ShowCursor(false);
+        system("cls");
+        return;
     }
+    Computer computer;
+    computer.setTypeOfComputer(typeOfComputer);
+    generateIDComputer(computer);
+    addNewComputerToFile(computer);
     MessageBoxW(NULL, L"Thêm máy tính thành công", L"Thông báo", MB_OK);
     system("cls");
     ShowCursor(false);
@@ -372,24 +372,22 @@ void Staff::setRegisteredCusToFile(Customer &customer)
         cout << "Không thể mở file registeredCus" << endl;
         return;
     }
-    file << customer.getUserName() << "|" << customer.getTypesOfComputer() << endl;
+    file << customer.getUserName() << "|" << customer.getTypeOfComputer() << endl;
     file.close();
 }
 void Staff::registerComputerForCus()
 {
     system("cls");
     ShowCursor(true);
+    string typeOfComputer = menuSelectTypeOfComputer();
     Customer customer;
     string usernameCustomer;
-    int selectOption;
     viewTypeOfComputer();
     cout << "Tên đăng nhập: ";
     enterString(usernameCustomer);
     // menuSelectComputer(customer);
-    cout << "Chọn loại:(1,2,3)"; // Tạm để v
-    cin >> selectOption;
     customer.setUserName(usernameCustomer);
-    customer.setTypesOfComputer(selectOption);
+    customer.setTypeOfComputer(typeOfComputer);
     setRegisteredCusToFile(customer);
     cout << "Đăng kí máy thành công" << endl;
     pressKeyQ();

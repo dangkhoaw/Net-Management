@@ -28,7 +28,7 @@ const int MENUFOOD = 7;
 const int MENUDRINK = 7;
 const int MENUQUANTITY = 4;
 const int MENUREVENUE = 4;
-const int MENUSELECTCOMPUTER = 3;
+const int MENUSELECTTYPEOFCOMPUTER = 4;
 
 mutex mtx;
 
@@ -378,21 +378,21 @@ void optionMenu(string typeMenu, int option)
             break;
         }
     }
-    else if (typeMenu == "selectComputer")
+    else if (typeMenu == "selectTypeOfComputer")
     {
         switch (option)
         {
         case 1:
-            cout << "     Tự bỏ tên máy                ";
+            cout << "       V.I.P             ";
             break;
         case 2:
-            cout << "     Tự bỏ tên máy                ";
+            cout << "      Cao cấp            ";
             break;
         case 3:
-            cout << "     Tự bỏ tên máy                ";
+            cout << "      Cơ bản             ";
             break;
         case 4:
-            cout << "      Thoát                      ";
+            cout << "       Thoát            ";
             break;
         }
     }
@@ -645,12 +645,12 @@ void showMenu(string typeMenu, int selectOption)
         }
         cout << "└──────────────────────────────┘" << endl;
     }
-    else if (typeMenu == "selectComputer")
+    else if (typeMenu == "selectTypeOfComputer") // áp dụng cho thêm máy với chọn loại máy cho khách hàng
     {
-        // có chi điều chỉnh lại cho hợp lý
+
         Gotoxy(0, 0);
-        cout << "┌──────────────────────────────┐" << endl;
-        for (int i = 1; i <= MENUSELECTCOMPUTER; i++)
+        cout << "┌─────────────────-───────┐" << endl;
+        for (int i = 1; i <= MENUSELECTTYPEOFCOMPUTER; i++)
         {
             Gotoxy(0, i);
             cout << "│";
@@ -658,7 +658,7 @@ void showMenu(string typeMenu, int selectOption)
             printMenuOption(typeMenu, i, isSelected);
             cout << "│" << endl;
         }
-        cout << "└──────────────────────────────┘" << endl;
+        cout << "└─────────────────────-───┘" << endl;
     }
 }
 
@@ -1283,7 +1283,7 @@ void menuDish(Customer &customer)
     }
 }
 
-void menuSelectComputer(Customer &customer)
+string menuSelectTypeOfComputer()
 {
     system("cls");
     SetConsoleTitle(TEXT("Menu chọn máy"));
@@ -1291,31 +1291,31 @@ void menuSelectComputer(Customer &customer)
     int selectOption = 1;
     while (true)
     {
-        showMenu("selectComputer", selectOption);
+        showMenu("selectTypeOfComputer", selectOption);
         int key = _getch();
         switch (key)
         {
         case KEY_UP:
-            selectOption = (selectOption == 1) ? MENUSELECTCOMPUTER : selectOption - 1;
+            selectOption = (selectOption == 1) ? MENUSELECTTYPEOFCOMPUTER : selectOption - 1;
             break;
         case KEY_DOWN:
-            selectOption = (selectOption == MENUSELECTCOMPUTER) ? 1 : selectOption + 1;
+            selectOption = (selectOption == MENUSELECTTYPEOFCOMPUTER) ? 1 : selectOption + 1;
             break;
         case KEY_ENTER:
             switch (selectOption)
             {
             case 1:
 
-                return;
+                return "VIP";
             case 2:
 
-                return;
+                return "Cao cap";
             case 3:
 
-                return;
+                return "Co ban";
             case 4:
                 system("cls");
-                return;
+                return "";
             }
         default:
             break;
@@ -1323,7 +1323,7 @@ void menuSelectComputer(Customer &customer)
     }
 }
 
-void menuCustomer(Customer &customer, Computer &computer)
+void menuCustomer(Customer &customer, Computer &computer) // cho ni coi co rut gon dc ko ne
 {
     SetConsoleTitle(TEXT("Menu khách hàng"));
     ShowCursor(false);
@@ -1331,7 +1331,7 @@ void menuCustomer(Customer &customer, Computer &computer)
     History history(Day().getCurrentDay(), customer.getId());
     double minutes = (customer.getBalance() * 60) / customer.setMoneyFromTypeOfComputer(getTypesOfComputerFromFile(customer));
     Time time(0, minutes, 0);
-    customer.setTypesOfComputer(getTypesOfComputerFromFile(customer));
+    customer.setTypeOfComputer(getTypesOfComputerFromFile(customer));
     customer.setTime(time);
     customer.setTimeToFile(time);
     thread threadShowTimeCustomer(showRemainingTimeOfCustomer, &customer);
@@ -1645,30 +1645,75 @@ bool checkFirstLogin(Account &account)
 /*------------------------------------COMPUTER------------------------------------*/
 int getNumberOfComputers()
 {
-    int count;
-    fstream file("./computer/count.txt", ios::in);
+    int sum = 0;
+    fstream file("./data/typeOfComputer.txt", ios::in);
     if (!file.is_open())
     {
-        cout << "Không thể mở file countComputer" << endl;
+        cout << "Không thể mở file typeOfComputer" << endl;
         return -1;
     }
-    file >> count;
+    string line;
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        string type;
+        int count_infile;
+        getline(ss, type, '|');
+        ss >> count_infile;
+        sum += count_infile;
+    }
     file.close();
-    return count;
+    return sum;
 }
-
-void updateNumberOfComputers(int &count)
+void generateIDComputer(Computer &computer)
 {
-    fstream file("./computer/count.txt", ios::out);
+    int count = getNumberOfComputers();
+    count++;
+    stringstream ss;
+    ss << setw(2) << setfill('0') << count;
+    string id = "COM" + ss.str();
+    computer.setId(id);
+    updateCountOfComputerToFile(computer.getTypeOfComputer(), 1);
+}
+void updateCountOfComputerToFile(string typeOfComputer, int count)
+{
+    fstream file("./data/typeOfComputer.txt", ios::in);
     if (!file.is_open())
     {
-        cout << "Không thể mở file countComputer" << endl;
+        cout << "Không thể mở file typeOfComputer" << endl;
         return;
     }
-    file << count;
+    fstream tempFile("./data/temp.txt", ios::out);
+    if (!tempFile.is_open())
+    {
+        cout << "Không thể mở file temp" << endl;
+        return;
+    }
+    string line;
+    bool isFound = false;
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        string type;
+        int count_infile;
+        getline(ss, type, '|');
+        ss >> count_infile;
+        if (type == typeOfComputer)
+        {
+            isFound = true;
+            count_infile += count;
+        }
+        tempFile << type << '|' << count_infile << endl;
+    }
+    if (!isFound)
+    {
+        tempFile << typeOfComputer << '|' << 1 << endl;
+    }
     file.close();
+    tempFile.close();
+    system("del .\\data\\typeOfComputer.txt");
+    system("ren .\\data\\temp.txt typeOfComputer.txt");
 }
-
 bool addNewComputerToFile(Computer &computer)
 {
     string path1 = "./computer/computer.txt"; // đưa vào file computer
@@ -1678,7 +1723,7 @@ bool addNewComputerToFile(Computer &computer)
         cout << "Không thể mở file computer" << endl;
         return false;
     }
-    file << computer.getId() << '|' << computer.getStatus() << '|' << computer.getCustomerUsingName() << endl;
+    file << computer.getId() << '|' << computer.getTypeOfComputer() << '|' << computer.getStatus() << '|' << computer.getCustomerUsingName() << endl;
     file.close();
 
     file.open("./time/" + computer.getId() + ".txt", ios::out);
@@ -1689,17 +1734,6 @@ bool addNewComputerToFile(Computer &computer)
     }
     file << computer.getUsageTime();
     return true;
-}
-
-void generateIDComputer(Computer &computer)
-{
-    int count = getNumberOfComputers();
-    count++;
-    stringstream ss;
-    ss << setw(2) << setfill('0') << count;
-    string id = "COM" + ss.str();
-    computer.setId(id);
-    updateNumberOfComputers(count);
 }
 
 List<Computer> getComputersByStatus(string status)
@@ -1715,11 +1749,12 @@ List<Computer> getComputersByStatus(string status)
     while (getline(file, line))
     {
         stringstream ss(line);
-        string id, statusStr, customerUsingName;
+        string id, statusStr, customerUsingName, typeOfComputer;
         getline(ss, id, '|');
+        getline(ss, typeOfComputer, '|');
         getline(ss, statusStr, '|');
         getline(ss, customerUsingName);
-        if (statusStr == status)
+        if (statusStr == status) // and typeOfComputer == type)
         {
             Computer computer(id, status, customerUsingName);
             computers.push_back(computer);
@@ -1765,11 +1800,11 @@ void assignRandomComputer(Customer &customer, Computer &computer)
     srand(time(NULL));
     int randomIndex = rand() % computers.size();
     computer = computers[randomIndex];
-    computer.setCustomerUsingName(customer.getUserName());
+    computer.setCustomerUsingName(customer.getUserName()); //
     computer.setStatus("Using");
     updateComputerToFile(computer);
 
-    double balance = customer.getBalance();
+    double balance = customer.getBalance(); // đoạn ni ko cần nx
     double cost = customer.setMoneyFromTypeOfComputer(getTypesOfComputerFromFile(customer));
     double seconds = balance / cost * 3600;
     Time time(0, 0, seconds);
@@ -1813,6 +1848,7 @@ void removeComputerFromFile(Computer &computer)
                 tempFile << line << endl;
             }
         }
+        updateCountOfComputerToFile(computer.getTypeOfComputer(), -1);
         file.close();
         tempFile.close();
         system("del .\\computer\\computer.txt");
@@ -1842,28 +1878,28 @@ void makeFileOrdered(Customer &customer)
         firstOrder = false;
     }
 }
-int getTypesOfComputerFromFile(Customer &customer)
+string getTypesOfComputerFromFile(Customer &customer)
 {
     fstream file("./data/registeredCus.txt", ios::in);
     if (!file.is_open())
     {
         cout << "Không thể mở file registerCus" << endl;
-        return -1;
+        return "";
     }
     string line;
     while (getline(file, line))
     {
         stringstream ss(line);
-        string usernameCustomerInfile;
-        int typesOfComputer;
+        string usernameCustomerInfile, typesOfComputer;
         getline(ss, usernameCustomerInfile, '|');
-        ss >> typesOfComputer;
+        getline(ss, typesOfComputer);
         if (usernameCustomerInfile == customer.getUserName())
         {
             return typesOfComputer;
         }
     }
-    return -1;
+    file.close();
+    return "";
 }
 
 List<Customer> getCustomers()

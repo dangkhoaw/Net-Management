@@ -4,6 +4,7 @@
 #include "account.h"
 #include "history.h"
 #include "dish.h"
+#include "computer.h"
 using namespace std;
 
 /*
@@ -22,31 +23,32 @@ class Customer : public Account
 {
 private:
     double balance;
-    int moneyforOrder, typeOfComputer;
+    int moneyforOrder;
     Dish dish;
-    string name, phone, currentComputerID;
+    string name, phone;
+    Computer computer;
     Time time;
     History historyRecently;
 
 public:
-    Customer(string username = "", string password = "", string role = "", string id = "", string status = "Offline", string isFirstLogin = "FirstLogin", string isLocked = "Unlocked", string name = "", string phone = "", double balance = 0, Time time = Time(), int moneyforOrder = 0, Dish dish = Dish(), string currentComputerID = "", History historyRecently = History());
+    Customer(string username = "", string password = "", string role = "", string id = "", string status = "Offline", string isFirstLogin = "FirstLogin", string isLocked = "Unlocked", string name = "", string phone = "", double balance = 0, Time time = Time(), int moneyforOrder = 0, Dish dish = Dish(), Computer computer = Computer(), History historyRecently = History());
     ~Customer();
     string getPhone();
     string getName();
     Time getTime();
     int getMoneyforOrder();
-    int getTypesOfComputer();
-    double getBalance();
+    string getTypeOfComputer();
     string getCurrentComputerID();
+    double getBalance();
     Time getTimeFromFile();
     Time MoneyToTime(double balance);
     void setmoneyforOrder(int moneyforOrder);
-    void setTypesOfComputer(int type);
     void setName(string name);
-    void setCurrentComputerID(string id);
     void setPhone(string phone);
     void setTime(Time time);
     void setBalance(double balance);
+    void setTypeOfComputer(string typeOfComputer);
+    void setCurrentComputerID(string currentComputerID);
     void setBalance(Time time);
     void setTimeToFile(Time time);
     void setHistory(History history);
@@ -54,10 +56,9 @@ public:
 
     void showMyInfo();
     bool isLocked();
-
     void addHistoryToFile(History &history);
     void showHistory();
-    double setMoneyFromTypeOfComputer(int type);
+    double setMoneyFromTypeOfComputer(string type);
     int enterAmountOrder();
     void order(string nameRefreshment, int quantity, bool isOrder_again);
     void order();
