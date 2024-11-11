@@ -38,6 +38,7 @@ void menuQuantity(Customer &customer, string nameFood);
 void menuDrink(Customer &customer);
 void menuGame();
 string menuSelectTypeOfComputer();
+string menuSelectComputer(string typeOfComputer);
 void printItemsOrdered(Customer &customer);
 /*------------------------------------TIME------------------------------------*/
 void showRemainingTimeOfCustomer(Customer *customer);
