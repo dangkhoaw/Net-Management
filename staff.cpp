@@ -40,18 +40,26 @@ void Staff::addComputer()
 {
     system("cls");
     ShowCursor(true);
-    string typeOfComputer = menuSelectTypeOfComputer();
-    if (typeOfComputer == "") // fix cho ni lai cho ro rang khoa oi
+    while (true)
     {
-        ShowCursor(false);
-        system("cls");
-        return;
+        string typeOfComputer = menuSelectTypeOfComputer();
+        if (typeOfComputer == "")
+        {
+            ShowCursor(false);
+            system("cls");
+            return;
+        }
+        Computer computer;
+        computer.setTypeOfComputer(typeOfComputer);
+        generateIDComputer(computer);
+        if (addNewComputerToFile(computer))
+        {
+            MessageBoxW(NULL, L"Thêm máy tính thành công", L"Thông báo", MB_OK);
+            break;
+        }
+        else
+            MessageBoxW(NULL, L"Thêm máy tính thất bại", L"Thông báo", MB_OK);
     }
-    Computer computer;
-    computer.setTypeOfComputer(typeOfComputer);
-    generateIDComputer(computer);
-    addNewComputerToFile(computer);
-    MessageBoxW(NULL, L"Thêm máy tính thành công", L"Thông báo", MB_OK);
     system("cls");
     ShowCursor(false);
 }
@@ -240,13 +248,13 @@ void Staff::viewCustomersInfo()
                 Gotoxy(79 + 11, i + 3);
                 cout << "│       " << customer.getStatus();
                 Gotoxy(102 + 11, i + 3);
-                if (customer.getCurrentComputerID() == "")
+                if (customer.getComputer().getId() == "")
                 {
                     cout << "│          -";
                 }
                 else
                 {
-                    cout << "│        " << customer.getCurrentComputerID();
+                    cout << "│        " << customer.getComputer().getId();
                 }
                 Gotoxy(125 + 11, i + 3);
                 cout << "│";
@@ -329,68 +337,73 @@ void Staff::lockAccount()
     pressKeyQ();
     ShowCursor(false);
 }
-void Staff::viewTypeOfComputer()
+void Staff::viewTypeOfComputer(bool isRegister)
 {
     system("cls");
-    Gotoxy(0, 0);
-    cout << "┌──────────────┬──────────────────────────────────────────┐" << endl;
-    Gotoxy(0, 1);
-    cout << "│     Loại     │             Thông tin máy                │" << endl;
-    Gotoxy(0, 2);
-    cout << "├──────────────┼──────────────────────────────────────────┤" << endl;
-    Gotoxy(0, 3);
-    cout << "│              │  CPU: Intel® Core™ i9-13900H             │" << endl;
-    Gotoxy(0, 4);
-    cout << "│   Cao cấp    │  RAM: 32G                                │" << endl;
-    Gotoxy(0, 5);
-    cout << "│              │  Card đồ họa: GeForce RTX 4060 Ti        │" << endl;
-    Gotoxy(0, 6);
-    cout << "├──────────────┼──────────────────────────────────────────┤" << endl;
-    Gotoxy(0, 7);
-    cout << "│              │  CPU: Intel® Core™ i7-13700H             │" << endl;
-    Gotoxy(0, 8);
-    cout << "│     VIP      │  RAM: 16G                                │" << endl;
-    Gotoxy(0, 9);
-    cout << "│              │  Card đồ họa: GeForce RTX 3060 Ti        │" << endl;
-    Gotoxy(0, 10);
-    cout << "├──────────────┼──────────────────────────────────────────┤" << endl;
-    Gotoxy(0, 11);
-    cout << "│              │  CPU: Intel® Core™ i5-11500H             │" << endl;
-    Gotoxy(0, 12);
-    cout << "│  Tầm trung   │  RAM: 8G                                 │" << endl;
-    Gotoxy(0, 13);
-    cout << "│              │  Card đồ họa: GeForce RTX 2080 Ti        │" << endl;
-    Gotoxy(0, 14);
-    cout << "└──────────────┴──────────────────────────────────────────┘" << endl;
+    int i = isRegister ? 7 : 0;
+    Gotoxy(0, i++);
+    cout << "┌──────────────┬──────────────────────────────────────────┬─────────────┐";
+    Gotoxy(0, i++);
+    cout << "│     Loại     │             Thông tin máy                │     Giá     │";
+    Gotoxy(0, i++);
+    cout << "├──────────────┼──────────────────────────────────────────┤─────────────┤";
+    Gotoxy(0, i++);
+    cout << "│              │  CPU: Intel® Core™ i9-13900H             │             │";
+    Gotoxy(0, i++);
+    cout << "│     VIP      │  RAM: 32G                                │  30.000 VNĐ │";
+    Gotoxy(0, i++);
+    cout << "│              │  Card đồ họa: GeForce RTX 4060 Ti        │             │";
+    Gotoxy(0, i++);
+    cout << "├──────────────┼──────────────────────────────────────────┤─────────────┤";
+    Gotoxy(0, i++);
+    cout << "│              │  CPU: Intel® Core™ i7-13700H             │             │";
+    Gotoxy(0, i++);
+    cout << "│   Cao cấp    │  RAM: 16G                                │  20.000 VNĐ │";
+    Gotoxy(0, i++);
+    cout << "│              │  Card đồ họa: GeForce RTX 3060 Ti        │             │";
+    Gotoxy(0, i++);
+    cout << "├──────────────┼──────────────────────────────────────────┤─────────────┤";
+    Gotoxy(0, i++);
+    cout << "│              │  CPU: Intel® Core™ i5-11500H             │             │";
+    Gotoxy(0, i++);
+    cout << "│    Cơ bản    │  RAM: 8G                                 │  10.000 VNĐ │";
+    Gotoxy(0, i++);
+    cout << "│              │  Card đồ họa: GeForce RTX 2080 Ti        │             │";
+    Gotoxy(0, i++);
+    cout << "└──────────────┴──────────────────────────────────────────┘─────────────┘";
 }
-void Staff::setRegisteredCusToFile(Customer &customer)
+
+void Staff::registerComputerForCus()
 {
+    system("cls");
+    viewTypeOfComputer(true);
+    string typeOfComputer = menuSelectTypeOfComputer();
+    system("cls");
+    Customer customer;
+    string usernameCustomer;
+
+    while (true)
+    {
+        Gotoxy(0, 0);
+        cout << "Tên đăng nhập: ";
+        enterString(usernameCustomer);
+        if (!isValidUsername(usernameCustomer))
+            break;
+    }
+    customer.setUserName(usernameCustomer);
+    customer.getComputer().setTypeOfComputer(typeOfComputer);
+
     fstream file;
     file.open("./data/registeredCus.txt", ios::app);
     if (!file.is_open())
     {
-        cout << "Không thể mở file registeredCus" << endl;
+        cout << "Không thể mở file registeredComputer" << endl;
         return;
     }
-    file << customer.getUserName() << "|" << customer.getTypeOfComputer() << endl;
+    file << customer.getUserName() << "|" << customer.getComputer().getTypeOfComputer() << endl;
     file.close();
-}
-void Staff::registerComputerForCus()
-{
-    system("cls");
-    ShowCursor(true);
-    string typeOfComputer = menuSelectTypeOfComputer();
-    Customer customer;
-    string usernameCustomer;
-    viewTypeOfComputer();
-    cout << "Tên đăng nhập: ";
-    enterString(usernameCustomer);
-    // menuSelectComputer(customer);
-    customer.setUserName(usernameCustomer);
-    customer.setTypeOfComputer(typeOfComputer);
-    setRegisteredCusToFile(customer);
+
     cout << "Đăng kí máy thành công" << endl;
     pressKeyQ();
-    ShowCursor(false);
     system("cls");
 }

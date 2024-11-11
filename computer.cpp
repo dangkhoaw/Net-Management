@@ -5,15 +5,21 @@
 
 mutex com;
 
-Computer::Computer(string id, string status, string customerUsingName, Time usageTime)
-    : id(id), status(status), customerUsingName(customerUsingName), usageTime(usageTime) {}
+Computer::Computer(string id, string typesOfComputer, string status, string customerUsingName, Time usageTime)
+    : id(id), typesOfComputer(typesOfComputer), status(status), customerUsingName(customerUsingName), usageTime(usageTime) {}
 
 Computer::~Computer() {}
 
 string Computer::getId() { return id; }
+double Computer::getCost() { return (typesOfComputer == "VIP") ? 30000 : (typesOfComputer == "Cao cap") ? 20000
+                                                                                                        : 10000; }
 
 void Computer::setId(string id) { this->id = id; }
-void Computer::setTypeOfComputer(string typesOfComputer) { this->typesOfComputer = typesOfComputer; }
+void Computer::setTypeOfComputer(string typesOfComputer)
+{
+    this->typesOfComputer = typesOfComputer;
+    setCost();
+}
 
 string Computer::getStatus() { return status; }
 
@@ -23,7 +29,8 @@ void Computer::setStatus(string status) { this->status = status; }
 void Computer::setUsageTime(Time usageTime) { this->usageTime = usageTime; }
 
 Time Computer::getUsageTime() { return usageTime; }
-
+void Computer::setCost() { cost = (typesOfComputer == "VIP") ? 30000 : (typesOfComputer == "Cao cap") ? 20000
+                                                                                                      : 10000; }
 Time Computer::getUsageTimeFromFile()
 {
     try
@@ -67,13 +74,12 @@ void Computer::setUsageTimeToFile(Time time)
 
 ostream &operator<<(ostream &os, Computer &computer)
 {
-    os << computer.id << "|" << computer.status << "|" << computer.customerUsingName;
+    os << computer.id << "|" << computer.typesOfComputer << "|" << computer.status << "|" << computer.customerUsingName;
     return os;
 }
 
 bool getComputerFromFile(Computer &computer)
 {
-    lock_guard<mutex> lock(com);
     fstream file("./computer/computer.txt", ios::in);
     if (!file.is_open())
     {

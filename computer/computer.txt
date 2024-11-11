@@ -1,0 +1,3 @@
+COM01|VIP|Available|
+COM02|Cao cap|Available|
+COM03|VIP|Available|

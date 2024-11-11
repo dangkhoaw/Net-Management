@@ -1,1 +1,2 @@
-UID0001|Grayzyss|grayzyss1|0356345644|9494.44|COM03
+UID0001|Grayzyss|grayzyss1|0356345644|9494.44|
+UID0002|Dang Dang Khoa|dangkhoaw|0906457124|49950|

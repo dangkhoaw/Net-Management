@@ -43,6 +43,6 @@ int main(int argc, char const *argv[])
             }
             menuCustomer(customer, computer);
         }
-        return 0;
     }
+    return 0;
 }

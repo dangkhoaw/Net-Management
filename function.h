@@ -21,9 +21,9 @@ void Gotoxy(SHORT posX, SHORT posY);
 void ClearLine(SHORT posY);
 void ClearLine(SHORT posX, SHORT posY, SHORT length);
 /*------------------------------------MENU------------------------------------*/
-void printMenuOption(string typeMenu, int option, bool isSelected);
-void showMenu(string typeMenu, int selectOption);
-void optionMenu(string typeMenu, int option);
+void printMenuOption(string typeMenu, int option, bool isSelected, List<Computer> computers = List<Computer>());
+void showMenu(string typeMenu, int selectOption, string typeComputer = "");
+void optionMenu(string typeMenu, int option, List<Computer> computers = List<Computer>());
 void computerManagementMenu(Staff &staff);
 void customerManagementMenu(Staff &staff);
 void menuStaff(Staff &staff);
@@ -64,7 +64,8 @@ bool addNewComputerToFile(Computer &computer); // setnewcomputer cho hay , tự 
 void updateCountOfComputerToFile(string typeOfComputer, int count = 1);
 void generateIDComputer(Computer &computer);
 List<Computer> getComputersByStatus(string status);
-List<Computer> getComputers();
+List<Computer> getAllComputers();
+List<Computer> getComputers(string typeOfComputer = "all", string status = "all");
 void assignRandomComputer(Customer &customer, Computer &computer);
 void removeComputerFromFile(Computer &computer);
 /*------------------------------------DISH------------------------------------*/

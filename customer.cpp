@@ -12,26 +12,16 @@ string Customer::getName() { return name; }
 string Customer::getPhone() { return phone; }
 Time Customer::getTime() { return time; }
 double Customer::getBalance() { return balance; }
-string Customer::getTypeOfComputer() { return computer.getTypeOfComputer(); }
-string Customer::getCurrentComputerID() { return computer.getId(); }
+Computer &Customer::getComputer() { return computer; }
 int Customer::getMoneyforOrder() { return moneyforOrder; }
 void Customer::setTime(Time time) { this->time = time; }
 void Customer::setPhone(string phone) { this->phone = phone; }
-void Customer::setTypeOfComputer(string typeOfComputer)
-{
-    computer.setTypeOfComputer(typeOfComputer);
-}
-void Customer::setCurrentComputerID(string currentComputerID)
-{
-    computer.setId(currentComputerID);
-}
-
 void Customer::setName(string name) { this->name = name; }
 void Customer::setmoneyforOrder(int moneyforOrder) { this->moneyforOrder = moneyforOrder; }
 void Customer::setBalance(double balance) { this->balance = balance; }
 void Customer::setBalance(Time time)
 {
-    double cost = setMoneyFromTypeOfComputer(this->computer.getTypeOfComputer());
+    double cost = computer.getCost();
     this->balance = (double(time.getHour()) + double(time.getMinute()) / 60 + double(time.getSecond()) / 3600) * cost;
 }
 void Customer::setHistory(History history) { this->historyRecently = history; }
@@ -80,7 +70,7 @@ void Customer::setTimeToFile(Time time)
 Time Customer::MoneyToTime(double balance)
 {
     Time time;
-    double cost = setMoneyFromTypeOfComputer(this->computer.getTypeOfComputer());
+    double cost = computer.getCost();
     time.setHour(balance / cost);
     time.setMinute((balance - time.getHour() * cost) / cost * 60);
     time.setSecond((balance - time.getHour() * cost - time.getMinute() * cost / 60) * 3600);
@@ -347,23 +337,7 @@ istream &operator>>(istream &is, Customer &customer)
     pressKeyQ();
     return is;
 }
-double Customer::setMoneyFromTypeOfComputer(string type)
-{
-    double cost = 0;
-    if (type == "1")
-    {
-        cost = 20000;
-    }
-    else if (type == "2")
-    {
-        cost = 15000;
-    }
-    else if (type == "3")
-    {
-        cost = 10000;
-    }
-    return cost;
-}
+
 int Customer::enterAmountOrder()
 {
     system("cls");
@@ -392,22 +366,14 @@ void Customer::order(string nameRefreshment, int quantity, bool orderAgain)
     {
         dish.getDishFromFile(this->getId(), nameRefreshment);
         if (dish.getCount() > quantity)
-        {
             this->moneyforOrder - (dish.getPrice() - price);
-        }
         else if (dish.getCount() < quantity)
-        {
             this->moneyforOrder + (price - dish.getPrice());
-        }
         else
-        {
             return;
-        }
     }
     else
-    {
         this->moneyforOrder += price;
-    }
     if (this->balance < this->moneyforOrder + 5000)
     {
         if (orderAgain)

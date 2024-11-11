@@ -22,8 +22,7 @@ public:
     void removeComputer();
     void viewListCustomer();
     void registerComputerForCus();
-    void setRegisteredCusToFile(Customer &customer);
-    void viewTypeOfComputer();
+    void viewTypeOfComputer(bool isRegister = false);
 };
 
 #endif

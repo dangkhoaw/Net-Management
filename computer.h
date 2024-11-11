@@ -9,11 +9,12 @@ using namespace std;
 class Computer
 {
 private:
-    string id, customerUsingName, status, typesOfComputer; //
+    string id, customerUsingName, status, typesOfComputer;
+    double cost;
     Time usageTime;
 
 public:
-    Computer(string id = "", string status = "Available", string customerUsingName = "", Time usageTime = Time());
+    Computer(string id = "", string typesOfComputer = "", string status = "Available", string customerUsingName = "", Time usageTime = Time());
     ~Computer();
 
     string getId();
@@ -21,6 +22,7 @@ public:
     string getCustomerUsingName();
     string getStatus();
     Time getUsageTimeFromFile();
+    double getCost();
     string getTypeOfComputer();
     void setTypeOfComputer(string typesOfComputer);
     void setId(string id);
@@ -28,6 +30,7 @@ public:
     void setCustomerUsingName(string customerUsingName);
     void setUsageTime(Time usageTime);
     void setUsageTimeToFile(Time usageTime);
+    void setCost();
 
     friend ostream &operator<<(ostream &os, Computer &computer);
     friend bool getComputerFromFile(Computer &computer);

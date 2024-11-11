@@ -37,8 +37,7 @@ public:
     string getName();
     Time getTime();
     int getMoneyforOrder();
-    string getTypeOfComputer();
-    string getCurrentComputerID();
+    Computer &getComputer();
     double getBalance();
     Time getTimeFromFile();
     Time MoneyToTime(double balance);
@@ -47,8 +46,7 @@ public:
     void setPhone(string phone);
     void setTime(Time time);
     void setBalance(double balance);
-    void setTypeOfComputer(string typeOfComputer);
-    void setCurrentComputerID(string currentComputerID);
+    void setComputer(Computer computer);
     void setBalance(Time time);
     void setTimeToFile(Time time);
     void setHistory(History history);
@@ -58,7 +56,7 @@ public:
     bool isLocked();
     void addHistoryToFile(History &history);
     void showHistory();
-    double setMoneyFromTypeOfComputer(string type);
+    // double setMoneyFromTypeOfComputer(string type);
     int enterAmountOrder();
     void order(string nameRefreshment, int quantity, bool isOrder_again);
     void order();
