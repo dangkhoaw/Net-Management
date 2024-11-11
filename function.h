@@ -48,7 +48,7 @@ void updateNumberOfAccounts(int &count);
 int getNumberOfAccounts();
 bool addNewAccountToFile(Account &account);
 bool removeAccountFromFile(string id_account);
-bool isValidUsername(string &username);
+bool isExistUsername(string &username);
 /*------------------------------------CUSTOMER------------------------------------*/
 bool addCustomerToFile(Customer &customer);
 bool removeCustomerFromFile(string id_customer);
@@ -72,6 +72,7 @@ void removeComputerFromFile(Computer &computer);
 /*------------------------------------DISH------------------------------------*/
 // void generateID(Dish &dish);
 /*------------------------------------OTHER------------------------------------*/
+bool isRegisterComputer(string &username);
 void enterPassword(string &password);
 string formatMoney(double money);
 void pressKeyQ();

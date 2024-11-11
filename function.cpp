@@ -398,18 +398,13 @@ void optionMenu(string typeMenu, int option, List<Computer> computers)
     }
     else if (typeMenu == "selectComputer")
     {
-        for (int i = 0; i < computers.size(); i++)
+        if (option == computers.size() + 1)
         {
-            if (option == i + 1)
-            {
-                cout << "      " << computers[i].getId() << "      ";
-                break;
-            }
-            else if (option == computers.size())
-            {
-                cout << "       Thoát            ";
-                break;
-            }
+            cout << "       Thoát     ";
+        }
+        else
+        {
+            cout << "      " << computers[option - 1].getId() << "       ";
         }
     }
 }
@@ -679,9 +674,9 @@ void showMenu(string typeMenu, int selectOption, string typeComputer)
     else if (typeMenu == "selectComputer")
     {
         Gotoxy(0, 0);
-        cout << "┌──────────────────────────────┐" << endl;
+        cout << "┌──────────────────┐" << endl;
         List<Computer> computers = getComputers(typeComputer, "Available");
-        for (int i = 1; i <= computers.size(); i++)
+        for (int i = 1; i <= computers.size() + 1; i++)
         {
             Gotoxy(0, i);
             cout << "│";
@@ -689,7 +684,7 @@ void showMenu(string typeMenu, int selectOption, string typeComputer)
             printMenuOption(typeMenu, i, isSelected, computers);
             cout << "│" << endl;
         }
-        cout << "└──────────────────────────────┘" << endl;
+        cout << "└──────────────────┘" << endl;
     }
 }
 
@@ -817,7 +812,8 @@ void menuStaff(Staff &staff)
                 staff.topUpAccount();
                 break;
             case 5:
-                // staff.registerComputerForCus();
+                staff.viewTypeOfComputer(true);
+                staff.registerComputerForCus();
                 break;
             case 6:
                 staff.viewTypeOfComputer();
@@ -1319,7 +1315,6 @@ void menuDish(Customer &customer)
 
 string menuSelectTypeOfComputer()
 {
-    system("cls");
     SetConsoleTitle(TEXT("Menu chọn máy"));
     ShowCursor(false);
     int selectOption = 1;
@@ -1360,7 +1355,12 @@ string menuSelectComputer(string typeOfComputer)
     SetConsoleTitle(TEXT("Menu chọn máy"));
     ShowCursor(false);
     int selectOption = 1;
-    const int SIZE = getComputers(typeOfComputer, "Available").size();
+    const int SIZE = getComputers(typeOfComputer, "Available").size() + 1;
+    if (SIZE == 1)
+    {
+        MessageBoxW(NULL, L"Không có máy nào!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
+        return "";
+    }
     while (true)
     {
         showMenu("selectComputer", selectOption, typeOfComputer);
@@ -1387,7 +1387,6 @@ string menuSelectComputer(string typeOfComputer)
             break;
         }
     }
-    // ShowCursor(true);
 }
 
 void menuCustomer(Customer &customer, Computer &computer) // cho ni coi co rut gon dc ko ne
@@ -1618,16 +1617,16 @@ void generateID(Account &account)
     updateNumberOfAccounts(count);
 }
 
-bool isValidUsername(string &username)
+bool isExistUsername(string &username)
 {
     if (username == "admin")
-        return false;
+        return true;
 
     fstream file("./account/account.txt", ios::in);
     if (!file.is_open())
     {
         cout << "Không thể mở file account" << endl;
-        return false;
+        return true;
     }
     string line;
     while (getline(file, line))
@@ -1639,11 +1638,11 @@ bool isValidUsername(string &username)
         if (usrname == username)
         {
             file.close();
-            return false;
+            return true;
         }
     }
     file.close();
-    return true;
+    return false;
 }
 
 /*------------------------------------STAFF------------------------------------*/
@@ -2187,6 +2186,29 @@ bool checkIsOrdered(Customer &customer, string nameRefreshment)
 }
 
 /*------------------------------------OTHER------------------------------------*/
+bool isRegisterComputer(string &username)
+{
+    fstream file("./data/registeredCus.txt", ios::in);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file registerCus" << endl;
+        return false;
+    }
+    string line;
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        string usernameCustomerInfile;
+        getline(ss, usernameCustomerInfile, '|');
+        if (usernameCustomerInfile == username)
+        {
+            file.close();
+            return true;
+        }
+    }
+    file.close();
+    return false;
+}
 void enterPassword(string &password)
 {
     password.clear();

@@ -46,7 +46,7 @@ Time Computer::getUsageTimeFromFile()
         file.close();
         return time;
     }
-    catch (const string error)
+    catch (const string &error)
     {
         cerr << error << endl;
         return Time();

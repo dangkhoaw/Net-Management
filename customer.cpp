@@ -318,7 +318,7 @@ istream &operator>>(istream &is, Customer &customer)
     {
         Gotoxy(17, 3);
         enterString(customer.username);
-        if (!isValidUsername(customer.username))
+        if (isExistUsername(customer.username))
         {
             MessageBoxW(NULL, L"Tài khoản đã tồn tại", L"Thông báo", MB_OK | MB_ICONWARNING | MB_TOPMOST);
             ClearLine(17, 3, 18);

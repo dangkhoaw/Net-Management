@@ -170,7 +170,7 @@ void Staff::topUpAccount()
         cout << "Tên đăng nhập: ";
         enterString(userName); // TEST
 
-        if (isValidUsername(userName))
+        if (!isExistUsername(userName))
         {
             if (++count == 4)
             {
@@ -300,7 +300,7 @@ void Staff::lockAccount()
         cout << "Tên đăng nhập: ";
         enterString(userName);
 
-        if (isValidUsername(userName))
+        if (!isExistUsername(userName))
         {
             if (++count == 3)
             {
@@ -375,23 +375,39 @@ void Staff::viewTypeOfComputer(bool isRegister)
 
 void Staff::registerComputerForCus()
 {
-    system("cls");
-    viewTypeOfComputer(true);
     string typeOfComputer = menuSelectTypeOfComputer();
-    system("cls");
-    Customer customer;
-    string usernameCustomer;
+    if (typeOfComputer == "")
+    {
+        system("cls");
+        return;
+    }
 
+    string idComputer = menuSelectComputer(typeOfComputer);
+    if (idComputer == "")
+    {
+        system("cls");
+        return;
+    }
+
+    system("cls");
+    string usernameCustomer;
+    ShowCursor(true);
     while (true)
     {
         Gotoxy(0, 0);
         cout << "Tên đăng nhập: ";
         enterString(usernameCustomer);
-        if (!isValidUsername(usernameCustomer))
+        if (isExistUsername(usernameCustomer))
+        {
+            if (isRegisterComputer(usernameCustomer))
+            {
+                ShowCursor(false);
+                MessageBoxW(NULL, L"Khách hàng đã đăng kí máy", L"Thông báo", MB_ICONINFORMATION);
+                return;
+            }
             break;
+        }
     }
-    customer.setUserName(usernameCustomer);
-    customer.getComputer().setTypeOfComputer(typeOfComputer);
 
     fstream file;
     file.open("./data/registeredCus.txt", ios::app);
@@ -400,10 +416,11 @@ void Staff::registerComputerForCus()
         cout << "Không thể mở file registeredComputer" << endl;
         return;
     }
-    file << customer.getUserName() << "|" << customer.getComputer().getTypeOfComputer() << endl;
+    file << usernameCustomer << "|" << idComputer << endl;
     file.close();
 
     cout << "Đăng kí máy thành công" << endl;
+    ShowCursor(false);
     pressKeyQ();
     system("cls");
 }
