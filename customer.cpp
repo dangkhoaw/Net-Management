@@ -282,7 +282,37 @@ void updateCustomerToFile(Customer &customer)
         cerr << error << endl;
     }
 }
-
+void Customer::unregisterComputer()
+{
+    fstream file("./data/registeredCus.txt", ios::in);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file registeredCus.txt" << endl;
+        return;
+    }
+    fstream tempFile("./data/temp.txt", ios::out);
+    if (!tempFile.is_open())
+    {
+        cout << "Không thể mở file temp.txt" << endl;
+        return;
+    }
+    string line;
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        string username, typeOfComputer;
+        getline(ss, username, '|');
+        getline(ss, typeOfComputer);
+        if (username != this->username)
+        {
+            tempFile << username << "|" << typeOfComputer << endl;
+        }
+    }
+    file.close();
+    tempFile.close();
+    system("del .\\data\\registeredCus.txt");
+    system("ren .\\data\\temp.txt registeredCus.txt");
+}
 istream &operator>>(istream &is, Customer &customer)
 {
     Gotoxy(0, 0);

@@ -193,7 +193,7 @@ void Staff::topUpAccount()
     do
     {
         Gotoxy(0, 1);
-        cout << "Nhập số tiền cần nạp (10k/h): ";
+        cout << "Nhập số tiền cần nạp: ";
         enterMoney(money, 7);
         amount = stod(money);
 
@@ -375,6 +375,11 @@ void Staff::viewTypeOfComputer(bool isRegister)
 
 void Staff::registerComputerForCus()
 {
+    if (isFullAllComputer())
+    {
+        MessageBoxW(NULL, L"Tất cả các máy đã được sử dụng", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
+        return;
+    }
     string typeOfComputer = menuSelectTypeOfComputer();
     if (typeOfComputer == "")
     {
@@ -418,7 +423,7 @@ void Staff::registerComputerForCus()
     }
     file << usernameCustomer << "|" << idComputer << endl;
     file.close();
-
+    // update trong file computer nx
     cout << "Đăng kí máy thành công" << endl;
     ShowCursor(false);
     pressKeyQ();

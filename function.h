@@ -56,7 +56,7 @@ void generateID(Account &account);
 bool checkFirstLogin(Account &account);
 bool checkIsOrdered(Customer &customer, string nameFood);
 void makeFileOrdered(Customer &customer);
-string getTypesOfComputerFromFile(Customer &customer);
+string getTypesOfComputerFromFile(string idComputer);
 List<Customer> getCustomers();
 
 /*------------------------------------COMPUTER------------------------------------*/
@@ -69,10 +69,13 @@ List<Computer> getAllComputers();
 List<Computer> getComputers(string typeOfComputer = "all", string status = "all");
 void assignRandomComputer(Customer &customer, Computer &computer);
 void removeComputerFromFile(Computer &computer);
+string getIdComputerFromFile(string username);
+bool isFullAllComputer();
+bool isStatusAdmin();
 /*------------------------------------DISH------------------------------------*/
 // void generateID(Dish &dish);
 /*------------------------------------OTHER------------------------------------*/
-bool isRegisterComputer(string &username);
+bool isRegisterComputer(string username);
 void enterPassword(string &password);
 string formatMoney(double money);
 void pressKeyQ();

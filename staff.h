@@ -22,6 +22,7 @@ public:
     void removeComputer();
     void viewListCustomer();
     void registerComputerForCus();
+    void unregisterComputerForCus(string usernameCus);
     void viewTypeOfComputer(bool isRegister = false);
 };
 

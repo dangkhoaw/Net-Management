@@ -225,25 +225,25 @@ void optionMenu(string typeMenu, int option, List<Computer> computers)
         switch (option)
         {
         case 1:
-            cout << "     Bánh mì thịt nướng       ";
+            cout << "     Bánh mì thịt nướng       │  15.000  ";
             break;
         case 2:
-            cout << "     Mì tôm trứng             ";
+            cout << "     Mì tôm trứng             │  15.000  ";
             break;
         case 3:
-            cout << "     Cơm gà nướng             ";
+            cout << "     Cơm gà nướng             │  25.000  ";
             break;
         case 4:
-            cout << "     Cơm gà chiên nước mắm    ";
+            cout << "     Cơm gà chiên nước mắm    │  25.000  ";
             break;
         case 5:
-            cout << "     Xúc xích                 ";
+            cout << "     Xúc xích                 │  10.000  ";
             break;
         case 6:
-            cout << "     Cơm cuộn                 ";
+            cout << "     Cơm cuộn                 │  15.000  ";
             break;
         case 7:
-            cout << "      Thoát                  ";
+            cout << "                  Thoát                 ";
             break;
         }
     }
@@ -252,25 +252,25 @@ void optionMenu(string typeMenu, int option, List<Computer> computers)
         switch (option)
         {
         case 1:
-            cout << "        Coca lon              ";
+            cout << "        Coca lon              │  10.000  ";
             break;
         case 2:
-            cout << "        Nước suối             ";
+            cout << "        Nước suối             │  5.000   ";
             break;
         case 3:
-            cout << "        Caffee đen            ";
+            cout << "        Caffee đen            │  10.000  ";
             break;
         case 4:
-            cout << "        Caffee sữa            ";
+            cout << "        Caffee sữa            │  15.000  ";
             break;
         case 5:
-            cout << "        Nước cam              ";
+            cout << "        Nước cam              │  10.000  ";
             break;
         case 6:
-            cout << "        Bò húc                ";
+            cout << "        Bò húc                │  15.000  ";
             break;
         case 7:
-            cout << "         Thoát               ";
+            cout << "                  Thoát                  ";
             break;
         }
     }
@@ -528,30 +528,38 @@ void showMenu(string typeMenu, int selectOption, string typeComputer)
     else if (typeMenu == "food")
     {
         Gotoxy(0, 0);
-        cout << "┌──────────────────────────────┐" << endl;
+        cout << "┌─────────────────────────────────────────┐";
+        Gotoxy(0, 1);
+        cout << "│        Tên món               │   Giá    │";
+        Gotoxy(0, 2);
+        cout << "├─────────────────────────────────────────┤";
         for (int i = 1; i <= MENUFOOD; i++)
         {
-            Gotoxy(0, i);
+            Gotoxy(0, i + 2);
             cout << "│";
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
             cout << "│" << endl;
         }
-        cout << "└──────────────────────────────┘" << endl;
+        cout << "└─────────────────────────────────────────┘" << endl;
     }
     else if (typeMenu == "drink")
     {
         Gotoxy(0, 0);
-        cout << "┌──────────────────────────────┐" << endl;
+        cout << "┌─────────────────────────────────────────┐";
+        Gotoxy(0, 1);
+        cout << "│        Thức uống             │   Giá    │";
+        Gotoxy(0, 2);
+        cout << "├─────────────────────────────────────────┤";
         for (int i = 1; i <= MENUDRINK; i++)
         {
-            Gotoxy(0, i);
+            Gotoxy(0, i + 2);
             cout << "│";
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
             cout << "│" << endl;
         }
-        cout << "└──────────────────────────────┘" << endl;
+        cout << "└─────────────────────────────────────────┘" << endl;
     }
     else if (typeMenu == "quantity")
     {
@@ -812,7 +820,6 @@ void menuStaff(Staff &staff)
                 staff.topUpAccount();
                 break;
             case 5:
-                staff.viewTypeOfComputer(true);
                 staff.registerComputerForCus();
                 break;
             case 6:
@@ -1355,10 +1362,10 @@ string menuSelectComputer(string typeOfComputer)
     SetConsoleTitle(TEXT("Menu chọn máy"));
     ShowCursor(false);
     int selectOption = 1;
-    const int SIZE = getComputers(typeOfComputer, "Available").size() + 1;
+    const int SIZE = getComputers(typeOfComputer, "Available").size() + 1; // bỏ số 1 đi, h ko theo cách cũ nx mà là theo hướng m luôn
     if (SIZE == 1)
     {
-        MessageBoxW(NULL, L"Không có máy nào!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
+        MessageBoxW(NULL, L"Loại máy này đã hết", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
         return "";
     }
     while (true)
@@ -1395,15 +1402,8 @@ void menuCustomer(Customer &customer, Computer &computer) // cho ni coi co rut g
     ShowCursor(false);
     int selectOption = 1;
     History history(Day().getCurrentDay(), customer.getId());
-    // double minutes = (customer.getBalance() * 60) / customer.setMoneyFromTypeOfComputer(getTypesOfComputerFromFile(customer));
-    double minutes = (customer.getBalance() * 60) / computer.getCost();
-    Time time(0, minutes, 0);
-    // customer.setTypeOfComputer(getTypesOfComputerFromFile(customer));
-    customer.getComputer().setTypeOfComputer(getTypesOfComputerFromFile(customer));
-    customer.setTime(time);
-    customer.setTimeToFile(time);
     thread threadShowTimeCustomer(showRemainingTimeOfCustomer, &customer);
-    thread threadShowTimeComputer(showUsageTimeOfComputer, &computer);
+    thread threadShowTimeComputer(showUsageTimeOfComputer, &customer.getComputer());
 
     while (showRemainingTime)
     {
@@ -1468,12 +1468,14 @@ void menuCustomer(Customer &customer, Computer &computer) // cho ni coi co rut g
     // customer.setBalance(customer.getTime());
     customer.setTimeToFile(Time());
     customer.setStatus("Offline");
+    customer.unregisterComputer();
     // customer.setCurrentComputerID("");
     customer.getComputer().setId("");
     (customer.isLocked()) ? customer.setLocked("Locked") : customer.setLocked("Unlocked");
     customer.setPassword(Base64(customer.getPassword()).encode());
     updateCustomerToFile(customer);
     updateAccountToFile(customer);
+
     computer.setStatus("Available");
     computer.setCustomerUsingName("");
     computer.setUsageTimeToFile(Time());
@@ -1852,7 +1854,9 @@ List<Computer> getAllComputers()
         getline(ss, type, '|');
         getline(ss, status, '|');
         getline(ss, customerUsingName);
-        Computer computer(id, status, customerUsingName);
+        Computer computer(id);
+        computer.setCustomerUsingName(customerUsingName);
+        computer.setStatus(status);
         computer.setTypeOfComputer(type);
         computer.setUsageTime(computer.getUsageTimeFromFile());
         computers.push_back(computer);
@@ -1903,29 +1907,85 @@ List<Computer> getComputers(string typeOfComputer, string status)
     return computers;
 }
 
-void assignRandomComputer(Customer &customer, Computer &computer)
+string getIdComputerFromFile(string username)
 {
-    List<Computer> computers = getComputersByStatus("Available");
-    if (computers.size() == 0)
+    fstream file("./data/registeredCus.txt", ios::in);
+    if (!file.is_open())
     {
-        MessageBoxW(NULL, L"Hiện tại không có máy trống!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
-        return;
+        cout << "Không thể mở file registerCus" << endl;
+        return "";
     }
-    srand(time(NULL));
-    int randomIndex = rand() % computers.size();
-    computer = computers[randomIndex];
-    computer.setCustomerUsingName(customer.getUserName()); //
+    string line;
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        string usernameCustomerInfile, idComputer;
+        getline(ss, usernameCustomerInfile, '|');
+        getline(ss, idComputer);
+        if (usernameCustomerInfile == username)
+        {
+            return idComputer;
+        }
+    }
+    file.close();
+    return "";
+}
+bool isFullAllComputer()
+{
+    List<Computer> computers = getAllComputers();
+    for (int i = 0; i < computers.size(); i++)
+    {
+        if (computers[i].getStatus() == "Available")
+        {
+            return false;
+        }
+    }
+    return true;
+}
+bool isStatusAdmin()
+{
+    fstream file("./account/account.txt", ios::in);
+    if (!file.is_open())
+    {
+        cout << "Không thể mở file account" << endl;
+        return false;
+    }
+    string line;
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        string id, username, password, role, status, isFirstLogin, isLocked;
+        getline(ss, id, '|');
+        getline(ss, username, '|');
+        getline(ss, password, '|');
+        getline(ss, role, '|');
+        getline(ss, status, '|');
+        getline(ss, isFirstLogin, '|');
+        getline(ss, isLocked);
+        if (username == "admin" && status == "Online")
+        {
+            return true;
+        }
+    }
+    file.close();
+    return false;
+}
+void assignRandomComputer(Customer &customer, Computer &computer) // chỗ ni gộp 2 thành 1 được không he , ý là cus có com nên không bk có đc ko
+{
+
+    computer.setId(getIdComputerFromFile(customer.getUserName()));
+    computer.setTypeOfComputer(getTypesOfComputerFromFile(computer.getId()));
+    computer.setCustomerUsingName(customer.getUserName());
     computer.setStatus("Using");
     updateComputerToFile(computer);
 
-    double balance = customer.getBalance(); // đoạn ni ko cần nx
-    // double cost = customer.setMoneyFromTypeOfComputer(getTypesOfComputerFromFile(customer));
+    double balance = customer.getBalance();
     double cost = computer.getCost();
     double seconds = balance / cost * 3600;
     Time time(0, 0, seconds);
     customer.setTimeToFile(time);
     customer.setTime(time);
-    // customer.setCurrentComputerID(computer.getId());
+    customer.getComputer().setTypeOfComputer(computer.getTypeOfComputer());
     customer.getComputer().setId(computer.getId());
     updateCustomerToFile(customer);
 }
@@ -1994,24 +2054,27 @@ void makeFileOrdered(Customer &customer)
         firstOrder = false;
     }
 }
-string getTypesOfComputerFromFile(Customer &customer)
+string getTypesOfComputerFromFile(string idComputer)
 {
-    fstream file("./data/registeredCus.txt", ios::in);
+    fstream file("./computer/computer.txt", ios::in);
     if (!file.is_open())
     {
-        cout << "Không thể mở file registerCus" << endl;
+        cout << "Không thể mở file computer" << endl;
         return "";
     }
     string line;
     while (getline(file, line))
     {
         stringstream ss(line);
-        string usernameCustomerInfile, typesOfComputer;
-        getline(ss, usernameCustomerInfile, '|');
-        getline(ss, typesOfComputer);
-        if (usernameCustomerInfile == customer.getUserName())
+        string id, type, status, customerUsingName;
+        getline(ss, id, '|');
+        getline(ss, type, '|');
+        getline(ss, status, '|');
+        getline(ss, customerUsingName);
+        if (id == idComputer)
         {
-            return typesOfComputer;
+            file.close();
+            return type;
         }
     }
     file.close();
@@ -2186,7 +2249,7 @@ bool checkIsOrdered(Customer &customer, string nameRefreshment)
 }
 
 /*------------------------------------OTHER------------------------------------*/
-bool isRegisterComputer(string &username)
+bool isRegisterComputer(string username)
 {
     fstream file("./data/registeredCus.txt", ios::in);
     if (!file.is_open())
