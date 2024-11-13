@@ -1942,7 +1942,7 @@ bool isFullAllComputer()
     }
     return true;
 }
-bool isStatusAdmin()
+bool isAdminOnline()
 {
     fstream file("./account/account.txt", ios::in);
     if (!file.is_open())
@@ -1972,7 +1972,6 @@ bool isStatusAdmin()
 }
 void assignRandomComputer(Customer &customer, Computer &computer) // chỗ ni gộp 2 thành 1 được không he , ý là cus có com nên không bk có đc ko
 {
-
     computer.setId(getIdComputerFromFile(customer.getUserName()));
     computer.setTypeOfComputer(getTypesOfComputerFromFile(computer.getId()));
     computer.setCustomerUsingName(customer.getUserName());

@@ -71,7 +71,7 @@ void assignRandomComputer(Customer &customer, Computer &computer);
 void removeComputerFromFile(Computer &computer);
 string getIdComputerFromFile(string username);
 bool isFullAllComputer();
-bool isStatusAdmin();
+bool isAdminOnline();
 /*------------------------------------DISH------------------------------------*/
 // void generateID(Dish &dish);
 /*------------------------------------OTHER------------------------------------*/

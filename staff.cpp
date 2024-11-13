@@ -375,6 +375,7 @@ void Staff::viewTypeOfComputer(bool isRegister)
 
 void Staff::registerComputerForCus()
 {
+    system("cls");
     if (isFullAllComputer())
     {
         MessageBoxW(NULL, L"Tất cả các máy đã được sử dụng", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
