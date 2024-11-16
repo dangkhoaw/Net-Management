@@ -668,7 +668,7 @@ void showMenu(string typeMenu, int selectOption, string typeComputer)
     else if (typeMenu == "selectTypeOfComputer") // áp dụng cho thêm máy với chọn loại máy cho khách hàng
     {
         Gotoxy(0, 0);
-        cout << "┌─────────────────-───────┐" << endl;
+        cout << "┌─────────────────────────┐" << endl;
         for (int i = 1; i <= MENUSELECTTYPEOFCOMPUTER; i++)
         {
             Gotoxy(0, i);
@@ -677,7 +677,7 @@ void showMenu(string typeMenu, int selectOption, string typeComputer)
             printMenuOption(typeMenu, i, isSelected);
             cout << "│" << endl;
         }
-        cout << "└─────────────────────-───┘" << endl;
+        cout << "└─────────────────────────┘" << endl;
     }
     else if (typeMenu == "selectComputer")
     {
@@ -1388,7 +1388,11 @@ string menuSelectComputer(string typeOfComputer)
             }
             else
             {
-                return getComputers(typeOfComputer, "Available")[selectOption - 1].getId();
+                Computer computer = getComputers(typeOfComputer, "Available")[selectOption - 1];
+                computer.setStatus("Registered");
+                updateComputerToFile(computer);
+                return computer.getId();
+                // return getComputers(typeOfComputer, "Available")[selectOption - 1].getId();
             }
         default:
             break;
@@ -2614,7 +2618,7 @@ void enterMoney(string &money, int length)
                 if (money.size() == 1)
                     cout << "\b \b";
                 else
-                    ClearLine(30, 1, formatMoney(stod(money)).size() + 3);
+                    ClearLine(22, 1, formatMoney(stod(money)).size() + 3);
                 money.pop_back();
                 if (!money.empty())
                     cout << formatMoney(stod(money));
@@ -2629,7 +2633,7 @@ void enterMoney(string &money, int length)
                 if ((length == 0 || money.size() < length))
                 {
                     money += ch;
-                    ClearLine(30, 1, formatMoney(stod(money)).size() + 10);
+                    ClearLine(22, 1, formatMoney(stod(money)).size() + 3);
                     cout << formatMoney(stod(money));
                 }
             }
