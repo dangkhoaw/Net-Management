@@ -1,4 +1,4 @@
-#include "function.h"
+#include "process.h"
 #include "revenue.h"
 #include "mtime.h"
 #include <iomanip>
@@ -144,7 +144,55 @@ void Staff::viewComputerStatus()
     }
     system("cls");
 }
+void Staff::searchCustomer()
+{
+    system("cls");
+    ShowCursor(true);
+    string userName;
+    Customer customer;
+    Date currentDate = Date().getCurrentDate();
+    Revenue revenue = Revenue().getRevenueByDate(currentDate);
+    revenue.setDate(currentDate);
+    int count = 0;
 
+    while (true)
+    {
+        ClearLine(3);
+        ClearLine(4);
+
+        Gotoxy(0, 3);
+
+        cout << "(Nhập sai 3 lần sẽ thoát: " << count << " lần nhập sai)";
+
+        ClearLine(0);
+        Gotoxy(0, 0);
+        cout << "Tên đăng nhập: ";
+        enterString(userName); // TEST
+
+        if (!isExistUsername(userName))
+        {
+            if (++count == 4)
+            {
+                system("cls");
+                cout << "Nhập sai 3 lần. Hãy thử lại sau" << endl;
+                pressKeyQ();
+                ShowCursor(false);
+                return;
+            }
+        }
+        else
+        {
+            ClearLine(3);
+            ClearLine(4);
+            break;
+        }
+    }
+    customer.setUserName(userName);
+    getCustomerFromFile(customer);
+    cout << customer;
+    pressKeyQ();
+    ShowCursor(false);
+}
 void Staff::topUpAccount()
 {
     system("cls");
@@ -208,10 +256,18 @@ void Staff::topUpAccount()
 
     customer.setUserName(userName);
     getCustomerFromFile(customer);
-
     customer.setBalance(customer.getBalance() + amount);
-    updateCustomerToFile(customer);
 
+    Computer computer = customer.getComputerViaFile();
+    double cost = computer.getCost();
+    if (computer.getStatus() == "Using")
+    {
+        Time time = customer.getTimeFromFile();
+        double seconds = amount / cost * 3600;
+        time = time + Time(0, 0, seconds);
+        customer.setTimeToFile(time);
+    }
+    updateCustomerToFile(customer);
     cout << "\nNạp tiền thành công" << endl;
 
     pressKeyQ();

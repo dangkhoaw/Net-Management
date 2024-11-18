@@ -1,4 +1,4 @@
-#include "function.h"
+#include "process.h"
 #include "revenue.h"
 #include "base64.h"
 #include "game.h"
@@ -19,7 +19,7 @@ bool firstOrder = true;
 bool isChangedOrder = true;
 
 const int MENUSTAFF = 7;
-const int MENUCUSTOMERMANAGER = 7;
+const int MENUCUSTOMERMANAGER = 5;
 const int MENUCOMPUTERMANAGER = 5;
 const int MENUCUSTOMER = 5;
 const int MENUGAME = 7;
@@ -117,18 +117,12 @@ void optionMenu(string typeMenu, int option, List<Computer> computers)
             cout << "       Xóa tài khoản              ";
             break;
         case 3:
-            cout << "       Khóa tài khoản             ";
-            break;
-        case 4:
-            cout << "       Mở khóa tài khoản          ";
-            break;
-        case 5:
             cout << "       Tìm kiếm khách hàng        ";
             break;
-        case 6:
+        case 4:
             cout << "       Xem thông tin khách hàng   ";
             break;
-        case 7:
+        case 5:
             cout << "       Thoát                      ";
             break;
         }
@@ -723,18 +717,12 @@ void customerManagementMenu(Staff &staff)
                 staff.removeAccount();
                 break;
             case 3:
-                staff.lockAccount();
+                staff.searchCustomer();
                 break;
             case 4:
-                // mở khóa tài khoản
-                break;
-            case 5:
-                // staff.searchCustomer();
-                break;
-            case 6:
                 staff.viewCustomersInfo();
                 break;
-            case 7:
+            case 5:
                 system("cls");
                 return;
             }
@@ -1939,7 +1927,7 @@ bool isFullAllComputer()
     List<Computer> computers = getAllComputers();
     for (int i = 0; i < computers.size(); i++)
     {
-        if (computers[i].getStatus() == "Available")
+        if (computers[i].getStatus() == "Available" || computers[i].getStatus() == "Registered")
         {
             return false;
         }
@@ -2640,4 +2628,103 @@ void enterMoney(string &money, int length)
         }
     }
     cout << endl;
+}
+
+void handleStaffLogin(Account &account)
+{
+    account.setStatus("Online");
+    updateAccountToFile(account);
+    account.setPassword(Base64(account.getPassword()).decode());
+    Staff staff(account.getUserName(), account.getPassword(), account.getRole(), account.getId(), account.getStatus(), account.getIsFirstLogin());
+    menuStaff(staff);
+}
+
+void handleCustomerLogin(Account &account)
+{
+    account.setStatus("Online");
+    updateAccountToFile(account);
+    account.setPassword(Base64(account.getPassword()).decode());
+
+    if (!isRegisterComputer(account.getUserName()))
+    {
+        account.setStatus("Offline");
+        account.setPassword(Base64(account.getPassword()).encode());
+        updateAccountToFile(account);
+        MessageBoxW(NULL, L"Bạn chưa đăng kí máy, vui lòng đăng kí máy trước!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
+        ShowCursor(true);
+        return;
+    }
+
+    Customer customer(account.getUserName(), account.getPassword(), account.getRole(), account.getId(), account.getStatus(), account.getIsFirstLogin());
+    getCustomerFromFile(customer);
+
+    Computer computer;
+    assignRandomComputer(customer, computer);
+
+    if (checkFirstLogin(account))
+    {
+        MessageBoxW(NULL, L"Đây là lần đầu tiên bạn đăng nhập, vui lòng đổi mật khẩu!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
+        while (!account.changePassword())
+        {
+        }
+        customer.setPassword(account.getPassword());
+        customer.setIsFirstLogin("NotFirstLogin");
+    }
+
+    menuCustomer(customer, computer);
+}
+
+void handleStaffLogin()
+{
+    Account account;
+    if (account.signIn())
+    {
+        getAccountFromFile(account);
+        if (account.getRole() == "staff")
+        {
+            handleStaffLogin(account);
+        }
+        else
+        {
+            MessageBoxW(NULL, L"Bạn không phải nhân viên, vui lòng không sử dụng máy", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
+        }
+    }
+}
+
+void mainProcess()
+{
+    Account account;
+    if (!account.signIn())
+        return;
+
+    getAccountFromFile(account);
+    if (account.getRole() == "staff")
+    {
+        handleStaffLogin(account);
+    }
+    else if (account.getRole() == "customer")
+    {
+        handleCustomerLogin(account);
+    }
+}
+
+void run()
+{
+    if (isFullAllComputer() && isAdminOnline())
+        return;
+
+    if (isFullAllComputer() && !isAdminOnline())
+    {
+        cout << "Bạn có phải nhân viên không? (Y/N): ";
+        string choice;
+        cin >> choice;
+        if (choice == "Y" || choice == "y")
+        {
+            handleStaffLogin();
+        }
+    }
+    else
+    {
+        mainProcess();
+    }
 }

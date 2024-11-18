@@ -1,4 +1,4 @@
-#include "function.h"
+#include "process.h"
 #include "base64.h"
 #include <mutex>
 
@@ -13,6 +13,40 @@ string Customer::getPhone() { return phone; }
 Time Customer::getTime() { return time; }
 double Customer::getBalance() { return balance; }
 Computer &Customer::getComputer() { return computer; }
+Computer &Customer::getComputerViaFile()
+{
+    try
+    {
+        lock_guard<mutex> lock(cus);
+        fstream file("./data/registeredCus.txt", ios::in);
+        if (!file.is_open())
+        {
+            throw "Không thể mở file registeredCus";
+        }
+        string line;
+        while (getline(file, line))
+        {
+            stringstream ss(line);
+            string username, idComputer;
+            getline(ss, username, '|');
+            getline(ss, idComputer);
+            if (username == this->username)
+            {
+                computer.setId(idComputer);
+                getComputerFromFile(computer);
+                file.close();
+                return computer;
+            }
+        }
+        file.close();
+        return computer;
+    }
+    catch (const string &error)
+    {
+        cerr << error << endl;
+        return computer;
+    }
+}
 int Customer::getMoneyforOrder() { return moneyforOrder; }
 void Customer::setTime(Time time) { this->time = time; }
 void Customer::setPhone(string phone) { this->phone = phone; }
@@ -367,7 +401,11 @@ istream &operator>>(istream &is, Customer &customer)
     pressKeyQ();
     return is;
 }
-
+ostream &operator<<(ostream &os, Customer &customer)
+{ // in mỗi thông tin trên 1 dòng
+    os << customer.id << "|" << customer.name << "|" << customer.username << "|" << customer.phone << "|" << customer.balance << "|" << customer.computer.getId();
+    return os;
+}
 int Customer::enterAmountOrder()
 {
     system("cls");

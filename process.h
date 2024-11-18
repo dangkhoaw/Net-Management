@@ -94,5 +94,10 @@ void enterString(string &str, int length = 0);
 void enterLetter(string &str, int length = 0);
 void enterNumber(string &num, int length = 0);
 void enterMoney(string &num, int length = 0);
+void handleStaffLogin(Account &account);
+void handleStaffLogin();
+void handleCustomerLogin(Account &account);
+void mainProcess();
+void run();
 
 #endif

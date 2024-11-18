@@ -1,4 +1,4 @@
-#include "function.h"
+#include "process.h"
 #include "account.h"
 #include "base64.h"
 
@@ -61,14 +61,14 @@ istream &operator>>(istream &is, Account &account)
                 Sleep(555);
                 continue;
             }
-            else
+            else if (account.role == "staff" || !isFullAllComputer())
             {
                 Gotoxy(0, 7);
                 cout << "Đăng nhập thành công!" << endl;
                 Sleep(555);
                 return is;
             }
-        }
+                }
         else
         {
             Gotoxy(0, 7);

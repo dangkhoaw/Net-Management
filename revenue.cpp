@@ -1,4 +1,4 @@
-#include "function.h"
+#include "process.h"
 #include "revenue.h"
 
 Revenue::Revenue(Date date, double totalMoney) : date(date), totalMoney(totalMoney) {}

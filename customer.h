@@ -7,18 +7,6 @@
 #include "computer.h"
 using namespace std;
 
-/*
-- class Customer:
-    + Bỏ int typeOfComputer, string currentComputerID
-    + Thêm vào Computer computer
-    + Bỏ hàm getTypesOfComputer, getCurrentComputerID, setTypesOfComputer, setCurrentComputerID
-    + Thêm hàm getComputer, setComputer
-
-- class Computer:
-    + Thêm string typeOfComputer
-    + Thêm hàm getTypeOfComputer, setTypeOfComputer
-*/
-
 class Customer : public Account
 {
 private:
@@ -38,6 +26,7 @@ public:
     Time getTime();
     int getMoneyforOrder();
     Computer &getComputer();
+    Computer &getComputerViaFile();
     double getBalance();
     Time getTimeFromFile();
     Time MoneyToTime(double balance);

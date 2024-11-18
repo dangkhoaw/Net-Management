@@ -1,3 +1,2 @@
 COM02|Cao cap|Available|
 COM03|VIP|Available|
-COM03|VIP|Available|
