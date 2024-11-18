@@ -816,7 +816,6 @@ void menuStaff(Staff &staff)
                 break;
             case 7:
                 staff.setStatus("Offline");
-                staff.setLocked("Unlocked");
                 staff.setPassword(Base64(staff.getPassword()).encode());
                 updateAccountToFile(staff);
                 system("cls");
@@ -1457,13 +1456,10 @@ void menuCustomer(Customer &customer, Computer &computer) // cho ni coi co rut g
 
     system("cls");
     system(("if exist .\\data\\" + customer.getId() + "_ordered.txt del .\\data\\" + customer.getId() + "_ordered.txt").c_str());
-    // customer.setBalance(customer.getTime());
     customer.setTimeToFile(Time());
     customer.setStatus("Offline");
     customer.unregisterComputer();
-    // customer.setCurrentComputerID("");
     customer.getComputer().setId("");
-    (customer.isLocked()) ? customer.setLocked("Locked") : customer.setLocked("Unlocked");
     customer.setPassword(Base64(customer.getPassword()).encode());
     updateCustomerToFile(customer);
     updateAccountToFile(customer);
@@ -1562,7 +1558,7 @@ bool addNewAccountToFile(Account &account)
         cout << "Không thể mở file account" << endl;
         return false;
     }
-    file << account.getId() << '|' << account.getUserName() << '|' << Base64(account.getPassword()).encode() << '|' << account.getRole() << '|' << account.getStatus() << '|' << account.getIsFirstLogin() << '|' << account.getIsLocked() << endl;
+    file << account.getId() << '|' << account.getUserName() << '|' << Base64(account.getPassword()).encode() << '|' << account.getRole() << '|' << account.getStatus() << '|' << account.getIsFirstLogin() << endl;
     file.close();
     return true;
 }
@@ -2082,7 +2078,6 @@ List<Customer> getCustomers()
         return customers;
     }
     string line;
-    Customer customer;
     while (getline(file, line))
     {
         stringstream ss(line);
@@ -2097,8 +2092,7 @@ List<Customer> getCustomers()
         customer.setId(id);
         customer.setName(name);
         customer.setUserName(username);
-        customer.setBalance(stof(balance));
-        // customer.setCurrentComputerID(currentComputerID);
+        customer.setBalance(stod(balance));
         customer.getComputer().setId(currentComputerID);
         customer.setPhone(phone);
         getAccountFromFile(customer);
@@ -2267,9 +2261,10 @@ void enterPassword(string &password)
 {
     password.clear();
     int i = 0;
+    bool show = false;
     while (true)
     {
-        char ch = getch();
+        char ch = _getch();
         if (ch == KEY_ENTER)
             break;
         else if (ch == KEY_BACKSPACE)
@@ -2281,11 +2276,33 @@ void enterPassword(string &password)
                 password.pop_back();
             }
         }
+        else if (ch == KEY_TAB)
+        {
+            show = !show;
+            for (int j = 0; j < i; j++)
+                cout << "\b \b";
+
+            for (int j = 0; j < i; j++)
+            {
+                if (show)
+                    cout << password[j];
+                else
+                    cout << "•";
+            }
+        }
+        else if (ch == KEY_ESC)
+        {
+            password.clear();
+            break;
+        }
         else
         {
             password += ch;
             i++;
-            cout << "•";
+            if (show)
+                cout << ch;
+            else
+                cout << "•";
         }
     }
     cout << endl;
@@ -2317,22 +2334,24 @@ void pressKeyQ()
     system("cls");
 }
 
-void toUpper(string &str)
+string toUpper(string &str)
 {
     for (int i = 0; i < str.size(); i++)
     {
         if (str[i] >= 'a' && str[i] <= 'z')
             str[i] -= 32;
     }
+    return str;
 }
 
-void toLower(string &str)
+string toLower(string &str)
 {
     for (int i = 0; i < str.size(); i++)
     {
         if (str[i] >= 'A' && str[i] <= 'Z')
             str[i] += 32;
     }
+    return str;
 }
 
 bool isNumber(const string &str)
@@ -2505,6 +2524,11 @@ void enterString(string &str, int length)
                 str.pop_back();
             }
         }
+        else if (ch == KEY_ESC)
+        {
+            str.clear();
+            break;
+        }
         else
         {
             if (length == 0 || str.size() < length)
@@ -2536,6 +2560,11 @@ void enterLetter(string &str, int length)
                 cout << "\b \b";
                 str.pop_back();
             }
+        }
+        else if (ch == KEY_ESC)
+        {
+            str.clear();
+            break;
         }
         else
         {
@@ -2571,6 +2600,11 @@ void enterNumber(string &num, int length)
                 cout << "\b \b";
                 num.pop_back();
             }
+        }
+        else if (ch == KEY_ESC)
+        {
+            num.clear();
+            break;
         }
         else
         {
@@ -2611,6 +2645,11 @@ void enterMoney(string &money, int length)
                 if (!money.empty())
                     cout << formatMoney(stod(money));
             }
+        }
+        else if (ch == KEY_ESC)
+        {
+            money.clear();
+            break;
         }
         else
         {

@@ -1,6 +1,4 @@
 #include "process.h"
-#include "base64.h"
-#include <iostream>
 
 using namespace std;
 

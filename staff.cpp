@@ -7,7 +7,7 @@
 
 using namespace std;
 
-Staff::Staff(string username, string password, string role, string id, string status, string isFirstLogin, string isLocked) : Account(username, password, role, id, status, isFirstLogin, isLocked) {}
+Staff::Staff(string username, string password, string role, string id, string status, string isFirstLogin) : Account(username, password, role, id, status, isFirstLogin) {}
 
 void Staff::addAccount()
 {
@@ -15,6 +15,12 @@ void Staff::addAccount()
     ShowCursor(true);
     Customer customer;
     cin >> customer;
+    if (customer.getUserName().empty() || customer.getName().empty() || customer.getPhone().empty())
+    {
+        ShowCursor(false);
+        system("cls");
+        return;
+    }
     addCustomerToFile(customer);
     addNewAccountToFile(customer);
     system("cls");
@@ -24,12 +30,18 @@ void Staff::removeAccount()
 {
     system("cls");
     ShowCursor(true);
-    string id_account;
+    string id;
     cout << "Nhập id tài khoản cần xóa: ";
-    enterString(id_account);
-    toUpper(id_account);
-    removeAccountFromFile(id_account);
-    removeCustomerFromFile(id_account);
+    enterString(id);
+    if (id.empty())
+    {
+        ShowCursor(false);
+        system("cls");
+        return;
+    }
+    toUpper(id);
+    removeAccountFromFile(id);
+    removeCustomerFromFile(id);
     MessageBoxW(NULL, L"Xóa tài khoản thành công", L"Thông báo", MB_OK);
 
     ShowCursor(false);
@@ -70,6 +82,12 @@ void Staff::removeComputer()
     string idComputer;
     cout << "Nhập id máy cần xóa: ";
     enterString(idComputer);
+    if (idComputer.empty())
+    {
+        ShowCursor(false);
+        system("cls");
+        return;
+    }
     toUpper(idComputer);
     Computer computer;
     computer.setId(idComputer);
@@ -148,48 +166,56 @@ void Staff::searchCustomer()
 {
     system("cls");
     ShowCursor(true);
-    string userName;
-    Customer customer;
-    Date currentDate = Date().getCurrentDate();
-    Revenue revenue = Revenue().getRevenueByDate(currentDate);
-    revenue.setDate(currentDate);
-    int count = 0;
-
-    while (true)
+    string info;
+    cout << "Nhập thông tin khách hàng: ";
+    enterString(info);
+    if (info.empty())
     {
-        ClearLine(3);
-        ClearLine(4);
-
-        Gotoxy(0, 3);
-
-        cout << "(Nhập sai 3 lần sẽ thoát: " << count << " lần nhập sai)";
-
-        ClearLine(0);
-        Gotoxy(0, 0);
-        cout << "Tên đăng nhập: ";
-        enterString(userName); // TEST
-
-        if (!isExistUsername(userName))
+        ShowCursor(false);
+        system("cls");
+        return;
+    }
+    toLower(info);
+    cout << "┌──────────┬───────────────────────────────┬──────────────────────┬───────────────────────┬──────────────────────┬──────────────────────┐" << endl;
+    cout << "│    ID    │              TÊN              │     TÊN ĐĂNG NHẬP    │     SỐ ĐIỆN THOẠI     │      TRẠNG THÁI      │   MÁY ĐANG SỬ DỤNG   │" << endl;
+    cout << "├──────────┼───────────────────────────────┼──────────────────────┼───────────────────────┼──────────────────────┼──────────────────────┤" << endl;
+    List<Customer> customers = getCustomers();
+    int i = 0;
+    for (Customer &customer : customers)
+    {
+        string username = customer.getUserName();
+        string name = customer.getName();
+        string phone = customer.getPhone();
+        string id = customer.getId();
+        // != string::npos là tìm thấy info trong chuỗi
+        if (toLower(username).find(info) != string::npos || toLower(name).find(info) != string::npos || toLower(phone).find(info) != string::npos || toLower(id).find(info) != string::npos)
         {
-            if (++count == 4)
+            Gotoxy(0, i + 4);
+            cout << "│ " << customer.getId();
+            Gotoxy(11, i + 4);
+            cout << "│  " << customer.getName();
+            Gotoxy(32 + 11, i + 4);
+            cout << "│      " << customer.getUserName();
+            Gotoxy(55 + 11, i + 4);
+            cout << "│      " << customer.getPhone();
+            Gotoxy(79 + 11, i + 4);
+            cout << "│       " << customer.getStatus();
+            Gotoxy(102 + 11, i + 4);
+            if (customer.getComputer().getId() == "")
             {
-                system("cls");
-                cout << "Nhập sai 3 lần. Hãy thử lại sau" << endl;
-                pressKeyQ();
-                ShowCursor(false);
-                return;
+                cout << "│          -";
             }
-        }
-        else
-        {
-            ClearLine(3);
-            ClearLine(4);
-            break;
+            else
+            {
+                cout << "│        " << customer.getComputer().getId();
+            }
+            Gotoxy(125 + 11, i + 4);
+            cout << "│";
+            i++;
         }
     }
-    customer.setUserName(userName);
-    getCustomerFromFile(customer);
-    cout << customer;
+    Gotoxy(0, i + 4);
+    cout << "└──────────┴───────────────────────────────┴──────────────────────┴───────────────────────┴──────────────────────┴──────────────────────┘" << endl;
     pressKeyQ();
     ShowCursor(false);
 }
@@ -216,7 +242,13 @@ void Staff::topUpAccount()
         ClearLine(0);
         Gotoxy(0, 0);
         cout << "Tên đăng nhập: ";
-        enterString(userName); // TEST
+        enterString(userName);
+        if (userName.empty())
+        {
+            ShowCursor(false);
+            system("cls");
+            return;
+        }
 
         if (!isExistUsername(userName))
         {
@@ -243,6 +275,12 @@ void Staff::topUpAccount()
         Gotoxy(0, 1);
         cout << "Nhập số tiền cần nạp: ";
         enterMoney(money, 7);
+        if (money.empty())
+        {
+            ShowCursor(false);
+            system("cls");
+            return;
+        }
         amount = stod(money);
 
         if (amount < 1000)
@@ -334,65 +372,7 @@ void Staff::viewCustomersInfo()
     }
     system("cls");
 }
-void Staff::lockAccount()
-{
-    system("cls");
-    ShowCursor(true);
-    string userName;
-    Account account;
-    int count = 0;
 
-    while (true)
-    {
-        ClearLine(3);
-        ClearLine(4);
-
-        Gotoxy(0, 3);
-
-        cout << "(Nhập sai 3 lần sẽ thoát: " << count << " lần nhập sai)";
-
-        ClearLine(0);
-        Gotoxy(0, 0);
-        cout << "Tên đăng nhập: ";
-        enterString(userName);
-
-        if (!isExistUsername(userName))
-        {
-            if (++count == 3)
-            {
-                system("cls");
-                cout << "Nhập sai 3 lần. Hãy thử lại sau" << endl;
-                pressKeyQ();
-                ShowCursor(false);
-                return;
-            }
-        }
-        else
-        {
-            ClearLine(3);
-            ClearLine(4);
-            break;
-        }
-    }
-
-    account.setUserName(userName);
-    getAccountFromFile(account);
-
-    if (account.getIsLocked() == "Locked")
-    {
-        cout << "Tài khoản đã bị khóa" << endl;
-        pressKeyQ();
-        ShowCursor(false);
-        return;
-    }
-
-    account.setLocked("Locked");
-    updateAccountToFile(account);
-
-    cout << "Khóa tài khoản thành công" << endl;
-    pressKeyQ();
-    ShowCursor(false);
-}
 void Staff::viewTypeOfComputer(bool isRegister)
 {
     system("cls");
@@ -459,6 +439,12 @@ void Staff::registerComputerForCus()
         Gotoxy(0, 0);
         cout << "Tên đăng nhập: ";
         enterString(usernameCustomer);
+        if (usernameCustomer.empty())
+        {
+            ShowCursor(false);
+            system("cls");
+            return;
+        }
         if (isExistUsername(usernameCustomer))
         {
             if (isRegisterComputer(usernameCustomer))

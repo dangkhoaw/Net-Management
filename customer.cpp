@@ -4,8 +4,8 @@
 
 mutex cus;
 
-Customer::Customer(string username, string password, string role, string id, string status, string isFirstLogin, string isLocked, string name, string phone, double balance, Time time, int moneyforOrder, Dish dish, Computer computer, History historyRecently)
-    : Account(username, password, role, id, status, isFirstLogin, isLocked), name(name), phone(phone), balance(balance), time(time), moneyforOrder(moneyforOrder), dish(dish), computer(computer), historyRecently(historyRecently) {}
+Customer::Customer(string username, string password, string role, string id, string status, string isFirstLogin, string name, string phone, double balance, Time time, int moneyforOrder, Dish dish, Computer computer, History historyRecently)
+    : Account(username, password, role, id, status, isFirstLogin), name(name), phone(phone), balance(balance), time(time), moneyforOrder(moneyforOrder), dish(dish), computer(computer), historyRecently(historyRecently) {}
 Customer::~Customer() {}
 
 string Customer::getName() { return name; }
@@ -181,52 +181,6 @@ void Customer::addHistoryToFile(History &historyRecently)
     }
 }
 
-bool Customer::isLocked()
-{
-    try
-    {
-        fstream file("./account/account.txt", ios::in);
-        if (!file.is_open())
-        {
-            throw "Không thể mở file account";
-        }
-        string line;
-        while (getline(file, line))
-        {
-            stringstream ss(line);
-            string id, username, password, role, status, isFirstLogin, isLocked;
-            getline(ss, id, '|');
-            getline(ss, username, '|');
-            getline(ss, password, '|');
-            getline(ss, role, '|');
-            getline(ss, status, '|');
-            getline(ss, isFirstLogin, '|');
-            getline(ss, isLocked);
-
-            if (username == this->username)
-            {
-                if (isLocked == "Locked")
-                {
-                    file.close();
-                    return true;
-                }
-                else
-                {
-                    file.close();
-                    return false;
-                }
-            }
-        }
-        file.close();
-        return false;
-    }
-    catch (const string &error)
-    {
-        cerr << error << endl;
-        return false;
-    }
-}
-
 bool getCustomerFromFile(Customer &customer)
 {
     try
@@ -358,12 +312,22 @@ istream &operator>>(istream &is, Customer &customer)
 
     Gotoxy(18, 1);
     enterLetter(customer.name);
+    if (customer.name.empty())
+    {
+        ShowCursor(false);
+        return is;
+    }
     toName(customer.name);
 
     while (true)
     {
         Gotoxy(17, 2);
         enterNumber(customer.phone, 10);
+        if (customer.phone.empty())
+        {
+            ShowCursor(false);
+            return is;
+        }
         if (isExistPhoneNumber(customer.phone))
         {
             MessageBoxW(NULL, L"Số điện thoại đã tồn tại", L"Thông báo", MB_OK | MB_ICONWARNING | MB_TOPMOST);
@@ -382,6 +346,11 @@ istream &operator>>(istream &is, Customer &customer)
     {
         Gotoxy(17, 3);
         enterString(customer.username);
+        if (customer.username.empty())
+        {
+            ShowCursor(false);
+            return is;
+        }
         if (isExistUsername(customer.username))
         {
             MessageBoxW(NULL, L"Tài khoản đã tồn tại", L"Thông báo", MB_OK | MB_ICONWARNING | MB_TOPMOST);
@@ -402,7 +371,7 @@ istream &operator>>(istream &is, Customer &customer)
     return is;
 }
 ostream &operator<<(ostream &os, Customer &customer)
-{ // in mỗi thông tin trên 1 dòng
+{
     os << customer.id << "|" << customer.name << "|" << customer.username << "|" << customer.phone << "|" << customer.balance << "|" << customer.computer.getId();
     return os;
 }

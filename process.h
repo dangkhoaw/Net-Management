@@ -11,8 +11,10 @@
 
 #define KEY_UP 72
 #define KEY_DOWN 80
-#define KEY_ENTER 13
-#define KEY_BACKSPACE 8
+#define KEY_ENTER 0x0D
+#define KEY_BACKSPACE 0x08
+#define KEY_ESC 0x1B
+#define KEY_TAB 0x09
 
 using namespace std;
 /*------------------------------------CONSOLE------------------------------------*/
@@ -61,7 +63,7 @@ List<Customer> getCustomers();
 
 /*------------------------------------COMPUTER------------------------------------*/
 int getNumberOfComputers();
-bool addNewComputerToFile(Computer &computer); // setnewcomputer cho hay , tự dưng get rồi mà sài add
+bool addNewComputerToFile(Computer &computer);
 void updateCountOfComputerToFile(string typeOfComputer, int count = 1);
 void generateIDComputer(Computer &computer);
 List<Computer> getComputersByStatus(string status);
@@ -72,15 +74,13 @@ void removeComputerFromFile(Computer &computer);
 string getIdComputerFromFile(string username);
 bool isFullAllComputer();
 bool isAdminOnline();
-/*------------------------------------DISH------------------------------------*/
-// void generateID(Dish &dish);
 /*------------------------------------OTHER------------------------------------*/
 bool isRegisterComputer(string username);
 void enterPassword(string &password);
 string formatMoney(double money);
 void pressKeyQ();
-void toUpper(string &str);
-void toLower(string &str);
+string toUpper(string &str);
+string toLower(string &str);
 bool isNumber(const string &str);
 bool isString(const string &str);
 bool isPhoneNumber(const string &str);

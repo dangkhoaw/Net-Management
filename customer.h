@@ -19,7 +19,7 @@ private:
     History historyRecently;
 
 public:
-    Customer(string username = "", string password = "", string role = "", string id = "", string status = "Offline", string isFirstLogin = "FirstLogin", string isLocked = "Unlocked", string name = "", string phone = "", double balance = 0, Time time = Time(), int moneyforOrder = 0, Dish dish = Dish(), Computer computer = Computer(), History historyRecently = History());
+    Customer(string username = "", string password = "", string role = "", string id = "", string status = "Offline", string isFirstLogin = "FirstLogin", string name = "", string phone = "", double balance = 0, Time time = Time(), int moneyforOrder = 0, Dish dish = Dish(), Computer computer = Computer(), History historyRecently = History());
     ~Customer();
     string getPhone();
     string getName();
@@ -42,10 +42,8 @@ public:
     friend istream &operator>>(istream &is, Customer &customer);
 
     void showMyInfo();
-    bool isLocked();
     void addHistoryToFile(History &history);
     void showHistory();
-    // double setMoneyFromTypeOfComputer(string type);
     int enterAmountOrder();
     void order(string nameRefreshment, int quantity, bool isOrder_again);
     void order();
