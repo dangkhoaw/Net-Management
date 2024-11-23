@@ -9,10 +9,15 @@
     "string": "cpp",
     "format": "cpp",
     "exception": "cpp",
-    "vector": "cpp"
+    "vector": "cpp",
+    "type_traits": "cpp",
+    "*.tcc": "cpp",
+    "chrono": "cpp",
+    "sstream": "cpp",
+    "algorithm": "cpp"
   },
   "code-runner.executorMap": {
-    "cpp": "cd $dir && g++ *.cpp -o Net_Management && ./Net_Management"
+    "cpp": "g++ src/*.cpp -o build/Net_Management && ./build/Net_Management"
   },
   "code-runner.runInTerminal": true
 }

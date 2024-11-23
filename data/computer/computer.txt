@@ -1,0 +1,7 @@
+COM02|Cao cap|Available|
+COM03|VIP|Available|
+COM04|VIP|Available|
+COM05|Co ban|Available|
+COM06|Co ban|Available|
+COM07|Co ban|Available|
+COM08|Cao cap|Available|

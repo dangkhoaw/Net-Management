@@ -27,23 +27,23 @@ git clone https://github.com/dangkhoaw/Net-Management.git
 2. Di chuyển vào thư mục chứa mã nguồn
 
 ```bash
-cd quan-ly-tiem-internet
+cd Net-Management
 ```
 
 3. Biên dịch chuơng trình
 
 ```bash
-g++ -std=c++11 *.cpp -o Net_Management
+g++ -std=c++11 src/*.cpp -o build/Net_Management
 ```
 
 4. Chạy chương trình
 
 ```bash
-./Net_Management
+./build/Net_Management
 ```
 
 > [!TIP]
-> Bạn có thể chạy file main.exe mà không cần biên dịch lại chương trình
+> Bạn có thể chạy file Net_Management.exe trong thư mục build mà không cần biên dịch lại
 
 # 🧑🏻‍💻 Contributors
 
