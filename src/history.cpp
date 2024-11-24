@@ -1,4 +1,5 @@
 #include "../include/history.hpp"
+#include <fstream>
 
 History::History(Day day, string customerID)
 {
@@ -35,6 +36,37 @@ string History::getCustomerID()
 void History::setDay(Day day)
 {
     this->day = day;
+}
+
+void History::addHistoryToFile()
+{
+    try
+    {
+        fstream file("./data/history/history.txt", ios::in);
+        if (!file.is_open())
+        {
+            throw "Không thể mở file history";
+        }
+        fstream tempFile("./data/history/temp.txt", ios::out);
+        if (!tempFile.is_open())
+        {
+            throw "Không thể mở file temp";
+        }
+        tempFile << this->getCustomerID() << "|" << this->getDay() << endl;
+        string line;
+        while (getline(file, line))
+        {
+            tempFile << line << endl;
+        }
+        file.close();
+        tempFile.close();
+        remove("./data/history/history.txt");
+        rename("./data/history/temp.txt", "./data/history/history.txt");
+    }
+    catch (const string &error)
+    {
+        cerr << error << endl;
+    }
 }
 
 void History::setCustomerID(string customerID)

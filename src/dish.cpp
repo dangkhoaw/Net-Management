@@ -31,6 +31,35 @@ istream &operator>>(istream &is, Dish &dish)
     dish.unserialize(temp);
     return is;
 }
+int Dish::getPriceOfRefreshment(string nameRefreshment, int quantity)
+{
+    int price = 0;
+    if (nameRefreshment == "Bánh mì thịt nướng")
+        price = 15000 * quantity;
+    else if (nameRefreshment == "Mì tôm trứng")
+        price = 15000 * quantity;
+    else if (nameRefreshment == "Cơm gà nướng")
+        price = 25000 * quantity;
+    else if (nameRefreshment == "Cơm gà chiên nước mắm")
+        price = 25000 * quantity;
+    else if (nameRefreshment == "Xúc xích")
+        price = 10000 * quantity;
+    else if (nameRefreshment == "Cơm cuộn")
+        price = 15000 * quantity;
+    else if (nameRefreshment == "Nước suối")
+        price = 5000 * quantity;
+    else if (nameRefreshment == "Nước cam")
+        price = 10000 * quantity;
+    else if (nameRefreshment == "Bò húc")
+        price = 15000 * quantity;
+    else if (nameRefreshment == "Caffee sữa")
+        price = 15000 * quantity;
+    else if (nameRefreshment == "Caffee đen")
+        price = 10000 * quantity;
+    else if (nameRefreshment == "Coca lon")
+        price = 10000 * quantity;
+    return price;
+}
 
 Dish Dish::getDishFromFile(string id_cus, string name)
 {

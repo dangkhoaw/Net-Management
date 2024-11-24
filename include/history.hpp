@@ -2,7 +2,6 @@
 #define HISTORY 1
 
 #include "day.hpp"
-
 using namespace std;
 
 class History
@@ -23,7 +22,7 @@ public:
 
     void setDay(Day day);
     void setCustomerID(string customerID);
-
+    void addHistoryToFile();
     string serialize() const;
     void unserialize(string &data);
 };

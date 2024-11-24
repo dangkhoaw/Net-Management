@@ -1,7 +1,6 @@
 #include "../include/process.hpp"
 #include "../include/revenue.hpp"
 #include "../include/base64.hpp"
-#include "../include/game.hpp"
 #include <thread>
 #include <mutex>
 #include <chrono>
@@ -16,15 +15,13 @@ bool showUsageTime = true;
 bool isChangingPassword = false;
 bool isViewingInfo = false;
 bool isOrdering = false;
-bool isSelectingGame = false;
 bool firstOrder = true;
 bool isChangedOrder = true;
 
 const int MENUSTAFF = 7;
 const int MENUCUSTOMERMANAGER = 5;
-const int MENUCOMPUTERMANAGER = 5;
-const int MENUCUSTOMER = 5;
-const int MENUGAME = 7;
+const int MENUCOMPUTERMANAGER = 4;
+const int MENUCUSTOMER = 4;
 const int MENUDISH = 4;
 const int MENUFOOD = 7;
 const int MENUDRINK = 7;
@@ -140,12 +137,9 @@ void optionMenu(string typeMenu, int option, List<Computer> computers)
             cout << "       Xóa máy tính              ";
             break;
         case 3:
-            cout << "       Sửa thông tin máy tính    ";
-            break;
-        case 4:
             cout << "       Xem trạng thái máy        ";
             break;
-        case 5:
+        case 4:
             cout << "       Thoát                     ";
             break;
         }
@@ -164,40 +158,11 @@ void optionMenu(string typeMenu, int option, List<Computer> computers)
             cout << "    Đặt món ăn                   ";
             break;
         case 4:
-            cout << "    Chơi game                    ";
-            break;
-        case 5:
             cout << "    Đăng xuất                    ";
             break;
         }
     }
-    else if (typeMenu == "game")
-    {
-        switch (option)
-        {
-        case 1:
-            cout << "      T-Rex Dinosaurs        ";
-            break;
-        case 2:
-            cout << "      2048                   ";
-            break;
-        case 3:
-            cout << "      Flappy Bird            ";
-            break;
-        case 4:
-            cout << "      Pacman                 ";
-            break;
-        case 5:
-            cout << "      Minesweeper (Dò mìn)   ";
-            break;
-        case 6:
-            cout << "      Super Mario            ";
-            break;
-        case 7:
-            cout << "      Thoát                  ";
-            break;
-        }
-    }
+
     else if (typeMenu == "dish")
     {
         switch (option)
@@ -489,23 +454,10 @@ void showMenu(string typeMenu, int selectOption, string typeComputer)
             printMenuOption(typeMenu, i, isSelected);
             cout << "│" << endl;
         }
-        Gotoxy(0, 10);
+        Gotoxy(0, 9);
         cout << "└──────────────────────────────────┘" << endl;
     }
-    else if (typeMenu == "game")
-    {
-        Gotoxy(0, 0);
-        cout << "┌──────────────────────────────┐" << endl;
-        for (int i = 1; i <= MENUGAME; i++)
-        {
-            Gotoxy(0, i);
-            cout << "│";
-            bool isSelected = (i == selectOption);
-            printMenuOption(typeMenu, i, isSelected);
-            cout << "│" << endl;
-        }
-        cout << "└──────────────────────────────┘" << endl;
-    }
+
     else if (typeMenu == "dish")
     {
         Gotoxy(0, 0);
@@ -760,12 +712,9 @@ void computerManagementMenu(Staff &staff)
                 staff.removeComputer();
                 break;
             case 3:
-                // sửa thông tin máy
-                break;
-            case 4:
                 staff.viewComputerStatus();
                 break;
-            case 5:
+            case 4:
                 system("cls");
                 return;
             }
@@ -829,69 +778,6 @@ void menuStaff(Staff &staff)
     }
 }
 
-void menuGame()
-{
-    system("cls");
-    SetConsoleTitle(TEXT("Menu game"));
-    ShowCursor(false);
-    int selectOption = 1;
-    Game game;
-    while (true)
-    {
-        showMenu("game", selectOption);
-        int key = _getch();
-        switch (key)
-        {
-        case KEY_UP:
-            selectOption = (selectOption == 1) ? MENUGAME : selectOption - 1;
-            break;
-        case KEY_DOWN:
-            selectOption = (selectOption == MENUGAME) ? 1 : selectOption + 1;
-            break;
-        case KEY_ENTER:
-            switch (selectOption)
-            {
-            case 1:
-                game.setName("T-Rex Dinosaurs");
-                game.playGame();
-                system("cls");
-                return;
-            case 2:
-                game.setName("2048");
-                game.playGame();
-                system("cls");
-                return;
-            case 3:
-                game.setName("FlappyBird");
-                game.playGame();
-                system("cls");
-                return;
-            case 4:
-                game.setName("pacman");
-                game.playGame();
-                system("cls");
-                return;
-            case 5:
-                game.setName("minesweeper");
-                game.playGame();
-                system("cls");
-                return;
-            case 6:
-                game.setName("supermario");
-                game.playGame();
-                system("cls");
-                return;
-            case 7:
-                system("cls");
-                return;
-            }
-        default:
-            break;
-        }
-    }
-    ShowCursor(true);
-}
-
 void menuRevenue(Staff &staff)
 {
     system("cls");
@@ -921,7 +807,6 @@ void menuRevenue(Staff &staff)
                 break;
             case 3:
                 menuRevenueYear(staff);
-
                 break;
             case 4:
                 system("cls");
@@ -1294,7 +1179,7 @@ void menuDish(Customer &customer)
             case 3:
                 isChangedOrder = true;
                 firstOrder = true;
-                customer.order();
+                customer.ConfirmOrder();
                 return;
             case 4:
                 isChangedOrder = true;
@@ -1393,9 +1278,6 @@ void menuCustomer(Customer &customer)
     ShowCursor(false);
     int selectOption = 1;
     History history(Day().getCurrentDay(), customer.getId());
-    // customer.setHistory(history);
-    customer.addHistoryToFile(history);
-
     thread threadShowTimeCustomer(showRemainingTimeOfCustomer, &customer);
     thread threadShowTimeComputer(showUsageTimeOfComputer, &customer.getComputer());
 
@@ -1431,12 +1313,8 @@ void menuCustomer(Customer &customer)
                     menuDish(customer);
                     isOrdering = false;
                     break;
+
                 case 4:
-                    isSelectingGame = true;
-                    menuGame();
-                    isSelectingGame = false;
-                    break;
-                case 5:
                     showUsageTime = false;
                     showRemainingTime = false;
                     break;
@@ -1457,7 +1335,7 @@ void menuCustomer(Customer &customer)
 
     system("cls");
     system(("if exist .\\data\\order\\" + customer.getId() + "_ordered.txt del .\\data\\order\\" + customer.getId() + "_ordered.txt").c_str());
-
+    history.addHistoryToFile();
     customer.getComputer().setStatus("Available");
     customer.getComputer().setCustomerUsingName("");
     customer.getComputer().setUsageTimeToFile(Time());
@@ -1480,7 +1358,7 @@ void showRemainingTimeOfCustomer(Customer *customer)
     while (showRemainingTime)
     {
         Time currentTime = customer->getTimeFromFile();
-        if (!isChangingPassword && !isViewingInfo && !isOrdering && !isSelectingGame)
+        if (!isChangingPassword && !isViewingInfo && !isOrdering)
         {
             lock_guard<mutex> lock(mtx);
             Gotoxy(1, 1);
@@ -1509,7 +1387,7 @@ void showUsageTimeOfComputer(Computer *computer)
     Time usageTime;
     while (showUsageTime)
     {
-        if (!isChangingPassword && !isViewingInfo && !isOrdering && !isSelectingGame)
+        if (!isChangingPassword && !isViewingInfo && !isOrdering)
         {
             lock_guard<mutex> lock(mtx);
             Gotoxy(1, 2);

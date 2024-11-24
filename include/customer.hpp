@@ -27,6 +27,7 @@ public:
     int getMoneyforOrder();
     Computer &getComputer();
     Computer &getComputerViaFile();
+    History getHistory();
     double getBalance();
     Time getTimeFromFile();
     Time MoneyToTime(double balance);
@@ -42,13 +43,11 @@ public:
     friend istream &operator>>(istream &is, Customer &customer);
 
     void showMyInfo();
-    void addHistoryToFile(History &history);
     void showHistory();
     int enterAmountOrder();
     void order(string nameRefreshment, int quantity, bool isOrder_again);
-    void order();
+    void ConfirmOrder();
     int getTotalPrice();
-    int getPriceOfRefreshment(string nameRefreshment, int quantity);
     friend ostream &operator<<(ostream &os, Customer &customer);
     void unregisterComputer();
 

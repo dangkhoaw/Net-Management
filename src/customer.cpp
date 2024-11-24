@@ -12,6 +12,10 @@ Customer::~Customer() {}
 string Customer::getName() { return name; }
 string Customer::getPhone() { return phone; }
 Time Customer::getTime() { return time; }
+History Customer::getHistory()
+{
+    return historyRecently;
+}
 double Customer::getBalance() { return balance; }
 Computer &Customer::getComputer() { return computer; }
 Computer &Customer::getComputerViaFile()
@@ -152,37 +156,6 @@ void Customer::showHistory()
     }
 }
 
-void Customer::addHistoryToFile(History &historyRecently)
-{
-    try
-    {
-        fstream file("./data/history/history.txt", ios::in);
-        if (!file.is_open())
-        {
-            throw "Không thể mở file history";
-        }
-        fstream tempFile("./data/history/temp.txt", ios::out);
-        if (!tempFile.is_open())
-        {
-            throw "Không thể mở file temp";
-        }
-        tempFile << historyRecently.getCustomerID() << "|" << historyRecently.getDay() << endl;
-        string line;
-        while (getline(file, line))
-        {
-            tempFile << line << endl;
-        }
-        file.close();
-        tempFile.close();
-        remove("./data/history/history.txt");
-        rename("./data/history/temp.txt", "./data/history/history.txt");
-    }
-    catch (const string &error)
-    {
-        cerr << error << endl;
-    }
-}
-
 void Customer::unregisterComputer()
 {
     fstream file("./data/computer/registered.txt", ios::in);
@@ -310,7 +283,7 @@ void Customer::order(string nameRefreshment, int quantity, bool orderAgain)
     system("cls");
     ShowCursor(false);
     Dish dish;
-    int price = getPriceOfRefreshment(nameRefreshment, quantity);
+    int price = dish.getPriceOfRefreshment(nameRefreshment, quantity);
 
     if (orderAgain)
     {
@@ -343,7 +316,7 @@ void Customer::order(string nameRefreshment, int quantity, bool orderAgain)
     MessageBoxW(NULL, L"    Đã thêm món..!    ", L"Thông báo", MB_OK);
 }
 
-void Customer::order()
+void Customer::ConfirmOrder()
 {
     system("cls");
     ShowCursor(false);
@@ -380,36 +353,6 @@ int Customer::getTotalPrice()
         total += price;
     }
     return total;
-}
-
-int Customer::getPriceOfRefreshment(string nameRefreshment, int quantity)
-{
-    int price = 0;
-    if (nameRefreshment == "Bánh mì thịt nướng")
-        price = 15000 * quantity;
-    else if (nameRefreshment == "Mì tôm trứng")
-        price = 15000 * quantity;
-    else if (nameRefreshment == "Cơm gà nướng")
-        price = 25000 * quantity;
-    else if (nameRefreshment == "Cơm gà chiên nước mắm")
-        price = 25000 * quantity;
-    else if (nameRefreshment == "Xúc xích")
-        price = 10000 * quantity;
-    else if (nameRefreshment == "Cơm cuộn")
-        price = 15000 * quantity;
-    else if (nameRefreshment == "Nước suối")
-        price = 5000 * quantity;
-    else if (nameRefreshment == "Nước cam")
-        price = 10000 * quantity;
-    else if (nameRefreshment == "Bò húc")
-        price = 15000 * quantity;
-    else if (nameRefreshment == "Caffee sữa")
-        price = 15000 * quantity;
-    else if (nameRefreshment == "Caffee đen")
-        price = 10000 * quantity;
-    else if (nameRefreshment == "Coca lon")
-        price = 10000 * quantity;
-    return price;
 }
 
 string Customer::serialize() const

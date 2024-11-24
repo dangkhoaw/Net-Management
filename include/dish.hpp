@@ -25,6 +25,7 @@ public:
 
     friend ostream &operator<<(ostream &os, const Dish &dish);
     friend istream &operator>>(istream &is, Dish &dish);
+    int getPriceOfRefreshment(string nameRefreshment, int quantity);
 
     Dish getDishFromFile(string id_cus, string name);
     friend void addAndUpdateDishToFile(string id_cus, Dish &dish);
