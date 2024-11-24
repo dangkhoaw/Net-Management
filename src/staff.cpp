@@ -76,7 +76,6 @@ void Staff::addComputer()
         if (Database<Computer>::add(computer))
         {
             MessageBoxW(NULL, L"Thêm máy tính thành công", L"Thông báo", MB_OK);
-            break;
         }
         else
             MessageBoxW(NULL, L"Thêm máy tính thất bại", L"Thông báo", MB_OK);
@@ -88,24 +87,18 @@ void Staff::addComputer()
 void Staff::removeComputer()
 {
     system("cls");
-    ShowCursor(true);
-    string idComputer;
-    cout << "Nhập id máy cần xóa: ";
-    enterString(idComputer);
-    if (idComputer.empty())
+    string idComputer = menuSelectComputer();
+    if (idComputer == "")
     {
-        ShowCursor(false);
         system("cls");
         return;
     }
-    id = toUpper(idComputer);
     Computer computer;
     computer.setId(idComputer);
     if (Database<Computer>::remove(computer))
         MessageBoxW(NULL, L"Xóa máy thành công", L"Thông báo", MB_OK);
     else
         MessageBoxW(NULL, L"Xóa máy thất bại", L"Thông báo", MB_OK);
-    ShowCursor(false);
     system("cls");
 }
 
@@ -324,11 +317,9 @@ void Staff::viewCustomersInfo()
     system("cls");
     List<Customer> prevCustomers;
     Gotoxy(0, 0);
-    cout << "┌──────────┬───────────────────────────────┬──────────────────────┬───────────────────────┬──────────────────────┬──────────────────────┐" << endl;
-    Gotoxy(0, 1);
-    cout << "│    ID    │              TÊN              │     TÊN ĐĂNG NHẬP    │     SỐ ĐIỆN THOẠI     │      TRẠNG THÁI      │   MÁY ĐANG SỬ DỤNG   │" << endl;
-    Gotoxy(0, 2);
-    cout << "├──────────┼───────────────────────────────┼──────────────────────┼───────────────────────┼──────────────────────┼──────────────────────┤" << endl;
+    cout << "┌──────────┬───────────────────────────────┬──────────────────────┬───────────────────────┬──────────────────────┬─────────────────────┐" << endl;
+    cout << "│    ID    │              TÊN              │     TÊN ĐĂNG NHẬP    │     SỐ ĐIỆN THOẠI     │        SỐ DƯ         │   MÁY ĐANG SỬ DỤNG  │" << endl;
+    cout << "├──────────┼───────────────────────────────┼──────────────────────┼───────────────────────┼──────────────────────┼─────────────────────┤" << endl;
     while (true)
     {
         List<Customer> customers = Database<Customer>::gets();
@@ -342,29 +333,38 @@ void Staff::viewCustomersInfo()
                 cout << "│ " << customer.getId();
                 Gotoxy(11, i + 3);
                 cout << "│  " << customer.getName();
-                Gotoxy(32 + 11, i + 3);
-                cout << "│      " << customer.getUserName();
-                Gotoxy(55 + 11, i + 3);
-                cout << "│      " << customer.getPhone();
-                Gotoxy(79 + 11, i + 3);
-                cout << "│       " << customer.getStatus();
-                Gotoxy(102 + 11, i + 3);
+                Gotoxy(43, i + 3);
+                cout << "│";
+                Gotoxy((66 + 43 - customer.getUserName().size() + 1) / 2, i + 3);
+                cout << customer.getUserName();
+                Gotoxy(66, i + 3);
+                cout << "│";
+                Gotoxy((90 + 66 - customer.getPhone().size() + 1) / 2, i + 3);
+                cout << customer.getPhone();
+                Gotoxy(90, i + 3);
+                cout << "│";
+                Gotoxy((113 + 90 - formatMoney(customer.getBalance()).size() + 1) / 2, i + 3);
+                cout << formatMoney(customer.getBalance());
+                Gotoxy(113, i + 3);
+                cout << "│";
                 if (customer.getComputer().getId() == "")
                 {
-                    cout << "│          -";
+                    Gotoxy((135 + 113) / 2, i + 3);
+                    cout << "-";
                 }
                 else
                 {
-                    cout << "│        " << customer.getComputer().getId();
+                    Gotoxy((135 + 113 - customer.getComputer().getId().size() + 1) / 2, i + 3);
+                    cout << customer.getComputer().getId();
                 }
-                Gotoxy(125 + 11, i + 3);
+                Gotoxy(135, i + 3);
                 cout << "│";
             }
             i++;
         }
         prevCustomers = customers;
         Gotoxy(0, customers.size() + 3);
-        cout << "└──────────┴───────────────────────────────┴──────────────────────┴───────────────────────┴──────────────────────┴──────────────────────┘" << endl;
+        cout << "└──────────┴───────────────────────────────┴──────────────────────┴───────────────────────┴──────────────────────┴─────────────────────┘" << endl;
         Gotoxy(0, customers.size() + 5);
         cout << "(Nhấn phím q để thoát)";
         if (_kbhit())

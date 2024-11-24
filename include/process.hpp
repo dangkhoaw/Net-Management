@@ -29,7 +29,7 @@ void optionMenu(string typeMenu, int option, List<Computer> computers = List<Com
 void computerManagementMenu(Staff &staff);
 void customerManagementMenu(Staff &staff);
 void menuStaff(Staff &staff);
-void menuCustomer(Customer &customer, Computer &computer);
+void menuCustomer(Customer &customer);
 void menuRevenue(Staff &staff);
 void menuRevenueMonth(Staff &staff);
 void menuRevenueYear(Staff &staff);
@@ -40,7 +40,7 @@ void menuQuantity(Customer &customer, string nameFood);
 void menuDrink(Customer &customer);
 void menuGame();
 string menuSelectTypeOfComputer();
-string menuSelectComputer(string typeOfComputer);
+string menuSelectComputer(string typeOfComputer = "");
 void printItemsOrdered(Customer &customer);
 /*------------------------------------TIME------------------------------------*/
 void showRemainingTimeOfCustomer(Customer *customer);
@@ -55,12 +55,11 @@ bool checkFirstLogin(Account &account);
 bool checkIsOrdered(Customer &customer, string nameFood);
 void makeFileOrdered(Customer &customer);
 string getTypesOfComputerFromFile(string idComputer);
-
 /*------------------------------------COMPUTER------------------------------------*/
 int getNumberOfComputers();
 void updateCountOfComputerToFile(string typeOfComputer, int count = 1);
 void generateIDComputer(Computer &computer);
-void assignRandomComputer(Customer &customer, Computer &computer);
+void assignComputer(Customer &customer);
 string getIdComputerFromFile(string username);
 bool isFullAllComputer();
 bool isAdminOnline();

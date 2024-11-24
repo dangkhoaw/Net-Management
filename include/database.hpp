@@ -521,6 +521,8 @@ List<T> Database<T>::gets(string field, string value)
                 customer.unserialize(line);
                 customer.setTime(customer.getTimeFromFile());
 
+                Database<Account>::get(customer);
+
                 bool match = false;
 
                 if (field == "")

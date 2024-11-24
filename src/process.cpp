@@ -1387,14 +1387,15 @@ string menuSelectComputer(string typeOfComputer)
     }
 }
 
-void menuCustomer(Customer &customer, Computer &computer) // cho ni coi co rut gon dc ko ne
+void menuCustomer(Customer &customer)
 {
     SetConsoleTitle(TEXT("Menu khách hàng"));
     ShowCursor(false);
     int selectOption = 1;
     History history(Day().getCurrentDay(), customer.getId());
-    cout << customer;
-    system("pause");
+    // customer.setHistory(history);
+    customer.addHistoryToFile(history);
+
     thread threadShowTimeCustomer(showRemainingTimeOfCustomer, &customer);
     thread threadShowTimeComputer(showUsageTimeOfComputer, &customer.getComputer());
 
@@ -1436,8 +1437,6 @@ void menuCustomer(Customer &customer, Computer &computer) // cho ni coi co rut g
                     isSelectingGame = false;
                     break;
                 case 5:
-                    customer.setHistory(history);
-                    customer.addHistoryToFile(history);
                     showUsageTime = false;
                     showRemainingTime = false;
                     break;
@@ -1457,7 +1456,13 @@ void menuCustomer(Customer &customer, Computer &computer) // cho ni coi co rut g
     }
 
     system("cls");
-    system(("if exist .\\data\\" + customer.getId() + "_ordered.txt del .\\data\\" + customer.getId() + "_ordered.txt").c_str());
+    system(("if exist .\\data\\order\\" + customer.getId() + "_ordered.txt del .\\data\\order\\" + customer.getId() + "_ordered.txt").c_str());
+
+    customer.getComputer().setStatus("Available");
+    customer.getComputer().setCustomerUsingName("");
+    customer.getComputer().setUsageTimeToFile(Time());
+    Database<Computer>::update(customer.getComputer());
+
     customer.setTimeToFile(Time());
     customer.setStatus("Offline");
     customer.unregisterComputer();
@@ -1465,11 +1470,6 @@ void menuCustomer(Customer &customer, Computer &computer) // cho ni coi co rut g
 
     Database<Customer>::update(customer);
     Database<Account>::update(customer);
-
-    computer.setStatus("Available");
-    computer.setCustomerUsingName("");
-    computer.setUsageTimeToFile(Time());
-    Database<Computer>::update(computer);
 
     ShowCursor(true);
 }
@@ -1738,22 +1738,20 @@ bool isAdminOnline()
     return false;
 }
 
-void assignRandomComputer(Customer &customer, Computer &computer)
+void assignComputer(Customer &customer)
 {
-    computer.setId(getIdComputerFromFile(customer.getUserName()));
-    computer.setTypeOfComputer(getTypesOfComputerFromFile(computer.getId()));
-    computer.setCustomerUsingName(customer.getUserName());
-    computer.setStatus("Using");
-    Database<Computer>::update(computer);
+    customer.getComputer().setId(getIdComputerFromFile(customer.getUserName()));
+    customer.getComputer().setTypeOfComputer(getTypesOfComputerFromFile(customer.getComputer().getId()));
+    customer.getComputer().setCustomerUsingName(customer.getUserName());
+    customer.getComputer().setStatus("Using");
+    Database<Computer>::update(customer.getComputer());
 
     double balance = customer.getBalance();
-    double cost = computer.getCost();
+    double cost = customer.getComputer().getCost();
     double seconds = balance / cost * 3600;
     Time time(0, 0, seconds);
     customer.setTimeToFile(time);
     customer.setTime(time);
-    customer.getComputer().setTypeOfComputer(computer.getTypeOfComputer());
-    customer.getComputer().setId(computer.getId());
     Database<Customer>::update(customer);
 }
 
@@ -2388,9 +2386,8 @@ void handleCustomerLogin(Account &account)
     Customer customer;
     customer.setUserName(account.getUserName());
     Database<Customer>::get(customer);
-
-    Computer computer;
-    assignRandomComputer(customer, computer);
+    customer.setStatus("Online");
+    assignComputer(customer);
 
     if (checkFirstLogin(account))
     {
@@ -2402,7 +2399,7 @@ void handleCustomerLogin(Account &account)
         customer.setIsFirstLogin("NotFirstLogin");
     }
 
-    menuCustomer(customer, computer);
+    menuCustomer(customer);
 }
 
 void handleStaffLogin()

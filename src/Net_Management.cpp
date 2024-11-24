@@ -13,6 +13,7 @@ int main(int argc, char const *argv[])
     catch (...)
     {
         cerr << "Có lỗi xảy ra, vui lòng thử lại sau" << endl;
+        system("pause");
     }
     return 0;
 }

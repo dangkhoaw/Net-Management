@@ -17,7 +17,7 @@
     "algorithm": "cpp"
   },
   "code-runner.executorMap": {
-    "cpp": "g++ src/*.cpp -o build/Net_Management && ./build/Net_Management"
+    "cpp": "g++ src/*.cpp -o Net_Management && ./Net_Management"
   },
   "code-runner.runInTerminal": true
 }
