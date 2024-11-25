@@ -24,9 +24,9 @@ istream &operator>>(istream &is, Account &account)
     int count = 0;
     while (count < 3)
     {
-        system("cls");
+        system("cls"); //  
         cout << "┌───────────────────────────────────┐" << endl
-             << "│               LOGIN              │" << endl
+             << "│               LOGIN              │" << endl
              << "├───────────────────────────────────┤" << endl
              << "│Username:                          │" << endl
              << "├───────────────────────────────────┤" << endl
@@ -53,7 +53,7 @@ istream &operator>>(istream &is, Account &account)
             if (account.status == "Online")
             {
                 Gotoxy(0, 7);
-                cout << "Tài khoản đã đăng nhập ở máy khác!" << endl;
+                cout << "\nTài khoản đã đăng nhập ở máy khác!" << endl;
                 account.username.clear();
                 account.password.clear();
                 count++;
@@ -63,15 +63,17 @@ istream &operator>>(istream &is, Account &account)
             else if (account.role == "staff" || !isFullAllComputer())
             {
                 Gotoxy(0, 7);
-                cout << "Đăng nhập thành công!" << endl;
-                Sleep(555);
+                cout << "\nĐăng nhập thành công!\n"
+                     << endl;
+                ShowCursor(false);
+                loading();
                 return is;
             }
         }
         else
         {
             Gotoxy(0, 7);
-            cout << "Đăng nhập thất bại!" << endl;
+            cout << "\nTài khoản hoặc mật khẩu không đúng!" << endl;
             account.username.clear();
             account.password.clear();
             count++;

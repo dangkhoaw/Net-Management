@@ -11,6 +11,8 @@
 
 #define KEY_UP 72
 #define KEY_DOWN 80
+#define KEY_LEFT 75
+#define KEY_RIGHT 77
 #define KEY_ENTER 0x0D
 #define KEY_BACKSPACE 0x08
 #define KEY_ESC 0x1B
@@ -38,10 +40,10 @@ void menuDish(Customer &customer);
 void menuFood(Customer &customer);
 void menuQuantity(Customer &customer, string nameFood);
 void menuDrink(Customer &customer);
-void menuGame();
 string menuSelectTypeOfComputer();
 string menuSelectComputer(string typeOfComputer = "");
 void printItemsOrdered(Customer &customer);
+bool button(int x, int y, string type, int selectOption = 1);
 /*------------------------------------TIME------------------------------------*/
 void showRemainingTimeOfCustomer(Customer *customer);
 void showUsageTimeOfComputer(Computer *computer);
@@ -62,8 +64,8 @@ string getIdComputerFromFile(string username);
 bool isFullAllComputer();
 bool isAdminOnline();
 /*------------------------------------OTHER------------------------------------*/
+void loading();
 bool isRegisterComputer(string username);
-void enterPassword(string &password);
 string formatMoney(double money);
 void pressKeyQ();
 string toUpper(const string &str);
@@ -79,6 +81,7 @@ string trim(const string &str);
 string removeSpecialCharacter(string &str);
 string toName(string &str);
 void makeFileOrdered(Customer &customer);
+void enterPassword(string &password);
 void enterString(string &str, int length = 0);
 void enterLetter(string &str, int length = 0);
 void enterNumber(string &num, int length = 0);

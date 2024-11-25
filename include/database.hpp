@@ -11,6 +11,7 @@
 #include "list.hpp"
 #include "base64.hpp"
 #include "process.hpp"
+#include "dish.hpp"
 
 using namespace std;
 

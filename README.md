@@ -33,17 +33,17 @@ cd Net-Management
 3. Biên dịch chuơng trình
 
 ```bash
-g++ -std=c++11 src/*.cpp -o build/Net_Management
+g++ -std=c++11 src/*.cpp -o build/Net-Management
 ```
 
 4. Chạy chương trình
 
 ```bash
-./build/Net_Management
+./build/Net-Management
 ```
 
 > [!TIP]
-> Bạn có thể chạy file Net_Management.exe trong thư mục build mà không cần biên dịch lại
+> Bạn có thể chạy file Net-Management.exe trong thư mục build mà không cần biên dịch lại
 
 # 🧑🏻‍💻 Contributors
 

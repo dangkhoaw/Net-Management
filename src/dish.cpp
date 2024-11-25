@@ -31,6 +31,7 @@ istream &operator>>(istream &is, Dish &dish)
     dish.unserialize(temp);
     return is;
 }
+
 int Dish::getPriceOfRefreshment(string nameRefreshment, int quantity)
 {
     int price = 0;
@@ -91,6 +92,7 @@ Dish Dish::getDishFromFile(string id_cus, string name)
     file.close();
     return Dish();
 }
+
 void addAndUpdateDishToFile(string id_cus, Dish &dish) // truyền id vô
 {
     fstream file("./data/order/" + id_cus + "_ordered.txt", ios::in);
@@ -134,6 +136,7 @@ void addAndUpdateDishToFile(string id_cus, Dish &dish) // truyền id vô
     remove(("./data/order/" + id_cus + "_ordered.txt").c_str());
     rename("./data/order/temp.txt", ("./data/order/" + id_cus + "_ordered.txt").c_str());
 }
+
 void removeDishFromFile(string id_cus, int &moneyForOrderOfCus, Dish &dish)
 {
     fstream file("./data/order/" + id_cus + "_ordered.txt", ios::in);

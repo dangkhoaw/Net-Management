@@ -119,10 +119,23 @@ Time Customer::MoneyToTime(double balance)
 void Customer::showMyInfo()
 {
     system("cls");
-    cout << "Tên khách hàng: " << name << endl;
-    cout << "Số điện thoại: " << phone << endl;
-    cout << "Số dư: " << formatMoney(balance) << " (VNĐ)" << endl;
+    cout << "┌───────────────────────────────────────┐" << endl;
+    cout << "│           Thông tin cá nhân          │" << endl;
+    cout << "├───────────────────────────────────────┤" << endl;
+    cout << "│ Tên khách hàng: " << name << endl;
+    cout << "│ Số điện thoại: " << phone << endl;
+    cout << "│ Số dư: " << formatMoney(balance) << " (VNĐ)" << endl;
+    cout << "│ ";
     showHistory();
+    cout << "└───────────────────────────────────────┘" << endl;
+    Gotoxy(40, 3);
+    cout << "│";
+    Gotoxy(40, 4);
+    cout << "│";
+    Gotoxy(40, 5);
+    cout << "│";
+    Gotoxy(40, 6);
+    cout << "│";
     pressKeyQ();
 }
 void Customer::showHistory()
@@ -143,7 +156,7 @@ void Customer::showHistory()
             getline(ss, day);
             if (id == this->getId())
             {
-                cout << "Lịch sử đăng nhập gần đây: " << day << endl;
+                cout << "Lần online cuối: " << day << endl;
                 return;
             }
         }

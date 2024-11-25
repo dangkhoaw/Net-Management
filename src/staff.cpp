@@ -48,11 +48,14 @@ void Staff::removeAccount()
     id = toUpper(id);
     Customer customer;
     customer.setId(id);
-    if (Database<Customer>::remove(customer))
-        MessageBoxW(NULL, L"Xóa tài khoản thành công", L"Thông báo", MB_OK);
-    else
-        MessageBoxW(NULL, L"Xóa tài khoản thất bại", L"Thông báo", MB_OK);
-
+    cout << "\nBạn có chắc chắn muốn xóa tài khoản này không?" << endl;
+    if (button(14, 3, "yesno"))
+    {
+        if (Database<Customer>::remove(customer) && Database<Account>::remove(customer))
+            MessageBoxW(NULL, L"Xóa tài khoản thành công", L"Thông báo", MB_OK);
+        else
+            MessageBoxW(NULL, L"Xóa tài khoản thất bại", L"Thông báo", MB_OK);
+    }
     ShowCursor(false);
     system("cls");
 }
@@ -95,10 +98,22 @@ void Staff::removeComputer()
     }
     Computer computer;
     computer.setId(idComputer);
-    if (Database<Computer>::remove(computer))
-        MessageBoxW(NULL, L"Xóa máy thành công", L"Thông báo", MB_OK);
-    else
-        MessageBoxW(NULL, L"Xóa máy thất bại", L"Thông báo", MB_OK);
+    system("cls");
+    cout << "Bạn có chắc chắn muốn xóa máy " << idComputer << " không?" << endl;
+    if (button(12, 1, "yesno"))
+    {
+        if (Database<Computer>::remove(computer))
+        {
+            cout << "\nXóa máy thành công" << endl;
+            Sleep(1000);
+        }
+        else
+        {
+            cout << "\nXóa máy thất bại" << endl;
+            ShowCursor(false);
+            Sleep(500);
+        }
+    }
     system("cls");
 }
 
@@ -273,7 +288,7 @@ void Staff::topUpAccount()
     {
         Gotoxy(0, 1);
         cout << "Nhập số tiền cần nạp: ";
-        enterMoney(money, 7);
+        enterMoney(money, 6);
         if (money.empty())
         {
             ShowCursor(false);

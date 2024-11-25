@@ -368,6 +368,22 @@ void optionMenu(string typeMenu, int option, List<Computer> computers)
             cout << "      " << computers[option - 1].getId() << "       ";
         }
     }
+    else if (toLower(typeMenu) == "yesno")
+    {
+        switch (option)
+        {
+        case 1:
+            cout << "   Có   ";
+            break;
+        case 2:
+            cout << "  Không  ";
+            break;
+        }
+    }
+    else if (toLower(typeMenu) == "ok")
+    {
+        cout << "    OK    ";
+    }
 }
 
 void printMenuOption(string typeMenu, int option, bool isSelected, List<Computer> computers)
@@ -1272,6 +1288,53 @@ string menuSelectComputer(string typeOfComputer)
     }
 }
 
+bool button(int x, int y, string type, int selectOption)
+{
+    ShowCursor(false);
+    if (toLower(type) == "yesno")
+    {
+        while (true)
+        {
+            Gotoxy(x, y);
+            for (int i = 1; i <= 2; i++)
+            {
+                printMenuOption(type, i, (i == selectOption));
+            }
+            int key = _getch();
+            switch (key)
+            {
+            case KEY_LEFT:
+                selectOption = (selectOption == 1) ? 2 : selectOption - 1;
+                break;
+            case KEY_RIGHT:
+                selectOption = (selectOption == 2) ? 1 : selectOption + 1;
+                break;
+            case KEY_ENTER:
+                return selectOption == 1;
+            default:
+                break;
+            }
+        }
+    }
+    else if (toLower(type) == "ok")
+    {
+        while (true)
+        {
+            Gotoxy(x, y);
+            printMenuOption(type, 1, true);
+            int key = _getch();
+            switch (key)
+            {
+            case KEY_ENTER:
+                return true;
+            default:
+                break;
+            }
+        }
+    }
+    return false;
+}
+
 void menuCustomer(Customer &customer)
 {
     SetConsoleTitle(TEXT("Menu khách hàng"));
@@ -1313,7 +1376,6 @@ void menuCustomer(Customer &customer)
                     menuDish(customer);
                     isOrdering = false;
                     break;
-
                 case 4:
                     showUsageTime = false;
                     showRemainingTime = false;
@@ -1807,6 +1869,20 @@ bool checkIsOrdered(Customer &customer, string nameRefreshment)
 }
 
 /*------------------------------------OTHER------------------------------------*/
+void loading()
+{
+    for (int i = 0; i <= 25; i++)
+    {
+        cout << "\r";
+        for (int j = 0; j < i; j++)
+            cout << "█";
+        for (int j = i; j < 25; j++)
+            cout << "▒";
+        cout << " " << i * 4 << "%";
+        Sleep(50);
+    }
+}
+
 bool isRegisterComputer(string username)
 {
     fstream file("./data/computer/registered.txt", ios::in);
@@ -1829,57 +1905,6 @@ bool isRegisterComputer(string username)
     }
     file.close();
     return false;
-}
-
-void enterPassword(string &password)
-{
-    password.clear();
-    int i = 0;
-    bool show = false;
-    while (true)
-    {
-        char ch = _getch();
-        if (ch == KEY_ENTER)
-            break;
-        else if (ch == KEY_BACKSPACE)
-        {
-            if (i > 0)
-            {
-                i--;
-                cout << "\b \b";
-                password.pop_back();
-            }
-        }
-        else if (ch == KEY_TAB)
-        {
-            show = !show;
-            for (int j = 0; j < i; j++)
-                cout << "\b \b";
-
-            for (int j = 0; j < i; j++)
-            {
-                if (show)
-                    cout << password[j];
-                else
-                    cout << "•";
-            }
-        }
-        else if (ch == KEY_ESC)
-        {
-            password.clear();
-            break;
-        }
-        else
-        {
-            password += ch;
-            i++;
-            if (show)
-                cout << ch;
-            else
-                cout << "•";
-        }
-    }
-    cout << endl;
 }
 
 string formatMoney(double money)
@@ -1953,7 +1978,6 @@ bool isPhoneNumber(const string &str)
 
 bool isExistPhoneNumber(const string &phone)
 {
-    // fstream file("./customer/customer.txt", ios::in);
     fstream file("./data/customer/customer.txt", ios::in);
     if (!file.is_open())
     {
@@ -2067,6 +2091,60 @@ string toName(string &str)
             str[i] -= 32;
     }
     return str;
+}
+
+void enterPassword(string &password)
+{
+    password.clear();
+    int i = 0;
+    bool show = false;
+    while (true)
+    {
+        char ch = _getch();
+        if (ch == KEY_ENTER)
+        {
+            if (!password.empty())
+                break;
+        }
+        else if (ch == KEY_BACKSPACE)
+        {
+            if (i > 0)
+            {
+                i--;
+                cout << "\b \b";
+                password.pop_back();
+            }
+        }
+        else if (ch == KEY_TAB)
+        {
+            show = !show;
+            for (int j = 0; j < i; j++)
+                cout << "\b \b";
+
+            for (int j = 0; j < i; j++)
+            {
+                if (show)
+                    cout << password[j];
+                else
+                    cout << "•";
+            }
+        }
+        else if (ch == KEY_ESC)
+        {
+            password.clear();
+            break;
+        }
+        else
+        {
+            password += ch;
+            i++;
+            if (show)
+                cout << ch;
+            else
+                cout << "•";
+        }
+    }
+    cout << endl;
 }
 
 void enterString(string &str, int length)
@@ -2196,6 +2274,7 @@ void enterMoney(string &money, int length)
 {
     money.clear();
     char ch;
+    Gotoxy(29, 1);
     while (true)
     {
         ch = _getch();
@@ -2210,13 +2289,18 @@ void enterMoney(string &money, int length)
         {
             if (!money.empty())
             {
-                if (money.size() == 1)
-                    cout << "\b \b";
-                else
-                    ClearLine(22, 1, formatMoney(stod(money)).size() + 3);
                 money.pop_back();
+                ClearLine(22, 1, 10);
                 if (!money.empty())
+                {
+                    if (money.size() >= 4)
+                        Gotoxy(29 - money.size() - 1, 1);
+                    else
+                        Gotoxy(29 - money.size(), 1);
                     cout << formatMoney(stod(money));
+                }
+                else
+                    Gotoxy(29, 1);
             }
         }
         else if (ch == KEY_ESC)
@@ -2233,7 +2317,11 @@ void enterMoney(string &money, int length)
                 if ((length == 0 || money.size() < length))
                 {
                     money += ch;
-                    ClearLine(22, 1, formatMoney(stod(money)).size() + 3);
+                    ClearLine(22, 1, 10);
+                    if (money.size() >= 4)
+                        Gotoxy(29 - money.size() - 1, 1);
+                    else
+                        Gotoxy(29 - money.size(), 1);
                     cout << formatMoney(stod(money));
                 }
             }
