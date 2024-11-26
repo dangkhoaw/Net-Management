@@ -1,19 +1,18 @@
 #ifndef DATABASE
 #define DATABASE 1
 
-#include <iostream>
+#include "utilities.hpp"
 #include <fstream>
 #include <string>
 #include <type_traits>
 #include "account.hpp"
-#include "customer.hpp"
 #include "computer.hpp"
-#include "list.hpp"
 #include "base64.hpp"
 #include "process.hpp"
 #include "dish.hpp"
 
 using namespace std;
+using namespace Utilities;
 
 template <class T>
 class Database

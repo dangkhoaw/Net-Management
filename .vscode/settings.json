@@ -14,7 +14,8 @@
     "*.tcc": "cpp",
     "chrono": "cpp",
     "sstream": "cpp",
-    "algorithm": "cpp"
+    "algorithm": "cpp",
+    "thread": "cpp"
   },
   "code-runner.executorMap": {
     "cpp": "g++ src/*.cpp -o build/Net-Management && ./Net-Management"

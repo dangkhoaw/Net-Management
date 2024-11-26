@@ -1,5 +1,4 @@
-#include "../include/process.hpp"
-#include "../include/account.hpp"
+#include "../include/utilities.hpp"
 #include "../include/base64.hpp"
 #include "../include/database.hpp"
 
@@ -24,7 +23,7 @@ istream &operator>>(istream &is, Account &account)
     int count = 0;
     while (count < 3)
     {
-        system("cls"); //  
+        system("cls");
         cout << "┌───────────────────────────────────┐" << endl
              << "│               LOGIN              │" << endl
              << "├───────────────────────────────────┤" << endl
@@ -33,18 +32,18 @@ istream &operator>>(istream &is, Account &account)
              << "│Password:                          │" << endl
              << "└───────────────────────────────────┘" << endl;
 
-        Gotoxy(11, 3);
-        enterString(account.username);
+        ConsoleUtils::Gotoxy(11, 3);
+        Utilities::enterString(account.username);
         if (account.username.empty())
         {
-            ShowCursor(true);
+            ConsoleUtils::ShowCursor(true);
             return is;
         }
-        Gotoxy(11, 5);
-        enterPassword(account.password);
+        ConsoleUtils::Gotoxy(11, 5);
+        Utilities::enterPassword(account.password);
         if (account.password.empty())
         {
-            ShowCursor(true);
+            ConsoleUtils::ShowCursor(true);
             return is;
         }
 
@@ -52,7 +51,7 @@ istream &operator>>(istream &is, Account &account)
         {
             if (account.status == "Online")
             {
-                Gotoxy(0, 7);
+                ConsoleUtils::Gotoxy(0, 7);
                 cout << "\nTài khoản đã đăng nhập ở máy khác!" << endl;
                 account.username.clear();
                 account.password.clear();
@@ -62,17 +61,17 @@ istream &operator>>(istream &is, Account &account)
             }
             else if (account.role == "staff" || !isFullAllComputer())
             {
-                Gotoxy(0, 7);
+                ConsoleUtils::Gotoxy(0, 7);
                 cout << "\nĐăng nhập thành công!\n"
                      << endl;
-                ShowCursor(false);
-                loading();
+                ConsoleUtils::ShowCursor(false);
+                Utilities::loading();
                 return is;
             }
         }
         else
         {
-            Gotoxy(0, 7);
+            ConsoleUtils::Gotoxy(0, 7);
             cout << "\nTài khoản hoặc mật khẩu không đúng!" << endl;
             account.username.clear();
             account.password.clear();
@@ -92,46 +91,46 @@ ostream &operator<<(ostream &os, Account &account)
 bool Account::signIn()
 {
     system("cls");
-    ShowCursor(true);
+    ConsoleUtils::ShowCursor(true);
     cin >> *this;
     system("cls");
     if (username.empty() || password.empty())
     {
-        ShowCursor(true);
+        ConsoleUtils::ShowCursor(true);
         return false;
     }
-    ShowCursor(false);
+    ConsoleUtils::ShowCursor(false);
     return true;
 }
 
 bool Account::changePassword()
 {
     system("cls");
-    ShowCursor(true);
+    ConsoleUtils::ShowCursor(true);
     string passwd, newPassword, rePassword;
     cout << "Mật khẩu cũ: ";
-    enterPassword(passwd);
+    Utilities::enterPassword(passwd);
     if (passwd.empty())
     {
         system("cls");
-        ShowCursor(false);
+        ConsoleUtils::ShowCursor(false);
         return false;
     }
     if (passwd != password)
     {
         MessageBoxW(NULL, L"Mật khẩu không đúng!", L"Thông báo", MB_OK | MB_ICONERROR | MB_TOPMOST);
         system("cls");
-        ShowCursor(false);
+        ConsoleUtils::ShowCursor(false);
         return false;
     }
     while (true)
     {
         cout << "Mật khẩu mới: ";
-        enterPassword(newPassword);
+        Utilities::enterPassword(newPassword);
         if (newPassword.empty())
         {
             system("cls");
-            ShowCursor(false);
+            ConsoleUtils::ShowCursor(false);
             return false;
         }
         if (newPassword == passwd)
@@ -142,18 +141,18 @@ bool Account::changePassword()
         break;
     }
     cout << "Nhập lại mật khẩu: ";
-    enterPassword(rePassword);
+    Utilities::enterPassword(rePassword);
     if (rePassword.empty())
     {
         system("cls");
-        ShowCursor(false);
+        ConsoleUtils::ShowCursor(false);
         return false;
     }
     if (newPassword != rePassword)
     {
         MessageBoxW(NULL, L"Mật khẩu không khớp!", L"Thông báo", MB_OK | MB_ICONERROR | MB_TOPMOST);
         system("cls");
-        ShowCursor(false);
+        ConsoleUtils::ShowCursor(false);
         return false;
     }
     password = Base64(newPassword).encode();
@@ -161,7 +160,7 @@ bool Account::changePassword()
     password = newPassword;
     MessageBoxW(NULL, L"Đổi mật khẩu thành công!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
     system("cls");
-    ShowCursor(false);
+    ConsoleUtils::ShowCursor(false);
     return true;
 }
 

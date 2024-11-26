@@ -1,3 +1,4 @@
+#include "../include/utilities.hpp"
 #include "../include/date.hpp"
 #include <string>
 Date::Date(int day, int month, int year) : day(day), month(month), year(year) {}
@@ -16,7 +17,7 @@ istream &operator>>(istream &is, Date &date)
     {
         cout << "Nhập vào ngày, tháng, năm dưới dạng (dd/mm/yyyy): ";
         string temp;
-        is >> temp;
+        Utilities::enterString(temp, 10);
 
         int pos1 = temp.find('/');
         int pos2 = temp.find('/', pos1 + 1);

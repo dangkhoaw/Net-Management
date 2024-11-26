@@ -1,3 +1,4 @@
+#include "../include/console.hpp"
 #include "../include/process.hpp"
 
 using namespace std;

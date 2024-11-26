@@ -1,9 +1,7 @@
 #include "../include/computer.hpp"
+#include "../include/constants.hpp"
 #include <fstream>
-#include <mutex>
 #include <sstream>
-
-mutex com;
 
 Computer::Computer(string id, string typesOfComputer, string status, string customerUsingName, Time usageTime)
     : id(id), typesOfComputer(typesOfComputer), status(status), customerUsingName(customerUsingName), usageTime(usageTime) {}
@@ -35,7 +33,7 @@ Time Computer::getUsageTimeFromFile()
 {
     try
     {
-        lock_guard<mutex> lock(com);
+        lock_guard<mutex> lock(Globals::mtx);
         Time time;
         fstream file("./data/time/" + id + ".txt", ios::in);
         if (!file.is_open())
@@ -59,7 +57,7 @@ void Computer::setCustomerUsingName(string customerUsingName) { this->customerUs
 
 void Computer::setUsageTimeToFile(Time time)
 {
-    lock_guard<mutex> lock(com);
+    lock_guard<mutex> lock(Globals::mtx);
     fstream file("./data/time/" + id + ".txt", ios::out);
     if (file.is_open())
     {

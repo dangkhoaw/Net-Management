@@ -1,79 +1,10 @@
+#include "../include/utilities.hpp"
 #include "../include/process.hpp"
 #include "../include/revenue.hpp"
 #include "../include/base64.hpp"
 #include <thread>
-#include <mutex>
 #include <chrono>
-#include "../include/dish.hpp"
-#include "../include/history.hpp"
-#include <conio.h>
 #include "../include/database.hpp"
-#include <algorithm>
-
-bool showRemainingTime = true;
-bool showUsageTime = true;
-bool isChangingPassword = false;
-bool isViewingInfo = false;
-bool isOrdering = false;
-bool firstOrder = true;
-bool isChangedOrder = true;
-
-const int MENUSTAFF = 7;
-const int MENUCUSTOMERMANAGER = 5;
-const int MENUCOMPUTERMANAGER = 4;
-const int MENUCUSTOMER = 4;
-const int MENUDISH = 4;
-const int MENUFOOD = 7;
-const int MENUDRINK = 7;
-const int MENUQUANTITY = 4;
-const int MENUREVENUE = 4;
-const int MENUSELECTTYPEOFCOMPUTER = 4;
-
-mutex mtx;
-
-/*------------------------------------CONSOLE------------------------------------*/
-
-void ShowCursor(bool CursorVisibility)
-{
-    HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_CURSOR_INFO cursor = {1, CursorVisibility};
-    SetConsoleCursorInfo(handle, &cursor);
-}
-
-void Gotoxy(SHORT posX, SHORT posY)
-{
-    HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
-    COORD Position;
-    Position.X = posX;
-    Position.Y = posY;
-
-    SetConsoleCursorPosition(hStdout, Position);
-}
-
-void ClearLine(SHORT posY)
-{
-    CONSOLE_SCREEN_BUFFER_INFO csbi;
-    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
-
-    int consoleWidth = csbi.srWindow.Right - csbi.srWindow.Left + 1;
-
-    Gotoxy(0, posY);
-    for (int i = 0; i < consoleWidth; i++)
-    {
-        cout << " ";
-    }
-    Gotoxy(0, posY);
-}
-
-void ClearLine(SHORT posX, SHORT posY, SHORT length)
-{
-    Gotoxy(posX, posY);
-    for (int i = 0; i < length; i++)
-    {
-        cout << " ";
-    }
-    Gotoxy(posX, posY);
-}
 
 /*------------------------------------MENU------------------------------------*/
 void optionMenu(string typeMenu, int option, List<Computer> computers)
@@ -368,7 +299,7 @@ void optionMenu(string typeMenu, int option, List<Computer> computers)
             cout << "      " << computers[option - 1].getId() << "       ";
         }
     }
-    else if (toLower(typeMenu) == "yesno")
+    else if (Utilities::toLower(typeMenu) == "yesno")
     {
         switch (option)
         {
@@ -380,7 +311,7 @@ void optionMenu(string typeMenu, int option, List<Computer> computers)
             break;
         }
     }
-    else if (toLower(typeMenu) == "ok")
+    else if (Utilities::toLower(typeMenu) == "ok")
     {
         cout << "    OK    ";
     }
@@ -403,11 +334,11 @@ void showMenu(string typeMenu, int selectOption, string typeComputer)
 {
     if (typeMenu == "staff")
     {
-        Gotoxy(0, 0);
+        ConsoleUtils::Gotoxy(0, 0);
         cout << "┌────────────────────────────────┐" << endl;
-        for (int i = 1; i <= MENUSTAFF; i++)
+        for (int i = 1; i <= Menu::MENUSTAFF; i++)
         {
-            Gotoxy(0, i);
+            ConsoleUtils::Gotoxy(0, i);
             cout << "│";
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
@@ -417,11 +348,11 @@ void showMenu(string typeMenu, int selectOption, string typeComputer)
     }
     else if (typeMenu == "customerManger")
     {
-        Gotoxy(0, 0);
+        ConsoleUtils::Gotoxy(0, 0);
         cout << "┌───────────────────────────────────┐" << endl;
-        for (int i = 1; i <= MENUCUSTOMERMANAGER; i++)
+        for (int i = 1; i <= Menu::MENUCUSTOMERMANAGER; i++)
         {
-            Gotoxy(0, i);
+            ConsoleUtils::Gotoxy(0, i);
             cout << "│";
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
@@ -431,11 +362,11 @@ void showMenu(string typeMenu, int selectOption, string typeComputer)
     }
     else if (typeMenu == "computerManager")
     {
-        Gotoxy(0, 0);
+        ConsoleUtils::Gotoxy(0, 0);
         cout << "┌──────────────────────────────────┐" << endl;
-        for (int i = 1; i <= MENUCOMPUTERMANAGER; i++)
+        for (int i = 1; i <= Menu::MENUCOMPUTERMANAGER; i++)
         {
-            Gotoxy(0, i);
+            ConsoleUtils::Gotoxy(0, i);
             cout << "│";
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
@@ -445,42 +376,42 @@ void showMenu(string typeMenu, int selectOption, string typeComputer)
     }
     else if (typeMenu == "customer")
     {
-        lock_guard<mutex> lock(mtx);
-        Gotoxy(0, 0);
+        lock_guard<mutex> lock(Globals::mtx);
+        ConsoleUtils::Gotoxy(0, 0);
         cout << "┌──────────────────────────────────┐" << endl;
-        Gotoxy(0, 4);
+        ConsoleUtils::Gotoxy(0, 4);
         cout << "├──────────────────────────────────┤" << endl;
-        Gotoxy(0, 1);
+        ConsoleUtils::Gotoxy(0, 1);
         cout << "│";
-        Gotoxy(0, 2);
+        ConsoleUtils::Gotoxy(0, 2);
         cout << "│";
-        Gotoxy(0, 3);
+        ConsoleUtils::Gotoxy(0, 3);
         cout << "│";
-        Gotoxy(35, 1);
+        ConsoleUtils::Gotoxy(35, 1);
         cout << "│";
-        Gotoxy(35, 2);
+        ConsoleUtils::Gotoxy(35, 2);
         cout << "│";
-        Gotoxy(35, 3);
+        ConsoleUtils::Gotoxy(35, 3);
         cout << "│";
-        for (int i = 1; i <= MENUCUSTOMER; i++)
+        for (int i = 1; i <= Menu::MENUCUSTOMER; i++)
         {
-            Gotoxy(0, i + 4);
+            ConsoleUtils::Gotoxy(0, i + 4);
             cout << "│";
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
             cout << "│" << endl;
         }
-        Gotoxy(0, 9);
+        ConsoleUtils::Gotoxy(0, 9);
         cout << "└──────────────────────────────────┘" << endl;
     }
 
     else if (typeMenu == "dish")
     {
-        Gotoxy(0, 0);
+        ConsoleUtils::Gotoxy(0, 0);
         cout << "┌──────────────────────────────┐" << endl;
-        for (int i = 1; i <= MENUDISH; i++)
+        for (int i = 1; i <= Menu::MENUDISH; i++)
         {
-            Gotoxy(0, i);
+            ConsoleUtils::Gotoxy(0, i);
             cout << "│";
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
@@ -490,15 +421,15 @@ void showMenu(string typeMenu, int selectOption, string typeComputer)
     }
     else if (typeMenu == "food")
     {
-        Gotoxy(0, 0);
+        ConsoleUtils::Gotoxy(0, 0);
         cout << "┌─────────────────────────────────────────┐";
-        Gotoxy(0, 1);
+        ConsoleUtils::Gotoxy(0, 1);
         cout << "│        Tên món               │   Giá    │";
-        Gotoxy(0, 2);
+        ConsoleUtils::Gotoxy(0, 2);
         cout << "├─────────────────────────────────────────┤";
-        for (int i = 1; i <= MENUFOOD; i++)
+        for (int i = 1; i <= Menu::MENUFOOD; i++)
         {
-            Gotoxy(0, i + 2);
+            ConsoleUtils::Gotoxy(0, i + 2);
             cout << "│";
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
@@ -508,15 +439,15 @@ void showMenu(string typeMenu, int selectOption, string typeComputer)
     }
     else if (typeMenu == "drink")
     {
-        Gotoxy(0, 0);
+        ConsoleUtils::Gotoxy(0, 0);
         cout << "┌─────────────────────────────────────────┐";
-        Gotoxy(0, 1);
+        ConsoleUtils::Gotoxy(0, 1);
         cout << "│        Thức uống             │   Giá    │";
-        Gotoxy(0, 2);
+        ConsoleUtils::Gotoxy(0, 2);
         cout << "├─────────────────────────────────────────┤";
-        for (int i = 1; i <= MENUDRINK; i++)
+        for (int i = 1; i <= Menu::MENUDRINK; i++)
         {
-            Gotoxy(0, i + 2);
+            ConsoleUtils::Gotoxy(0, i + 2);
             cout << "│";
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
@@ -526,19 +457,19 @@ void showMenu(string typeMenu, int selectOption, string typeComputer)
     }
     else if (typeMenu == "quantity")
     {
-        Gotoxy(0, 0);
+        ConsoleUtils::Gotoxy(0, 0);
         cout << "┌──────────────────────────┐";
-        Gotoxy(0, 1);
+        ConsoleUtils::Gotoxy(0, 1);
         cout << "│        Số lượng          │";
-        Gotoxy(0, 2);
+        ConsoleUtils::Gotoxy(0, 2);
         cout << "├──────────────────────────┤";
-        for (int i = 1; i <= MENUQUANTITY; i++)
+        for (int i = 1; i <= Menu::MENUQUANTITY; i++)
         {
-            Gotoxy(0, i + 2);
+            ConsoleUtils::Gotoxy(0, i + 2);
             cout << "│";
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
-            Gotoxy(27, i + 2);
+            ConsoleUtils::Gotoxy(27, i + 2);
             cout << "│";
         }
         cout << endl
@@ -546,11 +477,11 @@ void showMenu(string typeMenu, int selectOption, string typeComputer)
     }
     else if (typeMenu == "reOrder")
     {
-        Gotoxy(0, 0);
+        ConsoleUtils::Gotoxy(0, 0);
         cout << "┌──────────────────────────────┐" << endl;
         for (int i = 1; i <= 3; i++)
         {
-            Gotoxy(0, i);
+            ConsoleUtils::Gotoxy(0, i);
             cout << "│";
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
@@ -560,11 +491,11 @@ void showMenu(string typeMenu, int selectOption, string typeComputer)
     }
     else if (typeMenu == "revenue")
     {
-        Gotoxy(0, 0);
+        ConsoleUtils::Gotoxy(0, 0);
         cout << "┌─────────────────────────────────┐" << endl;
-        for (int i = 1; i <= MENUREVENUE; i++)
+        for (int i = 1; i <= Menu::MENUREVENUE; i++)
         {
-            Gotoxy(0, i);
+            ConsoleUtils::Gotoxy(0, i);
             cout << "│";
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
@@ -574,11 +505,11 @@ void showMenu(string typeMenu, int selectOption, string typeComputer)
     }
     else if (typeMenu == "revenueDay")
     {
-        Gotoxy(0, 0);
+        ConsoleUtils::Gotoxy(0, 0);
         cout << "┌──────────────────────────────────┐" << endl;
         for (int i = 1; i <= 4; i++)
         {
-            Gotoxy(0, i);
+            ConsoleUtils::Gotoxy(0, i);
             cout << "│";
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
@@ -588,11 +519,11 @@ void showMenu(string typeMenu, int selectOption, string typeComputer)
     }
     else if (typeMenu == "revenueMonth")
     {
-        Gotoxy(0, 0);
+        ConsoleUtils::Gotoxy(0, 0);
         cout << "┌──────────────────────────────────┐" << endl;
         for (int i = 1; i <= 4; i++)
         {
-            Gotoxy(0, i);
+            ConsoleUtils::Gotoxy(0, i);
             cout << "│";
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
@@ -602,11 +533,11 @@ void showMenu(string typeMenu, int selectOption, string typeComputer)
     }
     else if (typeMenu == "revenueYear")
     {
-        Gotoxy(0, 0);
+        ConsoleUtils::Gotoxy(0, 0);
         cout << "┌──────────────────────────────────┐" << endl;
         for (int i = 1; i <= 4; i++)
         {
-            Gotoxy(0, i);
+            ConsoleUtils::Gotoxy(0, i);
             cout << "│";
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
@@ -616,11 +547,11 @@ void showMenu(string typeMenu, int selectOption, string typeComputer)
     }
     else if (typeMenu == "dish")
     {
-        Gotoxy(0, 0);
+        ConsoleUtils::Gotoxy(0, 0);
         cout << "┌──────────────────────────────┐" << endl;
         for (int i = 1; i <= 9; i++)
         {
-            Gotoxy(0, i);
+            ConsoleUtils::Gotoxy(0, i);
             cout << "│";
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
@@ -630,11 +561,11 @@ void showMenu(string typeMenu, int selectOption, string typeComputer)
     }
     else if (typeMenu == "selectTypeOfComputer") // áp dụng cho thêm máy với chọn loại máy cho khách hàng
     {
-        Gotoxy(0, 0);
+        ConsoleUtils::Gotoxy(0, 0);
         cout << "┌─────────────────────────┐" << endl;
-        for (int i = 1; i <= MENUSELECTTYPEOFCOMPUTER; i++)
+        for (int i = 1; i <= Menu::MENUSELECTTYPEOFCOMPUTER; i++)
         {
-            Gotoxy(0, i);
+            ConsoleUtils::Gotoxy(0, i);
             cout << "│";
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected);
@@ -644,12 +575,12 @@ void showMenu(string typeMenu, int selectOption, string typeComputer)
     }
     else if (typeMenu == "selectComputer")
     {
-        Gotoxy(0, 0);
+        ConsoleUtils::Gotoxy(0, 0);
         cout << "┌──────────────────┐" << endl;
         List<Computer> computers = Database<Computer>::gets(typeComputer, "Available");
         for (int i = 1; i <= computers.size() + 1; i++)
         {
-            Gotoxy(0, i);
+            ConsoleUtils::Gotoxy(0, i);
             cout << "│";
             bool isSelected = (i == selectOption);
             printMenuOption(typeMenu, i, isSelected, computers);
@@ -670,13 +601,13 @@ void customerManagementMenu(Staff &staff)
         int key = _getch();
         switch (key)
         {
-        case KEY_UP:
-            selectOption = (selectOption == 1) ? MENUCUSTOMERMANAGER : selectOption - 1;
+        case Keys::KEY_UP:
+            selectOption = (selectOption == 1) ? Menu::MENUCUSTOMERMANAGER : selectOption - 1;
             break;
-        case KEY_DOWN:
-            selectOption = (selectOption == MENUCUSTOMERMANAGER) ? 1 : selectOption + 1;
+        case Keys::KEY_DOWN:
+            selectOption = (selectOption == Menu::MENUCUSTOMERMANAGER) ? 1 : selectOption + 1;
             break;
-        case KEY_ENTER:
+        case Keys::KEY_ENTER:
             switch (selectOption)
             {
             case 1:
@@ -712,13 +643,13 @@ void computerManagementMenu(Staff &staff)
         int key = _getch();
         switch (key)
         {
-        case KEY_UP:
-            selectOption = (selectOption == 1) ? MENUCOMPUTERMANAGER : selectOption - 1;
+        case Keys::KEY_UP:
+            selectOption = (selectOption == 1) ? Menu::MENUCOMPUTERMANAGER : selectOption - 1;
             break;
-        case KEY_DOWN:
-            selectOption = (selectOption == MENUCOMPUTERMANAGER) ? 1 : selectOption + 1;
+        case Keys::KEY_DOWN:
+            selectOption = (selectOption == Menu::MENUCOMPUTERMANAGER) ? 1 : selectOption + 1;
             break;
-        case KEY_ENTER:
+        case Keys::KEY_ENTER:
             switch (selectOption)
             {
             case 1:
@@ -744,7 +675,7 @@ void menuStaff(Staff &staff)
 {
     system("cls");
     SetConsoleTitle(TEXT("Menu nhân viên"));
-    ShowCursor(false);
+    ConsoleUtils::ShowCursor(false);
     int selectOption = 1;
     while (true)
     {
@@ -752,13 +683,13 @@ void menuStaff(Staff &staff)
         int key = _getch();
         switch (key)
         {
-        case KEY_UP:
-            selectOption = (selectOption == 1) ? MENUSTAFF : selectOption - 1;
+        case Keys::KEY_UP:
+            selectOption = (selectOption == 1) ? Menu::MENUSTAFF : selectOption - 1;
             break;
-        case KEY_DOWN:
-            selectOption = (selectOption == MENUSTAFF) ? 1 : selectOption + 1;
+        case Keys::KEY_DOWN:
+            selectOption = (selectOption == Menu::MENUSTAFF) ? 1 : selectOption + 1;
             break;
-        case KEY_ENTER:
+        case Keys::KEY_ENTER:
             switch (selectOption)
             {
             case 1:
@@ -778,14 +709,13 @@ void menuStaff(Staff &staff)
                 break;
             case 6:
                 staff.viewTypeOfComputer();
-                pressKeyQ();
+                Utilities::pressKeyQ();
                 break;
             case 7:
                 staff.setStatus("Offline");
-                // staff.setPassword(Base64(staff.getPassword()).encode());
                 Database<Account>::update(staff);
                 system("cls");
-                ShowCursor(true);
+                ConsoleUtils::ShowCursor(true);
                 return;
             }
         default:
@@ -798,7 +728,7 @@ void menuRevenue(Staff &staff)
 {
     system("cls");
     SetConsoleTitle(TEXT("Menu doanh thu"));
-    ShowCursor(false);
+    ConsoleUtils::ShowCursor(false);
     int selectOption = 1;
     while (true)
     {
@@ -806,13 +736,13 @@ void menuRevenue(Staff &staff)
         int key = _getch();
         switch (key)
         {
-        case KEY_UP:
-            selectOption = (selectOption == 1) ? MENUREVENUE : selectOption - 1;
+        case Keys::KEY_UP:
+            selectOption = (selectOption == 1) ? Menu::MENUREVENUE : selectOption - 1;
             break;
-        case KEY_DOWN:
-            selectOption = (selectOption == MENUREVENUE) ? 1 : selectOption + 1;
+        case Keys::KEY_DOWN:
+            selectOption = (selectOption == Menu::MENUREVENUE) ? 1 : selectOption + 1;
             break;
-        case KEY_ENTER:
+        case Keys::KEY_ENTER:
             switch (selectOption)
             {
             case 1:
@@ -833,7 +763,7 @@ void menuRevenue(Staff &staff)
             break;
         }
     }
-    ShowCursor(true);
+    ConsoleUtils::ShowCursor(true);
 }
 
 void menuRevenueDay(Staff &staff)
@@ -842,7 +772,7 @@ void menuRevenueDay(Staff &staff)
     Date date;
     system("cls");
     SetConsoleTitle(TEXT("Menu doanh thu theo ngày"));
-    ShowCursor(false);
+    ConsoleUtils::ShowCursor(false);
     int selectOption = 1;
     while (true)
     {
@@ -850,13 +780,13 @@ void menuRevenueDay(Staff &staff)
         int key = _getch();
         switch (key)
         {
-        case KEY_UP:
+        case Keys::KEY_UP:
             selectOption = (selectOption == 1) ? 4 : selectOption - 1;
             break;
-        case KEY_DOWN:
+        case Keys::KEY_DOWN:
             selectOption = (selectOption == 4) ? 1 : selectOption + 1;
             break;
-        case KEY_ENTER:
+        case Keys::KEY_ENTER:
             switch (selectOption)
             {
             case 1:
@@ -868,11 +798,11 @@ void menuRevenueDay(Staff &staff)
                 revenue.viewRevenueDay(date);
                 break;
             case 3:
-                ShowCursor(true);
+                ConsoleUtils::ShowCursor(true);
                 system("cls");
                 cin >> date;
                 revenue.viewRevenueDay(date);
-                ShowCursor(false);
+                ConsoleUtils::ShowCursor(false);
                 break;
             case 4:
                 system("cls");
@@ -888,7 +818,7 @@ void menuRevenueMonth(Staff &staff)
 {
     system("cls");
     SetConsoleTitle(TEXT("Menu doanh thu theo tháng"));
-    ShowCursor(false);
+    ConsoleUtils::ShowCursor(false);
     int selectOption = 1;
     Revenue revenue;
     Date date;
@@ -899,13 +829,13 @@ void menuRevenueMonth(Staff &staff)
         int key = _getch();
         switch (key)
         {
-        case KEY_UP:
+        case Keys::KEY_UP:
             selectOption = (selectOption == 1) ? 4 : selectOption - 1;
             break;
-        case KEY_DOWN:
+        case Keys::KEY_DOWN:
             selectOption = (selectOption == 4) ? 1 : selectOption + 1;
             break;
-        case KEY_ENTER:
+        case Keys::KEY_ENTER:
             switch (selectOption)
             {
             case 1:
@@ -917,9 +847,9 @@ void menuRevenueMonth(Staff &staff)
                 revenue.viewRevenueMonth(date);
                 break;
             case 3:
-                ShowCursor(true);
+                ConsoleUtils::ShowCursor(true);
                 system("cls");
-                inputMonthAndYear(month, year);
+                Utilities::inputMonthAndYear(month, year);
                 date.setMonth(month);
                 date.setYear(year);
                 revenue.viewRevenueMonth(date);
@@ -938,7 +868,7 @@ void menuRevenueYear(Staff &staff)
 {
     system("cls");
     SetConsoleTitle(TEXT("Menu doanh thu theo năm"));
-    ShowCursor(false);
+    ConsoleUtils::ShowCursor(false);
     int selectOption = 1;
     Revenue revenue;
     Date date;
@@ -949,13 +879,13 @@ void menuRevenueYear(Staff &staff)
         int key = _getch();
         switch (key)
         {
-        case KEY_UP:
+        case Keys::KEY_UP:
             selectOption = (selectOption == 1) ? 4 : selectOption - 1;
             break;
-        case KEY_DOWN:
+        case Keys::KEY_DOWN:
             selectOption = (selectOption == 4) ? 1 : selectOption + 1;
             break;
-        case KEY_ENTER:
+        case Keys::KEY_ENTER:
             switch (selectOption)
             {
             case 1:
@@ -967,9 +897,9 @@ void menuRevenueYear(Staff &staff)
                 revenue.viewRevenueYear(date);
                 break;
             case 3:
-                ShowCursor(true);
+                ConsoleUtils::ShowCursor(true);
                 system("cls");
-                inputYear(year);
+                Utilities::inputYear(year);
                 date.setYear(year);
                 revenue.viewRevenueYear(date);
                 break;
@@ -987,9 +917,9 @@ void menuQuantity(Customer &customer, string nameRefreshment)
 {
     system("cls");
     SetConsoleTitle(TEXT("Menu số lượng"));
-    ShowCursor(false);
+    ConsoleUtils::ShowCursor(false);
     int selectOption = 1;
-    isChangedOrder = true;
+    Globals::isChangedOrder = true;
     if (!checkIsOrdered(customer, nameRefreshment))
     {
         while (true)
@@ -998,13 +928,13 @@ void menuQuantity(Customer &customer, string nameRefreshment)
             int key = _getch();
             switch (key)
             {
-            case KEY_UP:
-                selectOption = (selectOption == 1) ? MENUQUANTITY : selectOption - 1;
+            case Keys::KEY_UP:
+                selectOption = (selectOption == 1) ? Menu::MENUQUANTITY : selectOption - 1;
                 break;
-            case KEY_DOWN:
-                selectOption = (selectOption == MENUQUANTITY) ? 1 : selectOption + 1;
+            case Keys::KEY_DOWN:
+                selectOption = (selectOption == Menu::MENUQUANTITY) ? 1 : selectOption + 1;
                 break;
-            case KEY_ENTER:
+            case Keys::KEY_ENTER:
                 switch (selectOption)
                 {
                 case 1:
@@ -1035,13 +965,13 @@ void menuQuantity(Customer &customer, string nameRefreshment)
             int key = _getch();
             switch (key)
             {
-            case KEY_UP:
+            case Keys::KEY_UP:
                 selectOption = (selectOption == 1) ? 3 : selectOption - 1;
                 break;
-            case KEY_DOWN:
+            case Keys::KEY_DOWN:
                 selectOption = (selectOption == 3) ? 1 : selectOption + 1;
                 break;
-            case KEY_ENTER:
+            case Keys::KEY_ENTER:
                 switch (selectOption)
                 {
                 case 1:
@@ -1066,7 +996,7 @@ void menuDrink(Customer &customer)
 {
     system("cls");
     SetConsoleTitle(TEXT("Menu Drink"));
-    ShowCursor(false);
+    ConsoleUtils::ShowCursor(false);
     int selectOption = 1;
     while (true)
     {
@@ -1075,13 +1005,13 @@ void menuDrink(Customer &customer)
         switch (key)
         {
 
-        case KEY_UP:
-            selectOption = (selectOption == 1) ? MENUDRINK : selectOption - 1;
+        case Keys::KEY_UP:
+            selectOption = (selectOption == 1) ? Menu::MENUDRINK : selectOption - 1;
             break;
-        case KEY_DOWN:
-            selectOption = (selectOption == MENUDRINK) ? 1 : selectOption + 1;
+        case Keys::KEY_DOWN:
+            selectOption = (selectOption == Menu::MENUDRINK) ? 1 : selectOption + 1;
             break;
-        case KEY_ENTER:
+        case Keys::KEY_ENTER:
             switch (selectOption)
             {
             case 1:
@@ -1103,7 +1033,7 @@ void menuDrink(Customer &customer)
                 menuQuantity(customer, "Bò húc");
                 break;
             case 7:
-                isChangedOrder = true;
+                Globals::isChangedOrder = true;
                 system("cls");
                 return;
             }
@@ -1117,7 +1047,7 @@ void menuFood(Customer &customer)
 {
     system("cls");
     SetConsoleTitle(TEXT("Menu Food"));
-    ShowCursor(false);
+    ConsoleUtils::ShowCursor(false);
     int selectOption = 1;
     while (true)
     {
@@ -1125,13 +1055,13 @@ void menuFood(Customer &customer)
         int key = _getch();
         switch (key)
         {
-        case KEY_UP:
-            selectOption = (selectOption == 1) ? MENUFOOD : selectOption - 1;
+        case Keys::KEY_UP:
+            selectOption = (selectOption == 1) ? Menu::MENUFOOD : selectOption - 1;
             break;
-        case KEY_DOWN:
-            selectOption = (selectOption == MENUFOOD) ? 1 : selectOption + 1;
+        case Keys::KEY_DOWN:
+            selectOption = (selectOption == Menu::MENUFOOD) ? 1 : selectOption + 1;
             break;
-        case KEY_ENTER:
+        case Keys::KEY_ENTER:
             switch (selectOption)
             {
             case 1:
@@ -1153,7 +1083,7 @@ void menuFood(Customer &customer)
                 menuQuantity(customer, "Cơm cuộn");
                 break;
             case 7:
-                isChangedOrder = true;
+                Globals::isChangedOrder = true;
                 system("cls");
                 return;
             }
@@ -1167,7 +1097,7 @@ void menuDish(Customer &customer)
 {
     system("cls");
     SetConsoleTitle(TEXT("Menu Food/Drink"));
-    ShowCursor(false);
+    ConsoleUtils::ShowCursor(false);
     int selectOption = 1;
     makeFileOrdered(customer);
     while (true)
@@ -1177,13 +1107,13 @@ void menuDish(Customer &customer)
         int key = _getch();
         switch (key)
         {
-        case KEY_UP:
-            selectOption = (selectOption == 1) ? MENUDISH : selectOption - 1;
+        case Keys::KEY_UP:
+            selectOption = (selectOption == 1) ? Menu::MENUDISH : selectOption - 1;
             break;
-        case KEY_DOWN:
-            selectOption = (selectOption == MENUDISH) ? 1 : selectOption + 1;
+        case Keys::KEY_DOWN:
+            selectOption = (selectOption == Menu::MENUDISH) ? 1 : selectOption + 1;
             break;
-        case KEY_ENTER:
+        case Keys::KEY_ENTER:
             switch (selectOption)
             {
             case 1:
@@ -1193,12 +1123,12 @@ void menuDish(Customer &customer)
                 menuDrink(customer);
                 break;
             case 3:
-                isChangedOrder = true;
-                firstOrder = true;
+                Globals::isChangedOrder = true;
+                Globals::firstOrder = true;
                 customer.ConfirmOrder();
                 return;
             case 4:
-                isChangedOrder = true;
+                Globals::isChangedOrder = true;
                 customer.setmoneyforOrder(customer.getMoneyforOrder() - customer.getTotalPrice());
                 system("cls");
                 return;
@@ -1212,7 +1142,7 @@ void menuDish(Customer &customer)
 string menuSelectTypeOfComputer()
 {
     SetConsoleTitle(TEXT("Menu chọn máy"));
-    ShowCursor(false);
+    ConsoleUtils::ShowCursor(false);
     int selectOption = 1;
     while (true)
     {
@@ -1220,13 +1150,13 @@ string menuSelectTypeOfComputer()
         int key = _getch();
         switch (key)
         {
-        case KEY_UP:
-            selectOption = (selectOption == 1) ? MENUSELECTTYPEOFCOMPUTER : selectOption - 1;
+        case Keys::KEY_UP:
+            selectOption = (selectOption == 1) ? Menu::MENUSELECTTYPEOFCOMPUTER : selectOption - 1;
             break;
-        case KEY_DOWN:
-            selectOption = (selectOption == MENUSELECTTYPEOFCOMPUTER) ? 1 : selectOption + 1;
+        case Keys::KEY_DOWN:
+            selectOption = (selectOption == Menu::MENUSELECTTYPEOFCOMPUTER) ? 1 : selectOption + 1;
             break;
-        case KEY_ENTER:
+        case Keys::KEY_ENTER:
             switch (selectOption)
             {
             case 1:
@@ -1249,7 +1179,7 @@ string menuSelectComputer(string typeOfComputer)
 {
     system("cls");
     SetConsoleTitle(TEXT("Menu chọn máy"));
-    ShowCursor(false);
+    ConsoleUtils::ShowCursor(false);
     int selectOption = 1;
     const int SIZE = Database<Computer>::gets(typeOfComputer, "Available").size() + 1;
     if (SIZE == 1)
@@ -1263,13 +1193,13 @@ string menuSelectComputer(string typeOfComputer)
         int key = _getch();
         switch (key)
         {
-        case KEY_UP:
+        case Keys::KEY_UP:
             selectOption = (selectOption == 1) ? SIZE : selectOption - 1;
             break;
-        case KEY_DOWN:
+        case Keys::KEY_DOWN:
             selectOption = (selectOption == SIZE) ? 1 : selectOption + 1;
             break;
-        case KEY_ENTER:
+        case Keys::KEY_ENTER:
             if (selectOption == SIZE)
             {
                 system("cls");
@@ -1290,12 +1220,12 @@ string menuSelectComputer(string typeOfComputer)
 
 bool button(int x, int y, string type, int selectOption)
 {
-    ShowCursor(false);
-    if (toLower(type) == "yesno")
+    ConsoleUtils::ShowCursor(false);
+    if (Utilities::toLower(type) == "yesno")
     {
         while (true)
         {
-            Gotoxy(x, y);
+            ConsoleUtils::Gotoxy(x, y);
             for (int i = 1; i <= 2; i++)
             {
                 printMenuOption(type, i, (i == selectOption));
@@ -1303,29 +1233,29 @@ bool button(int x, int y, string type, int selectOption)
             int key = _getch();
             switch (key)
             {
-            case KEY_LEFT:
+            case Keys::KEY_LEFT:
                 selectOption = (selectOption == 1) ? 2 : selectOption - 1;
                 break;
-            case KEY_RIGHT:
+            case Keys::KEY_RIGHT:
                 selectOption = (selectOption == 2) ? 1 : selectOption + 1;
                 break;
-            case KEY_ENTER:
+            case Keys::KEY_ENTER:
                 return selectOption == 1;
             default:
                 break;
             }
         }
     }
-    else if (toLower(type) == "ok")
+    else if (Utilities::toLower(type) == "ok")
     {
         while (true)
         {
-            Gotoxy(x, y);
+            ConsoleUtils::Gotoxy(x, y);
             printMenuOption(type, 1, true);
             int key = _getch();
             switch (key)
             {
-            case KEY_ENTER:
+            case Keys::KEY_ENTER:
                 return true;
             default:
                 break;
@@ -1338,13 +1268,13 @@ bool button(int x, int y, string type, int selectOption)
 void menuCustomer(Customer &customer)
 {
     SetConsoleTitle(TEXT("Menu khách hàng"));
-    ShowCursor(false);
+    ConsoleUtils::ShowCursor(false);
     int selectOption = 1;
     History history(Day().getCurrentDay(), customer.getId());
     thread threadShowTimeCustomer(showRemainingTimeOfCustomer, &customer);
     thread threadShowTimeComputer(showUsageTimeOfComputer, &customer.getComputer());
 
-    while (showRemainingTime)
+    while (Globals::showRemainingTime)
     {
         showMenu("customer", selectOption);
         if (_kbhit())
@@ -1352,33 +1282,33 @@ void menuCustomer(Customer &customer)
             int key = _getch();
             switch (key)
             {
-            case KEY_UP:
-                selectOption = (selectOption == 1) ? MENUCUSTOMER : selectOption - 1;
+            case Keys::KEY_UP:
+                selectOption = (selectOption == 1) ? Menu::MENUCUSTOMER : selectOption - 1;
                 break;
-            case KEY_DOWN:
-                selectOption = (selectOption == MENUCUSTOMER) ? 1 : selectOption + 1;
+            case Keys::KEY_DOWN:
+                selectOption = (selectOption == Menu::MENUCUSTOMER) ? 1 : selectOption + 1;
                 break;
-            case KEY_ENTER:
+            case Keys::KEY_ENTER:
                 switch (selectOption)
                 {
                 case 1:
-                    isChangingPassword = true;
+                    Globals::isChangingPassword = true;
                     customer.changePassword();
-                    isChangingPassword = false;
+                    Globals::isChangingPassword = false;
                     break;
                 case 2:
-                    isViewingInfo = true;
+                    Globals::isViewingInfo = true;
                     customer.showMyInfo();
-                    isViewingInfo = false;
+                    Globals::isViewingInfo = false;
                     break;
                 case 3:
-                    isOrdering = true;
+                    Globals::isOrdering = true;
                     menuDish(customer);
-                    isOrdering = false;
+                    Globals::isOrdering = false;
                     break;
                 case 4:
-                    showUsageTime = false;
-                    showRemainingTime = false;
+                    Globals::showUsageTime = false;
+                    Globals::showRemainingTime = false;
                     break;
                 }
             default:
@@ -1411,26 +1341,26 @@ void menuCustomer(Customer &customer)
     Database<Customer>::update(customer);
     Database<Account>::update(customer);
 
-    ShowCursor(true);
+    ConsoleUtils::ShowCursor(true);
 }
 
 /*------------------------------------TIME------------------------------------*/
 void showRemainingTimeOfCustomer(Customer *customer)
 {
-    while (showRemainingTime)
+    while (Globals::showRemainingTime)
     {
         Time currentTime = customer->getTimeFromFile();
-        if (!isChangingPassword && !isViewingInfo && !isOrdering)
+        if (!Globals::isChangingPassword && !Globals::isViewingInfo && !Globals::isOrdering)
         {
-            lock_guard<mutex> lock(mtx);
-            Gotoxy(1, 1);
+            lock_guard<mutex> lock(Globals::mtx);
+            ConsoleUtils::Gotoxy(1, 1);
             cout << "   Thời gian còn lại: " << currentTime << "    ";
         }
 
         if (currentTime.isZero())
         {
-            showRemainingTime = false;
-            showUsageTime = false;
+            Globals::showRemainingTime = false;
+            Globals::showUsageTime = false;
             MessageBoxW(NULL, L"Hết thời gian sử dụng!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
             break;
         }
@@ -1441,22 +1371,22 @@ void showRemainingTimeOfCustomer(Customer *customer)
         customer->setTimeToFile(currentTime);
         this_thread::sleep_for(chrono::seconds(1));
     }
-    ShowCursor(true);
+    ConsoleUtils::ShowCursor(true);
 }
 
 void showUsageTimeOfComputer(Computer *computer)
 {
     Time usageTime;
-    while (showUsageTime)
+    while (Globals::showUsageTime)
     {
-        if (!isChangingPassword && !isViewingInfo && !isOrdering)
+        if (!Globals::isChangingPassword && !Globals::isViewingInfo && !Globals::isOrdering)
         {
-            lock_guard<mutex> lock(mtx);
-            Gotoxy(1, 2);
+            lock_guard<mutex> lock(Globals::mtx);
+            ConsoleUtils::Gotoxy(1, 2);
             cout << "   Thời gian sử dụng: " << usageTime << "    ";
             computer->setUsageTimeToFile(usageTime);
             computer->setUsageTime(usageTime);
-            Gotoxy(1, 3);
+            ConsoleUtils::Gotoxy(1, 3);
             cout << "   Bạn đang sử dụng máy: " << computer->getId() << "    ";
         }
         usageTime++;
@@ -1697,7 +1627,7 @@ void assignComputer(Customer &customer)
 
 void makeFileOrdered(Customer &customer)
 {
-    if (firstOrder)
+    if (Globals::firstOrder)
     {
         MessageBoxW(NULL, L"Số dư sau khi mua phải trên 5.000 đồng!", L"Yêu cầu", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
         fstream file("./data/order/" + customer.getId() + "_ordered.txt", ios::out);
@@ -1707,7 +1637,7 @@ void makeFileOrdered(Customer &customer)
             return;
         }
         file.close();
-        firstOrder = false;
+        Globals::firstOrder = false;
     }
 }
 
@@ -1740,7 +1670,7 @@ string getTypesOfComputerFromFile(string idComputer)
 
 void printItemsOrdered(Customer &customer)
 {
-    if (isChangedOrder)
+    if (Globals::isChangedOrder)
     {
         fstream file("./data/order/" + customer.getId() + "_ordered.txt", ios::in);
         if (!file.is_open())
@@ -1749,26 +1679,26 @@ void printItemsOrdered(Customer &customer)
             return;
         }
 
-        Gotoxy(0, 6);
+        ConsoleUtils::Gotoxy(0, 6);
         int temp_balance = customer.getBalance();
-        cout << "Số dư hiện tại: " << formatMoney(temp_balance) << " (VNĐ)" << endl;
+        cout << "Số dư hiện tại: " << Utilities::formatMoney(temp_balance) << " (VNĐ)" << endl;
         int i = 7;
-        ClearLine(i);
+        ConsoleUtils::ClearLine(i);
         cout << "┌───────────────────────────────────────────────┐" << endl;
-        ClearLine(i + 1);
-        Gotoxy(0, i + 1);
+        ConsoleUtils::ClearLine(i + 1);
+        ConsoleUtils::Gotoxy(0, i + 1);
         cout << "│               Các món đã đặt                  │" << endl;
         i += 2;
-        ClearLine(i);
-        Gotoxy(0, i);
+        ConsoleUtils::ClearLine(i);
+        ConsoleUtils::Gotoxy(0, i);
         cout << "├────────────────────────┬──────┬───────────────┤" << endl;
         i++;
-        ClearLine(i);
-        Gotoxy(0, i);
+        ConsoleUtils::ClearLine(i);
+        ConsoleUtils::Gotoxy(0, i);
         cout << "│ Tên món                │ SL   │ Giá           │" << endl;
         i++;
-        ClearLine(i);
-        Gotoxy(0, i);
+        ConsoleUtils::ClearLine(i);
+        ConsoleUtils::Gotoxy(0, i);
         cout << "├────────────────────────┼──────┼───────────────┤" << endl;
         string line;
 
@@ -1785,35 +1715,35 @@ void printItemsOrdered(Customer &customer)
             ss.ignore();
             ss >> price;
 
-            ClearLine(i);
-            Gotoxy(0, i);
+            ConsoleUtils::ClearLine(i);
+            ConsoleUtils::Gotoxy(0, i);
             cout << "│ " << name;
-            Gotoxy(25, i);
+            ConsoleUtils::Gotoxy(25, i);
             cout << "│ " << quantity;
-            Gotoxy(32, i);
-            cout << "│ " << formatMoney(price);
-            Gotoxy(48, i);
+            ConsoleUtils::Gotoxy(32, i);
+            cout << "│ " << Utilities::formatMoney(price);
+            ConsoleUtils::Gotoxy(48, i);
             cout << "│" << endl;
         }
 
         i++;
-        ClearLine(i);
-        Gotoxy(0, i);
+        ConsoleUtils::ClearLine(i);
+        ConsoleUtils::Gotoxy(0, i);
         cout << "├────────────────────────┴──────┴───────────────┤" << endl;
 
         i++;
-        ClearLine(i);
-        Gotoxy(0, i);
+        ConsoleUtils::ClearLine(i);
+        ConsoleUtils::Gotoxy(0, i);
         cout << "│ Tổng tiền: ";
-        Gotoxy(34, i);
-        cout << formatMoney(customer.getTotalPrice());
-        Gotoxy(48, i);
+        ConsoleUtils::Gotoxy(34, i);
+        cout << Utilities::formatMoney(customer.getTotalPrice());
+        ConsoleUtils::Gotoxy(48, i);
         cout << "│" << endl;
         i++;
-        ClearLine(i);
-        Gotoxy(0, i);
+        ConsoleUtils::ClearLine(i);
+        ConsoleUtils::Gotoxy(0, i);
         cout << "└───────────────────────────────────────────────┘" << endl;
-        isChangedOrder = false;
+        Globals::isChangedOrder = false;
         file.close();
     }
 }
@@ -1869,467 +1799,6 @@ bool checkIsOrdered(Customer &customer, string nameRefreshment)
 }
 
 /*------------------------------------OTHER------------------------------------*/
-void loading()
-{
-    for (int i = 0; i <= 25; i++)
-    {
-        cout << "\r";
-        for (int j = 0; j < i; j++)
-            cout << "█";
-        for (int j = i; j < 25; j++)
-            cout << "▒";
-        cout << " " << i * 4 << "%";
-        Sleep(50);
-    }
-}
-
-bool isRegisterComputer(string username)
-{
-    fstream file("./data/computer/registered.txt", ios::in);
-    if (!file.is_open())
-    {
-        cout << "Không thể mở file registered" << endl;
-        return false;
-    }
-    string line;
-    while (getline(file, line))
-    {
-        stringstream ss(line);
-        string usernameCustomerInfile;
-        getline(ss, usernameCustomerInfile, '|');
-        if (usernameCustomerInfile == username)
-        {
-            file.close();
-            return true;
-        }
-    }
-    file.close();
-    return false;
-}
-
-string formatMoney(double money)
-{
-    stringstream ss;
-    ss << fixed << setprecision(0) << money;
-    string str = ss.str();
-    string result;
-    int count = 0;
-    for (int i = str.size() - 1; i >= 0; i--)
-    {
-        result = str[i] + result;
-        count++;
-        if (count % 3 == 0 && i != 0)
-            result = "." + result;
-    }
-    return result;
-}
-
-void pressKeyQ()
-{
-    ShowCursor(false);
-    cout << "\n\n(Nhấn 'q' để thoát)" << endl;
-    while (_getch() != 'q')
-        ;
-    system("cls");
-}
-
-string toUpper(const string &str)
-{
-    string temp = str;
-    transform(temp.begin(), temp.end(), temp.begin(), ::toupper);
-    return temp;
-}
-
-string toLower(const string &str)
-{
-    string temp = str;
-    transform(temp.begin(), temp.end(), temp.begin(), ::tolower);
-    return temp;
-}
-
-bool isNumber(const string &str)
-{
-    return all_of(str.begin(), str.end(), ::isdigit);
-}
-
-bool isString(const string &str)
-{
-    for (int i = 0; i < str.size(); i++)
-    {
-        if (!(isalpha(str[i]) || str[i] != ' '))
-            return false;
-    }
-    return true;
-}
-
-bool isPhoneNumber(const string &str)
-{
-    if (str.size() != 10)
-        return false;
-    const List<string> telephonePrefixes = {"013", "016", "032", "033", "034", "035", "036", "037", "038", "039", "052", "055", "056", "058", "059", "070", "076", "077", "078", "079", "081", "082", "083", "084", "085", "086", "088", "089", "090", "091", "092", "093", "094", "096", "097", "098", "099"};
-
-    for (string &telephonePrefix : telephonePrefixes)
-    {
-        if (str.substr(0, 3) == telephonePrefix)
-            return isNumber(str);
-    }
-    return false;
-}
-
-bool isExistPhoneNumber(const string &phone)
-{
-    fstream file("./data/customer/customer.txt", ios::in);
-    if (!file.is_open())
-    {
-        cout << "Không thể mở file customer" << endl;
-        return false;
-    }
-    string line;
-    while (getline(file, line))
-    {
-        stringstream ss(line);
-        string id, name, username, phoneStr, balance, currentComputerID;
-        getline(ss, id, '|');
-        getline(ss, name, '|');
-        getline(ss, username, '|');
-        getline(ss, phoneStr, '|');
-        getline(ss, balance, '|');
-        getline(ss, currentComputerID);
-        if (phoneStr == phone)
-        {
-            file.close();
-            return true;
-        }
-    }
-    file.close();
-    return false;
-}
-
-void inputMonthAndYear(int &month, int &year)
-{
-    while (true)
-    {
-        string temp;
-        cout << "Nhập tháng, năm theo định dạng (mm/yyyy): ";
-        cin >> temp;
-
-        int pos = temp.find('/');
-        if (pos == -1 || pos == 0 || pos == temp.size() - 1 || temp.find('/', pos + 1) != -1)
-        {
-            cout << "Nhập sai định dạng!" << endl;
-            continue;
-        }
-
-        month = stoi(temp.substr(0, pos));
-        year = stoi(temp.substr(pos + 1));
-
-        if (month < 1 || month > 12 || year <= 0)
-        {
-            cout << "Nhập sai định dạng!" << endl;
-            continue;
-        }
-        break;
-    }
-}
-
-void inputYear(int &year)
-{
-    string temp;
-    while (true)
-    {
-        cout << "Nhập năm: ";
-        cin >> temp;
-        if (isNumber(temp))
-        {
-            year = stoi(temp);
-            if (year > 0)
-                break;
-        }
-        cout << "Nhập sai định dạng!" << endl;
-    }
-}
-
-string trim(const string &str)
-{
-    string temp = str;
-    while (temp[0] == ' ')
-        temp.erase(0, 1);
-    while (temp[temp.size() - 1] == ' ')
-        temp.erase(temp.size() - 1, 1);
-
-    for (int i = 0; i < temp.size(); i++)
-    {
-        if (temp[i] == ' ' && temp[i + 1] == ' ')
-        {
-            temp.erase(i, 1);
-            i--;
-        }
-    }
-    return temp;
-}
-
-string removeSpecialCharacter(string &str)
-{
-    for (int i = 0; i < str.size(); i++)
-    {
-        if (!((str[i] >= 'a' && str[i] <= 'z') || (str[i] >= 'A' && str[i] <= 'Z') || str[i] == ' '))
-        {
-            str.erase(i, 1);
-            i--;
-        }
-    }
-    return str;
-}
-
-string toName(string &str)
-{
-    str = trim(str);
-    str = toLower(str);
-    for (int i = 0; i < str.size(); i++)
-    {
-        if ((i == 0 || (i > 0 && str[i - 1] == ' ')) && str[i] >= 'a' && str[i] <= 'z')
-            str[i] -= 32;
-    }
-    return str;
-}
-
-void enterPassword(string &password)
-{
-    password.clear();
-    int i = 0;
-    bool show = false;
-    while (true)
-    {
-        char ch = _getch();
-        if (ch == KEY_ENTER)
-        {
-            if (!password.empty())
-                break;
-        }
-        else if (ch == KEY_BACKSPACE)
-        {
-            if (i > 0)
-            {
-                i--;
-                cout << "\b \b";
-                password.pop_back();
-            }
-        }
-        else if (ch == KEY_TAB)
-        {
-            show = !show;
-            for (int j = 0; j < i; j++)
-                cout << "\b \b";
-
-            for (int j = 0; j < i; j++)
-            {
-                if (show)
-                    cout << password[j];
-                else
-                    cout << "•";
-            }
-        }
-        else if (ch == KEY_ESC)
-        {
-            password.clear();
-            break;
-        }
-        else
-        {
-            password += ch;
-            i++;
-            if (show)
-                cout << ch;
-            else
-                cout << "•";
-        }
-    }
-    cout << endl;
-}
-
-void enterString(string &str, int length)
-{
-    str.clear();
-    char ch;
-    while (true)
-    {
-        ch = _getch();
-        if (ch == KEY_ENTER)
-        {
-            if (!str.empty())
-                break;
-        }
-        else if (ch == KEY_TAB)
-            continue;
-        else if (ch == KEY_BACKSPACE)
-        {
-            if (!str.empty())
-            {
-                cout << "\b \b";
-                str.pop_back();
-            }
-        }
-        else if (ch == KEY_ESC)
-        {
-            str.clear();
-            break;
-        }
-        else
-        {
-            if (length == 0 || str.size() < length)
-            {
-                cout << ch;
-                str += ch;
-            }
-        }
-    }
-    cout << endl;
-}
-
-void enterLetter(string &str, int length)
-{
-    str.clear();
-    char ch;
-    while (true)
-    {
-        ch = _getch();
-        if (ch == KEY_ENTER)
-        {
-            if (!str.empty())
-                break;
-        }
-        else if (ch == KEY_TAB)
-            continue;
-        else if (ch == KEY_BACKSPACE)
-        {
-            if (!str.empty())
-            {
-                cout << "\b \b";
-                str.pop_back();
-            }
-        }
-        else if (ch == KEY_ESC)
-        {
-            str.clear();
-            break;
-        }
-        else
-        {
-            if (isalpha(ch) || ch == ' ')
-            {
-                if (length == 0 || str.size() < length)
-                {
-                    cout << ch;
-                    str += ch;
-                }
-            }
-        }
-    }
-    cout << endl;
-}
-
-void enterNumber(string &num, int length)
-{
-    num.clear();
-    char ch;
-    while (true)
-    {
-        ch = _getch();
-        if (ch == KEY_ENTER)
-        {
-            if (!num.empty())
-                break;
-        }
-        else if (ch == KEY_TAB)
-            continue;
-        else if (ch == KEY_BACKSPACE)
-        {
-            if (!num.empty())
-            {
-                cout << "\b \b";
-                num.pop_back();
-            }
-        }
-        else if (ch == KEY_ESC)
-        {
-            num.clear();
-            break;
-        }
-        else
-        {
-            if (isdigit(ch))
-            {
-                if (length == 0 || num.size() < length)
-                {
-                    cout << ch;
-                    num += ch;
-                }
-            }
-        }
-    }
-    cout << endl;
-}
-
-void enterMoney(string &money, int length)
-{
-    money.clear();
-    char ch;
-    Gotoxy(29, 1);
-    while (true)
-    {
-        ch = _getch();
-        if (ch == KEY_ENTER)
-        {
-            if (!money.empty())
-                break;
-        }
-        else if (ch == KEY_TAB)
-            continue;
-        else if (ch == KEY_BACKSPACE)
-        {
-            if (!money.empty())
-            {
-                money.pop_back();
-                ClearLine(22, 1, 10);
-                if (!money.empty())
-                {
-                    if (money.size() >= 4)
-                        Gotoxy(29 - money.size() - 1, 1);
-                    else
-                        Gotoxy(29 - money.size(), 1);
-                    cout << formatMoney(stod(money));
-                }
-                else
-                    Gotoxy(29, 1);
-            }
-        }
-        else if (ch == KEY_ESC)
-        {
-            money.clear();
-            break;
-        }
-        else
-        {
-            if (isdigit(ch))
-            {
-                if (ch == '0' && money.empty())
-                    continue;
-                if ((length == 0 || money.size() < length))
-                {
-                    money += ch;
-                    ClearLine(22, 1, 10);
-                    if (money.size() >= 4)
-                        Gotoxy(29 - money.size() - 1, 1);
-                    else
-                        Gotoxy(29 - money.size(), 1);
-                    cout << formatMoney(stod(money));
-                }
-            }
-        }
-    }
-    cout << endl;
-}
-
 void handleStaffLogin(Account &account)
 {
     account.setStatus("Online");
@@ -2340,10 +1809,10 @@ void handleStaffLogin(Account &account)
 
 void handleCustomerLogin(Account &account)
 {
-    if (!isRegisterComputer(account.getUserName()))
+    if (!Utilities::isRegisterComputer(account.getUserName()))
     {
         MessageBoxW(NULL, L"Bạn chưa đăng kí máy, vui lòng đăng kí máy trước!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
-        ShowCursor(true);
+        ConsoleUtils::ShowCursor(true);
         return;
     }
 

@@ -43,7 +43,7 @@ g++ -std=c++11 src/*.cpp -o build/Net-Management
 ```
 
 > [!TIP]
-> Bạn có thể chạy file Net-Management.exe trong thư mục build mà không cần biên dịch lại
+> Bạn có thể chạy file Net-Management.exe trong thư mục Net-Management mà không cần biên dịch lại chương trình
 
 # 🧑🏻‍💻 Contributors
 

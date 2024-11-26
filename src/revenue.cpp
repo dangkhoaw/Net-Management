@@ -1,3 +1,4 @@
+#include "../include/utilities.hpp"
 #include "../include/process.hpp"
 #include "../include/revenue.hpp"
 
@@ -88,16 +89,16 @@ void Revenue::viewRevenueDay(Date &date)
     if (!checkDate(date))
     {
         cout << "Không có dữ liệu doanh thu cho ngày này" << endl;
-        ShowCursor(false);
-        pressKeyQ();
+        ConsoleUtils::ShowCursor(false);
+        Utilities::pressKeyQ();
         return;
     }
 
     *this = getRevenueByDate(date);
-    cout << "Doanh thu ngày " << date << " là: " << formatMoney((double)this->totalMoney) << " (VNĐ)" << endl;
+    cout << "Doanh thu ngày " << date << " là: " << Utilities::formatMoney((double)this->totalMoney) << " (VNĐ)" << endl;
 
-    ShowCursor(false);
-    pressKeyQ();
+    ConsoleUtils::ShowCursor(false);
+    Utilities::pressKeyQ();
 }
 
 void Revenue::viewRevenueMonth(Date &date)
@@ -107,16 +108,16 @@ void Revenue::viewRevenueMonth(Date &date)
     if (!checkDate(date))
     {
         cout << "Không có dữ liệu doanh thu cho tháng này" << endl;
-        ShowCursor(false);
-        pressKeyQ();
+        ConsoleUtils::ShowCursor(false);
+        Utilities::pressKeyQ();
         return;
     }
 
     *this = getRevenueByMonth(date);
-    cout << "Doanh thu tháng " << setfill('0') << setw(2) << date.getMonth() << "/" << date.getYear() << " là: " << formatMoney((double)this->totalMoney) << " (VNĐ)" << endl;
+    cout << "Doanh thu tháng " << setfill('0') << setw(2) << date.getMonth() << "/" << date.getYear() << " là: " << Utilities::formatMoney((double)this->totalMoney) << " (VNĐ)" << endl;
 
-    ShowCursor(false);
-    pressKeyQ();
+    ConsoleUtils::ShowCursor(false);
+    Utilities::pressKeyQ();
 }
 
 void Revenue::viewRevenueYear(Date &date)
@@ -126,17 +127,17 @@ void Revenue::viewRevenueYear(Date &date)
     if (!checkDate(date))
     {
         cout << "Không có dữ liệu doanh thu cho năm này" << endl;
-        ShowCursor(false);
-        pressKeyQ();
+        ConsoleUtils::ShowCursor(false);
+        Utilities::pressKeyQ();
         return;
     }
 
     *this = getRevenueByYear(date);
 
-    cout << "Doanh thu năm " << date.getYear() << " là: " << formatMoney((double)this->totalMoney) << " (VNĐ)" << endl;
+    cout << "Doanh thu năm " << date.getYear() << " là: " << Utilities::formatMoney((double)this->totalMoney) << " (VNĐ)" << endl;
 
-    ShowCursor(false);
-    pressKeyQ();
+    ConsoleUtils::ShowCursor(false);
+    Utilities::pressKeyQ();
 }
 
 Revenue Revenue::getRevenueByDate(Date &date)

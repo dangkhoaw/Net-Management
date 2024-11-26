@@ -1,9 +1,6 @@
-#include "../include/process.hpp"
+#include "../include/utilities.hpp"
 #include "../include/base64.hpp"
 #include "../include/database.hpp"
-#include <mutex>
-
-mutex cus;
 
 Customer::Customer(string username, string password, string role, string id, string status, string isFirstLogin, string name, string phone, double balance, Time time, int moneyforOrder, Dish dish, Computer computer, History historyRecently)
     : Account(username, password, role, id, status, isFirstLogin), name(name), phone(phone), balance(balance), time(time), moneyforOrder(moneyforOrder), dish(dish), computer(computer), historyRecently(historyRecently) {}
@@ -22,7 +19,7 @@ Computer &Customer::getComputerViaFile()
 {
     try
     {
-        lock_guard<mutex> lock(cus);
+        lock_guard<mutex> lock(Globals::mtx);
         fstream file("./data/computer/registered.txt", ios::in);
         if (!file.is_open())
         {
@@ -69,7 +66,7 @@ Time Customer::getTimeFromFile()
 {
     try
     {
-        lock_guard<mutex> lock(cus);
+        lock_guard<mutex> lock(Globals::mtx);
         Time time;
         fstream file("./data/time/" + getId() + ".txt", ios::in);
         if (!file.is_open())
@@ -91,7 +88,7 @@ void Customer::setTimeToFile(Time time)
 {
     try
     {
-        lock_guard<mutex> lock(cus);
+        lock_guard<mutex> lock(Globals::mtx);
         fstream file("./data/time/" + getId() + ".txt", ios::out);
         if (!file.is_open())
         {
@@ -124,19 +121,19 @@ void Customer::showMyInfo()
     cout << "├───────────────────────────────────────┤" << endl;
     cout << "│ Tên khách hàng: " << name << endl;
     cout << "│ Số điện thoại: " << phone << endl;
-    cout << "│ Số dư: " << formatMoney(balance) << " (VNĐ)" << endl;
+    cout << "│ Số dư: " << Utilities::formatMoney(balance) << " (VNĐ)" << endl;
     cout << "│ ";
     showHistory();
     cout << "└───────────────────────────────────────┘" << endl;
-    Gotoxy(40, 3);
+    ConsoleUtils::Gotoxy(40, 3);
     cout << "│";
-    Gotoxy(40, 4);
+    ConsoleUtils::Gotoxy(40, 4);
     cout << "│";
-    Gotoxy(40, 5);
+    ConsoleUtils::Gotoxy(40, 5);
     cout << "│";
-    Gotoxy(40, 6);
+    ConsoleUtils::Gotoxy(40, 6);
     cout << "│";
-    pressKeyQ();
+    Utilities::pressKeyQ();
 }
 void Customer::showHistory()
 {
@@ -202,40 +199,40 @@ void Customer::unregisterComputer()
 }
 istream &operator>>(istream &is, Customer &customer)
 {
-    Gotoxy(0, 0);
+    ConsoleUtils::Gotoxy(0, 0);
     cout << "┌─────────────────────────────────────────────┐" << endl;
     cout << "│ Tên khách hàng:                             │" << endl;
     cout << "│ Số điện thoại:                              │" << endl;
     cout << "│ Tên đăng nhập:                              │" << endl;
     cout << "└─────────────────────────────────────────────┘" << endl;
 
-    Gotoxy(18, 1);
-    enterLetter(customer.name);
+    ConsoleUtils::Gotoxy(18, 1);
+    Utilities::enterLetter(customer.name);
     if (customer.name.empty())
     {
         ShowCursor(false);
         return is;
     }
-    toName(customer.name);
+    Utilities::toName(customer.name);
 
     while (true)
     {
-        Gotoxy(17, 2);
-        enterNumber(customer.phone, 10);
+        ConsoleUtils::Gotoxy(17, 2);
+        Utilities::enterNumber(customer.phone, 10);
         if (customer.phone.empty())
         {
             ShowCursor(false);
             return is;
         }
-        if (isExistPhoneNumber(customer.phone))
+        if (Utilities::isExistPhoneNumber(customer.phone))
         {
             MessageBoxW(NULL, L"Số điện thoại đã tồn tại", L"Thông báo", MB_OK | MB_ICONWARNING | MB_TOPMOST);
-            ClearLine(17, 2, 19);
+            ConsoleUtils::ClearLine(17, 2, 19);
         }
-        else if (!isPhoneNumber(customer.phone))
+        else if (!Utilities::isPhoneNumber(customer.phone))
         {
             MessageBoxW(NULL, L"Số điện thoại không hợp lệ", L"Thông báo", MB_OK | MB_ICONWARNING | MB_TOPMOST);
-            ClearLine(17, 2, 19);
+            ConsoleUtils::ClearLine(17, 2, 19);
         }
         else
             break;
@@ -243,8 +240,8 @@ istream &operator>>(istream &is, Customer &customer)
 
     while (true)
     {
-        Gotoxy(17, 3);
-        enterString(customer.username);
+        ConsoleUtils::Gotoxy(17, 3);
+        Utilities::enterString(customer.username);
         if (customer.username.empty())
         {
             ShowCursor(false);
@@ -253,12 +250,12 @@ istream &operator>>(istream &is, Customer &customer)
         if (isExistUsername(customer.username))
         {
             MessageBoxW(NULL, L"Tài khoản đã tồn tại", L"Thông báo", MB_OK | MB_ICONWARNING | MB_TOPMOST);
-            ClearLine(17, 3, 18);
+            ConsoleUtils::ClearLine(17, 3, 18);
         }
         else
             break;
     }
-    ClearLine(4);
+    ConsoleUtils::ClearLine(4);
     cout << "│ Mật khẩu: 123456                            │" << endl;
     cout << "└─────────────────────────────────────────────┘" << endl;
 

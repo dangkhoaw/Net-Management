@@ -1,4 +1,4 @@
-#include "../include/process.hpp"
+#include "../include/utilities.hpp"
 #include "../include/revenue.hpp"
 #include "../include/mtime.hpp"
 #include "../include/database.hpp"
@@ -13,12 +13,12 @@ Staff::Staff(string username, string password, string role, string id, string st
 void Staff::addAccount()
 {
     system("cls");
-    ShowCursor(true);
+    ConsoleUtils::ShowCursor(true);
     Customer customer;
     cin >> customer;
     if (customer.getUserName().empty() || customer.getName().empty() || customer.getPhone().empty())
     {
-        ShowCursor(false);
+        ConsoleUtils::ShowCursor(false);
         system("cls");
         return;
     }
@@ -29,23 +29,23 @@ void Staff::addAccount()
         MessageBoxW(NULL, L"Thêm tài khoản thất bại", L"Thông báo", MB_OK);
 
     system("cls");
-    ShowCursor(false);
+    ConsoleUtils::ShowCursor(false);
 }
 
 void Staff::removeAccount()
 {
     system("cls");
-    ShowCursor(true);
+    ConsoleUtils::ShowCursor(true);
     string id;
     cout << "Nhập id tài khoản cần xóa: ";
-    enterString(id);
+    Utilities::enterString(id);
     if (id.empty())
     {
-        ShowCursor(false);
+        ConsoleUtils::ShowCursor(false);
         system("cls");
         return;
     }
-    id = toUpper(id);
+    id = Utilities::toUpper(id);
     Customer customer;
     customer.setId(id);
     cout << "\nBạn có chắc chắn muốn xóa tài khoản này không?" << endl;
@@ -56,20 +56,20 @@ void Staff::removeAccount()
         else
             MessageBoxW(NULL, L"Xóa tài khoản thất bại", L"Thông báo", MB_OK);
     }
-    ShowCursor(false);
+    ConsoleUtils::ShowCursor(false);
     system("cls");
 }
 
 void Staff::addComputer()
 {
     system("cls");
-    ShowCursor(true);
+    ConsoleUtils::ShowCursor(true);
     while (true)
     {
         string typeOfComputer = menuSelectTypeOfComputer();
         if (typeOfComputer == "")
         {
-            ShowCursor(false);
+            ConsoleUtils::ShowCursor(false);
             system("cls");
             return;
         }
@@ -84,7 +84,7 @@ void Staff::addComputer()
             MessageBoxW(NULL, L"Thêm máy tính thất bại", L"Thông báo", MB_OK);
     }
     system("cls");
-    ShowCursor(false);
+    ConsoleUtils::ShowCursor(false);
 }
 
 void Staff::removeComputer()
@@ -110,7 +110,7 @@ void Staff::removeComputer()
         else
         {
             cout << "\nXóa máy thất bại" << endl;
-            ShowCursor(false);
+            ConsoleUtils::ShowCursor(false);
             Sleep(500);
         }
     }
@@ -121,11 +121,11 @@ void Staff::viewComputerStatus()
 {
     system("cls");
     List<Computer> prevComputers;
-    Gotoxy(0, 0);
+    ConsoleUtils::Gotoxy(0, 0);
     cout << "┌──────────┬────────────────────┬──────────────────────────┬──────────────────────┐" << endl;
-    Gotoxy(0, 1);
+    ConsoleUtils::Gotoxy(0, 1);
     cout << "│   MÁY    │     TRẠNG THÁI     │        KHÁCH HÀNG        │   THỜI GIAN SỬ DỤNG  │" << endl;
-    Gotoxy(0, 2);
+    ConsoleUtils::Gotoxy(0, 2);
     cout << "├──────────┼────────────────────┼──────────────────────────┼──────────────────────┤" << endl;
     while (true)
     {
@@ -135,41 +135,41 @@ void Staff::viewComputerStatus()
         {
             if (prevComputers.empty() || prevComputers[i].getUsageTime() != computer.getUsageTime())
             {
-                ClearLine(i + 3);
-                Gotoxy(0, i + 3);
+                ConsoleUtils::ClearLine(i + 3);
+                ConsoleUtils::Gotoxy(0, i + 3);
                 cout << "│  " << computer.getId() << "   ";
-                Gotoxy(11, i + 3);
+                ConsoleUtils::Gotoxy(11, i + 3);
                 (computer.getStatus() == "Using") ? cout << "│    Đang sử dụng" : cout << "│       Trống";
 
                 if (computer.getCustomerUsingName() == "")
                 {
-                    Gotoxy(32, i + 3);
+                    ConsoleUtils::Gotoxy(32, i + 3);
                     cout << "│             -";
                 }
                 else
                 {
-                    Gotoxy(32, i + 3);
+                    ConsoleUtils::Gotoxy(32, i + 3);
                     cout << "│        " << computer.getCustomerUsingName();
                 }
                 if (computer.getUsageTime().isZero())
                 {
-                    Gotoxy(59, i + 3);
+                    ConsoleUtils::Gotoxy(59, i + 3);
                     cout << "│           -";
                 }
                 else
                 {
-                    Gotoxy(59, i + 3);
+                    ConsoleUtils::Gotoxy(59, i + 3);
                     cout << "│       " << computer.getUsageTime();
                 }
-                Gotoxy(82, i + 3);
+                ConsoleUtils::Gotoxy(82, i + 3);
                 cout << "│";
             }
             i++;
         }
         prevComputers = computers;
-        Gotoxy(0, computers.size() + 3);
+        ConsoleUtils::Gotoxy(0, computers.size() + 3);
         cout << "└──────────┴────────────────────┴──────────────────────────┴──────────────────────┘" << endl;
-        Gotoxy(0, computers.size() + 5);
+        ConsoleUtils::Gotoxy(0, computers.size() + 5);
         cout << "(Nhấn phím q để thoát)";
         if (_kbhit())
         {
@@ -187,13 +187,13 @@ void Staff::viewComputerStatus()
 void Staff::searchCustomer()
 {
     system("cls");
-    ShowCursor(true);
+    ConsoleUtils::ShowCursor(true);
     string info;
     cout << "Nhập thông tin khách hàng: ";
-    enterString(info);
+    Utilities::enterString(info);
     if (info.empty())
     {
-        ShowCursor(false);
+        ConsoleUtils::ShowCursor(false);
         system("cls");
         return;
     }
@@ -204,17 +204,17 @@ void Staff::searchCustomer()
     int i = 0;
     for (Customer &customer : customers)
     {
-        Gotoxy(0, i + 4);
+        ConsoleUtils::Gotoxy(0, i + 4);
         cout << "│ " << customer.getId();
-        Gotoxy(11, i + 4);
+        ConsoleUtils::Gotoxy(11, i + 4);
         cout << "│  " << customer.getName();
-        Gotoxy(32 + 11, i + 4);
+        ConsoleUtils::Gotoxy(32 + 11, i + 4);
         cout << "│      " << customer.getUserName();
-        Gotoxy(55 + 11, i + 4);
+        ConsoleUtils::Gotoxy(55 + 11, i + 4);
         cout << "│      " << customer.getPhone();
-        Gotoxy(79 + 11, i + 4);
+        ConsoleUtils::Gotoxy(79 + 11, i + 4);
         cout << "│       " << customer.getStatus();
-        Gotoxy(102 + 11, i + 4);
+        ConsoleUtils::Gotoxy(102 + 11, i + 4);
         if (customer.getComputer().getId() == "")
         {
             cout << "│          -";
@@ -223,20 +223,20 @@ void Staff::searchCustomer()
         {
             cout << "│        " << customer.getComputer().getId();
         }
-        Gotoxy(125 + 11, i + 4);
+        ConsoleUtils::Gotoxy(125 + 11, i + 4);
         cout << "│";
         i++;
     }
-    Gotoxy(0, i + 4);
+    ConsoleUtils::Gotoxy(0, i + 4);
     cout << "└──────────┴───────────────────────────────┴──────────────────────┴───────────────────────┴──────────────────────┴──────────────────────┘" << endl;
-    pressKeyQ();
-    ShowCursor(false);
+    Utilities::pressKeyQ();
+    ConsoleUtils::ShowCursor(false);
 }
 
 void Staff::topUpAccount()
 {
     system("cls");
-    ShowCursor(true);
+    ConsoleUtils::ShowCursor(true);
     string userName;
     Customer customer;
     Date currentDate = Date().getCurrentDate();
@@ -246,20 +246,20 @@ void Staff::topUpAccount()
 
     while (true)
     {
-        ClearLine(3);
-        ClearLine(4);
+        ConsoleUtils::ClearLine(3);
+        ConsoleUtils::ClearLine(4);
 
-        Gotoxy(0, 3);
+        ConsoleUtils::Gotoxy(0, 3);
 
         cout << "(Nhập sai 3 lần sẽ thoát: " << count << " lần nhập sai)";
 
-        ClearLine(0);
-        Gotoxy(0, 0);
+        ConsoleUtils::ClearLine(0);
+        ConsoleUtils::Gotoxy(0, 0);
         cout << "Tên đăng nhập: ";
-        enterString(userName);
+        Utilities::enterString(userName);
         if (userName.empty())
         {
-            ShowCursor(false);
+            ConsoleUtils::ShowCursor(false);
             system("cls");
             return;
         }
@@ -270,15 +270,15 @@ void Staff::topUpAccount()
             {
                 system("cls");
                 cout << "Nhập sai 3 lần. Hãy thử lại sau" << endl;
-                pressKeyQ();
-                ShowCursor(false);
+                Utilities::pressKeyQ();
+                ConsoleUtils::ShowCursor(false);
                 return;
             }
         }
         else
         {
-            ClearLine(3);
-            ClearLine(4);
+            ConsoleUtils::ClearLine(3);
+            ConsoleUtils::ClearLine(4);
             break;
         }
     }
@@ -286,12 +286,12 @@ void Staff::topUpAccount()
     double amount = 0;
     do
     {
-        Gotoxy(0, 1);
+        ConsoleUtils::Gotoxy(0, 1);
         cout << "Nhập số tiền cần nạp: ";
-        enterMoney(money, 6);
+        Utilities::enterMoney(money, 6);
         if (money.empty())
         {
-            ShowCursor(false);
+            ConsoleUtils::ShowCursor(false);
             system("cls");
             return;
         }
@@ -322,16 +322,16 @@ void Staff::topUpAccount()
     Database<Customer>::update(customer);
     cout << "\nNạp tiền thành công" << endl;
 
-    pressKeyQ();
+    Utilities::pressKeyQ();
 
-    ShowCursor(false);
+    ConsoleUtils::ShowCursor(false);
 }
 
 void Staff::viewCustomersInfo()
 {
     system("cls");
     List<Customer> prevCustomers;
-    Gotoxy(0, 0);
+    ConsoleUtils::Gotoxy(0, 0);
     cout << "┌──────────┬───────────────────────────────┬──────────────────────┬───────────────────────┬──────────────────────┬─────────────────────┐" << endl;
     cout << "│    ID    │              TÊN              │     TÊN ĐĂNG NHẬP    │     SỐ ĐIỆN THOẠI     │        SỐ DƯ         │   MÁY ĐANG SỬ DỤNG  │" << endl;
     cout << "├──────────┼───────────────────────────────┼──────────────────────┼───────────────────────┼──────────────────────┼─────────────────────┤" << endl;
@@ -343,44 +343,44 @@ void Staff::viewCustomersInfo()
         {
             if (prevCustomers.empty() || prevCustomers[i].getStatus() != customer.getStatus())
             {
-                ClearLine(i + 3);
-                Gotoxy(0, i + 3);
+                ConsoleUtils::ClearLine(i + 3);
+                ConsoleUtils::Gotoxy(0, i + 3);
                 cout << "│ " << customer.getId();
-                Gotoxy(11, i + 3);
+                ConsoleUtils::Gotoxy(11, i + 3);
                 cout << "│  " << customer.getName();
-                Gotoxy(43, i + 3);
+                ConsoleUtils::Gotoxy(43, i + 3);
                 cout << "│";
-                Gotoxy((66 + 43 - customer.getUserName().size() + 1) / 2, i + 3);
+                ConsoleUtils::Gotoxy((66 + 43 - customer.getUserName().size() + 1) / 2, i + 3);
                 cout << customer.getUserName();
-                Gotoxy(66, i + 3);
+                ConsoleUtils::Gotoxy(66, i + 3);
                 cout << "│";
-                Gotoxy((90 + 66 - customer.getPhone().size() + 1) / 2, i + 3);
+                ConsoleUtils::Gotoxy((90 + 66 - customer.getPhone().size() + 1) / 2, i + 3);
                 cout << customer.getPhone();
-                Gotoxy(90, i + 3);
+                ConsoleUtils::Gotoxy(90, i + 3);
                 cout << "│";
-                Gotoxy((113 + 90 - formatMoney(customer.getBalance()).size() + 1) / 2, i + 3);
-                cout << formatMoney(customer.getBalance());
-                Gotoxy(113, i + 3);
+                ConsoleUtils::Gotoxy((113 + 90 - Utilities::formatMoney(customer.getBalance()).size() + 1) / 2, i + 3);
+                cout << Utilities::formatMoney(customer.getBalance());
+                ConsoleUtils::Gotoxy(113, i + 3);
                 cout << "│";
                 if (customer.getComputer().getId() == "")
                 {
-                    Gotoxy((135 + 113) / 2, i + 3);
+                    ConsoleUtils::Gotoxy((135 + 113) / 2, i + 3);
                     cout << "-";
                 }
                 else
                 {
-                    Gotoxy((135 + 113 - customer.getComputer().getId().size() + 1) / 2, i + 3);
+                    ConsoleUtils::Gotoxy((135 + 113 - customer.getComputer().getId().size() + 1) / 2, i + 3);
                     cout << customer.getComputer().getId();
                 }
-                Gotoxy(135, i + 3);
+                ConsoleUtils::Gotoxy(135, i + 3);
                 cout << "│";
             }
             i++;
         }
         prevCustomers = customers;
-        Gotoxy(0, customers.size() + 3);
+        ConsoleUtils::Gotoxy(0, customers.size() + 3);
         cout << "└──────────┴───────────────────────────────┴──────────────────────┴───────────────────────┴──────────────────────┴─────────────────────┘" << endl;
-        Gotoxy(0, customers.size() + 5);
+        ConsoleUtils::Gotoxy(0, customers.size() + 5);
         cout << "(Nhấn phím q để thoát)";
         if (_kbhit())
         {
@@ -399,35 +399,35 @@ void Staff::viewTypeOfComputer(bool isRegister)
 {
     system("cls");
     int i = isRegister ? 7 : 0;
-    Gotoxy(0, i++);
+    ConsoleUtils::Gotoxy(0, i++);
     cout << "┌──────────────┬──────────────────────────────────────────┬─────────────┐";
-    Gotoxy(0, i++);
+    ConsoleUtils::Gotoxy(0, i++);
     cout << "│     Loại     │             Thông tin máy                │     Giá     │";
-    Gotoxy(0, i++);
+    ConsoleUtils::Gotoxy(0, i++);
     cout << "├──────────────┼──────────────────────────────────────────┼─────────────┤";
-    Gotoxy(0, i++);
+    ConsoleUtils::Gotoxy(0, i++);
     cout << "│              │  CPU: Intel® Core™ i9-13900H             │             │";
-    Gotoxy(0, i++);
+    ConsoleUtils::Gotoxy(0, i++);
     cout << "│     VIP      │  RAM: 32G                                │  30.000 VNĐ │";
-    Gotoxy(0, i++);
+    ConsoleUtils::Gotoxy(0, i++);
     cout << "│              │  Card đồ họa: GeForce RTX 4060 Ti        │             │";
-    Gotoxy(0, i++);
+    ConsoleUtils::Gotoxy(0, i++);
     cout << "├──────────────┼──────────────────────────────────────────┼─────────────┤";
-    Gotoxy(0, i++);
+    ConsoleUtils::Gotoxy(0, i++);
     cout << "│              │  CPU: Intel® Core™ i7-13700H             │             │";
-    Gotoxy(0, i++);
+    ConsoleUtils::Gotoxy(0, i++);
     cout << "│   Cao cấp    │  RAM: 16G                                │  20.000 VNĐ │";
-    Gotoxy(0, i++);
+    ConsoleUtils::Gotoxy(0, i++);
     cout << "│              │  Card đồ họa: GeForce RTX 3060 Ti        │             │";
-    Gotoxy(0, i++);
+    ConsoleUtils::Gotoxy(0, i++);
     cout << "├──────────────┼──────────────────────────────────────────┼─────────────┤";
-    Gotoxy(0, i++);
+    ConsoleUtils::Gotoxy(0, i++);
     cout << "│              │  CPU: Intel® Core™ i5-11500H             │             │";
-    Gotoxy(0, i++);
+    ConsoleUtils::Gotoxy(0, i++);
     cout << "│    Cơ bản    │  RAM: 8G                                 │  10.000 VNĐ │";
-    Gotoxy(0, i++);
+    ConsoleUtils::Gotoxy(0, i++);
     cout << "│              │  Card đồ họa: GeForce RTX 2080 Ti        │             │";
-    Gotoxy(0, i++);
+    ConsoleUtils::Gotoxy(0, i++);
     cout << "└──────────────┴──────────────────────────────────────────┴─────────────┘";
 }
 
@@ -455,23 +455,23 @@ void Staff::registerComputerForCus()
 
     system("cls");
     string usernameCustomer;
-    ShowCursor(true);
+    ConsoleUtils::ShowCursor(true);
     while (true)
     {
-        Gotoxy(0, 0);
+        ConsoleUtils::Gotoxy(0, 0);
         cout << "Tên đăng nhập: ";
-        enterString(usernameCustomer);
+        Utilities::enterString(usernameCustomer);
         if (usernameCustomer.empty())
         {
-            ShowCursor(false);
+            ConsoleUtils::ShowCursor(false);
             system("cls");
             return;
         }
         if (isExistUsername(usernameCustomer))
         {
-            if (isRegisterComputer(usernameCustomer))
+            if (Utilities::isRegisterComputer(usernameCustomer))
             {
-                ShowCursor(false);
+                ConsoleUtils::ShowCursor(false);
                 MessageBoxW(NULL, L"Khách hàng đã đăng kí máy", L"Thông báo", MB_ICONINFORMATION);
                 return;
             }
@@ -488,7 +488,7 @@ void Staff::registerComputerForCus()
     file << usernameCustomer << "|" << idComputer << endl;
     file.close();
     cout << "Đăng kí máy thành công" << endl;
-    ShowCursor(false);
-    pressKeyQ();
+    ConsoleUtils::ShowCursor(false);
+    Utilities::pressKeyQ();
     system("cls");
 }
