@@ -1,7 +1,8 @@
 #include "../include/history.hpp"
 #include <fstream>
+#include <sstream>
 
-History::History(Day day, string customerID)
+History::History(Day day, std::string customerID)
 {
     this->day = day;
     this->customerID = customerID;
@@ -11,15 +12,17 @@ History::~History()
 {
 }
 
-ostream &operator<<(ostream &os, const History &history)
+std::ostream &operator<<(std::ostream &os, const History &history)
 {
-    os << history.customerID << "|" << history.day;
+    os << history.serialize();
     return os;
 }
 
-istream &operator>>(istream &is, History &history)
+std::istream &operator>>(std::istream &is, History &history)
 {
-    is >> history.day >> history.customerID;
+    std::string temp;
+    std::getline(is, temp);
+    history.unserialize(temp);
     return is;
 }
 
@@ -28,7 +31,7 @@ Day History::getDay()
     return day;
 }
 
-string History::getCustomerID()
+std::string History::getCustomerID()
 {
     return customerID;
 }
@@ -42,49 +45,49 @@ void History::addHistoryToFile()
 {
     try
     {
-        fstream file("./data/history/history.txt", ios::in);
+        std::fstream file("./data/history/history.txt", std::ios::in);
         if (!file.is_open())
         {
             throw "Không thể mở file history";
         }
-        fstream tempFile("./data/history/temp.txt", ios::out);
+        std::fstream tempFile("./data/history/temp.txt", std::ios::out);
         if (!tempFile.is_open())
         {
             throw "Không thể mở file temp";
         }
-        tempFile << this->getCustomerID() << "|" << this->getDay() << endl;
-        string line;
-        while (getline(file, line))
+        tempFile << this->getCustomerID() << "|" << this->getDay() << std::endl;
+        std::string line;
+        while (std::getline(file, line))
         {
-            tempFile << line << endl;
+            tempFile << line << std::endl;
         }
         file.close();
         tempFile.close();
         remove("./data/history/history.txt");
         rename("./data/history/temp.txt", "./data/history/history.txt");
     }
-    catch (const string &error)
+    catch (const std::string &error)
     {
-        cerr << error << endl;
+        std::cerr << error << std::endl;
     }
 }
 
-void History::setCustomerID(string customerID)
+void History::setCustomerID(std::string customerID)
 {
     this->customerID = customerID;
 }
 
-string History::serialize() const
+std::string History::serialize() const
 {
     return customerID + "|" + day.serialize();
 }
 
-void History::unserialize(string &data)
+void History::unserialize(std::string &data)
 {
-    stringstream ss(data);
-    string customerID, day;
-    getline(ss, customerID, '|');
-    getline(ss, day);
+    std::stringstream ss(data);
+    std::string customerID, day;
+    std::getline(ss, customerID, '|');
+    std::getline(ss, day);
     this->customerID = customerID;
     this->day.unserialize(day);
 }

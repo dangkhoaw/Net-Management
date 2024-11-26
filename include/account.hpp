@@ -2,43 +2,39 @@
 #define ACCOUNT 1
 
 #include <iostream>
-#include <fstream>
-#include <sstream>
-
-using namespace std;
 
 class Account
 {
 protected:
-    string username, password, role, id;
-    string status, isFirstLogin;
+    std::string username, password, role, id;
+    std::string status, isFirstLogin;
 
 public:
-    Account(string username = "", string password = "", string role = "", string id = "", string status = "", string isFirstLogin = "");
+    Account(std::string username = "", std::string password = "", std::string role = "", std::string id = "", std::string status = "", std::string isFirstLogin = "");
     ~Account();
 
-    string getRole();
-    string getUserName();
-    string getPassword();
-    string getId();
-    string getStatus();
-    string getIsFirstLogin();
+    std::string getRole();
+    std::string getUserName();
+    std::string getPassword();
+    std::string getId();
+    std::string getStatus();
+    std::string getIsFirstLogin();
 
-    void setRole(string role);
-    void setPassword(string password);
-    void setUserName(string username);
-    void setId(string id);
-    void setStatus(string status);
-    void setIsFirstLogin(string isFirstLogin);
+    void setRole(std::string role);
+    void setPassword(std::string password);
+    void setUserName(std::string username);
+    void setId(std::string id);
+    void setStatus(std::string status);
+    void setIsFirstLogin(std::string isFirstLogin);
 
     bool signIn();
     bool changePassword();
-    friend istream &operator>>(istream &is, Account &account);
-    friend ostream &operator<<(ostream &os, Account &account);
+    friend std::istream &operator>>(std::istream &is, Account &account);
+    friend std::ostream &operator<<(std::ostream &os, const Account &account);
     friend bool checkAccount(Account &account);
 
-    string serialize() const;
-    void unserialize(string &data);
+    std::string serialize() const;
+    void unserialize(std::string &data);
 };
 
 #endif

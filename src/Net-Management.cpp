@@ -1,8 +1,6 @@
 #include "../include/console.hpp"
 #include "../include/process.hpp"
 
-using namespace std;
-
 int main(int argc, char const *argv[])
 {
     SetConsoleTitle(TEXT("Quản lý tiệm Internet"));
@@ -13,7 +11,7 @@ int main(int argc, char const *argv[])
     }
     catch (...)
     {
-        cerr << "Có lỗi xảy ra, vui lòng thử lại sau" << endl;
+        std::cerr << "Có lỗi xảy ra, vui lòng thử lại sau" << std::endl;
         system("pause");
     }
     return 0;

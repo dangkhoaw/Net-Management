@@ -3,26 +3,26 @@
 #include <fstream>
 #include <sstream>
 
-Computer::Computer(string id, string typesOfComputer, string status, string customerUsingName, Time usageTime)
+Computer::Computer(std::string id, std::string typesOfComputer, std::string status, std::string customerUsingName, Time usageTime)
     : id(id), typesOfComputer(typesOfComputer), status(status), customerUsingName(customerUsingName), usageTime(usageTime) {}
 
 Computer::~Computer() {}
 
-string Computer::getId() const { return id; }
+std::string Computer::getId() const { return id; }
 double Computer::getCost() { return (typesOfComputer == "VIP") ? 30000 : (typesOfComputer == "Cao cap") ? 20000
                                                                                                         : 10000; }
 
-void Computer::setId(string id) { this->id = id; }
-void Computer::setTypeOfComputer(string typesOfComputer)
+void Computer::setId(std::string id) { this->id = id; }
+void Computer::setTypeOfComputer(std::string typesOfComputer)
 {
     this->typesOfComputer = typesOfComputer;
     setCost();
 }
 
-string Computer::getStatus() { return status; }
+std::string Computer::getStatus() { return status; }
 
-string Computer::getTypeOfComputer() { return typesOfComputer; }
-void Computer::setStatus(string status) { this->status = status; }
+std::string Computer::getTypeOfComputer() { return typesOfComputer; }
+void Computer::setStatus(std::string status) { this->status = status; }
 
 void Computer::setUsageTime(Time usageTime) { this->usageTime = usageTime; }
 
@@ -33,9 +33,9 @@ Time Computer::getUsageTimeFromFile()
 {
     try
     {
-        lock_guard<mutex> lock(Globals::mtx);
+        std::lock_guard<std::mutex> lock(Constants::Globals::mtx);
         Time time;
-        fstream file("./data/time/" + id + ".txt", ios::in);
+        std::fstream file("./data/time/" + id + ".txt", std::ios::in);
         if (!file.is_open())
         {
             throw "Không thể mở file t/g computer";
@@ -44,21 +44,21 @@ Time Computer::getUsageTimeFromFile()
         file.close();
         return time;
     }
-    catch (const string &error)
+    catch (const std::string &error)
     {
-        cerr << error << endl;
+        std::cerr << error << std::endl;
         return Time();
     }
 }
 
-string Computer::getCustomerUsingName() { return customerUsingName; }
+std::string Computer::getCustomerUsingName() { return customerUsingName; }
 
-void Computer::setCustomerUsingName(string customerUsingName) { this->customerUsingName = customerUsingName; }
+void Computer::setCustomerUsingName(std::string customerUsingName) { this->customerUsingName = customerUsingName; }
 
 void Computer::setUsageTimeToFile(Time time)
 {
-    lock_guard<mutex> lock(Globals::mtx);
-    fstream file("./data/time/" + id + ".txt", ios::out);
+    std::lock_guard<std::mutex> lock(Constants::Globals::mtx);
+    std::fstream file("./data/time/" + id + ".txt", std::ios::out);
     if (file.is_open())
     {
         file << time;
@@ -66,29 +66,29 @@ void Computer::setUsageTimeToFile(Time time)
     }
     else
     {
-        cout << "Không thể mở file t/g computer" << endl;
+        std::cout << "Không thể mở file t/g computer" << std::endl;
     }
 }
 
-ostream &operator<<(ostream &os, Computer &computer)
+std::ostream &operator<<(std::ostream &os, Computer &computer)
 {
     os << computer.serialize();
     return os;
 }
 
-string Computer::serialize() const
+std::string Computer::serialize() const
 {
     return id + "|" + typesOfComputer + "|" + status + "|" + customerUsingName;
 }
 
-void Computer::unserialize(string &data)
+void Computer::unserialize(std::string &data)
 {
-    stringstream ss(data);
-    string id, typeOfComputer, status, customerUsingName;
-    getline(ss, id, '|');
-    getline(ss, typeOfComputer, '|');
-    getline(ss, status, '|');
-    getline(ss, customerUsingName);
+    std::stringstream ss(data);
+    std::string id, typeOfComputer, status, customerUsingName;
+    std::getline(ss, id, '|');
+    std::getline(ss, typeOfComputer, '|');
+    std::getline(ss, status, '|');
+    std::getline(ss, customerUsingName);
     this->id = id;
     this->typesOfComputer = typeOfComputer;
     this->status = status;

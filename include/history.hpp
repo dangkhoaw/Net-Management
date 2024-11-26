@@ -2,29 +2,28 @@
 #define HISTORY 1
 
 #include "day.hpp"
-using namespace std;
 
 class History
 {
 private:
     Day day;
-    string customerID;
+    std::string customerID;
 
 public:
-    History(Day day = Day(), string customerID = "");
+    History(Day day = Day(), std::string customerID = "");
     ~History();
 
-    friend ostream &operator<<(ostream &os, const History &history);
-    friend istream &operator>>(istream &is, History &history);
+    friend std::ostream &operator<<(std::ostream &os, const History &history);
+    friend std::istream &operator>>(std::istream &is, History &history);
 
     Day getDay();
-    string getCustomerID();
+    std::string getCustomerID();
 
     void setDay(Day day);
-    void setCustomerID(string customerID);
+    void setCustomerID(std::string customerID);
     void addHistoryToFile();
-    string serialize() const;
-    void unserialize(string &data);
+    std::string serialize() const;
+    void unserialize(std::string &data);
 };
 
 #endif

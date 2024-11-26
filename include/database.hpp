@@ -11,27 +11,26 @@
 #include "process.hpp"
 #include "dish.hpp"
 
-using namespace std;
 using namespace Utilities;
 
 template <class T>
 class Database
 {
 private:
-    static bool openFile(fstream &file, string path, ios_base::openmode mode);
-    static bool closeFile(fstream &file);
-    static bool writeToFile(fstream &file, T &obj);
+    static bool openFile(std::fstream &file, std::string path, std::ios_base::openmode mode);
+    static bool closeFile(std::fstream &file);
+    static bool writeToFile(std::fstream &file, T &obj);
 
 public:
     static bool add(T &obj);
     static bool remove(T &obj);
     static bool update(T &obj);
     static bool get(T &obj);
-    static List<T> gets(string field = "", string value = "");
+    static List<T> gets(std::string field = "", std::string value = "");
 };
 
 template <class T>
-bool Database<T>::openFile(fstream &file, string path, ios_base::openmode mode)
+bool Database<T>::openFile(std::fstream &file, std::string path, std::ios_base::openmode mode)
 {
     file.open(path, mode);
     if (!file.is_open())
@@ -42,7 +41,7 @@ bool Database<T>::openFile(fstream &file, string path, ios_base::openmode mode)
 }
 
 template <class T>
-bool Database<T>::closeFile(fstream &file)
+bool Database<T>::closeFile(std::fstream &file)
 {
     file.close();
     if (file.is_open())
@@ -53,21 +52,21 @@ bool Database<T>::closeFile(fstream &file)
 }
 
 template <class T>
-bool Database<T>::writeToFile(fstream &file, T &obj)
+bool Database<T>::writeToFile(std::fstream &file, T &obj)
 {
-    file << obj << endl;
+    file << obj << std::endl;
     return file.good();
 }
 
 template <class T>
 bool Database<T>::add(T &obj)
 {
-    if constexpr (is_same<T, Account>::value)
+    if constexpr (std::is_same<T, Account>::value)
     {
         try
         {
-            fstream file;
-            if (!openFile(file, "./data/account/account.txt", ios::app))
+            std::fstream file;
+            if (!openFile(file, "./data/account/account.txt", std::ios::app))
                 throw "Không thể mở file account";
 
             if (!writeToFile(file, obj))
@@ -76,18 +75,18 @@ bool Database<T>::add(T &obj)
             closeFile(file);
             return true;
         }
-        catch (const string &error)
+        catch (const std::string &error)
         {
-            cerr << error << endl;
+            std::cerr << error << std::endl;
             return false;
         }
     }
-    else if constexpr (is_same<T, Customer>::value)
+    else if constexpr (std::is_same<T, Customer>::value)
     {
         try
         {
-            fstream file;
-            if (!openFile(file, "./data/customer/customer.txt", ios::app))
+            std::fstream file;
+            if (!openFile(file, "./data/customer/customer.txt", std::ios::app))
                 throw "Không thể mở file customer";
 
             if (!writeToFile(file, obj))
@@ -95,25 +94,25 @@ bool Database<T>::add(T &obj)
 
             closeFile(file);
 
-            if (!openFile(file, "./data/time/" + obj.getId() + ".txt", ios::out))
+            if (!openFile(file, "./data/time/" + obj.getId() + ".txt", std::ios::out))
                 throw "Không thể tạo file t/g customer";
 
             file << obj.getTime();
             closeFile(file);
             return true;
         }
-        catch (const string &error)
+        catch (const std::string &error)
         {
-            cerr << error << endl;
+            std::cerr << error << std::endl;
             return false;
         }
     }
-    else if constexpr (is_same<T, Computer>::value)
+    else if constexpr (std::is_same<T, Computer>::value)
     {
         try
         {
-            fstream file;
-            if (!openFile(file, "./data/computer/computer.txt", ios::app))
+            std::fstream file;
+            if (!openFile(file, "./data/computer/computer.txt", std::ios::app))
                 throw "Không thể mở file computer";
 
             if (!writeToFile(file, obj))
@@ -121,16 +120,16 @@ bool Database<T>::add(T &obj)
 
             closeFile(file);
 
-            if (!openFile(file, "./data/time/" + obj.getId() + ".txt", ios::out))
+            if (!openFile(file, "./data/time/" + obj.getId() + ".txt", std::ios::out))
                 throw "Không thể tạo file t/g computer";
 
             file << obj.getUsageTime();
             closeFile(file);
             return true;
         }
-        catch (const string &error)
+        catch (const std::string &error)
         {
-            cerr << error << endl;
+            std::cerr << error << std::endl;
             return false;
         }
     }
@@ -139,26 +138,26 @@ bool Database<T>::add(T &obj)
 template <class T>
 bool Database<T>::remove(T &obj)
 {
-    if constexpr (is_same<T, Account>::value)
+    if constexpr (std::is_same<T, Account>::value)
     {
         try
         {
-            fstream file;
-            if (!openFile(file, "./data/account/account.txt", ios::in))
+            std::fstream file;
+            if (!openFile(file, "./data/account/account.txt", std::ios::in))
                 throw "Không thể mở file account";
 
-            fstream tempFile;
-            if (!openFile(tempFile, "./data/account/temp.txt", ios::out))
+            std::fstream tempFile;
+            if (!openFile(tempFile, "./data/account/temp.txt", std::ios::out))
                 throw "Không thể mở file temp";
 
-            string line;
-            while (getline(file, line))
+            std::string line;
+            while (std::getline(file, line))
             {
-                stringstream ss(line);
-                string id;
-                getline(ss, id, '|');
+                std::stringstream ss(line);
+                std::string id;
+                std::getline(ss, id, '|');
                 if (id != obj.getId())
-                    tempFile << line << endl;
+                    tempFile << line << std::endl;
             }
 
             closeFile(file);
@@ -167,32 +166,32 @@ bool Database<T>::remove(T &obj)
             std::rename("./data/account/temp.txt", "./data/account/account.txt");
             return true;
         }
-        catch (const string &error)
+        catch (const std::string &error)
         {
-            cerr << error << endl;
+            std::cerr << error << std::endl;
             return false;
         }
     }
-    else if constexpr (is_same<T, Customer>::value)
+    else if constexpr (std::is_same<T, Customer>::value)
     {
         try
         {
-            fstream file;
-            if (!openFile(file, "./data/customer/customer.txt", ios::in))
+            std::fstream file;
+            if (!openFile(file, "./data/customer/customer.txt", std::ios::in))
                 throw "Không thể mở file customer";
 
-            fstream tempFile;
-            if (!openFile(tempFile, "./data/customer/temp.txt", ios::out))
+            std::fstream tempFile;
+            if (!openFile(tempFile, "./data/customer/temp.txt", std::ios::out))
                 throw "Không thể mở file temp";
 
-            string line;
-            while (getline(file, line))
+            std::string line;
+            while (std::getline(file, line))
             {
-                stringstream ss(line);
-                string id;
-                getline(ss, id, '|');
+                std::stringstream ss(line);
+                std::string id;
+                std::getline(ss, id, '|');
                 if (id != obj.getId())
-                    tempFile << line << endl;
+                    tempFile << line << std::endl;
             }
 
             Database<Account>::remove(obj);
@@ -204,32 +203,32 @@ bool Database<T>::remove(T &obj)
             std::remove(("./data/time/" + obj.getId() + ".txt").c_str());
             return true;
         }
-        catch (const string &error)
+        catch (const std::string &error)
         {
-            cerr << error << endl;
+            std::cerr << error << std::endl;
             return false;
         }
     }
-    else if constexpr (is_same<T, Computer>::value)
+    else if constexpr (std::is_same<T, Computer>::value)
     {
         try
         {
-            fstream file;
-            if (!openFile(file, "./data/computer/computer.txt", ios::in))
+            std::fstream file;
+            if (!openFile(file, "./data/computer/computer.txt", std::ios::in))
                 throw "Không thể mở file computer";
 
-            fstream tempFile;
-            if (!openFile(tempFile, "./data/computer/temp.txt", ios::out))
+            std::fstream tempFile;
+            if (!openFile(tempFile, "./data/computer/temp.txt", std::ios::out))
                 throw "Không thể mở file temp";
 
-            string line;
-            while (getline(file, line))
+            std::string line;
+            while (std::getline(file, line))
             {
-                stringstream ss(line);
-                string id;
-                getline(ss, id, '|');
+                std::stringstream ss(line);
+                std::string id;
+                std::getline(ss, id, '|');
                 if (id != obj.getId())
-                    tempFile << line << endl;
+                    tempFile << line << std::endl;
             }
 
             closeFile(file);
@@ -239,9 +238,9 @@ bool Database<T>::remove(T &obj)
             std::remove(("./data/time/" + obj.getId() + ".txt").c_str());
             return true;
         }
-        catch (const string &error)
+        catch (const std::string &error)
         {
-            cerr << error << endl;
+            std::cerr << error << std::endl;
             return false;
         }
     }
@@ -250,27 +249,27 @@ bool Database<T>::remove(T &obj)
 template <class T>
 bool Database<T>::update(T &obj)
 {
-    if constexpr (is_same<T, Account>::value)
+    if constexpr (std::is_same<T, Account>::value)
     {
         try
         {
-            fstream file;
-            if (!openFile(file, "./data/account/account.txt", ios::in))
+            std::fstream file;
+            if (!openFile(file, "./data/account/account.txt", std::ios::in))
                 throw "Không thể mở file account";
 
-            fstream tempFile;
-            if (!openFile(tempFile, "./data/account/temp.txt", ios::out))
+            std::fstream tempFile;
+            if (!openFile(tempFile, "./data/account/temp.txt", std::ios::out))
                 throw "Không thể mở file temp";
 
-            string line;
+            std::string line;
             Account account;
-            while (getline(file, line))
+            while (std::getline(file, line))
             {
                 account.unserialize(line);
                 if (account.getId() == obj.getId())
-                    tempFile << obj << endl;
+                    tempFile << obj << std::endl;
                 else
-                    tempFile << line << endl;
+                    tempFile << line << std::endl;
             }
 
             closeFile(file);
@@ -279,33 +278,33 @@ bool Database<T>::update(T &obj)
             std::rename("./data/account/temp.txt", "./data/account/account.txt");
             return true;
         }
-        catch (const string &error)
+        catch (const std::string &error)
         {
-            cerr << error << endl;
+            std::cerr << error << std::endl;
             return false;
         }
     }
-    else if constexpr (is_same<T, Customer>::value)
+    else if constexpr (std::is_same<T, Customer>::value)
     {
         try
         {
-            fstream file;
-            if (!openFile(file, "./data/customer/customer.txt", ios::in))
+            std::fstream file;
+            if (!openFile(file, "./data/customer/customer.txt", std::ios::in))
                 throw "Không thể mở file customer";
 
-            fstream tempFile;
-            if (!openFile(tempFile, "./data/customer/temp.txt", ios::out))
+            std::fstream tempFile;
+            if (!openFile(tempFile, "./data/customer/temp.txt", std::ios::out))
                 throw "Không thể mở file temp";
 
-            string line;
+            std::string line;
             Customer customer;
-            while (getline(file, line))
+            while (std::getline(file, line))
             {
                 customer.unserialize(line);
                 if (customer.getId() == obj.getId())
-                    tempFile << obj << endl;
+                    tempFile << obj << std::endl;
                 else
-                    tempFile << line << endl;
+                    tempFile << line << std::endl;
             }
 
             closeFile(file);
@@ -314,33 +313,33 @@ bool Database<T>::update(T &obj)
             std::rename("./data/customer/temp.txt", "./data/customer/customer.txt");
             return true;
         }
-        catch (const string &error)
+        catch (const std::string &error)
         {
-            cerr << error << endl;
+            std::cerr << error << std::endl;
             return false;
         }
     }
-    else if constexpr (is_same<T, Computer>::value)
+    else if constexpr (std::is_same<T, Computer>::value)
     {
         try
         {
-            fstream file;
-            if (!openFile(file, "./data/computer/computer.txt", ios::in))
+            std::fstream file;
+            if (!openFile(file, "./data/computer/computer.txt", std::ios::in))
                 throw "Không thể mở file computer";
 
-            fstream tempFile;
-            if (!openFile(tempFile, "./data/computer/temp.txt", ios::out))
+            std::fstream tempFile;
+            if (!openFile(tempFile, "./data/computer/temp.txt", std::ios::out))
                 throw "Không thể mở file temp";
 
-            string line;
+            std::string line;
             Computer computer;
-            while (getline(file, line))
+            while (std::getline(file, line))
             {
                 computer.unserialize(line);
                 if (computer.getId() == obj.getId())
-                    tempFile << obj << endl;
+                    tempFile << obj << std::endl;
                 else
-                    tempFile << line << endl;
+                    tempFile << line << std::endl;
             }
 
             closeFile(file);
@@ -349,9 +348,9 @@ bool Database<T>::update(T &obj)
             std::rename("./data/computer/temp.txt", "./data/computer/computer.txt");
             return true;
         }
-        catch (const string &error)
+        catch (const std::string &error)
         {
-            cerr << error << endl;
+            std::cerr << error << std::endl;
             return false;
         }
     }
@@ -360,17 +359,17 @@ bool Database<T>::update(T &obj)
 template <class T>
 bool Database<T>::get(T &obj)
 {
-    if constexpr (is_same<T, Account>::value)
+    if constexpr (std::is_same<T, Account>::value)
     {
         try
         {
-            fstream file;
-            if (!openFile(file, "./data/account/account.txt", ios::in))
+            std::fstream file;
+            if (!openFile(file, "./data/account/account.txt", std::ios::in))
                 throw "Không thể mở file account";
 
-            string line;
+            std::string line;
             Account account;
-            while (getline(file, line))
+            while (std::getline(file, line))
             {
                 account.unserialize(line);
                 if (account.getUserName() == obj.getUserName() || account.getId() == obj.getId())
@@ -384,23 +383,23 @@ bool Database<T>::get(T &obj)
             closeFile(file);
             return false;
         }
-        catch (const string &error)
+        catch (const std::string &error)
         {
-            cerr << error << endl;
+            std::cerr << error << std::endl;
             return false;
         }
     }
-    else if constexpr (is_same<T, Customer>::value)
+    else if constexpr (std::is_same<T, Customer>::value)
     {
         try
         {
-            fstream file;
-            if (!openFile(file, "./data/customer/customer.txt", ios::in))
+            std::fstream file;
+            if (!openFile(file, "./data/customer/customer.txt", std::ios::in))
                 throw "Không thể mở file customer";
 
-            string line;
+            std::string line;
             Customer customer;
-            while (getline(file, line))
+            while (std::getline(file, line))
             {
                 customer.unserialize(line);
                 if (customer.getUserName() == obj.getUserName() || customer.getId() == obj.getId())
@@ -416,23 +415,23 @@ bool Database<T>::get(T &obj)
             closeFile(file);
             return false;
         }
-        catch (const string &error)
+        catch (const std::string &error)
         {
-            cerr << error << endl;
+            std::cerr << error << std::endl;
             return false;
         }
     }
-    else if constexpr (is_same<T, Computer>::value)
+    else if constexpr (std::is_same<T, Computer>::value)
     {
         try
         {
-            fstream file;
-            if (!openFile(file, "./data/computer/computer.txt", ios::in))
+            std::fstream file;
+            if (!openFile(file, "./data/computer/computer.txt", std::ios::in))
                 throw "Không thể mở file computer";
 
-            string line;
+            std::string line;
             Computer computer;
-            while (getline(file, line))
+            while (std::getline(file, line))
             {
                 computer.unserialize(line);
                 if (computer.getId() == obj.getId())
@@ -447,9 +446,9 @@ bool Database<T>::get(T &obj)
             closeFile(file);
             return false;
         }
-        catch (const string &error)
+        catch (const std::string &error)
         {
-            cerr << error << endl;
+            std::cerr << error << std::endl;
             return false;
         }
     }
@@ -461,37 +460,37 @@ bool Database<T>::get(T &obj)
 /// @param value giá trị cần lọc, nếu là Computer thì value là status (Bỏ trống nếu muốn lấy tất cả)
 /// @return
 template <class T>
-List<T> Database<T>::gets(string field, string value)
+List<T> Database<T>::gets(std::string field, std::string value)
 {
     List<T> objs;
-    if constexpr (is_same<T, Account>::value)
+    if constexpr (std::is_same<T, Account>::value)
     {
         try
         {
-            fstream file;
-            if (!openFile(file, "./data/account/account.txt", ios::in))
+            std::fstream file;
+            if (!openFile(file, "./data/account/account.txt", std::ios::in))
                 throw "Không thể mở file account";
 
-            string line;
+            std::string line;
             Account account;
-            while (getline(file, line))
+            while (std::getline(file, line))
             {
                 account.unserialize(line);
 
                 bool match = false;
 
                 if (field == "")
-                    match = (toLower(account.getId()).find(toLower(value)) != string::npos || toLower(account.getUserName()).find(toLower(value)) != string::npos || toLower(account.getRole()).find(toLower(value)) != string::npos || toLower(account.getStatus()).find(toLower(value)) != string::npos || toLower(account.getIsFirstLogin()).find(toLower(value)) != string::npos);
+                    match = (toLower(account.getId()).find(toLower(value)) != std::string::npos || toLower(account.getUserName()).find(toLower(value)) != std::string::npos || toLower(account.getRole()).find(toLower(value)) != std::string::npos || toLower(account.getStatus()).find(toLower(value)) != std::string::npos || toLower(account.getIsFirstLogin()).find(toLower(value)) != std::string::npos);
                 else if (field == "id")
-                    match = toLower(account.getId()).find(toLower(value)) != string::npos;
+                    match = toLower(account.getId()).find(toLower(value)) != std::string::npos;
                 else if (field == "username")
-                    match = toLower(account.getUserName()).find(toLower(value)) != string::npos;
+                    match = toLower(account.getUserName()).find(toLower(value)) != std::string::npos;
                 else if (field == "role")
-                    match = toLower(account.getRole()).find(toLower(value)) != string::npos;
+                    match = toLower(account.getRole()).find(toLower(value)) != std::string::npos;
                 else if (field == "status")
-                    match = toLower(account.getStatus()).find(toLower(value)) != string::npos;
+                    match = toLower(account.getStatus()).find(toLower(value)) != std::string::npos;
                 else if (field == "isFirstLogin")
-                    match = toLower(account.getIsFirstLogin()).find(toLower(value)) != string::npos;
+                    match = toLower(account.getIsFirstLogin()).find(toLower(value)) != std::string::npos;
 
                 if (match || value == "")
                     objs.push_back(account);
@@ -500,23 +499,23 @@ List<T> Database<T>::gets(string field, string value)
             closeFile(file);
             return objs;
         }
-        catch (const string &error)
+        catch (const std::string &error)
         {
-            cerr << error << endl;
+            std::cerr << error << std::endl;
             return objs;
         }
     }
-    else if constexpr (is_same<T, Customer>::value)
+    else if constexpr (std::is_same<T, Customer>::value)
     {
         try
         {
-            fstream file;
-            if (!openFile(file, "./data/customer/customer.txt", ios::in))
+            std::fstream file;
+            if (!openFile(file, "./data/customer/customer.txt", std::ios::in))
                 throw "Không thể mở file customer";
 
-            string line;
+            std::string line;
             Customer customer;
-            while (getline(file, line))
+            while (std::getline(file, line))
             {
                 customer.unserialize(line);
                 customer.setTime(customer.getTimeFromFile());
@@ -526,19 +525,19 @@ List<T> Database<T>::gets(string field, string value)
                 bool match = false;
 
                 if (field == "")
-                    match = (toLower(customer.getId()).find(toLower(value)) != string::npos || toLower(customer.getName()).find(toLower(value)) != string::npos || toLower(customer.getUserName()).find(toLower(value)) != string::npos || toLower(customer.getPhone()).find(toLower(value)) != string::npos || toLower(to_string(customer.getBalance())).find(toLower(value)) != string::npos || toLower(customer.getComputer().getId()).find(toLower(value)) != string::npos);
+                    match = (toLower(customer.getId()).find(toLower(value)) != std::string::npos || toLower(customer.getName()).find(toLower(value)) != std::string::npos || toLower(customer.getUserName()).find(toLower(value)) != std::string::npos || toLower(customer.getPhone()).find(toLower(value)) != std::string::npos || toLower(std::to_string(customer.getBalance())).find(toLower(value)) != std::string::npos || toLower(customer.getComputer().getId()).find(toLower(value)) != std::string::npos);
                 else if (field == "id")
-                    match = toLower(customer.getId()).find(toLower(value)) != string::npos;
+                    match = toLower(customer.getId()).find(toLower(value)) != std::string::npos;
                 else if (field == "name")
-                    match = toLower(customer.getName()).find(toLower(value)) != string::npos;
+                    match = toLower(customer.getName()).find(toLower(value)) != std::string::npos;
                 else if (field == "username")
-                    match = toLower(customer.getUserName()).find(toLower(value)) != string::npos;
+                    match = toLower(customer.getUserName()).find(toLower(value)) != std::string::npos;
                 else if (field == "phone")
-                    match = toLower(customer.getPhone()).find(toLower(value)) != string::npos;
+                    match = toLower(customer.getPhone()).find(toLower(value)) != std::string::npos;
                 else if (field == "balance")
-                    match = toLower(to_string(customer.getBalance())).find(toLower(value)) != string::npos;
+                    match = toLower(std::to_string(customer.getBalance())).find(toLower(value)) != std::string::npos;
                 else if (field == "idComputer")
-                    match = toLower(customer.getComputer().getId()).find(toLower(value)) != string::npos;
+                    match = toLower(customer.getComputer().getId()).find(toLower(value)) != std::string::npos;
 
                 if (match || value == "")
                     objs.push_back(customer);
@@ -547,27 +546,27 @@ List<T> Database<T>::gets(string field, string value)
             closeFile(file);
             return objs;
         }
-        catch (const string &error)
+        catch (const std::string &error)
         {
-            cerr << error << endl;
+            std::cerr << error << std::endl;
             return objs;
         }
     }
-    else if constexpr (is_same<T, Computer>::value)
+    else if constexpr (std::is_same<T, Computer>::value)
     {
         try
         {
-            fstream file;
-            if (!openFile(file, "./data/computer/computer.txt", ios::in))
+            std::fstream file;
+            if (!openFile(file, "./data/computer/computer.txt", std::ios::in))
                 throw "Không thể mở file computer";
 
-            string line;
+            std::string line;
             Computer computer;
-            while (getline(file, line))
+            while (std::getline(file, line))
             {
                 computer.unserialize(line);
 
-                if ((field == "" || toLower(computer.getTypeOfComputer()).find(toLower(field)) != string::npos) && (value == "" || toLower(computer.getStatus()).find(toLower(value)) != string::npos))
+                if ((field == "" || toLower(computer.getTypeOfComputer()).find(toLower(field)) != std::string::npos) && (value == "" || toLower(computer.getStatus()).find(toLower(value)) != std::string::npos))
                 {
                     computer.setUsageTime(computer.getUsageTimeFromFile());
                     objs.push_back(computer);
@@ -577,9 +576,9 @@ List<T> Database<T>::gets(string field, string value)
             closeFile(file);
             return objs;
         }
-        catch (const string &error)
+        catch (const std::string &error)
         {
-            cerr << error << endl;
+            std::cerr << error << std::endl;
             return objs;
         }
     }

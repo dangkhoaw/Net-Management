@@ -4,38 +4,36 @@
 #include <iostream>
 #include "mtime.hpp"
 
-using namespace std;
-
 class Computer
 {
 private:
-    string id, customerUsingName, status, typesOfComputer;
+    std::string id, customerUsingName, status, typesOfComputer;
     double cost;
     Time usageTime;
 
 public:
-    Computer(string id = "", string typesOfComputer = "", string status = "Available", string customerUsingName = "", Time usageTime = Time());
+    Computer(std::string id = "", std::string typesOfComputer = "", std::string status = "Available", std::string customerUsingName = "", Time usageTime = Time());
     ~Computer();
 
-    string getId() const;
+    std::string getId() const;
     Time getUsageTime();
-    string getCustomerUsingName();
-    string getStatus();
+    std::string getCustomerUsingName();
+    std::string getStatus();
     Time getUsageTimeFromFile();
     double getCost();
-    string getTypeOfComputer();
-    void setTypeOfComputer(string typesOfComputer);
-    void setId(string id);
-    void setStatus(string status);
-    void setCustomerUsingName(string customerUsingName);
+    std::string getTypeOfComputer();
+    void setTypeOfComputer(std::string typesOfComputer);
+    void setId(std::string id);
+    void setStatus(std::string status);
+    void setCustomerUsingName(std::string customerUsingName);
     void setUsageTime(Time usageTime);
     void setUsageTimeToFile(Time usageTime);
     void setCost();
 
-    friend ostream &operator<<(ostream &os, Computer &computer);
+    friend std::ostream &operator<<(std::ostream &os, Computer &computer);
 
-    string serialize() const;
-    void unserialize(string &data);
+    std::string serialize() const;
+    void unserialize(std::string &data);
 };
 
 #endif

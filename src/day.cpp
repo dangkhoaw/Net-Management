@@ -1,18 +1,21 @@
 #include "../include/day.hpp"
+#include <sstream>
 
 Day::Day(Date date, Time time) : date(date), time(time) {}
 
 Day::~Day() {}
 
-ostream &operator<<(ostream &os, const Day &day)
+std::ostream &operator<<(std::ostream &os, const Day &day)
 {
-    os << day.time << " " << day.date;
+    os << day.serialize();
     return os;
 }
 
-istream &operator>>(istream &is, Day &day)
+std::istream &operator>>(std::istream &is, Day &day)
 {
-    is >> day.date >> day.time;
+    std::string data;
+    std::getline(is, data);
+    day.unserialize(data);
     return is;
 }
 
@@ -110,17 +113,17 @@ Day Day::getCurrentDay()
     return temp;
 }
 
-string Day::serialize() const
+std::string Day::serialize() const
 {
-    stringstream ss;
+    std::stringstream ss;
     ss << time.serialize() << " " << date.serialize();
     return ss.str();
 }
 
-void Day::unserialize(string &data)
+void Day::unserialize(std::string &data)
 {
-    stringstream ss(data);
-    string time, date;
+    std::stringstream ss(data);
+    std::string time, date;
     ss >> time >> date;
     this->time.unserialize(time);
     this->date.unserialize(date);

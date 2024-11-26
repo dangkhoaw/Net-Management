@@ -2,7 +2,6 @@
 #define LIST 1
 
 #include <iostream>
-using namespace std;
 
 template <class T>
 class List
@@ -41,7 +40,7 @@ public:
     };
     List();
     ~List();
-    List(initializer_list<T>);
+    List(std::initializer_list<T>);
     List(const List<T> &);
     void push_back(T);
     void push_front(T);
@@ -69,7 +68,7 @@ List<T>::~List()
 }
 
 template <class T>
-List<T>::List(initializer_list<T> list)
+List<T>::List(std::initializer_list<T> list)
 {
     this->head = this->tail = nullptr;
     this->_size = 0;
@@ -107,9 +106,9 @@ void List<T>::push_back(T node)
         }
         this->_size++;
     }
-    catch (const bad_alloc &e)
+    catch (const std::bad_alloc &e)
     {
-        cerr << "Lỗi cấp phát bộ nhớ" << endl;
+        std::cerr << "Lỗi cấp phát bộ nhớ" << std::endl;
     }
 }
 
@@ -130,9 +129,9 @@ void List<T>::push_front(T node)
         }
         this->_size++;
     }
-    catch (const bad_alloc &e)
+    catch (const std::bad_alloc &e)
     {
-        cerr << "Lỗi cấp phát bộ nhớ" << endl;
+        std::cerr << "Lỗi cấp phát bộ nhớ" << std::endl;
     }
 }
 
@@ -149,9 +148,9 @@ void List<T>::pop_back() // Xem xét
         delete temp;
         this->_size--;
     }
-    catch (const string &msg)
+    catch (const std::string &msg)
     {
-        cerr << msg << endl;
+        std::cerr << msg << std::endl;
     }
 }
 
@@ -168,9 +167,9 @@ void List<T>::pop_front()
         delete temp;
         this->_size--;
     }
-    catch (const string &msg)
+    catch (const std::string &msg)
     {
-        cerr << msg << endl;
+        std::cerr << msg << std::endl;
     }
 }
 
@@ -199,9 +198,9 @@ void List<T>::remove(int index)
             this->_size--;
         }
     }
-    catch (const string &msg)
+    catch (const std::string &msg)
     {
-        cerr << msg << endl;
+        std::cerr << msg << std::endl;
     }
 }
 
@@ -241,9 +240,9 @@ T &List<T>::operator[](int index) const
             temp = temp->next;
         return temp->data;
     }
-    catch (const string &msg)
+    catch (const std::string &msg)
     {
-        cerr << msg << endl;
+        std::cerr << msg << std::endl;
         return this->head->data;
     }
 }

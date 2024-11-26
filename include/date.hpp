@@ -2,9 +2,6 @@
 #define DaTe 1
 
 #include <iostream>
-#include <iomanip>
-#include <ctime>
-using namespace std;
 
 class Date
 {
@@ -17,8 +14,8 @@ public:
     Date(int day = 1, int month = 1, int year = 1);
     ~Date();
 
-    friend ostream &operator<<(ostream &os, const Date &date);
-    friend istream &operator>>(istream &is, Date &date);
+    friend std::ostream &operator<<(std::ostream &os, const Date &date);
+    friend std::istream &operator>>(std::istream &is, Date &date);
     friend bool operator==(const Date &date1, const Date &date2);
     friend bool operator!=(const Date &date1, const Date &date2);
     Date &operator++();
@@ -42,8 +39,8 @@ public:
     bool isValid();
     Date getCurrentDate();
 
-    string serialize() const;
-    void unserialize(string &data);
+    std::string serialize() const;
+    void unserialize(std::string &data);
 };
 
 #endif

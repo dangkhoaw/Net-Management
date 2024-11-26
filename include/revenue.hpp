@@ -4,7 +4,6 @@
 #include "day.hpp"
 #include "list.hpp"
 
-using namespace std;
 class Revenue
 {
 private:
@@ -16,8 +15,8 @@ public:
     Revenue(const Revenue &revenue);
     ~Revenue();
 
-    friend ostream &operator<<(ostream &os, const Revenue &revenue);
-    friend istream &operator>>(istream &is, Revenue &revenue);
+    friend std::ostream &operator<<(std::ostream &os, const Revenue &revenue);
+    friend std::istream &operator>>(std::istream &is, Revenue &revenue);
     Revenue operator+(double money);
     Revenue operator-(double money);
     Revenue operator+(const Revenue &other);
@@ -39,8 +38,8 @@ public:
     void viewRevenueMonth(Date &date);
     void viewRevenueYear(Date &date);
 
-    string serialize();
-    void unserialize(string &data);
+    std::string serialize();
+    void unserialize(std::string &data);
 };
 
 #endif

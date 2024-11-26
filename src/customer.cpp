@@ -1,13 +1,14 @@
+#include "../include/console.hpp"
 #include "../include/utilities.hpp"
 #include "../include/base64.hpp"
 #include "../include/database.hpp"
 
-Customer::Customer(string username, string password, string role, string id, string status, string isFirstLogin, string name, string phone, double balance, Time time, int moneyforOrder, Dish dish, Computer computer, History historyRecently)
+Customer::Customer(std::string username, std::string password, std::string role, std::string id, std::string status, std::string isFirstLogin, std::string name, std::string phone, double balance, Time time, int moneyforOrder, Dish dish, Computer computer, History historyRecently)
     : Account(username, password, role, id, status, isFirstLogin), name(name), phone(phone), balance(balance), time(time), moneyforOrder(moneyforOrder), dish(dish), computer(computer), historyRecently(historyRecently) {}
 Customer::~Customer() {}
 
-string Customer::getName() { return name; }
-string Customer::getPhone() { return phone; }
+std::string Customer::getName() { return name; }
+std::string Customer::getPhone() { return phone; }
 Time Customer::getTime() { return time; }
 History Customer::getHistory()
 {
@@ -19,19 +20,19 @@ Computer &Customer::getComputerViaFile()
 {
     try
     {
-        lock_guard<mutex> lock(Globals::mtx);
-        fstream file("./data/computer/registered.txt", ios::in);
+        std::lock_guard<std::mutex> lock(Constants::Globals::mtx);
+        std::fstream file("./data/computer/registered.txt", std::ios::in);
         if (!file.is_open())
         {
             throw "Không thể mở file registeredCus";
         }
-        string line;
-        while (getline(file, line))
+        std::string line;
+        while (std::getline(file, line))
         {
-            stringstream ss(line);
-            string username, idComputer;
-            getline(ss, username, '|');
-            getline(ss, idComputer);
+            std::stringstream ss(line);
+            std::string username, idComputer;
+            std::getline(ss, username, '|');
+            std::getline(ss, idComputer);
             if (username == this->username)
             {
                 computer.setId(idComputer);
@@ -43,16 +44,16 @@ Computer &Customer::getComputerViaFile()
         file.close();
         return computer;
     }
-    catch (const string &error)
+    catch (const std::string &error)
     {
-        cerr << error << endl;
+        std::cerr << error << std::endl;
         return computer;
     }
 }
 int Customer::getMoneyforOrder() { return moneyforOrder; }
 void Customer::setTime(Time time) { this->time = time; }
-void Customer::setPhone(string phone) { this->phone = phone; }
-void Customer::setName(string name) { this->name = name; }
+void Customer::setPhone(std::string phone) { this->phone = phone; }
+void Customer::setName(std::string name) { this->name = name; }
 void Customer::setmoneyforOrder(int moneyforOrder) { this->moneyforOrder = moneyforOrder; }
 void Customer::setBalance(double balance) { this->balance = balance; }
 void Customer::setBalance(Time time)
@@ -66,9 +67,9 @@ Time Customer::getTimeFromFile()
 {
     try
     {
-        lock_guard<mutex> lock(Globals::mtx);
+        std::lock_guard<std::mutex> lock(Constants::Globals::mtx);
         Time time;
-        fstream file("./data/time/" + getId() + ".txt", ios::in);
+        std::fstream file("./data/time/" + getId() + ".txt", std::ios::in);
         if (!file.is_open())
         {
             throw "Không thể mở file t/g customer";
@@ -77,9 +78,9 @@ Time Customer::getTimeFromFile()
         file.close();
         return time;
     }
-    catch (const string &error)
+    catch (const std::string &error)
     {
-        cerr << error << endl;
+        std::cerr << error << std::endl;
         return Time();
     }
 }
@@ -88,8 +89,8 @@ void Customer::setTimeToFile(Time time)
 {
     try
     {
-        lock_guard<mutex> lock(Globals::mtx);
-        fstream file("./data/time/" + getId() + ".txt", ios::out);
+        std::lock_guard<std::mutex> lock(Constants::Globals::mtx);
+        std::fstream file("./data/time/" + getId() + ".txt", std::ios::out);
         if (!file.is_open())
         {
             throw "Không thể mở file t/g customer";
@@ -97,9 +98,9 @@ void Customer::setTimeToFile(Time time)
         file << time;
         file.close();
     }
-    catch (const string &error)
+    catch (const std::string &error)
     {
-        cerr << error << endl;
+        std::cerr << error << std::endl;
     }
 }
 
@@ -116,80 +117,80 @@ Time Customer::MoneyToTime(double balance)
 void Customer::showMyInfo()
 {
     system("cls");
-    cout << "┌───────────────────────────────────────┐" << endl;
-    cout << "│           Thông tin cá nhân          │" << endl;
-    cout << "├───────────────────────────────────────┤" << endl;
-    cout << "│ Tên khách hàng: " << name << endl;
-    cout << "│ Số điện thoại: " << phone << endl;
-    cout << "│ Số dư: " << Utilities::formatMoney(balance) << " (VNĐ)" << endl;
-    cout << "│ ";
+    std::cout << "┌───────────────────────────────────────┐" << std::endl;
+    std::cout << "│           Thông tin cá nhân          │" << std::endl;
+    std::cout << "├───────────────────────────────────────┤" << std::endl;
+    std::cout << "│ Tên khách hàng: " << name << std::endl;
+    std::cout << "│ Số điện thoại: " << phone << std::endl;
+    std::cout << "│ Số dư: " << Utilities::formatMoney(balance) << " (VNĐ)" << std::endl;
+    std::cout << "│ ";
     showHistory();
-    cout << "└───────────────────────────────────────┘" << endl;
+    std::cout << "└───────────────────────────────────────┘" << std::endl;
     ConsoleUtils::Gotoxy(40, 3);
-    cout << "│";
+    std::cout << "│";
     ConsoleUtils::Gotoxy(40, 4);
-    cout << "│";
+    std::cout << "│";
     ConsoleUtils::Gotoxy(40, 5);
-    cout << "│";
+    std::cout << "│";
     ConsoleUtils::Gotoxy(40, 6);
-    cout << "│";
+    std::cout << "│";
     Utilities::pressKeyQ();
 }
 void Customer::showHistory()
 {
     try
     {
-        fstream file("./data/history/history.txt", ios::in);
+        std::fstream file("./data/history/history.txt", std::ios::in);
         if (!file.is_open())
         {
             throw "Không thể mở file history";
         }
-        string line;
-        while (getline(file, line))
+        std::string line;
+        while (std::getline(file, line))
         {
-            stringstream ss(line);
-            string id, day;
-            getline(ss, id, '|');
-            getline(ss, day);
+            std::stringstream ss(line);
+            std::string id, day;
+            std::getline(ss, id, '|');
+            std::getline(ss, day);
             if (id == this->getId())
             {
-                cout << "Lần online cuối: " << day << endl;
+                std::cout << "Lần online cuối: " << day << std::endl;
                 return;
             }
         }
         file.close();
     }
-    catch (const string &error)
+    catch (const std::string &error)
     {
-        cerr << error << endl;
+        std::cerr << error << std::endl;
         return;
     }
 }
 
 void Customer::unregisterComputer()
 {
-    fstream file("./data/computer/registered.txt", ios::in);
+    std::fstream file("./data/computer/registered.txt", std::ios::in);
     if (!file.is_open())
     {
-        cout << "Không thể mở file registeredCus.txt" << endl;
+        std::cout << "Không thể mở file registeredCus.txt" << std::endl;
         return;
     }
-    fstream tempFile("./data/computer/temp.txt", ios::out);
+    std::fstream tempFile("./data/computer/temp.txt", std::ios::out);
     if (!tempFile.is_open())
     {
-        cout << "Không thể mở file temp.txt" << endl;
+        std::cout << "Không thể mở file temp.txt" << std::endl;
         return;
     }
-    string line;
-    while (getline(file, line))
+    std::string line;
+    while (std::getline(file, line))
     {
-        stringstream ss(line);
-        string username, typeOfComputer;
-        getline(ss, username, '|');
-        getline(ss, typeOfComputer);
+        std::stringstream ss(line);
+        std::string username, typeOfComputer;
+        std::getline(ss, username, '|');
+        std::getline(ss, typeOfComputer);
         if (username != this->username)
         {
-            tempFile << username << "|" << typeOfComputer << endl;
+            tempFile << username << "|" << typeOfComputer << std::endl;
         }
     }
     file.close();
@@ -197,14 +198,15 @@ void Customer::unregisterComputer()
     remove("./data/computer/registered.txt");
     rename("./data/computer/temp.txt", "./data/computer/registered.txt");
 }
-istream &operator>>(istream &is, Customer &customer)
+
+std::istream &operator>>(std::istream &is, Customer &customer)
 {
     ConsoleUtils::Gotoxy(0, 0);
-    cout << "┌─────────────────────────────────────────────┐" << endl;
-    cout << "│ Tên khách hàng:                             │" << endl;
-    cout << "│ Số điện thoại:                              │" << endl;
-    cout << "│ Tên đăng nhập:                              │" << endl;
-    cout << "└─────────────────────────────────────────────┘" << endl;
+    std::cout << "┌─────────────────────────────────────────────┐" << std::endl;
+    std::cout << "│ Tên khách hàng:                             │" << std::endl;
+    std::cout << "│ Số điện thoại:                              │" << std::endl;
+    std::cout << "│ Tên đăng nhập:                              │" << std::endl;
+    std::cout << "└─────────────────────────────────────────────┘" << std::endl;
 
     ConsoleUtils::Gotoxy(18, 1);
     Utilities::enterLetter(customer.name);
@@ -256,8 +258,8 @@ istream &operator>>(istream &is, Customer &customer)
             break;
     }
     ConsoleUtils::ClearLine(4);
-    cout << "│ Mật khẩu: 123456                            │" << endl;
-    cout << "└─────────────────────────────────────────────┘" << endl;
+    std::cout << "│ Mật khẩu: 123456                            │" << std::endl;
+    std::cout << "└─────────────────────────────────────────────┘" << std::endl;
 
     customer.password = "123456";
     customer.role = "customer";
@@ -265,7 +267,7 @@ istream &operator>>(istream &is, Customer &customer)
     return is;
 }
 
-ostream &operator<<(ostream &os, Customer &customer)
+std::ostream &operator<<(std::ostream &os, Customer &customer)
 {
     os << customer.serialize();
     return os;
@@ -275,20 +277,27 @@ int Customer::enterAmountOrder()
 {
     system("cls");
     ShowCursor(true);
+    std::string input;
     int amount;
     do
     {
-        cout << "Nhập số lượng: ";
-        cin >> amount;
+        std::cout << "Nhập số lượng: ";
+        Utilities::enterNumber(input, 2);
+        if (input.empty())
+        {
+            ShowCursor(false);
+            return -1;
+        }
+        amount = stoi(input);
         if (amount <= 0)
         {
-            cout << "Số lượng không hợp lệ" << endl;
+            std::cout << "Số lượng không hợp lệ" << std::endl;
         }
     } while (amount <= 0);
     return amount;
 }
 
-void Customer::order(string nameRefreshment, int quantity, bool orderAgain)
+void Customer::order(std::string nameRefreshment, int quantity, bool orderAgain)
 {
     system("cls");
     ShowCursor(false);
@@ -342,22 +351,22 @@ void Customer::ConfirmOrder()
 
 int Customer::getTotalPrice()
 {
-    fstream file("./data/order/" + this->getId() + "_ordered.txt", ios::in);
+    std::fstream file("./data/order/" + this->getId() + "_ordered.txt", std::ios::in);
     if (!file.is_open())
     {
-        cout << "Không thể mở file ordered" << endl;
+        std::cout << "Không thể mở file ordered" << std::endl;
         return 0;
     }
-    string line;
+    std::string line;
     int total = 0;
-    while (getline(file, line))
+    while (std::getline(file, line))
     {
-        stringstream ss(line);
-        string name;
+        std::stringstream ss(line);
+        std::string name;
         int quantity;
         int price;
-        getline(ss, name, '|');
-        getline(ss, line, '|');
+        std::getline(ss, name, '|');
+        std::getline(ss, line, '|');
         quantity = stoi(line);
         ss >> price;
         total += price;
@@ -365,24 +374,24 @@ int Customer::getTotalPrice()
     return total;
 }
 
-string Customer::serialize() const
+std::string Customer::serialize() const
 {
-    stringstream ss;
+    std::stringstream ss;
     ss << this->id << "|" << this->name << "|" << this->username << "|" << this->phone << "|" << this->balance << "|" << this->computer.getId();
     return ss.str();
 }
 
-void Customer::unserialize(string &data)
+void Customer::unserialize(std::string &data)
 {
-    stringstream ss(data);
-    getline(ss, this->id, '|');
-    getline(ss, this->name, '|');
-    getline(ss, this->username, '|');
-    getline(ss, this->phone, '|');
-    string balance;
-    getline(ss, balance, '|');
+    std::stringstream ss(data);
+    std::getline(ss, this->id, '|');
+    std::getline(ss, this->name, '|');
+    std::getline(ss, this->username, '|');
+    std::getline(ss, this->phone, '|');
+    std::string balance;
+    std::getline(ss, balance, '|');
     this->balance = stod(balance);
-    string idComputer;
-    getline(ss, idComputer);
+    std::string idComputer;
+    std::getline(ss, idComputer);
     this->computer.setId(idComputer);
 }

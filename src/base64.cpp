@@ -1,12 +1,13 @@
 #include "../include/base64.hpp"
+#include <iostream>
 
-Base64::Base64(const string &str) : str(str) {}
+Base64::Base64(const std::string &str) : str(str) {}
 
-string Base64::encode()
+std::string Base64::encode()
 {
     int len = this->str.length();
-    string base64Table = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-    string result;
+    std::string base64Table = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    std::string result;
     int i = 0;
     while (i < len)
     {
@@ -19,11 +20,11 @@ string Base64::encode()
     return result;
 }
 
-string Base64::decode()
+std::string Base64::decode()
 {
     int len = this->str.length();
-    string base64Table = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-    string result;
+    std::string base64Table = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    std::string result;
     int i = 0;
     while (i < len)
     {

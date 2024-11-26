@@ -1,29 +1,29 @@
 #include "../include/utilities.hpp"
 #include "../include/date.hpp"
-#include <string>
+
 Date::Date(int day, int month, int year) : day(day), month(month), year(year) {}
 
 Date::~Date() {}
 
-ostream &operator<<(ostream &os, const Date &date)
+std::ostream &operator<<(std::ostream &os, const Date &date)
 {
     os << date.serialize();
     return os;
 }
 
-istream &operator>>(istream &is, Date &date)
+std::istream &operator>>(std::istream &is, Date &date)
 {
     while (true)
     {
-        cout << "Nhập vào ngày, tháng, năm dưới dạng (dd/mm/yyyy): ";
-        string temp;
+        std::cout << "Nhập vào ngày, tháng, năm dưới dạng (dd/mm/yyyy): ";
+        std::string temp;
         Utilities::enterString(temp, 10);
 
         int pos1 = temp.find('/');
         int pos2 = temp.find('/', pos1 + 1);
         if (pos1 == -1 || pos2 == -1 || pos1 == 0 || pos2 == temp.size() - 1 || temp.find('/', pos2 + 1) != -1 || pos1 == pos2 - 1) // kiểm tra xem có phải là dd/mm/yyyy không
         {
-            cout << "Nhập sai định dạng!" << endl;
+            std::cout << "Nhập sai định dạng!" << std::endl;
             continue;
         }
 
@@ -33,7 +33,7 @@ istream &operator>>(istream &is, Date &date)
 
         if (date.isValid())
             break;
-        cout << "Ngày tháng năm không hợp lệ!" << endl;
+        std::cout << "Ngày tháng năm không hợp lệ!" << std::endl;
     }
     return is;
 }
@@ -197,14 +197,14 @@ Date Date::getCurrentDate()
     return Date(ltm->tm_mday, ltm->tm_mon + 1, ltm->tm_year + 1900);
 }
 
-string Date::serialize() const
+std::string Date::serialize() const
 {
-    stringstream ss;
-    ss << setfill('0') << setw(2) << day << '/' << setw(2) << month << '/' << setw(4) << year;
+    std::stringstream ss;
+    ss << std::setfill('0') << std::setw(2) << day << '/' << std::setw(2) << month << '/' << std::setw(4) << year;
     return ss.str();
 }
 
-void Date::unserialize(string &data)
+void Date::unserialize(std::string &data)
 {
     int pos1 = data.find('|');
     int pos2 = data.find('|', pos1 + 1);

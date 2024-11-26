@@ -1,25 +1,23 @@
 #ifndef BASE64
 #define BASE64 1
 
-#include <iostream>
-
-using namespace std;
+#include <string>
 
 class Base64
 {
 private:
-    string str;
+    std::string str;
 
 public:
-    Base64(const string &);
+    Base64(const std::string &);
 
     /// @brief Mã hóa
     /// @return Chuỗi được mã hóa
-    string encode();
+    std::string encode();
 
     /// @brief Giải mã
     /// @return Chuỗi được giải mã
-    string decode();
+    std::string decode();
 
     ~Base64();
 };

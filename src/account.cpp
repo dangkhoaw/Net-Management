@@ -1,36 +1,37 @@
+#include "../include/console.hpp"
 #include "../include/utilities.hpp"
 #include "../include/base64.hpp"
 #include "../include/database.hpp"
 
-Account::Account(string username, string password, string role, string id, string status, string isFirstLogin) : username(username), password(password), role(role), id(id), status(status), isFirstLogin(isFirstLogin) {}
+Account::Account(std::string username, std::string password, std::string role, std::string id, std::string status, std::string isFirstLogin) : username(username), password(password), role(role), id(id), status(status), isFirstLogin(isFirstLogin) {}
 
 Account::~Account() {}
-void Account::setRole(string role) { this->role = role; }
-void Account::setPassword(string password) { this->password = password; }
-void Account::setUserName(string username) { this->username = username; }
-void Account::setStatus(string status) { this->status = status; }
-void Account::setIsFirstLogin(string isFirstLogin) { this->isFirstLogin = isFirstLogin; }
-void Account::setId(string id) { this->id = id; }
-string Account::getRole() { return role; }
-string Account::getUserName() { return username; }
-string Account::getPassword() { return password; }
-string Account::getId() { return id; }
-string Account::getStatus() { return status; }
-string Account::getIsFirstLogin() { return isFirstLogin; }
+void Account::setRole(std::string role) { this->role = role; }
+void Account::setPassword(std::string password) { this->password = password; }
+void Account::setUserName(std::string username) { this->username = username; }
+void Account::setStatus(std::string status) { this->status = status; }
+void Account::setIsFirstLogin(std::string isFirstLogin) { this->isFirstLogin = isFirstLogin; }
+void Account::setId(std::string id) { this->id = id; }
+std::string Account::getRole() { return role; }
+std::string Account::getUserName() { return username; }
+std::string Account::getPassword() { return password; }
+std::string Account::getId() { return id; }
+std::string Account::getStatus() { return status; }
+std::string Account::getIsFirstLogin() { return isFirstLogin; }
 
-istream &operator>>(istream &is, Account &account)
+std::istream &operator>>(std::istream &is, Account &account)
 {
     int count = 0;
     while (count < 3)
     {
         system("cls");
-        cout << "┌───────────────────────────────────┐" << endl
-             << "│               LOGIN              │" << endl
-             << "├───────────────────────────────────┤" << endl
-             << "│Username:                          │" << endl
-             << "├───────────────────────────────────┤" << endl
-             << "│Password:                          │" << endl
-             << "└───────────────────────────────────┘" << endl;
+        std::cout << "┌───────────────────────────────────┐" << std::endl
+                  << "│               LOGIN              │" << std::endl
+                  << "├───────────────────────────────────┤" << std::endl
+                  << "│Username:                          │" << std::endl
+                  << "├───────────────────────────────────┤" << std::endl
+                  << "│Password:                          │" << std::endl
+                  << "└───────────────────────────────────┘" << std::endl;
 
         ConsoleUtils::Gotoxy(11, 3);
         Utilities::enterString(account.username);
@@ -52,7 +53,7 @@ istream &operator>>(istream &is, Account &account)
             if (account.status == "Online")
             {
                 ConsoleUtils::Gotoxy(0, 7);
-                cout << "\nTài khoản đã đăng nhập ở máy khác!" << endl;
+                std::cout << "\nTài khoản đã đăng nhập ở máy khác!" << std::endl;
                 account.username.clear();
                 account.password.clear();
                 count++;
@@ -62,8 +63,8 @@ istream &operator>>(istream &is, Account &account)
             else if (account.role == "staff" || !isFullAllComputer())
             {
                 ConsoleUtils::Gotoxy(0, 7);
-                cout << "\nĐăng nhập thành công!\n"
-                     << endl;
+                std::cout << "\nĐăng nhập thành công!\n"
+                          << std::endl;
                 ConsoleUtils::ShowCursor(false);
                 Utilities::loading();
                 return is;
@@ -72,7 +73,7 @@ istream &operator>>(istream &is, Account &account)
         else
         {
             ConsoleUtils::Gotoxy(0, 7);
-            cout << "\nTài khoản hoặc mật khẩu không đúng!" << endl;
+            std::cout << "\nTài khoản hoặc mật khẩu không đúng!" << std::endl;
             account.username.clear();
             account.password.clear();
             count++;
@@ -82,7 +83,7 @@ istream &operator>>(istream &is, Account &account)
     return is;
 }
 
-ostream &operator<<(ostream &os, Account &account)
+std::ostream &operator<<(std::ostream &os, const Account &account)
 {
     os << account.serialize();
     return os;
@@ -92,7 +93,7 @@ bool Account::signIn()
 {
     system("cls");
     ConsoleUtils::ShowCursor(true);
-    cin >> *this;
+    std::cin >> *this;
     system("cls");
     if (username.empty() || password.empty())
     {
@@ -107,8 +108,8 @@ bool Account::changePassword()
 {
     system("cls");
     ConsoleUtils::ShowCursor(true);
-    string passwd, newPassword, rePassword;
-    cout << "Mật khẩu cũ: ";
+    std::string passwd, newPassword, rePassword;
+    std::cout << "Mật khẩu cũ: ";
     Utilities::enterPassword(passwd);
     if (passwd.empty())
     {
@@ -125,7 +126,7 @@ bool Account::changePassword()
     }
     while (true)
     {
-        cout << "Mật khẩu mới: ";
+        std::cout << "Mật khẩu mới: ";
         Utilities::enterPassword(newPassword);
         if (newPassword.empty())
         {
@@ -135,12 +136,12 @@ bool Account::changePassword()
         }
         if (newPassword == passwd)
         {
-            cout << "\nMật khẩu mới không được trùng với mật khẩu cũ!" << endl;
+            std::cout << "\nMật khẩu mới không được trùng với mật khẩu cũ!" << std::endl;
             continue;
         }
         break;
     }
-    cout << "Nhập lại mật khẩu: ";
+    std::cout << "Nhập lại mật khẩu: ";
     Utilities::enterPassword(rePassword);
     if (rePassword.empty())
     {
@@ -178,19 +179,19 @@ bool checkAccount(Account &account)
     return false;
 }
 
-string Account::serialize() const
+std::string Account::serialize() const
 {
     return id + '|' + username + '|' + Base64(password).encode() + '|' + role + '|' + status + '|' + isFirstLogin;
 }
 
-void Account::unserialize(string &data)
+void Account::unserialize(std::string &data)
 {
-    stringstream ss(data);
-    getline(ss, id, '|');
-    getline(ss, username, '|');
-    getline(ss, password, '|');
+    std::stringstream ss(data);
+    std::getline(ss, id, '|');
+    std::getline(ss, username, '|');
+    std::getline(ss, password, '|');
     password = Base64(password).decode();
-    getline(ss, role, '|');
-    getline(ss, status, '|');
-    getline(ss, isFirstLogin);
+    std::getline(ss, role, '|');
+    std::getline(ss, status, '|');
+    std::getline(ss, isFirstLogin);
 }

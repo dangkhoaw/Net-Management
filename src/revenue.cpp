@@ -1,3 +1,4 @@
+#include "../include/console.hpp"
 #include "../include/utilities.hpp"
 #include "../include/process.hpp"
 #include "../include/revenue.hpp"
@@ -7,13 +8,13 @@ Revenue::Revenue(Date date, double totalMoney) : date(date), totalMoney(totalMon
 Revenue::Revenue(const Revenue &revenue) : date(revenue.date), totalMoney(revenue.totalMoney) {}
 Revenue::~Revenue() {}
 
-ostream &operator<<(ostream &os, const Revenue &revenue)
+std::ostream &operator<<(std::ostream &os, const Revenue &revenue)
 {
     os << revenue.date << "|" << revenue.totalMoney;
     return os;
 }
 
-istream &operator>>(istream &is, Revenue &revenue)
+std::istream &operator>>(std::istream &is, Revenue &revenue)
 {
     is >> revenue.date >> revenue.totalMoney;
     return is;
@@ -22,27 +23,27 @@ istream &operator>>(istream &is, Revenue &revenue)
 List<Revenue> Revenue::getRevenue()
 {
     List<Revenue> doanhthus;
-    fstream file("./data/revenue/revenue.txt", ios::in);
+    std::fstream file("./data/revenue/revenue.txt", std::ios::in);
     if (!file.is_open())
     {
-        cout << "Không thể mở file doanh thu" << endl;
+        std::cout << "Không thể mở file doanh thu" << std::endl;
         return doanhthus;
     }
 
-    string line;
-    while (getline(file, line))
+    std::string line;
+    while (std::getline(file, line))
     {
-        stringstream ss(line);
-        string date, totalMoney;
-        getline(ss, date, '|');
-        getline(ss, totalMoney);
+        std::stringstream ss(line);
+        std::string date, totalMoney;
+        std::getline(ss, date, '|');
+        std::getline(ss, totalMoney);
 
-        string dateArr[3];
-        stringstream ssDate(date);
+        std::string dateArr[3];
+        std::stringstream ssDate(date);
 
         for (int i = 0; i < 3; i++)
         {
-            getline(ssDate, dateArr[i], '/');
+            std::getline(ssDate, dateArr[i], '/');
         }
 
         Date dateObj(stoi(dateArr[0]), stoi(dateArr[1]), stoi(dateArr[2]));
@@ -56,10 +57,10 @@ List<Revenue> Revenue::getRevenue()
 void Revenue::updateRevenue(Revenue &revenue)
 {
     List<Revenue> doanhthus = getRevenue();
-    fstream file("./data/revenue/revenue.txt", ios::out);
+    std::fstream file("./data/revenue/revenue.txt", std::ios::out);
     if (!file.is_open())
     {
-        cout << "Không thể mở file doanh thu" << endl;
+        std::cout << "Không thể mở file doanh thu" << std::endl;
         return;
     }
 
@@ -72,12 +73,12 @@ void Revenue::updateRevenue(Revenue &revenue)
             check = true;
             doanhThuTemp = revenue;
         }
-        file << doanhThuTemp << endl;
+        file << doanhThuTemp << std::endl;
     }
 
     if (check == false)
     {
-        file << revenue << endl;
+        file << revenue << std::endl;
     }
     file.close();
 }
@@ -88,14 +89,14 @@ void Revenue::viewRevenueDay(Date &date)
 
     if (!checkDate(date))
     {
-        cout << "Không có dữ liệu doanh thu cho ngày này" << endl;
+        std::cout << "Không có dữ liệu doanh thu cho ngày này" << std::endl;
         ConsoleUtils::ShowCursor(false);
         Utilities::pressKeyQ();
         return;
     }
 
     *this = getRevenueByDate(date);
-    cout << "Doanh thu ngày " << date << " là: " << Utilities::formatMoney((double)this->totalMoney) << " (VNĐ)" << endl;
+    std::cout << "Doanh thu ngày " << date << " là: " << Utilities::formatMoney((double)this->totalMoney) << " (VNĐ)" << std::endl;
 
     ConsoleUtils::ShowCursor(false);
     Utilities::pressKeyQ();
@@ -107,14 +108,14 @@ void Revenue::viewRevenueMonth(Date &date)
 
     if (!checkDate(date))
     {
-        cout << "Không có dữ liệu doanh thu cho tháng này" << endl;
+        std::cout << "Không có dữ liệu doanh thu cho tháng này" << std::endl;
         ConsoleUtils::ShowCursor(false);
         Utilities::pressKeyQ();
         return;
     }
 
     *this = getRevenueByMonth(date);
-    cout << "Doanh thu tháng " << setfill('0') << setw(2) << date.getMonth() << "/" << date.getYear() << " là: " << Utilities::formatMoney((double)this->totalMoney) << " (VNĐ)" << endl;
+    std::cout << "Doanh thu tháng " << std::setfill('0') << std::setw(2) << date.getMonth() << "/" << date.getYear() << " là: " << Utilities::formatMoney((double)this->totalMoney) << " (VNĐ)" << std::endl;
 
     ConsoleUtils::ShowCursor(false);
     Utilities::pressKeyQ();
@@ -126,7 +127,7 @@ void Revenue::viewRevenueYear(Date &date)
 
     if (!checkDate(date))
     {
-        cout << "Không có dữ liệu doanh thu cho năm này" << endl;
+        std::cout << "Không có dữ liệu doanh thu cho năm này" << std::endl;
         ConsoleUtils::ShowCursor(false);
         Utilities::pressKeyQ();
         return;
@@ -134,7 +135,7 @@ void Revenue::viewRevenueYear(Date &date)
 
     *this = getRevenueByYear(date);
 
-    cout << "Doanh thu năm " << date.getYear() << " là: " << Utilities::formatMoney((double)this->totalMoney) << " (VNĐ)" << endl;
+    std::cout << "Doanh thu năm " << date.getYear() << " là: " << Utilities::formatMoney((double)this->totalMoney) << " (VNĐ)" << std::endl;
 
     ConsoleUtils::ShowCursor(false);
     Utilities::pressKeyQ();
@@ -262,19 +263,19 @@ bool Revenue::isValid()
     return this->date.isValid();
 }
 
-string Revenue::serialize()
+std::string Revenue::serialize()
 {
-    stringstream ss;
+    std::stringstream ss;
     ss << this->date << "|" << this->totalMoney;
     return ss.str();
 }
 
-void Revenue::unserialize(string &data)
+void Revenue::unserialize(std::string &data)
 {
-    stringstream ss(data);
-    string date, totalMoney;
-    getline(ss, date, '|');
-    getline(ss, totalMoney);
+    std::stringstream ss(data);
+    std::string date, totalMoney;
+    std::getline(ss, date, '|');
+    std::getline(ss, totalMoney);
     this->date.unserialize(date);
     this->totalMoney = stod(totalMoney);
 }

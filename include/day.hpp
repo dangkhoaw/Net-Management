@@ -5,8 +5,6 @@
 #include "mtime.hpp"
 #include "date.hpp"
 
-using namespace std;
-
 class Day
 {
 protected:
@@ -17,8 +15,8 @@ public:
     Day(Date date = Date(), Time time = Time());
     ~Day();
 
-    friend ostream &operator<<(ostream &os, const Day &day);
-    friend istream &operator>>(istream &is, Day &day);
+    friend std::ostream &operator<<(std::ostream &os, const Day &day);
+    friend std::istream &operator>>(std::istream &is, Day &day);
     friend bool operator==(const Day &day1, const Day &day2);
     friend bool operator!=(const Day &day1, const Day &day2);
     Day operator+(int day);
@@ -38,8 +36,8 @@ public:
     bool isValid();
     Day getCurrentDay();
 
-    string serialize() const;
-    void unserialize(string &data);
+    std::string serialize() const;
+    void unserialize(std::string &data);
 };
 
 #endif

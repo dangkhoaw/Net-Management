@@ -2,14 +2,12 @@
 #define STAFF 1
 
 #include "account.hpp"
-#include <iostream>
 #include "customer.hpp"
-using namespace std;
 
 class Staff : public Account
 {
 public:
-    Staff(string username = "", string password = "", string role = "", string id = "", string status = "", string isFirstLogin = "");
+    Staff(std::string username = "", std::string password = "", std::string role = "", std::string id = "", std::string status = "", std::string isFirstLogin = "");
 
     void viewComputerStatus();
     void topUpAccount();

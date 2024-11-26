@@ -133,15 +133,15 @@ Time Time::operator-(const Time &time)
     return temp;
 }
 
-ostream &operator<<(ostream &os, const Time &time)
+std::ostream &operator<<(std::ostream &os, const Time &time)
 {
     os << time.serialize();
     return os;
 }
 
-istream &operator>>(istream &is, Time &time)
+std::istream &operator>>(std::istream &is, Time &time)
 {
-    string temp;
+    std::string temp;
     is >> temp;
     time.unserialize(temp);
     return is;
@@ -187,17 +187,17 @@ int Time::getSecond()
     return second;
 }
 
-string Time::serialize() const
+std::string Time::serialize() const
 {
-    stringstream ss;
-    ss << setfill('0') << setw(2) << hour << colon << setw(2) << minute << colon << setw(2) << second;
+    std::stringstream ss;
+    ss << std::setfill('0') << std::setw(2) << hour << colon << std::setw(2) << minute << colon << std::setw(2) << second;
     return ss.str();
 }
 
-void Time::unserialize(string &data)
+void Time::unserialize(std::string &data)
 {
-    stringstream ss(data);
-    string hour, minute, second;
+    std::stringstream ss(data);
+    std::string hour, minute, second;
     getline(ss, hour, colon);
     getline(ss, minute, colon);
     getline(ss, second);

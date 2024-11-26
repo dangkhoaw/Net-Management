@@ -3,8 +3,6 @@
 
 #include <iostream>
 
-using namespace std;
-
 class Time
 {
 private:
@@ -24,8 +22,8 @@ public:
     friend Time operator--(Time &time, int);
     Time operator+(const Time &time);
     Time operator-(const Time &time);
-    friend ostream &operator<<(ostream &os, const Time &time);
-    friend istream &operator>>(istream &is, Time &time);
+    friend std::ostream &operator<<(std::ostream &os, const Time &time);
+    friend std::istream &operator>>(std::istream &is, Time &time);
     friend bool operator==(const Time &time1, const Time &time2);
     friend bool operator!=(const Time &time1, const Time &time2);
     void setHour(int hour);
@@ -35,8 +33,8 @@ public:
     int getMinute();
     int getSecond();
 
-    string serialize() const;
-    void unserialize(string &data);
+    std::string serialize() const;
+    void unserialize(std::string &data);
 };
 
 #endif
