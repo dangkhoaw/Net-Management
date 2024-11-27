@@ -3,6 +3,8 @@
 
 namespace ConsoleUtils
 {
+    /// @brief Hiển thị hoặc ẩn con trỏ nhấp nháy
+    /// @param CursorVisibility True: Hiển thị, False: Ẩn
     void ShowCursor(bool CursorVisibility)
     {
         HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -10,6 +12,7 @@ namespace ConsoleUtils
         SetConsoleCursorInfo(handle, &cursor);
     }
 
+    /// @brief Di chuyển con trỏ đến vị trí (posX, posY)
     void Gotoxy(SHORT posX, SHORT posY)
     {
         HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -20,6 +23,7 @@ namespace ConsoleUtils
         SetConsoleCursorPosition(hStdout, Position);
     }
 
+    /// @brief Xóa dòng
     void ClearLine(SHORT posY)
     {
         CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -35,6 +39,7 @@ namespace ConsoleUtils
         Gotoxy(0, posY);
     }
 
+    /// @brief Xóa từ vị trí (posX, posY) với length ký tự
     void ClearLine(SHORT posX, SHORT posY, SHORT length)
     {
         Gotoxy(posX, posY);

@@ -1,6 +1,6 @@
 #include "../include/computer.hpp"
 #include "../include/constants.hpp"
-#include <fstream>
+#include "../include/file.hpp"
 #include <sstream>
 
 Computer::Computer(std::string id, std::string typesOfComputer, std::string status, std::string customerUsingName, Time usageTime)
@@ -26,7 +26,7 @@ void Computer::setStatus(std::string status) { this->status = status; }
 
 void Computer::setUsageTime(Time usageTime) { this->usageTime = usageTime; }
 
-Time Computer::getUsageTime() { return usageTime; }
+Time &Computer::getUsageTime() { return usageTime; }
 void Computer::setCost() { cost = (typesOfComputer == "VIP") ? 30000 : (typesOfComputer == "Cao cap") ? 20000
                                                                                                       : 10000; }
 Time Computer::getUsageTimeFromFile()
@@ -35,19 +35,20 @@ Time Computer::getUsageTimeFromFile()
     {
         std::lock_guard<std::mutex> lock(Constants::Globals::mtx);
         Time time;
-        std::fstream file("./data/time/" + id + ".txt", std::ios::in);
-        if (!file.is_open())
+        std::fstream file;
+        if (!File::open(file, "./data/time/" + id + ".txt", std::ios::in))
         {
-            throw "Không thể mở file t/g computer";
+            throw std::string("Không thể mở file t/g computer");
         }
         file >> time;
-        file.close();
+        File::close(file);
         return time;
     }
     catch (const std::string &error)
     {
         std::cerr << error << std::endl;
-        return Time();
+        static Time defaultTime;
+        return defaultTime;
     }
 }
 
@@ -57,16 +58,20 @@ void Computer::setCustomerUsingName(std::string customerUsingName) { this->custo
 
 void Computer::setUsageTimeToFile(Time time)
 {
-    std::lock_guard<std::mutex> lock(Constants::Globals::mtx);
-    std::fstream file("./data/time/" + id + ".txt", std::ios::out);
-    if (file.is_open())
+    try
     {
+        std::lock_guard<std::mutex> lock(Constants::Globals::mtx);
+        std::fstream file;
+        if (!File::open(file, "./data/time/" + id + ".txt", std::ios::out))
+        {
+            throw std::string("Không thể mở file t/g computer");
+        }
         file << time;
-        file.close();
+        File::close(file);
     }
-    else
+    catch (const std::string &error)
     {
-        std::cout << "Không thể mở file t/g computer" << std::endl;
+        std::cerr << error << std::endl;
     }
 }
 

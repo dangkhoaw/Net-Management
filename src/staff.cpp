@@ -51,7 +51,7 @@ void Staff::removeAccount()
     std::cout << "\nBạn có chắc chắn muốn xóa tài khoản này không?" << std::endl;
     if (Menu::button(14, 3, "yesno"))
     {
-        if (Database<Customer>::remove(customer) && Database<Account>::remove(customer))
+        if (Database<Customer>::remove(customer))
             MessageBoxW(NULL, L"Xóa tài khoản thành công", L"Thông báo", MB_OK);
         else
             MessageBoxW(NULL, L"Xóa tài khoản thất bại", L"Thông báo", MB_OK);
@@ -304,7 +304,7 @@ void Staff::topUpAccount()
     } while (amount < 1000);
 
     revenue = revenue + amount;
-    revenue.updateRevenue(revenue);
+    Database<Revenue>::update(revenue);
 
     customer.setUserName(userName);
     Database<Customer>::get(customer);

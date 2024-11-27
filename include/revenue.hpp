@@ -22,11 +22,9 @@ public:
     Revenue operator+(const Revenue &other);
     Revenue operator-(const Revenue &other);
 
-    List<Revenue> getRevenue();
     Revenue getRevenueByDate(Date &date);
     Revenue getRevenueByMonth(Date &date);
     Revenue getRevenueByYear(Date &date);
-    void updateRevenue(Revenue &Revenue);
     Date getDate();
     double getTotalMoney();
 

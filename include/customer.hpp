@@ -22,11 +22,11 @@ public:
     ~Customer();
     std::string getPhone();
     std::string getName();
-    Time getTime();
+    Time &getTime();
     int getMoneyforOrder();
     Computer &getComputer();
     Computer &getComputerViaFile();
-    History getHistory();
+    History &getHistory();
     double getBalance();
     Time getTimeFromFile();
     Time MoneyToTime(double balance);

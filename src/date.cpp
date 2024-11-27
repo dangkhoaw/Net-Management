@@ -206,8 +206,8 @@ std::string Date::serialize() const
 
 void Date::unserialize(std::string &data)
 {
-    int pos1 = data.find('|');
-    int pos2 = data.find('|', pos1 + 1);
+    int pos1 = data.find('/');
+    int pos2 = data.find('/', pos1 + 1);
     day = stoi(data.substr(0, pos1));
     month = stoi(data.substr(pos1 + 1, pos2 - pos1 - 1));
     year = stoi(data.substr(pos2 + 1));

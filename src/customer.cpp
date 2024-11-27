@@ -2,6 +2,7 @@
 #include "../include/utilities.hpp"
 #include "../include/base64.hpp"
 #include "../include/database.hpp"
+#include "../include/file.hpp"
 
 Customer::Customer(std::string username, std::string password, std::string role, std::string id, std::string status, std::string isFirstLogin, std::string name, std::string phone, double balance, Time time, int moneyforOrder, Dish dish, Computer computer, History historyRecently)
     : Account(username, password, role, id, status, isFirstLogin), name(name), phone(phone), balance(balance), time(time), moneyforOrder(moneyforOrder), dish(dish), computer(computer), historyRecently(historyRecently) {}
@@ -9,8 +10,8 @@ Customer::~Customer() {}
 
 std::string Customer::getName() { return name; }
 std::string Customer::getPhone() { return phone; }
-Time Customer::getTime() { return time; }
-History Customer::getHistory()
+Time &Customer::getTime() { return time; }
+History &Customer::getHistory()
 {
     return historyRecently;
 }
@@ -21,13 +22,13 @@ Computer &Customer::getComputerViaFile()
     try
     {
         std::lock_guard<std::mutex> lock(Constants::Globals::mtx);
-        std::fstream file("./data/computer/registered.txt", std::ios::in);
-        if (!file.is_open())
+        std::fstream file;
+        if (!File::open(file, "./data/computer/computer.txt", std::ios::in))
         {
-            throw "Không thể mở file registeredCus";
+            throw std::string("Không thể mở file computer");
         }
         std::string line;
-        while (std::getline(file, line))
+        while (File::read(file, line))
         {
             std::stringstream ss(line);
             std::string username, idComputer;
@@ -37,11 +38,11 @@ Computer &Customer::getComputerViaFile()
             {
                 computer.setId(idComputer);
                 Database<Computer>::get(computer);
-                file.close();
+                File::close(file);
                 return computer;
             }
         }
-        file.close();
+        File::close(file);
         return computer;
     }
     catch (const std::string &error)
@@ -69,13 +70,13 @@ Time Customer::getTimeFromFile()
     {
         std::lock_guard<std::mutex> lock(Constants::Globals::mtx);
         Time time;
-        std::fstream file("./data/time/" + getId() + ".txt", std::ios::in);
-        if (!file.is_open())
+        std::fstream file;
+        if (!File::open(file, "./data/time/" + getId() + ".txt", std::ios::in))
         {
-            throw "Không thể mở file t/g customer";
+            throw std::string("Không thể mở file t/g customer");
         }
         file >> time;
-        file.close();
+        File::close(file);
         return time;
     }
     catch (const std::string &error)
@@ -90,13 +91,13 @@ void Customer::setTimeToFile(Time time)
     try
     {
         std::lock_guard<std::mutex> lock(Constants::Globals::mtx);
-        std::fstream file("./data/time/" + getId() + ".txt", std::ios::out);
-        if (!file.is_open())
+        std::fstream file;
+        if (!File::open(file, "./data/time/" + getId() + ".txt", std::ios::out))
         {
-            throw "Không thể mở file t/g customer";
+            throw std::string("Không thể mở file t/g customer");
         }
         file << time;
-        file.close();
+        File::close(file);
     }
     catch (const std::string &error)
     {
@@ -140,13 +141,13 @@ void Customer::showHistory()
 {
     try
     {
-        std::fstream file("./data/history/history.txt", std::ios::in);
-        if (!file.is_open())
+        std::fstream file;
+        if (!File::open(file, "./data/history/history.txt", std::ios::in))
         {
-            throw "Không thể mở file history";
+            throw std::string("Không thể mở file history");
         }
         std::string line;
-        while (std::getline(file, line))
+        while (File::read(file, line))
         {
             std::stringstream ss(line);
             std::string id, day;
@@ -155,10 +156,11 @@ void Customer::showHistory()
             if (id == this->getId())
             {
                 std::cout << "Lần online cuối: " << day << std::endl;
+                File::close(file);
                 return;
             }
         }
-        file.close();
+        File::close(file);
     }
     catch (const std::string &error)
     {
@@ -169,20 +171,20 @@ void Customer::showHistory()
 
 void Customer::unregisterComputer()
 {
-    std::fstream file("./data/computer/registered.txt", std::ios::in);
-    if (!file.is_open())
+    std::fstream file;
+    if (!File::open(file, "./data/computer/registered.txt", std::ios::in))
     {
         std::cout << "Không thể mở file registeredCus.txt" << std::endl;
         return;
     }
-    std::fstream tempFile("./data/computer/temp.txt", std::ios::out);
-    if (!tempFile.is_open())
+    std::fstream tempFile;
+    if (!File::open(tempFile, "./data/computer/temp.txt", std::ios::out))
     {
         std::cout << "Không thể mở file temp.txt" << std::endl;
         return;
     }
     std::string line;
-    while (std::getline(file, line))
+    while (File::read(file, line))
     {
         std::stringstream ss(line);
         std::string username, typeOfComputer;
@@ -190,13 +192,13 @@ void Customer::unregisterComputer()
         std::getline(ss, typeOfComputer);
         if (username != this->username)
         {
-            tempFile << username << "|" << typeOfComputer << std::endl;
+            File::write(tempFile, username + "|" + typeOfComputer);
         }
     }
-    file.close();
-    tempFile.close();
-    remove("./data/computer/registered.txt");
-    rename("./data/computer/temp.txt", "./data/computer/registered.txt");
+    File::close(file);
+    File::close(tempFile);
+    File::remove("./data/computer/registered.txt");
+    File::rename("./data/computer/temp.txt", "./data/computer/registered.txt");
 }
 
 std::istream &operator>>(std::istream &is, Customer &customer)
@@ -344,22 +346,22 @@ void Customer::ConfirmOrder()
     this->setTimeToFile(this->getTime()); // đoạn ni cần không
     this->moneyforOrder = 0;
     Database<Customer>::update(*this);
-    remove(("./data/order/" + getId() + "_ordered.txt").c_str());
+    File::remove("./data/order/" + getId() + "_ordered.txt");
     MessageBoxW(NULL, L"Đang chuẩn bị, vui lòng chờ trong giây lát..!", L"Thông báo", MB_OK);
     return;
 }
 
 int Customer::getTotalPrice()
 {
-    std::fstream file("./data/order/" + this->getId() + "_ordered.txt", std::ios::in);
-    if (!file.is_open())
+    std::fstream file;
+    if (!File::open(file, "./data/order/" + this->getId() + "_ordered.txt", std::ios::in))
     {
         std::cout << "Không thể mở file ordered" << std::endl;
         return 0;
     }
     std::string line;
     int total = 0;
-    while (std::getline(file, line))
+    while (File::read(file, line))
     {
         std::stringstream ss(line);
         std::string name;
@@ -371,6 +373,7 @@ int Customer::getTotalPrice()
         ss >> price;
         total += price;
     }
+    File::close(file);
     return total;
 }
 

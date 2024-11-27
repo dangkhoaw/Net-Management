@@ -156,9 +156,8 @@ bool Account::changePassword()
         ConsoleUtils::ShowCursor(false);
         return false;
     }
-    password = Base64(newPassword).encode();
-    Database<Account>::update(*this);
     password = newPassword;
+    Database<Account>::update(*this);
     MessageBoxW(NULL, L"Đổi mật khẩu thành công!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
     system("cls");
     ConsoleUtils::ShowCursor(false);

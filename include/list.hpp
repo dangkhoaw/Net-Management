@@ -2,6 +2,7 @@
 #define LIST 1
 
 #include <iostream>
+#include <initializer_list>
 
 template <class T>
 class List

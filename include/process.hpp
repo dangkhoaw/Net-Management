@@ -22,7 +22,7 @@ void updateCountOfComputerToFile(std::string typeOfComputer, int count = 1);
 void generateIDComputer(Computer &computer);
 void assignComputer(Customer &customer);
 std::string getTypesOfComputerFromFile(std::string idComputer);
-std::string getIdComputerFromFile(std::string username);
+std::string getIdComputerRegistered(std::string username);
 bool isFullAllComputer();
 bool isAdminOnline();
 /*------------------------------------OTHER------------------------------------*/

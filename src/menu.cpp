@@ -3,10 +3,15 @@
 #include "../include/utilities.hpp"
 #include "../include/database.hpp"
 #include "../include/revenue.hpp"
+#include "../include/file.hpp"
 #include <thread>
 
 namespace Menu
 {
+    /// @brief In từng option của menu
+    /// @param typeMenu Loại menu
+    /// @param option Option cần in
+    /// @param computers Danh sách máy tính (Bỏ trống nếu không cần)
     void optionMenu(std::string typeMenu, int option, List<Computer> computers)
     {
         if (typeMenu == "staff")
@@ -317,6 +322,11 @@ namespace Menu
         }
     }
 
+    /// @brief In ra option được chọn của menu (Đổi màu nền)
+    /// @param typeMenu Loại menu
+    /// @param option Option cần in
+    /// @param isSelected Đã chọn hay chưa
+    /// @param computers Danh sách máy tính (Bỏ trống nếu không cần)
     void printMenuOption(std::string typeMenu, int option, bool isSelected, List<Computer> computers)
     {
         HANDLE myConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -330,6 +340,10 @@ namespace Menu
         SetConsoleTextAttribute(myConsole, foregroundWhite);
     }
 
+    /// @brief In ra menu
+    /// @param typeMenu Loại menu
+    /// @param selectOption Option được chọn
+    /// @param typeComputer Loại máy tính (Bỏ trống nếu không cần)
     void showMenu(std::string typeMenu, int selectOption, std::string typeComputer)
     {
         if (typeMenu == "staff")
@@ -1338,8 +1352,8 @@ namespace Menu
     {
         if (Constants::Globals::isChangedOrder)
         {
-            std::fstream file("./data/order/" + customer.getId() + "_ordered.txt", std::ios::in);
-            if (!file.is_open())
+            std::fstream file;
+            if (!File::open(file, "./data/order/" + customer.getId() + "_ordered.txt", std::ios::in))
             {
                 std::cout << "Không thể mở file ordered" << std::endl;
                 return;
@@ -1368,7 +1382,7 @@ namespace Menu
             std::cout << "├────────────────────────┼──────┼───────────────┤" << std::endl;
             std::string line;
 
-            while (getline(file, line))
+            while (File::read(file, line))
             {
                 i++;
                 std::stringstream ss(line);
@@ -1410,7 +1424,7 @@ namespace Menu
             ConsoleUtils::Gotoxy(0, i);
             std::cout << "└───────────────────────────────────────────────┘" << std::endl;
             Constants::Globals::isChangedOrder = false;
-            file.close();
+            File::close(file);
         }
     }
 }

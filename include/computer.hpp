@@ -16,7 +16,7 @@ public:
     ~Computer();
 
     std::string getId() const;
-    Time getUsageTime();
+    Time &getUsageTime();
     std::string getCustomerUsingName();
     std::string getStatus();
     Time getUsageTimeFromFile();

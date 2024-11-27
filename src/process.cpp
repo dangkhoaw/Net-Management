@@ -7,8 +7,7 @@
 #include <thread>
 #include <chrono>
 #include "../include/database.hpp"
-
-/*------------------------------------MENU------------------------------------*/
+#include "../include/file.hpp"
 
 /*------------------------------------TIME------------------------------------*/
 void showRemainingTimeOfCustomer(Customer *customer)
@@ -63,27 +62,27 @@ void showUsageTimeOfComputer(Computer *computer)
 /*------------------------------------ACCOUNT------------------------------------*/
 void updateNumberOfAccounts(int &count)
 {
-    std::fstream file("./data/account/count.txt", std::ios::out);
-    if (!file.is_open())
+    std::fstream file;
+    if (!File::open(file, "./data/account/count.txt", std::ios::out))
     {
         std::cout << "Không thể mở file count" << std::endl;
         return;
     }
     file << count;
-    file.close();
+    File::close(file);
 }
 
 int getNumberOfAccounts()
 {
-    int count;
-    std::fstream file("./data/account/count.txt", std::ios::in);
-    if (!file.is_open())
+    int count = 0;
+    std::fstream file;
+    if (!File::open(file, "./data/account/count.txt", std::ios::in))
     {
         std::cout << "Không thể mở file count" << std::endl;
         return -1;
     }
     file >> count;
-    file.close();
+    File::close(file);
     return count;
 }
 
@@ -103,26 +102,15 @@ bool isExistUsername(std::string &username)
     if (username == "admin")
         return true;
 
-    std::fstream file("./data/account/account.txt", std::ios::in);
-    if (!file.is_open())
+    List<Account> accounts = Database<Account>::gets();
+    for (int i = 0; i < accounts.size(); i++)
     {
-        std::cout << "Không thể mở file account" << std::endl;
-        return true;
-    }
-    std::string line;
-    while (getline(file, line))
-    {
-        std::stringstream ss(line);
-        std::string id, usrname;
-        getline(ss, id, '|');
-        getline(ss, usrname, '|');
-        if (usrname == username)
+        if (accounts[i].getUserName() == username)
         {
-            file.close();
             return true;
         }
     }
-    file.close();
+
     return false;
 }
 
@@ -136,25 +124,25 @@ bool checkFirstLogin(Account &account)
 /*------------------------------------COMPUTER------------------------------------*/
 int getNumberOfComputers()
 {
-    int sum = 0;
-    std::fstream file("./data/computer/typeOfComputer.txt", std::ios::in);
-    if (!file.is_open())
+    int count = 0;
+    std::fstream file;
+    if (!File::open(file, "./data/computer/count.txt", std::ios::in))
     {
-        std::cout << "Không thể mở file typeOfComputer" << std::endl;
+        std::cout << "Không thể mở file count" << std::endl;
         return -1;
     }
     std::string line;
-    while (getline(file, line))
+    while (File::read(file, line))
     {
         std::stringstream ss(line);
         std::string type;
-        int count_infile;
-        getline(ss, type, '|');
-        ss >> count_infile;
-        sum += count_infile;
+        int countInFile;
+        std::getline(ss, type, '|');
+        ss >> countInFile;
+        count += countInFile;
     }
-    file.close();
-    return sum;
+    File::close(file);
+    return count;
 }
 
 void generateIDComputer(Computer &computer)
@@ -170,74 +158,73 @@ void generateIDComputer(Computer &computer)
 
 void updateCountOfComputerToFile(std::string typeOfComputer, int count)
 {
-    std::fstream file("./data/computer/typeOfComputer.txt", std::ios::in);
-    if (!file.is_open())
+    std::fstream file;
+    if (!File::open(file, "./data/computer/typeOfComputer.txt", std::ios::in))
     {
         std::cout << "Không thể mở file typeOfComputer" << std::endl;
         return;
     }
-    std::fstream tempFile("./data/computer/temp.txt", std::ios::out);
-    if (!tempFile.is_open())
+    std::fstream tempFile;
+    if (!File::open(tempFile, "./data/computer/temp.txt", std::ios::out))
     {
         std::cout << "Không thể mở file temp" << std::endl;
         return;
     }
     std::string line;
     bool isFound = false;
-    while (getline(file, line))
+    while (File::read(file, line))
     {
         std::stringstream ss(line);
         std::string type;
         int countInFile;
-        getline(ss, type, '|');
+        std::getline(ss, type, '|');
         ss >> countInFile;
         if (type == typeOfComputer)
         {
             isFound = true;
             countInFile += count;
         }
-        tempFile << type << '|' << countInFile << std::endl;
+        File::write(tempFile, type + '|' + std::to_string(countInFile));
     }
     if (!isFound)
-    {
-        tempFile << typeOfComputer << '|' << 1 << std::endl;
-    }
-    file.close();
-    tempFile.close();
-    remove("./data/computer/typeOfComputer.txt");
-    rename("./data/computer/temp.txt", "./data/computer/typeOfComputer.txt");
+        File::write(tempFile, typeOfComputer + '|' + std::to_string(1));
+    File::close(file);
+    File::close(tempFile);
+    File::remove("./data/computer/typeOfComputer.txt");
+    File::rename("./data/computer/temp.txt", "./data/computer/typeOfComputer.txt");
 }
 
-std::string getIdComputerFromFile(std::string username)
+std::string getIdComputerRegistered(std::string username)
 {
-    std::fstream file("./data/computer/registered.txt", std::ios::in);
-    if (!file.is_open())
+    std::fstream file;
+    if (!File::open(file, "./data/computer/registered.txt", std::ios::in))
     {
         std::cout << "Không thể mở file registered" << std::endl;
         return "";
     }
     std::string line;
-    while (getline(file, line))
+    while (File::read(file, line))
     {
         std::stringstream ss(line);
         std::string usernameCustomerInfile, idComputer;
-        getline(ss, usernameCustomerInfile, '|');
-        getline(ss, idComputer);
+        std::getline(ss, usernameCustomerInfile, '|');
+        std::getline(ss, idComputer);
         if (usernameCustomerInfile == username)
         {
+            File::close(file);
             return idComputer;
         }
     }
-    file.close();
+    File::close(file);
     return "";
 }
 
 bool isFullAllComputer()
 {
     List<Computer> computers = Database<Computer>::gets();
-    for (int i = 0; i < computers.size(); i++)
+    for (Computer computer : computers)
     {
-        if (computers[i].getStatus() == "Available" || computers[i].getStatus() == "Registered")
+        if (computer.getStatus() == "Available" || computer.getStatus() == "Registered")
         {
             return false;
         }
@@ -247,36 +234,20 @@ bool isFullAllComputer()
 
 bool isAdminOnline()
 {
-    std::fstream file("./data/account/account.txt", std::ios::in);
-    if (!file.is_open())
+    List<Account> accounts = Database<Account>::gets();
+    for (Account account : accounts)
     {
-        std::cout << "Không thể mở file account" << std::endl;
-        return false;
-    }
-    std::string line;
-    while (getline(file, line))
-    {
-        std::stringstream ss(line);
-        std::string id, username, password, role, status, isFirstLogin, isLocked;
-        getline(ss, id, '|');
-        getline(ss, username, '|');
-        getline(ss, password, '|');
-        getline(ss, role, '|');
-        getline(ss, status, '|');
-        getline(ss, isFirstLogin, '|');
-        getline(ss, isLocked);
-        if (username == "admin" && status == "Online")
+        if (account.getUserName() == "admin" && account.getStatus() == "Online")
         {
             return true;
         }
     }
-    file.close();
     return false;
 }
 
 void assignComputer(Customer &customer)
 {
-    customer.getComputer().setId(getIdComputerFromFile(customer.getUserName()));
+    customer.getComputer().setId(getIdComputerRegistered(customer.getUserName()));
     customer.getComputer().setTypeOfComputer(getTypesOfComputerFromFile(customer.getComputer().getId()));
     customer.getComputer().setCustomerUsingName(customer.getUserName());
     customer.getComputer().setStatus("Using");
@@ -295,88 +266,65 @@ void makeFileOrdered(Customer &customer)
 {
     if (Constants::Globals::firstOrder)
     {
-        MessageBoxW(NULL, L"Số dư sau khi mua phải trên 5.000 đồng!", L"Yêu cầu", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
-        std::fstream file("./data/order/" + customer.getId() + "_ordered.txt", std::ios::out);
-        if (!file.is_open())
+        // MessageBoxW(NULL, L"Số dư sau khi mua phải trên 5.000 đồng!", L"Yêu cầu", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
+        std::cout << "Số dư sau khi mua phải trên 5.000 đồng!" << std::endl;
+        Menu::button(52, 0, "ok");
+        std::fstream file;
+        if (!File::open(file, "./data/order/" + customer.getId() + "_ordered.txt", std::ios::out))
         {
             std::cout << "Không thể mở file ordered" << std::endl;
             return;
         }
-        file.close();
+        File::close(file);
         Constants::Globals::firstOrder = false;
     }
 }
 
 std::string getTypesOfComputerFromFile(std::string idComputer)
 {
-    std::fstream file("./data/computer/computer.txt", std::ios::in);
-    if (!file.is_open())
+    List<Computer> computers = Database<Computer>::gets();
+    for (Computer computer : computers)
     {
-        std::cout << "Không thể mở file computer" << std::endl;
-        return "";
-    }
-    std::string line;
-    while (getline(file, line))
-    {
-        std::stringstream ss(line);
-        std::string id, type, status, customerUsingName;
-        getline(ss, id, '|');
-        getline(ss, type, '|');
-        getline(ss, status, '|');
-        getline(ss, customerUsingName);
-        if (id == idComputer)
+        if (computer.getId() == idComputer)
         {
-            file.close();
-            return type;
+            return computer.getTypeOfComputer();
         }
     }
-    file.close();
     return "";
 }
 
 List<Dish> getDishes(std::string id_cus)
 {
     List<Dish> dishes;
-    std::fstream file("./data/order/" + id_cus + "_ordered.txt", std::ios::in);
-    if (!file.is_open())
+    std::fstream file;
+    if (!File::open(file, "./data/order/" + id_cus + "_ordered.txt", std::ios::in))
     {
         std::cout << "Không thể mở file ordered" << std::endl;
         return dishes;
     }
     std::string line;
-    while (getline(file, line))
+    while (File::read(file, line))
     {
         std::stringstream ss(line);
         std::string name;
         int quantity, price;
-        getline(ss, name, '|');
+        std::getline(ss, name, '|');
         ss >> quantity;
         ss.ignore();
         ss >> price;
         Dish dish(name, quantity, price);
         dishes.push_back(dish);
     }
-    file.close();
+    File::close(file);
     return dishes;
 }
 
 bool checkIsOrdered(Customer &customer, std::string nameRefreshment)
 {
-    std::fstream file("./data/order/" + customer.getId() + "_ordered.txt", std::ios::in);
-    if (!file.is_open())
+    List<Dish> dishes = getDishes(customer.getId());
+    for (Dish dish : dishes)
     {
-        std::cout << "Không thể mở file ordered" << std::endl;
-        return false;
-    }
-    std::string line;
-    while (getline(file, line))
-    {
-        std::stringstream ss(line);
-        std::string name;
-        int quantity;
-        getline(ss, name, '|');
-        ss >> quantity;
-        if (name == nameRefreshment)
+        if (dish.getName() == nameRefreshment)
         {
             return true;
         }
@@ -471,25 +419,22 @@ void mainProcess()
 
 void run()
 {
-    if (isFullAllComputer() && isAdminOnline())
+    bool isFull = isFullAllComputer();
+    bool isAdmin = isAdminOnline();
+
+    if (isFull && isAdmin)
         return;
 
-    if (isFullAllComputer() && !isAdminOnline())
+    if (isFull && !isAdmin)
     {
         std::cout << "Bạn có phải nhân viên không? (Y/N): ";
         std::string choice;
         std::cin >> choice;
         if (choice == "Y" || choice == "y")
-        {
             handleStaffLogin();
-        }
         else if (choice == "N" || choice == "n")
-        {
             return;
-        }
     }
     else
-    {
         mainProcess();
-    }
 }
