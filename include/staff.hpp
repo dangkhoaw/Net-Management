@@ -17,7 +17,6 @@ public:
     void addAccount();
     void removeAccount();
     void removeComputer();
-    void viewListCustomer();
     void searchCustomer();
     void registerComputerForCus();
     void viewTypeOfComputer(bool isRegister = false);

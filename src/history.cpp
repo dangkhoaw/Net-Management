@@ -1,5 +1,5 @@
 #include "../include/history.hpp"
-#include <fstream>
+#include "../include/file.hpp"
 #include <sstream>
 
 History::History(Day day, std::string customerID)
@@ -45,26 +45,27 @@ void History::addHistoryToFile()
 {
     try
     {
-        std::fstream file("./data/history/history.txt", std::ios::in);
-        if (!file.is_open())
+        std::fstream file;
+        if (!File::open(file, "./data/history/history.txt", std::ios::in))
         {
             throw "Không thể mở file history";
         }
-        std::fstream tempFile("./data/history/temp.txt", std::ios::out);
-        if (!tempFile.is_open())
+        std::fstream tempFile;
+        if (!File::open(tempFile, "./data/history/temp.txt", std::ios::out))
         {
             throw "Không thể mở file temp";
         }
-        tempFile << this->getCustomerID() << "|" << this->getDay() << std::endl;
+
+        File::write(tempFile, this->getCustomerID() + "|" + this->getDay().serialize());
         std::string line;
-        while (std::getline(file, line))
+        while (File::read(file, line))
         {
-            tempFile << line << std::endl;
+            File::write(tempFile, line);
         }
         file.close();
         tempFile.close();
-        remove("./data/history/history.txt");
-        rename("./data/history/temp.txt", "./data/history/history.txt");
+        File::remove("./data/history/history.txt");
+        File::rename("./data/history/temp.txt", "./data/history/history.txt");
     }
     catch (const std::string &error)
     {

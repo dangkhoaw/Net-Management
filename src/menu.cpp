@@ -1,10 +1,10 @@
 #include "../include/console.hpp"
 #include "../include/menu.hpp"
-#include "../include/utilities.hpp"
 #include "../include/database.hpp"
-#include "../include/revenue.hpp"
 #include "../include/file.hpp"
+#include "../include/constants.hpp"
 #include <thread>
+#include <conio.h>
 
 namespace Menu
 {
@@ -304,7 +304,7 @@ namespace Menu
                 std::cout << "      " << computers[option - 1].getId() << "       ";
             }
         }
-        else if (Utilities::toLower(typeMenu) == "yesno")
+        else if (Utilities::StringUtils::toLower(typeMenu) == "yesno")
         {
             switch (option)
             {
@@ -316,7 +316,7 @@ namespace Menu
                 break;
             }
         }
-        else if (Utilities::toLower(typeMenu) == "ok")
+        else if (Utilities::StringUtils::toLower(typeMenu) == "ok")
         {
             std::cout << "    OK    ";
         }
@@ -723,7 +723,7 @@ namespace Menu
                     break;
                 case 6:
                     staff.viewTypeOfComputer();
-                    Utilities::pressKeyQ();
+                    Utilities::MiscUtils::pressKeyQ();
                     break;
                 case 7:
                     staff.setStatus("Offline");
@@ -863,7 +863,7 @@ namespace Menu
                 case 3:
                     ConsoleUtils::ShowCursor(true);
                     system("cls");
-                    Utilities::inputMonthAndYear(month, year);
+                    Utilities::InputUtils::inputMonthYear(month, year);
                     date.setMonth(month);
                     date.setYear(year);
                     revenue.viewRevenueMonth(date);
@@ -913,7 +913,7 @@ namespace Menu
                 case 3:
                     ConsoleUtils::ShowCursor(true);
                     system("cls");
-                    Utilities::inputYear(year);
+                    Utilities::InputUtils::inputYear(year);
                     date.setYear(year);
                     revenue.viewRevenueYear(date);
                     break;
@@ -1235,7 +1235,7 @@ namespace Menu
     bool button(int x, int y, std::string type, int selectOption)
     {
         ConsoleUtils::ShowCursor(false);
-        if (Utilities::toLower(type) == "yesno")
+        if (Utilities::StringUtils::toLower(type) == "yesno")
         {
             while (true)
             {
@@ -1260,7 +1260,7 @@ namespace Menu
                 }
             }
         }
-        else if (Utilities::toLower(type) == "ok")
+        else if (Utilities::StringUtils::toLower(type) == "ok")
         {
             while (true)
             {
@@ -1361,7 +1361,7 @@ namespace Menu
 
             ConsoleUtils::Gotoxy(0, 6);
             int temp_balance = customer.getBalance();
-            std::cout << "Số dư hiện tại: " << Utilities::formatMoney(temp_balance) << " (VNĐ)" << std::endl;
+            std::cout << "Số dư hiện tại: " << Utilities::MiscUtils::formatMoney(temp_balance) << " (VNĐ)" << std::endl;
             int i = 7;
             ConsoleUtils::ClearLine(i);
             std::cout << "┌───────────────────────────────────────────────┐" << std::endl;
@@ -1401,7 +1401,7 @@ namespace Menu
                 ConsoleUtils::Gotoxy(25, i);
                 std::cout << "│ " << quantity;
                 ConsoleUtils::Gotoxy(32, i);
-                std::cout << "│ " << Utilities::formatMoney(price);
+                std::cout << "│ " << Utilities::MiscUtils::formatMoney(price);
                 ConsoleUtils::Gotoxy(48, i);
                 std::cout << "│" << std::endl;
             }
@@ -1416,7 +1416,7 @@ namespace Menu
             ConsoleUtils::Gotoxy(0, i);
             std::cout << "│ Tổng tiền: ";
             ConsoleUtils::Gotoxy(34, i);
-            std::cout << Utilities::formatMoney(customer.getTotalPrice());
+            std::cout << Utilities::MiscUtils::formatMoney(customer.getTotalPrice());
             ConsoleUtils::Gotoxy(48, i);
             std::cout << "│" << std::endl;
             i++;

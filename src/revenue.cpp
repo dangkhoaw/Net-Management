@@ -1,9 +1,6 @@
 #include "../include/console.hpp"
-#include "../include/utilities.hpp"
-#include "../include/process.hpp"
-#include "../include/revenue.hpp"
-#include "../include/file.hpp"
 #include "../include/database.hpp"
+#include <iomanip>
 
 Revenue::Revenue(Date date, double totalMoney) : date(date), totalMoney(totalMoney) {}
 
@@ -22,69 +19,6 @@ std::istream &operator>>(std::istream &is, Revenue &revenue)
     return is;
 }
 
-// List<Revenue> Revenue::getRevenue()
-// {
-//     List<Revenue> doanhthus;
-//     std::fstream file("./data/revenue/revenue.txt", std::ios::in);
-//     if (!file.is_open())
-//     {
-//         std::cout << "Không thể mở file doanh thu" << std::endl;
-//         return doanhthus;
-//     }
-
-//     std::string line;
-//     while (std::getline(file, line))
-//     {
-//         std::stringstream ss(line);
-//         std::string date, totalMoney;
-//         std::getline(ss, date, '|');
-//         std::getline(ss, totalMoney);
-
-//         std::string dateArr[3];
-//         std::stringstream ssDate(date);
-
-//         for (int i = 0; i < 3; i++)
-//         {
-//             std::getline(ssDate, dateArr[i], '/');
-//         }
-
-//         Date dateObj(stoi(dateArr[0]), stoi(dateArr[1]), stoi(dateArr[2]));
-//         Revenue revenue(dateObj, stod(totalMoney));
-//         doanhthus.push_back(revenue);
-//     }
-//     file.close();
-//     return doanhthus;
-// }
-
-// void Revenue::updateRevenue(Revenue &revenue)
-// {
-//     List<Revenue> doanhthus = getRevenue();
-//     std::fstream file("./data/revenue/revenue.txt", std::ios::out);
-//     if (!file.is_open())
-//     {
-//         std::cout << "Không thể mở file doanh thu" << std::endl;
-//         return;
-//     }
-
-//     bool check = false;
-
-//     for (Revenue &doanhThuTemp : doanhthus)
-//     {
-//         if (doanhThuTemp.getDate() == revenue.getDate())
-//         {
-//             check = true;
-//             doanhThuTemp = revenue;
-//         }
-//         file << doanhThuTemp << std::endl;
-//     }
-
-//     if (check == false)
-//     {
-//         file << revenue << std::endl;
-//     }
-//     file.close();
-// }
-
 void Revenue::viewRevenueDay(Date &date)
 {
     system("cls");
@@ -93,15 +27,15 @@ void Revenue::viewRevenueDay(Date &date)
     {
         std::cout << "Không có dữ liệu doanh thu cho ngày này" << std::endl;
         ConsoleUtils::ShowCursor(false);
-        Utilities::pressKeyQ();
+        Utilities::MiscUtils::pressKeyQ();
         return;
     }
 
     *this = getRevenueByDate(date);
-    std::cout << "Doanh thu ngày " << date << " là: " << Utilities::formatMoney((double)this->totalMoney) << " (VNĐ)" << std::endl;
+    std::cout << "Doanh thu ngày " << date << " là: " << Utilities::MiscUtils::formatMoney((double)this->totalMoney) << " (VNĐ)" << std::endl;
 
     ConsoleUtils::ShowCursor(false);
-    Utilities::pressKeyQ();
+    Utilities::MiscUtils::pressKeyQ();
 }
 
 void Revenue::viewRevenueMonth(Date &date)
@@ -112,15 +46,15 @@ void Revenue::viewRevenueMonth(Date &date)
     {
         std::cout << "Không có dữ liệu doanh thu cho tháng này" << std::endl;
         ConsoleUtils::ShowCursor(false);
-        Utilities::pressKeyQ();
+        Utilities::MiscUtils::pressKeyQ();
         return;
     }
 
     *this = getRevenueByMonth(date);
-    std::cout << "Doanh thu tháng " << std::setfill('0') << std::setw(2) << date.getMonth() << "/" << date.getYear() << " là: " << Utilities::formatMoney((double)this->totalMoney) << " (VNĐ)" << std::endl;
+    std::cout << "Doanh thu tháng " << std::setfill('0') << std::setw(2) << date.getMonth() << "/" << date.getYear() << " là: " << Utilities::MiscUtils::formatMoney((double)this->totalMoney) << " (VNĐ)" << std::endl;
 
     ConsoleUtils::ShowCursor(false);
-    Utilities::pressKeyQ();
+    Utilities::MiscUtils::pressKeyQ();
 }
 
 void Revenue::viewRevenueYear(Date &date)
@@ -131,16 +65,16 @@ void Revenue::viewRevenueYear(Date &date)
     {
         std::cout << "Không có dữ liệu doanh thu cho năm này" << std::endl;
         ConsoleUtils::ShowCursor(false);
-        Utilities::pressKeyQ();
+        Utilities::MiscUtils::pressKeyQ();
         return;
     }
 
     *this = getRevenueByYear(date);
 
-    std::cout << "Doanh thu năm " << date.getYear() << " là: " << Utilities::formatMoney((double)this->totalMoney) << " (VNĐ)" << std::endl;
+    std::cout << "Doanh thu năm " << date.getYear() << " là: " << Utilities::MiscUtils::formatMoney((double)this->totalMoney) << " (VNĐ)" << std::endl;
 
     ConsoleUtils::ShowCursor(false);
-    Utilities::pressKeyQ();
+    Utilities::MiscUtils::pressKeyQ();
 }
 
 Revenue Revenue::getRevenueByDate(Date &date)

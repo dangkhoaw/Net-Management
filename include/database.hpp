@@ -3,7 +3,7 @@
 
 #include "utilities.hpp"
 #include <fstream>
-#include <string>
+#include <sstream>
 #include <type_traits>
 #include "account.hpp"
 #include "computer.hpp"
@@ -567,9 +567,9 @@ List<T> Database<T>::gets(std::string field, std::string value)
     List<T> objs;
 
     if (!field.empty())
-        field = Utilities::toLower(field);
+        field = Utilities::StringUtils::toLower(field);
     if (!value.empty())
-        value = Utilities::toLower(value);
+        value = Utilities::StringUtils::toLower(value);
 
     if constexpr (std::is_same<T, Account>::value)
     {
@@ -588,17 +588,17 @@ List<T> Database<T>::gets(std::string field, std::string value)
                 bool match = false;
 
                 if (field.empty() && !value.empty())
-                    match = (Utilities::toLower(account.getId()).find(value) != std::string::npos || Utilities::toLower(account.getUserName()).find(value) != std::string::npos || Utilities::toLower(account.getRole()).find(value) != std::string::npos || Utilities::toLower(account.getStatus()).find(value) != std::string::npos || Utilities::toLower(account.getIsFirstLogin()).find(value) != std::string::npos);
+                    match = (Utilities::StringUtils::toLower(account.getId()).find(value) != std::string::npos || Utilities::StringUtils::toLower(account.getUserName()).find(value) != std::string::npos || Utilities::StringUtils::toLower(account.getRole()).find(value) != std::string::npos || Utilities::StringUtils::toLower(account.getStatus()).find(value) != std::string::npos || Utilities::StringUtils::toLower(account.getIsFirstLogin()).find(value) != std::string::npos);
                 else if (field == "id")
-                    match = Utilities::toLower(account.getId()).find(value) != std::string::npos;
+                    match = Utilities::StringUtils::toLower(account.getId()).find(value) != std::string::npos;
                 else if (field == "username")
-                    match = Utilities::toLower(account.getUserName()).find(value) != std::string::npos;
+                    match = Utilities::StringUtils::toLower(account.getUserName()).find(value) != std::string::npos;
                 else if (field == "role")
-                    match = Utilities::toLower(account.getRole()).find(value) != std::string::npos;
+                    match = Utilities::StringUtils::toLower(account.getRole()).find(value) != std::string::npos;
                 else if (field == "status")
-                    match = Utilities::toLower(account.getStatus()).find(value) != std::string::npos;
+                    match = Utilities::StringUtils::toLower(account.getStatus()).find(value) != std::string::npos;
                 else if (field == "isfirstlogin")
-                    match = Utilities::toLower(account.getIsFirstLogin()).find(value) != std::string::npos;
+                    match = Utilities::StringUtils::toLower(account.getIsFirstLogin()).find(value) != std::string::npos;
 
                 if (match || value.empty())
                     objs.push_back(account);
@@ -635,19 +635,19 @@ List<T> Database<T>::gets(std::string field, std::string value)
                 bool match = false;
 
                 if (field.empty() && !value.empty())
-                    match = (Utilities::toLower(customer.getId()).find(value) != std::string::npos || Utilities::toLower(customer.getName()).find(value) != std::string::npos || Utilities::toLower(customer.getUserName()).find(value) != std::string::npos || Utilities::toLower(customer.getPhone()).find(value) != std::string::npos || Utilities::toLower(std::to_string(customer.getBalance())).find(value) != std::string::npos || Utilities::toLower(customer.getComputer().getId()).find(value) != std::string::npos);
+                    match = (Utilities::StringUtils::toLower(customer.getId()).find(value) != std::string::npos || Utilities::StringUtils::toLower(customer.getName()).find(value) != std::string::npos || Utilities::StringUtils::toLower(customer.getUserName()).find(value) != std::string::npos || Utilities::StringUtils::toLower(customer.getPhone()).find(value) != std::string::npos || Utilities::StringUtils::toLower(std::to_string(customer.getBalance())).find(value) != std::string::npos || Utilities::StringUtils::toLower(customer.getComputer().getId()).find(value) != std::string::npos);
                 else if (field == "id")
-                    match = Utilities::toLower(customer.getId()).find(value) != std::string::npos;
+                    match = Utilities::StringUtils::toLower(customer.getId()).find(value) != std::string::npos;
                 else if (field == "name")
-                    match = Utilities::toLower(customer.getName()).find(value) != std::string::npos;
+                    match = Utilities::StringUtils::toLower(customer.getName()).find(value) != std::string::npos;
                 else if (field == "username")
-                    match = Utilities::toLower(customer.getUserName()).find(value) != std::string::npos;
+                    match = Utilities::StringUtils::toLower(customer.getUserName()).find(value) != std::string::npos;
                 else if (field == "phone")
-                    match = Utilities::toLower(customer.getPhone()).find(value) != std::string::npos;
+                    match = Utilities::StringUtils::toLower(customer.getPhone()).find(value) != std::string::npos;
                 else if (field == "balance")
-                    match = Utilities::toLower(std::to_string(customer.getBalance())).find(value) != std::string::npos;
+                    match = Utilities::StringUtils::toLower(std::to_string(customer.getBalance())).find(value) != std::string::npos;
                 else if (field == "idcomputer")
-                    match = Utilities::toLower(customer.getComputer().getId()).find(value) != std::string::npos;
+                    match = Utilities::StringUtils::toLower(customer.getComputer().getId()).find(value) != std::string::npos;
 
                 if (match || value.empty())
                     objs.push_back(customer);
@@ -678,9 +678,9 @@ List<T> Database<T>::gets(std::string field, std::string value)
             {
                 computer.unserialize(line);
 
-                if (field.empty() || Utilities::toLower(computer.getTypeOfComputer()).find(field) != std::string::npos)
+                if (field.empty() || Utilities::StringUtils::toLower(computer.getTypeOfComputer()).find(field) != std::string::npos)
                 {
-                    if (value.empty() || Utilities::toLower(computer.getStatus()).find(value) != std::string::npos)
+                    if (value.empty() || Utilities::StringUtils::toLower(computer.getStatus()).find(value) != std::string::npos)
                     {
                         computer.setUsageTime(computer.getUsageTimeFromFile());
                         objs.push_back(computer);

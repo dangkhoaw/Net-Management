@@ -1,7 +1,4 @@
 #include "../include/console.hpp"
-#include "../include/utilities.hpp"
-#include "../include/revenue.hpp"
-#include "../include/mtime.hpp"
 #include "../include/database.hpp"
 #include "../include/menu.hpp"
 #include <iomanip>
@@ -38,14 +35,14 @@ void Staff::removeAccount()
     ConsoleUtils::ShowCursor(true);
     std::string id;
     std::cout << "Nhập id tài khoản cần xóa: ";
-    Utilities::enterString(id);
+    Utilities::InputUtils::inputString(id);
     if (id.empty())
     {
         ConsoleUtils::ShowCursor(false);
         system("cls");
         return;
     }
-    id = Utilities::toUpper(id);
+    id = Utilities::StringUtils::toUpper(id);
     Customer customer;
     customer.setId(id);
     std::cout << "\nBạn có chắc chắn muốn xóa tài khoản này không?" << std::endl;
@@ -190,7 +187,7 @@ void Staff::searchCustomer()
     ConsoleUtils::ShowCursor(true);
     std::string info;
     std::cout << "Nhập thông tin khách hàng: ";
-    Utilities::enterString(info);
+    Utilities::InputUtils::inputString(info);
     if (info.empty())
     {
         ConsoleUtils::ShowCursor(false);
@@ -229,7 +226,7 @@ void Staff::searchCustomer()
     }
     ConsoleUtils::Gotoxy(0, i + 4);
     std::cout << "└──────────┴───────────────────────────────┴──────────────────────┴───────────────────────┴──────────────────────┴──────────────────────┘" << std::endl;
-    Utilities::pressKeyQ();
+    Utilities::MiscUtils::pressKeyQ();
     ConsoleUtils::ShowCursor(false);
 }
 
@@ -256,7 +253,7 @@ void Staff::topUpAccount()
         ConsoleUtils::ClearLine(0);
         ConsoleUtils::Gotoxy(0, 0);
         std::cout << "Tên đăng nhập: ";
-        Utilities::enterString(userName);
+        Utilities::InputUtils::inputString(userName);
         if (userName.empty())
         {
             ConsoleUtils::ShowCursor(false);
@@ -270,7 +267,7 @@ void Staff::topUpAccount()
             {
                 system("cls");
                 std::cout << "Nhập sai 3 lần. Hãy thử lại sau" << std::endl;
-                Utilities::pressKeyQ();
+                Utilities::MiscUtils::pressKeyQ();
                 ConsoleUtils::ShowCursor(false);
                 return;
             }
@@ -288,7 +285,7 @@ void Staff::topUpAccount()
     {
         ConsoleUtils::Gotoxy(0, 1);
         std::cout << "Nhập số tiền cần nạp: ";
-        Utilities::enterMoney(money, 6);
+        Utilities::InputUtils::inputMoney(money, 6);
         if (money.empty())
         {
             ConsoleUtils::ShowCursor(false);
@@ -322,7 +319,7 @@ void Staff::topUpAccount()
     Database<Customer>::update(customer);
     std::cout << "\nNạp tiền thành công" << std::endl;
 
-    Utilities::pressKeyQ();
+    Utilities::MiscUtils::pressKeyQ();
 
     ConsoleUtils::ShowCursor(false);
 }
@@ -358,8 +355,8 @@ void Staff::viewCustomersInfo()
                 std::cout << customer.getPhone();
                 ConsoleUtils::Gotoxy(90, i + 3);
                 std::cout << "│";
-                ConsoleUtils::Gotoxy((113 + 90 - Utilities::formatMoney(customer.getBalance()).size() + 1) / 2, i + 3);
-                std::cout << Utilities::formatMoney(customer.getBalance());
+                ConsoleUtils::Gotoxy((113 + 90 - Utilities::MiscUtils::formatMoney(customer.getBalance()).size() + 1) / 2, i + 3);
+                std::cout << Utilities::MiscUtils::formatMoney(customer.getBalance());
                 ConsoleUtils::Gotoxy(113, i + 3);
                 std::cout << "│";
                 if (customer.getComputer().getId() == "")
@@ -460,7 +457,7 @@ void Staff::registerComputerForCus()
     {
         ConsoleUtils::Gotoxy(0, 0);
         std::cout << "Tên đăng nhập: ";
-        Utilities::enterString(usernameCustomer);
+        Utilities::InputUtils::inputString(usernameCustomer);
         if (usernameCustomer.empty())
         {
             ConsoleUtils::ShowCursor(false);
@@ -469,7 +466,7 @@ void Staff::registerComputerForCus()
         }
         if (isExistUsername(usernameCustomer))
         {
-            if (Utilities::isRegisterComputer(usernameCustomer))
+            if (Utilities::Validation::isRegisterComputer(usernameCustomer))
             {
                 ConsoleUtils::ShowCursor(false);
                 MessageBoxW(NULL, L"Khách hàng đã đăng kí máy", L"Thông báo", MB_ICONINFORMATION);
@@ -489,6 +486,6 @@ void Staff::registerComputerForCus()
     file.close();
     std::cout << "Đăng kí máy thành công" << std::endl;
     ConsoleUtils::ShowCursor(false);
-    Utilities::pressKeyQ();
+    Utilities::MiscUtils::pressKeyQ();
     system("cls");
 }

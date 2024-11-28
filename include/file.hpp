@@ -1,7 +1,6 @@
 #ifndef FILE_UTILS
 #define FILE_UTILS 1
 
-#include <iostream>
 #include <fstream>
 
 namespace File

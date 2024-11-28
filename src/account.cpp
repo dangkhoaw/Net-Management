@@ -2,6 +2,7 @@
 #include "../include/utilities.hpp"
 #include "../include/base64.hpp"
 #include "../include/database.hpp"
+#include <sstream>
 
 Account::Account(std::string username, std::string password, std::string role, std::string id, std::string status, std::string isFirstLogin) : username(username), password(password), role(role), id(id), status(status), isFirstLogin(isFirstLogin) {}
 
@@ -34,14 +35,14 @@ std::istream &operator>>(std::istream &is, Account &account)
                   << "└───────────────────────────────────┘" << std::endl;
 
         ConsoleUtils::Gotoxy(11, 3);
-        Utilities::enterString(account.username);
+        Utilities::InputUtils::inputString(account.username);
         if (account.username.empty())
         {
             ConsoleUtils::ShowCursor(true);
             return is;
         }
         ConsoleUtils::Gotoxy(11, 5);
-        Utilities::enterPassword(account.password);
+        Utilities::InputUtils::inputPassword(account.password);
         if (account.password.empty())
         {
             ConsoleUtils::ShowCursor(true);
@@ -66,7 +67,7 @@ std::istream &operator>>(std::istream &is, Account &account)
                 std::cout << "\nĐăng nhập thành công!\n"
                           << std::endl;
                 ConsoleUtils::ShowCursor(false);
-                Utilities::loading();
+                Utilities::MiscUtils::loading();
                 return is;
             }
         }
@@ -110,7 +111,7 @@ bool Account::changePassword()
     ConsoleUtils::ShowCursor(true);
     std::string passwd, newPassword, rePassword;
     std::cout << "Mật khẩu cũ: ";
-    Utilities::enterPassword(passwd);
+    Utilities::InputUtils::inputPassword(passwd);
     if (passwd.empty())
     {
         system("cls");
@@ -127,7 +128,7 @@ bool Account::changePassword()
     while (true)
     {
         std::cout << "Mật khẩu mới: ";
-        Utilities::enterPassword(newPassword);
+        Utilities::InputUtils::inputPassword(newPassword);
         if (newPassword.empty())
         {
             system("cls");
@@ -142,7 +143,7 @@ bool Account::changePassword()
         break;
     }
     std::cout << "Nhập lại mật khẩu: ";
-    Utilities::enterPassword(rePassword);
+    Utilities::InputUtils::inputPassword(rePassword);
     if (rePassword.empty())
     {
         system("cls");

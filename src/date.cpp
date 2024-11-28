@@ -1,5 +1,6 @@
 #include "../include/utilities.hpp"
 #include "../include/date.hpp"
+#include <iomanip>
 
 Date::Date(int day, int month, int year) : day(day), month(month), year(year) {}
 
@@ -17,7 +18,7 @@ std::istream &operator>>(std::istream &is, Date &date)
     {
         std::cout << "Nhập vào ngày, tháng, năm dưới dạng (dd/mm/yyyy): ";
         std::string temp;
-        Utilities::enterString(temp, 10);
+        Utilities::InputUtils::inputString(temp, 10);
 
         int pos1 = temp.find('/');
         int pos2 = temp.find('/', pos1 + 1);

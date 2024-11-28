@@ -1,8 +1,9 @@
 #include "../include/console.hpp"
-#include "../include/utilities.hpp"
 #include "../include/base64.hpp"
 #include "../include/database.hpp"
 #include "../include/file.hpp"
+#include "../include/constants.hpp"
+#include <sstream>
 
 Customer::Customer(std::string username, std::string password, std::string role, std::string id, std::string status, std::string isFirstLogin, std::string name, std::string phone, double balance, Time time, int moneyforOrder, Dish dish, Computer computer, History historyRecently)
     : Account(username, password, role, id, status, isFirstLogin), name(name), phone(phone), balance(balance), time(time), moneyforOrder(moneyforOrder), dish(dish), computer(computer), historyRecently(historyRecently) {}
@@ -123,7 +124,7 @@ void Customer::showMyInfo()
     std::cout << "├───────────────────────────────────────┤" << std::endl;
     std::cout << "│ Tên khách hàng: " << name << std::endl;
     std::cout << "│ Số điện thoại: " << phone << std::endl;
-    std::cout << "│ Số dư: " << Utilities::formatMoney(balance) << " (VNĐ)" << std::endl;
+    std::cout << "│ Số dư: " << Utilities::MiscUtils::formatMoney(balance) << " (VNĐ)" << std::endl;
     std::cout << "│ ";
     showHistory();
     std::cout << "└───────────────────────────────────────┘" << std::endl;
@@ -135,7 +136,7 @@ void Customer::showMyInfo()
     std::cout << "│";
     ConsoleUtils::Gotoxy(40, 6);
     std::cout << "│";
-    Utilities::pressKeyQ();
+    Utilities::MiscUtils::pressKeyQ();
 }
 void Customer::showHistory()
 {
@@ -211,29 +212,29 @@ std::istream &operator>>(std::istream &is, Customer &customer)
     std::cout << "└─────────────────────────────────────────────┘" << std::endl;
 
     ConsoleUtils::Gotoxy(18, 1);
-    Utilities::enterLetter(customer.name);
+    Utilities::InputUtils::inputCharacter(customer.name);
     if (customer.name.empty())
     {
         ShowCursor(false);
         return is;
     }
-    Utilities::toName(customer.name);
+    Utilities::StringUtils::toName(customer.name);
 
     while (true)
     {
         ConsoleUtils::Gotoxy(17, 2);
-        Utilities::enterNumber(customer.phone, 10);
+        Utilities::InputUtils::inputNumber(customer.phone, 10);
         if (customer.phone.empty())
         {
             ShowCursor(false);
             return is;
         }
-        if (Utilities::isExistPhoneNumber(customer.phone))
+        if (Utilities::Validation::isExistPhoneNumber(customer.phone))
         {
             MessageBoxW(NULL, L"Số điện thoại đã tồn tại", L"Thông báo", MB_OK | MB_ICONWARNING | MB_TOPMOST);
             ConsoleUtils::ClearLine(17, 2, 19);
         }
-        else if (!Utilities::isPhoneNumber(customer.phone))
+        else if (!Utilities::Validation::isPhoneNumber(customer.phone))
         {
             MessageBoxW(NULL, L"Số điện thoại không hợp lệ", L"Thông báo", MB_OK | MB_ICONWARNING | MB_TOPMOST);
             ConsoleUtils::ClearLine(17, 2, 19);
@@ -245,7 +246,7 @@ std::istream &operator>>(std::istream &is, Customer &customer)
     while (true)
     {
         ConsoleUtils::Gotoxy(17, 3);
-        Utilities::enterString(customer.username);
+        Utilities::InputUtils::inputString(customer.username);
         if (customer.username.empty())
         {
             ShowCursor(false);
@@ -284,7 +285,7 @@ int Customer::enterAmountOrder()
     do
     {
         std::cout << "Nhập số lượng: ";
-        Utilities::enterNumber(input, 2);
+        Utilities::InputUtils::inputNumber(input, 2);
         if (input.empty())
         {
             ShowCursor(false);

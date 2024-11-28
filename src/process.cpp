@@ -1,13 +1,11 @@
 #include "../include/console.hpp"
-#include "../include/utilities.hpp"
-#include "../include/process.hpp"
-#include "../include/revenue.hpp"
 #include "../include/base64.hpp"
 #include "../include/menu.hpp"
 #include <thread>
 #include <chrono>
+#include <iomanip>
 #include "../include/database.hpp"
-#include "../include/file.hpp"
+#include "../include/constants.hpp"
 
 /*------------------------------------TIME------------------------------------*/
 void showRemainingTimeOfCustomer(Customer *customer)
@@ -343,7 +341,7 @@ void handleStaffLogin(Account &account)
 
 void handleCustomerLogin(Account &account)
 {
-    if (!Utilities::isRegisterComputer(account.getUserName()))
+    if (!Utilities::Validation::isRegisterComputer(account.getUserName()))
     {
         MessageBoxW(NULL, L"Bạn chưa đăng kí máy, vui lòng đăng kí máy trước!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
         ConsoleUtils::ShowCursor(true);

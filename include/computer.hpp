@@ -2,7 +2,7 @@
 #define COMPUTER 1
 
 #include <iostream>
-#include "mtime.hpp"
+#include "time.hpp"
 
 class Computer
 {
