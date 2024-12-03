@@ -27,6 +27,7 @@ namespace Menu
     void menuDrink(Customer &customer);
     std::string menuSelectTypeOfComputer();
     std::string menuSelectComputer(std::string typeOfComputer = "");
+    std::string menuSelectComputerRegistered();
     void printItemsOrdered(Customer &customer);
     bool button(int x, int y, std::string type, int selectOption = 1);
 }

@@ -195,7 +195,7 @@ void Staff::searchCustomer()
         return;
     }
     std::cout << "┌──────────┬───────────────────────────────┬──────────────────────┬───────────────────────┬──────────────────────┬──────────────────────┐" << std::endl;
-    std::cout << "│    ID    │              TÊN              │     TÊN ĐĂNG NHẬP    │     SỐ ĐIỆN THOẠI     │      TRẠNG THÁI      │   MÁY ĐANG SỬ DỤNG   │" << std::endl;
+    std::cout << "│    ID    │              TÊN              │     TÊN ĐĂNG NHẬP    │     SỐ ĐIỆN THOẠI     │         SỐ DƯ        │   MÁY ĐANG SỬ DỤNG   │" << std::endl;
     std::cout << "├──────────┼───────────────────────────────┼──────────────────────┼───────────────────────┼──────────────────────┼──────────────────────┤" << std::endl;
     List<Customer> customers = Database<Customer>::gets("", info);
     int i = 0;
@@ -210,7 +210,7 @@ void Staff::searchCustomer()
         ConsoleUtils::Gotoxy(55 + 11, i + 4);
         std::cout << "│      " << customer.getPhone();
         ConsoleUtils::Gotoxy(79 + 11, i + 4);
-        std::cout << "│       " << customer.getStatus();
+        std::cout << "│       " << customer.getBalance();
         ConsoleUtils::Gotoxy(102 + 11, i + 4);
         if (customer.getComputer().getId() == "")
         {
@@ -314,6 +314,7 @@ void Staff::topUpAccount()
         Time time = customer.getTimeFromFile();
         double seconds = amount / cost * 3600;
         time = time + Time(0, 0, seconds);
+        customer.setTime(time);
         customer.setTimeToFile(time);
     }
     Database<Customer>::update(customer);
@@ -486,6 +487,58 @@ void Staff::registerComputerForCus()
     file.close();
     std::cout << "Đăng kí máy thành công" << std::endl;
     ConsoleUtils::ShowCursor(false);
+    Utilities::MiscUtils::pressKeyQ();
+    system("cls");
+}
+void Staff::cancelRegisterComputer()
+{
+
+    system("cls");
+    std::string idComputer = Menu::menuSelectComputerRegistered();
+    if (idComputer == "")
+    {
+        system("cls");
+        return;
+    }
+    ConsoleUtils::ShowCursor(true);
+    std::fstream file;
+    if (!File::open(file, "./data/computer/registered.txt", std::ios::in))
+    {
+        std::cout << "Không thể mở file registered" << std::endl;
+        return;
+    }
+    std::fstream tempFile;
+    if (!File::open(tempFile, "./data/computer/temp.txt", std::ios::app))
+    {
+        std::cout << "Không thể mở file temp" << std::endl;
+        return;
+    }
+    std::string line;
+    while (File::read(file, line))
+    {
+        std::stringstream ss(line);
+        std::string usernameTemp;
+        std::string idComputerTemp;
+        std::getline(ss, usernameTemp, '|');
+        std::getline(ss, idComputerTemp);
+        if (idComputerTemp != idComputer)
+        {
+            tempFile << usernameTemp << "|" << idComputerTemp << std::endl;
+        }
+    }
+    if (!File::close(file))
+    {
+        std::cout << "Không thể đóng file registered" << std::endl;
+        return;
+    }
+    if (!File::close(tempFile))
+    {
+        std::cout << "Không thể đóng file temp" << std::endl;
+        return;
+    }
+    File::remove("./data/computer/registered.txt");
+    File::rename("./data/computer/temp.txt", "./data/computer/registered.txt");
+    std::cout << "Hủy đăng kí máy thành công" << std::endl;
     Utilities::MiscUtils::pressKeyQ();
     system("cls");
 }

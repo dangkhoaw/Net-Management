@@ -19,6 +19,7 @@ public:
     void removeComputer();
     void searchCustomer();
     void registerComputerForCus();
+    void cancelRegisterComputer();
     void viewTypeOfComputer(bool isRegister = false);
 };
 

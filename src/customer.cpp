@@ -22,7 +22,6 @@ Computer &Customer::getComputerViaFile()
 {
     try
     {
-        std::lock_guard<std::mutex> lock(Constants::Globals::mtx);
         std::fstream file;
         if (!File::open(file, "./data/computer/computer.txt", std::ios::in))
         {
@@ -69,7 +68,6 @@ Time Customer::getTimeFromFile()
 {
     try
     {
-        std::lock_guard<std::mutex> lock(Constants::Globals::mtx);
         Time time;
         std::fstream file;
         if (!File::open(file, "./data/time/" + getId() + ".txt", std::ios::in))
@@ -83,6 +81,7 @@ Time Customer::getTimeFromFile()
     catch (const std::string &error)
     {
         std::cerr << error << std::endl;
+        system("pause");
         return Time();
     }
 }
@@ -91,7 +90,6 @@ void Customer::setTimeToFile(Time time)
 {
     try
     {
-        std::lock_guard<std::mutex> lock(Constants::Globals::mtx);
         std::fstream file;
         if (!File::open(file, "./data/time/" + getId() + ".txt", std::ios::out))
         {
@@ -103,6 +101,7 @@ void Customer::setTimeToFile(Time time)
     catch (const std::string &error)
     {
         std::cerr << error << std::endl;
+        system("pause");
     }
 }
 

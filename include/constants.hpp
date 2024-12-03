@@ -8,7 +8,7 @@ namespace Constants
 {
     namespace Menu
     {
-        constexpr int MENUSTAFF = 7;
+        constexpr int MENUSTAFF = 8;
         constexpr int MENUCUSTOMERMANAGER = 5;
         constexpr int MENUCOMPUTERMANAGER = 4;
         constexpr int MENUCUSTOMER = 4;
@@ -43,7 +43,6 @@ namespace Constants
         inline bool isChangedOrder = true;
         inline bool firstOrder = true;
 
-        static std::mutex mtx;
         inline std::mutex mtxTime;
     }
 }

@@ -33,7 +33,6 @@ Time Computer::getUsageTimeFromFile()
 {
     try
     {
-        std::lock_guard<std::mutex> lock(Constants::Globals::mtx);
         Time time;
         std::fstream file;
         if (!File::open(file, "./data/time/" + id + ".txt", std::ios::in))
@@ -60,7 +59,6 @@ void Computer::setUsageTimeToFile(Time time)
 {
     try
     {
-        std::lock_guard<std::mutex> lock(Constants::Globals::mtx);
         std::fstream file;
         if (!File::open(file, "./data/time/" + id + ".txt", std::ios::out))
         {

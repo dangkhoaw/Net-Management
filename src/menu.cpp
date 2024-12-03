@@ -34,9 +34,12 @@ namespace Menu
                 std::cout << "       Đăng kí máy             ";
                 break;
             case 6:
-                std::cout << "       Xem các loại máy        ";
+                std::cout << "      Hủy đăng kí máy           ";
                 break;
             case 7:
+                std::cout << "       Xem các loại máy        ";
+                break;
+            case 8:
                 std::cout << "       Đăng xuất               ";
                 break;
             }
@@ -303,6 +306,45 @@ namespace Menu
             {
                 std::cout << "      " << computers[option - 1].getId() << "       ";
             }
+        }
+        else if (typeMenu == "selectComputerRegistered")
+        {
+            if (option == computers.size() + 1)
+            {
+                std::cout << "       Thoát     ";
+            }
+            else
+            {
+                std::cout << "      " << computers[option - 1].getId() << "       ";
+            }
+        }
+        else if (typeMenu == "button")
+        {
+            switch (option)
+            {
+            case 1:
+                std::cout << "    Có    ";
+                break;
+            case 2:
+                std::cout << "   Không  ";
+                break;
+            }
+        }
+        else if (typeMenu == "yesno")
+        {
+            switch (option)
+            {
+            case 1:
+                std::cout << "   Có   ";
+                break;
+            case 2:
+                std::cout << "  Không  ";
+                break;
+            }
+        }
+        else if (typeMenu == "ok")
+        {
+            std::cout << "    OK    ";
         }
         else if (Utilities::StringUtils::toLower(typeMenu) == "yesno")
         {
@@ -602,6 +644,21 @@ namespace Menu
             }
             std::cout << "└──────────────────┘" << std::endl;
         }
+        else if (typeMenu == "selectComputerRegistered")
+        {
+            ConsoleUtils::Gotoxy(0, 0);
+            std::cout << "┌──────────────────┐" << std::endl;
+            List<Computer> computers = Database<Computer>::gets("", "Registered");
+            for (int i = 1; i <= computers.size() + 1; i++)
+            {
+                ConsoleUtils::Gotoxy(0, i);
+                std::cout << "│";
+                bool isSelected = (i == selectOption);
+                printMenuOption(typeMenu, i, isSelected, computers);
+                std::cout << "│" << std::endl;
+            }
+            std::cout << "└──────────────────┘" << std::endl;
+        }
     }
 
     void customerManagementMenu(Staff &staff)
@@ -722,10 +779,13 @@ namespace Menu
                     staff.registerComputerForCus();
                     break;
                 case 6:
+                    staff.cancelRegisterComputer();
+                    break;
+                case 7:
                     staff.viewTypeOfComputer();
                     Utilities::MiscUtils::pressKeyQ();
                     break;
-                case 7:
+                case 8:
                     staff.setStatus("Offline");
                     Database<Account>::update(staff);
                     system("cls");
@@ -1231,7 +1291,48 @@ namespace Menu
             }
         }
     }
-
+    std::string menuSelectComputerRegistered()
+    {
+        system("cls");
+        SetConsoleTitle(TEXT("Constants::Menu chọn máy"));
+        ConsoleUtils::ShowCursor(false);
+        int selectOption = 1;
+        const int SIZE = Database<Computer>::gets("", "Registered").size() + 1;
+        if (SIZE == 1)
+        {
+            MessageBoxW(NULL, L"Không có máy nào đang sử dụng", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
+            return "";
+        }
+        while (true)
+        {
+            showMenu("selectComputerRegistered", selectOption);
+            int key = _getch();
+            switch (key)
+            {
+            case Constants::Keys::KEY_UP:
+                selectOption = (selectOption == 1) ? SIZE : selectOption - 1;
+                break;
+            case Constants::Keys::KEY_DOWN:
+                selectOption = (selectOption == SIZE) ? 1 : selectOption + 1;
+                break;
+            case Constants::Keys::KEY_ENTER:
+                if (selectOption == SIZE)
+                {
+                    system("cls");
+                    return "";
+                }
+                else
+                {
+                    Computer computer = Database<Computer>::gets("", "Registered")[selectOption - 1];
+                    computer.setStatus("Available");
+                    Database<Computer>::update(computer);
+                    return computer.getId();
+                }
+            default:
+                break;
+            }
+        }
+    }
     bool button(int x, int y, std::string type, int selectOption)
     {
         ConsoleUtils::ShowCursor(false);
