@@ -72,7 +72,7 @@ void Staff::addComputer()
         }
         Computer computer;
         computer.setTypeOfComputer(typeOfComputer);
-        generateIDComputer(computer);
+        Utilities::MiscUtils::generateID(computer);
         if (Database<Computer>::add(computer))
         {
             MessageBoxW(NULL, L"Thêm máy tính thành công", L"Thông báo", MB_OK);
@@ -261,7 +261,7 @@ void Staff::topUpAccount()
             return;
         }
 
-        if (!isExistUsername(userName))
+        if (!Utilities::Validation::isExistUsername(userName))
         {
             if (++count == 4)
             {
@@ -314,7 +314,6 @@ void Staff::topUpAccount()
         Time time = customer.getTimeFromFile();
         double seconds = amount / cost * 3600;
         time = time + Time(0, 0, seconds);
-        customer.setTime(time);
         customer.setTimeToFile(time);
     }
     Database<Customer>::update(customer);
@@ -432,7 +431,7 @@ void Staff::viewTypeOfComputer(bool isRegister)
 void Staff::registerComputerForCus()
 {
     system("cls");
-    if (isFullAllComputer())
+    if (Utilities::Validation::isFullAllComputer())
     {
         MessageBoxW(NULL, L"Tất cả các máy đã được sử dụng", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
         return;
@@ -465,7 +464,7 @@ void Staff::registerComputerForCus()
             system("cls");
             return;
         }
-        if (isExistUsername(usernameCustomer))
+        if (Utilities::Validation::isExistUsername(usernameCustomer))
         {
             if (Utilities::Validation::isRegisterComputer(usernameCustomer))
             {
@@ -490,9 +489,9 @@ void Staff::registerComputerForCus()
     Utilities::MiscUtils::pressKeyQ();
     system("cls");
 }
+
 void Staff::cancelRegisterComputer()
 {
-
     system("cls");
     std::string idComputer = Menu::menuSelectComputerRegistered();
     if (idComputer == "")
@@ -500,45 +499,10 @@ void Staff::cancelRegisterComputer()
         system("cls");
         return;
     }
-    ConsoleUtils::ShowCursor(true);
-    std::fstream file;
-    if (!File::open(file, "./data/computer/registered.txt", std::ios::in))
-    {
-        std::cout << "Không thể mở file registered" << std::endl;
-        return;
-    }
-    std::fstream tempFile;
-    if (!File::open(tempFile, "./data/computer/temp.txt", std::ios::app))
-    {
-        std::cout << "Không thể mở file temp" << std::endl;
-        return;
-    }
-    std::string line;
-    while (File::read(file, line))
-    {
-        std::stringstream ss(line);
-        std::string usernameTemp;
-        std::string idComputerTemp;
-        std::getline(ss, usernameTemp, '|');
-        std::getline(ss, idComputerTemp);
-        if (idComputerTemp != idComputer)
-        {
-            tempFile << usernameTemp << "|" << idComputerTemp << std::endl;
-        }
-    }
-    if (!File::close(file))
-    {
-        std::cout << "Không thể đóng file registered" << std::endl;
-        return;
-    }
-    if (!File::close(tempFile))
-    {
-        std::cout << "Không thể đóng file temp" << std::endl;
-        return;
-    }
-    File::remove("./data/computer/registered.txt");
-    File::rename("./data/computer/temp.txt", "./data/computer/registered.txt");
-    std::cout << "Hủy đăng kí máy thành công" << std::endl;
+    Customer customer;
+    customer.setComputer(Computer(idComputer));
+    Utilities::MiscUtils::unRegisterComputer(customer);
+    std::cout << "Hủy đăng ký máy thành công" << std::endl;
     Utilities::MiscUtils::pressKeyQ();
     system("cls");
 }

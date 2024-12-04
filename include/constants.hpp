@@ -44,6 +44,7 @@ namespace Constants
         inline bool firstOrder = true;
 
         inline std::mutex mtxTime;
+        inline std::mutex mtxCustomer;
     }
 }
 

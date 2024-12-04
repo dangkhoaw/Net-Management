@@ -23,9 +23,9 @@ Computer &Customer::getComputerViaFile()
     try
     {
         std::fstream file;
-        if (!File::open(file, "./data/computer/computer.txt", std::ios::in))
+        if (!File::open(file, "./data/computer/registered.txt", std::ios::in))
         {
-            throw std::string("Không thể mở file computer");
+            throw std::string("Không thể mở file registered");
         }
         std::string line;
         while (File::read(file, line))
@@ -63,14 +63,16 @@ void Customer::setBalance(Time time)
     this->balance = (double(time.getHour()) + double(time.getMinute()) / 60 + double(time.getSecond()) / 3600) * cost;
 }
 void Customer::setHistory(History history) { this->historyRecently = history; }
+void Customer::setComputer(Computer computer) { this->computer = computer; }
 
 Time Customer::getTimeFromFile()
 {
     try
     {
-        Time time;
+        std::lock_guard<std::mutex> lock(Constants::Globals::mtxCustomer);
+        static Time time;
         std::fstream file;
-        if (!File::open(file, "./data/time/" + getId() + ".txt", std::ios::in))
+        if (!File::open(file, "./data/time/" + id + ".txt", std::ios::in))
         {
             throw std::string("Không thể mở file t/g customer");
         }
@@ -90,8 +92,9 @@ void Customer::setTimeToFile(Time time)
 {
     try
     {
+        std::lock_guard<std::mutex> lock(Constants::Globals::mtxCustomer);
         std::fstream file;
-        if (!File::open(file, "./data/time/" + getId() + ".txt", std::ios::out))
+        if (!File::open(file, "./data/time/" + id + ".txt", std::ios::out))
         {
             throw std::string("Không thể mở file t/g customer");
         }
@@ -169,38 +172,6 @@ void Customer::showHistory()
     }
 }
 
-void Customer::unregisterComputer()
-{
-    std::fstream file;
-    if (!File::open(file, "./data/computer/registered.txt", std::ios::in))
-    {
-        std::cout << "Không thể mở file registeredCus.txt" << std::endl;
-        return;
-    }
-    std::fstream tempFile;
-    if (!File::open(tempFile, "./data/computer/temp.txt", std::ios::out))
-    {
-        std::cout << "Không thể mở file temp.txt" << std::endl;
-        return;
-    }
-    std::string line;
-    while (File::read(file, line))
-    {
-        std::stringstream ss(line);
-        std::string username, typeOfComputer;
-        std::getline(ss, username, '|');
-        std::getline(ss, typeOfComputer);
-        if (username != this->username)
-        {
-            File::write(tempFile, username + "|" + typeOfComputer);
-        }
-    }
-    File::close(file);
-    File::close(tempFile);
-    File::remove("./data/computer/registered.txt");
-    File::rename("./data/computer/temp.txt", "./data/computer/registered.txt");
-}
-
 std::istream &operator>>(std::istream &is, Customer &customer)
 {
     ConsoleUtils::Gotoxy(0, 0);
@@ -251,7 +222,7 @@ std::istream &operator>>(std::istream &is, Customer &customer)
             ShowCursor(false);
             return is;
         }
-        if (isExistUsername(customer.username))
+        if (Utilities::Validation::isExistUsername(customer.username))
         {
             MessageBoxW(NULL, L"Tài khoản đã tồn tại", L"Thông báo", MB_OK | MB_ICONWARNING | MB_TOPMOST);
             ConsoleUtils::ClearLine(17, 3, 18);
@@ -265,7 +236,7 @@ std::istream &operator>>(std::istream &is, Customer &customer)
 
     customer.password = "123456";
     customer.role = "customer";
-    generateID(customer);
+    Utilities::MiscUtils::generateID(customer);
     return is;
 }
 

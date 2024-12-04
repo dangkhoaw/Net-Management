@@ -34,7 +34,7 @@ namespace Menu
                 std::cout << "       Đăng kí máy             ";
                 break;
             case 6:
-                std::cout << "      Hủy đăng kí máy           ";
+                std::cout << "       Hủy đăng kí máy         ";
                 break;
             case 7:
                 std::cout << "       Xem các loại máy        ";
@@ -317,34 +317,6 @@ namespace Menu
             {
                 std::cout << "      " << computers[option - 1].getId() << "       ";
             }
-        }
-        else if (typeMenu == "button")
-        {
-            switch (option)
-            {
-            case 1:
-                std::cout << "    Có    ";
-                break;
-            case 2:
-                std::cout << "   Không  ";
-                break;
-            }
-        }
-        else if (typeMenu == "yesno")
-        {
-            switch (option)
-            {
-            case 1:
-                std::cout << "   Có   ";
-                break;
-            case 2:
-                std::cout << "  Không  ";
-                break;
-            }
-        }
-        else if (typeMenu == "ok")
-        {
-            std::cout << "    OK    ";
         }
         else if (Utilities::StringUtils::toLower(typeMenu) == "yesno")
         {
@@ -664,7 +636,7 @@ namespace Menu
     void customerManagementMenu(Staff &staff)
     {
         system("cls");
-        SetConsoleTitle(TEXT("Constants::Menu quản lí khách hàng"));
+        SetConsoleTitle(TEXT("Menu quản lí khách hàng"));
         int selectOption = 1;
         while (true)
         {
@@ -706,7 +678,7 @@ namespace Menu
     void computerManagementMenu(Staff &staff)
     {
         system("cls");
-        SetConsoleTitle(TEXT("Constants::Menu quản lí máy tính"));
+        SetConsoleTitle(TEXT("Menu quản lí máy tính"));
         int selectOption = 1;
         while (true)
         {
@@ -745,7 +717,7 @@ namespace Menu
     void menuStaff(Staff &staff)
     {
         system("cls");
-        SetConsoleTitle(TEXT("Constants::Menu nhân viên"));
+        SetConsoleTitle(TEXT("Menu nhân viên"));
         ConsoleUtils::ShowCursor(false);
         int selectOption = 1;
         while (true)
@@ -801,7 +773,7 @@ namespace Menu
     void menuRevenue(Staff &staff)
     {
         system("cls");
-        SetConsoleTitle(TEXT("Constants::Menu doanh thu"));
+        SetConsoleTitle(TEXT("Menu doanh thu"));
         ConsoleUtils::ShowCursor(false);
         int selectOption = 1;
         while (true)
@@ -845,7 +817,7 @@ namespace Menu
         Revenue revenue;
         Date date;
         system("cls");
-        SetConsoleTitle(TEXT("Constants::Menu doanh thu theo ngày"));
+        SetConsoleTitle(TEXT("Menu doanh thu theo ngày"));
         ConsoleUtils::ShowCursor(false);
         int selectOption = 1;
         while (true)
@@ -891,7 +863,7 @@ namespace Menu
     void menuRevenueMonth(Staff &staff)
     {
         system("cls");
-        SetConsoleTitle(TEXT("Constants::Menu doanh thu theo tháng"));
+        SetConsoleTitle(TEXT("Menu doanh thu theo tháng"));
         ConsoleUtils::ShowCursor(false);
         int selectOption = 1;
         Revenue revenue;
@@ -941,7 +913,7 @@ namespace Menu
     void menuRevenueYear(Staff &staff)
     {
         system("cls");
-        SetConsoleTitle(TEXT("Constants::Menu doanh thu theo năm"));
+        SetConsoleTitle(TEXT("Menu doanh thu theo năm"));
         ConsoleUtils::ShowCursor(false);
         int selectOption = 1;
         Revenue revenue;
@@ -990,11 +962,11 @@ namespace Menu
     void menuQuantity(Customer &customer, std::string nameRefreshment)
     {
         system("cls");
-        SetConsoleTitle(TEXT("Constants::Menu số lượng"));
+        SetConsoleTitle(TEXT("Menu số lượng"));
         ConsoleUtils::ShowCursor(false);
         int selectOption = 1;
         Constants::Globals::isChangedOrder = true;
-        if (!checkIsOrdered(customer, nameRefreshment))
+        if (!Utilities::Validation::isOrdered(customer, nameRefreshment))
         {
             while (true)
             {
@@ -1069,7 +1041,7 @@ namespace Menu
     void menuDrink(Customer &customer)
     {
         system("cls");
-        SetConsoleTitle(TEXT("Constants::Menu Drink"));
+        SetConsoleTitle(TEXT("Menu Drink"));
         ConsoleUtils::ShowCursor(false);
         int selectOption = 1;
         while (true)
@@ -1120,7 +1092,7 @@ namespace Menu
     void menuFood(Customer &customer)
     {
         system("cls");
-        SetConsoleTitle(TEXT("Constants::Menu Food"));
+        SetConsoleTitle(TEXT("Menu Food"));
         ConsoleUtils::ShowCursor(false);
         int selectOption = 1;
         while (true)
@@ -1170,10 +1142,10 @@ namespace Menu
     void menuDish(Customer &customer)
     {
         system("cls");
-        SetConsoleTitle(TEXT("Constants::Menu Food/Drink"));
+        SetConsoleTitle(TEXT("Menu Food/Drink"));
         ConsoleUtils::ShowCursor(false);
         int selectOption = 1;
-        makeFileOrdered(customer);
+        Utilities::MiscUtils::makeFileOrdered(customer);
         while (true)
         {
             printItemsOrdered(customer);
@@ -1215,7 +1187,7 @@ namespace Menu
 
     std::string menuSelectTypeOfComputer()
     {
-        SetConsoleTitle(TEXT("Constants::Menu chọn máy"));
+        SetConsoleTitle(TEXT("Menu chọn máy"));
         ConsoleUtils::ShowCursor(false);
         int selectOption = 1;
         while (true)
@@ -1252,7 +1224,7 @@ namespace Menu
     std::string menuSelectComputer(std::string typeOfComputer)
     {
         system("cls");
-        SetConsoleTitle(TEXT("Constants::Menu chọn máy"));
+        SetConsoleTitle(TEXT("Menu chọn máy"));
         ConsoleUtils::ShowCursor(false);
         int selectOption = 1;
         const int SIZE = Database<Computer>::gets(typeOfComputer, "Available").size() + 1;
@@ -1294,13 +1266,13 @@ namespace Menu
     std::string menuSelectComputerRegistered()
     {
         system("cls");
-        SetConsoleTitle(TEXT("Constants::Menu chọn máy"));
+        SetConsoleTitle(TEXT("Menu chọn máy"));
         ConsoleUtils::ShowCursor(false);
         int selectOption = 1;
         const int SIZE = Database<Computer>::gets("", "Registered").size() + 1;
         if (SIZE == 1)
         {
-            MessageBoxW(NULL, L"Không có máy nào đang sử dụng", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
+            MessageBoxW(NULL, L"Không có máy nào được đăng ký", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
             return "";
         }
         while (true)
@@ -1382,7 +1354,7 @@ namespace Menu
 
     void menuCustomer(Customer &customer)
     {
-        SetConsoleTitle(TEXT("Constants::Menu khách hàng"));
+        SetConsoleTitle(TEXT("Menu khách hàng"));
         ConsoleUtils::ShowCursor(false);
         int selectOption = 1;
         History history(Day().getCurrentDay(), customer.getId());
@@ -1431,7 +1403,7 @@ namespace Menu
         }
 
         system("cls");
-        system(("if exist .\\data\\order\\" + customer.getId() + "_ordered.txt del .\\data\\order\\" + customer.getId() + "_ordered.txt").c_str());
+        File::remove("./data/order/" + customer.getId() + "_ordered.txt");
         history.addHistoryToFile();
         customer.getComputer().setStatus("Available");
         customer.getComputer().setCustomerUsingName("");
@@ -1440,7 +1412,7 @@ namespace Menu
 
         customer.setTimeToFile(Time());
         customer.setStatus("Offline");
-        customer.unregisterComputer();
+        Utilities::MiscUtils::unRegisterComputer(customer);
         customer.getComputer().setId("");
 
         Database<Customer>::update(customer);
@@ -1451,6 +1423,7 @@ namespace Menu
 
     void printItemsOrdered(Customer &customer)
     {
+        system("cls");
         if (Constants::Globals::isChangedOrder)
         {
             std::fstream file;

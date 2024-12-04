@@ -61,7 +61,7 @@ std::istream &operator>>(std::istream &is, Account &account)
                 Sleep(555);
                 continue;
             }
-            else if (account.role == "staff" || !isFullAllComputer())
+            else if (account.role == "staff" || !Utilities::Validation::isFullAllComputer())
             {
                 ConsoleUtils::Gotoxy(0, 7);
                 std::cout << "\nĐăng nhập thành công!\n"

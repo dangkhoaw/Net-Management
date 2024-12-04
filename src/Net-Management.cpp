@@ -1,5 +1,5 @@
 #include "../include/console.hpp"
-#include "../include/process.hpp"
+#include "../include/utilities.hpp"
 
 int main(int argc, char const *argv[])
 {
@@ -7,7 +7,7 @@ int main(int argc, char const *argv[])
     SetConsoleOutputCP(65001);
     try
     {
-        run();
+        Utilities::MiscUtils::run();
     }
     catch (...)
     {

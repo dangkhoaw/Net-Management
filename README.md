@@ -12,7 +12,7 @@
 
 ## Requirements
 
-- **g++** phiên bản **4.8** trở lên để hỗ trợ chuẩn **C++11** (hoặc cao hơn), đảm bảo tính năng `thread` hoạt động. Bạn có thể cài đặt g++ thông qua [MSYS2](https://www.msys2.org/)
+- **C++11** hoặc cao hơn để đảm bảo tính năng `thread` hoạt động. Bạn có thể cài đặt thông qua [MSYS2](https://www.msys2.org/)
 
 - Font chữ **CaskaydiaCove Nerd Font** để hiển thị icon trong chương trình. Bạn có thể tải font chữ tại [đây](https://www.nerdfonts.com/font-downloads)
 
@@ -30,16 +30,10 @@ git clone https://github.com/dangkhoaw/Net-Management.git
 cd Net-Management
 ```
 
-3. Biên dịch chuơng trình
+3. Biên dịch và chạy chương trình
 
 ```bash
-g++ -std=c++11 src/*.cpp -o build/Net-Management
-```
-
-4. Chạy chương trình
-
-```bash
-./build/Net-Management
+g++ -std=c++11 src/*.cpp -o build/Net-Management ; ./build/Net-Management
 ```
 
 > [!TIP]

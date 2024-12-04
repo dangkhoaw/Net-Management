@@ -13,7 +13,6 @@ public:
     void topUpAccount();
     void viewCustomersInfo();
     void addComputer();
-    void viewRevenue();
     void addAccount();
     void removeAccount();
     void removeComputer();

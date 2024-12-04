@@ -48,7 +48,6 @@ public:
     void ConfirmOrder();
     int getTotalPrice();
     friend std::ostream &operator<<(std::ostream &os, Customer &customer);
-    void unregisterComputer();
 
     std::string serialize() const;
     void unserialize(std::string &data);
