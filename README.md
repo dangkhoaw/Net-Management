@@ -46,6 +46,6 @@ g++ -std=c++11 src/*.cpp -o build/Net-Management ; ./build/Net-Management
 
 ---
 
-<p align="center"><a href="https://visitcount.itsvg.in/api?id=Net-Management&label=Project%20Views&color=1&icon=5&pretty=true">
-  <img src="https://visitcount.itsvg.in/api?id=Net-Management&label=Project%20Views&color=1&icon=5&pretty=true" />
+<p align="center"><a href="https://visitcount.itsvg.in/api?id=dangkhoaw%27Net-Management&label=Project%20Views&color=1&icon=5&pretty=true">
+  <img src="https://visitcount.itsvg.in/api?id=dangkhoaw%27Net-Management&label=Project%20Views&color=1&icon=5&pretty=true" />
 </a></p>
