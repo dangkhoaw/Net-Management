@@ -1,4 +1,5 @@
 #include "../include/console.hpp"
+#include "../include/constants.hpp"
 #include "../include/database.hpp"
 #include "../include/menu.hpp"
 #include <iomanip>
@@ -20,11 +21,23 @@ void Staff::addAccount()
         return;
     }
 
-    if (Database<Customer>::add(customer) && Database<Account>::add(customer))
-        MessageBoxW(NULL, L"Thêm tài khoản thành công", L"Thông báo", MB_OK);
+    ConsoleUtils::print("\nBạn có chắc chắn muốn thêm tài khoản này không?", {{Constants::ANSI::Foreground::YELLOW, Constants::ANSI::Style::BOLD}});
+    bool choice = Menu::button(14, 8, "yesno");
+    ConsoleUtils::ClearLine(7);
+    ConsoleUtils::ClearLine(8);
+    ConsoleUtils::Gotoxy(0, 7);
+    if (choice)
+    {
+        if (Database<Customer>::add(customer) && Database<Account>::add(customer))
+            ConsoleUtils::print("\n\nThêm tài khoản thành công\n", {Constants::ANSI::Foreground::GREEN});
+        else
+            ConsoleUtils::print("\n\nThêm tài khoản thất bại do lôi hệ thống\n", {Constants::ANSI::Foreground::RED}, true);
+    }
     else
-        MessageBoxW(NULL, L"Thêm tài khoản thất bại", L"Thông báo", MB_OK);
-
+    {
+        ConsoleUtils::print("Thêm tài khoản thất bại", {Constants::ANSI::Foreground::RED}, true);
+    }
+    Utilities::MiscUtils::pressKeyQ();
     system("cls");
     ConsoleUtils::ShowCursor(false);
 }
@@ -33,26 +46,48 @@ void Staff::removeAccount()
 {
     system("cls");
     ConsoleUtils::ShowCursor(true);
-    std::string id;
-    std::cout << "Nhập id tài khoản cần xóa: ";
-    Utilities::InputUtils::inputString(id);
-    if (id.empty())
+    std::string info;
+    std::cout << "Nhập id hoặc tên tài khoản cần xóa: ";
+    Utilities::InputUtils::inputString(info);
+    if (info.empty())
     {
         ConsoleUtils::ShowCursor(false);
         system("cls");
         return;
     }
-    id = Utilities::StringUtils::toUpper(id);
     Customer customer;
-    customer.setId(id);
-    std::cout << "\nBạn có chắc chắn muốn xóa tài khoản này không?" << std::endl;
-    if (Menu::button(14, 3, "yesno"))
+    std::string id = info;
+    std::string username = info;
+    id = Utilities::StringUtils::toUpper(id);
+    if (id.substr(0, 3) == "UID")
+        customer.setId(id);
+    else
+        customer.setUserName(username);
+
+    if (!Database<Customer>::get(customer))
+    {
+        ConsoleUtils::print("\nKhông tìm thấy tài khoản", {Constants::ANSI::Foreground::RED}, true);
+        Utilities::MiscUtils::pressKeyQ();
+        ConsoleUtils::ShowCursor(false);
+        system("cls");
+        return;
+    }
+    ConsoleUtils::print("\nBạn có chắc chắn muốn xóa tài khoản này không?", {Constants::ANSI::Foreground::YELLOW, Constants::ANSI::Style::BOLD});
+    bool choice = Menu::button(14, 3, "yesno");
+    ConsoleUtils::ClearLine(2);
+    ConsoleUtils::ClearLine(3);
+    ConsoleUtils::Gotoxy(0, 2);
+    if (choice)
     {
         if (Database<Customer>::remove(customer))
-            MessageBoxW(NULL, L"Xóa tài khoản thành công", L"Thông báo", MB_OK);
+            ConsoleUtils::print("Xóa tài khoản thành công", {Constants::ANSI::Foreground::GREEN});
         else
-            MessageBoxW(NULL, L"Xóa tài khoản thất bại", L"Thông báo", MB_OK);
+            ConsoleUtils::print("Xóa tài khoản thất bại do lỗi hệ thống", {Constants::ANSI::Foreground::RED}, true);
     }
+    else
+        ConsoleUtils::print("Xóa tài khoản thất bại", {Constants::ANSI::Foreground::RED}, true);
+
+    Utilities::MiscUtils::pressKeyQ();
     ConsoleUtils::ShowCursor(false);
     system("cls");
 }
@@ -61,9 +96,10 @@ void Staff::addComputer()
 {
     system("cls");
     ConsoleUtils::ShowCursor(true);
+    int select = 1;
     while (true)
     {
-        std::string typeOfComputer = Menu::menuSelectTypeOfComputer();
+        std::string typeOfComputer = Menu::menuSelectTypeOfComputer(select);
         if (typeOfComputer == "")
         {
             ConsoleUtils::ShowCursor(false);
@@ -74,11 +110,12 @@ void Staff::addComputer()
         computer.setTypeOfComputer(typeOfComputer);
         Utilities::MiscUtils::generateID(computer);
         if (Database<Computer>::add(computer))
-        {
-            MessageBoxW(NULL, L"Thêm máy tính thành công", L"Thông báo", MB_OK);
-        }
+            ConsoleUtils::print("Thêm máy tính thành công", {Constants::ANSI::Foreground::GREEN});
         else
-            MessageBoxW(NULL, L"Thêm máy tính thất bại", L"Thông báo", MB_OK);
+            ConsoleUtils::print("Thêm máy tính thất bại", {Constants::ANSI::Foreground::RED}, true);
+
+        Sleep(500);
+        ConsoleUtils::ClearLine(6);
     }
     system("cls");
     ConsoleUtils::ShowCursor(false);
@@ -96,17 +133,18 @@ void Staff::removeComputer()
     Computer computer;
     computer.setId(idComputer);
     system("cls");
-    std::cout << "Bạn có chắc chắn muốn xóa máy " << idComputer << " không?" << std::endl;
-    if (Menu::button(12, 1, "yesno"))
+    ConsoleUtils::print(("Bạn có chắc chắn muốn xóa máy " + idComputer + " không?").c_str(), {Constants::ANSI::Foreground::YELLOW, Constants::ANSI::Style::BOLD});
+    bool choice = Menu::button(12, 1, "yesno");
+    if (choice)
     {
         if (Database<Computer>::remove(computer))
         {
-            std::cout << "\nXóa máy thành công" << std::endl;
+            ConsoleUtils::print("\nXóa máy thành công", {Constants::ANSI::Foreground::GREEN});
             Sleep(1000);
         }
         else
         {
-            std::cout << "\nXóa máy thất bại" << std::endl;
+            ConsoleUtils::print("\nXóa máy thất bại", {Constants::ANSI::Foreground::RED}, true);
             ConsoleUtils::ShowCursor(false);
             Sleep(500);
         }
@@ -164,17 +202,14 @@ void Staff::viewComputerStatus()
             i++;
         }
         prevComputers = computers;
-        ConsoleUtils::Gotoxy(0, computers.size() + 3);
-        std::cout << "└──────────┴────────────────────┴──────────────────────────┴──────────────────────┘" << std::endl;
-        ConsoleUtils::Gotoxy(0, computers.size() + 5);
-        std::cout << "(Nhấn phím q để thoát)";
+        ConsoleUtils::Gotoxy(0, i + 3);
+        std::cout << "└──────────┴────────────────────┴──────────────────────────┴──────────────────────┘";
+        ConsoleUtils::print("\n(Nhấn phím q để thoát)", {Constants::ANSI::Foreground::YELLOW});
         if (_kbhit())
         {
             char key = _getch();
-            if (key == 'q')
+            if (key == 'q' || key == 'Q')
                 break;
-            else
-                continue;
         }
         Sleep(1000);
     }
@@ -194,38 +229,48 @@ void Staff::searchCustomer()
         system("cls");
         return;
     }
-    std::cout << "┌──────────┬───────────────────────────────┬──────────────────────┬───────────────────────┬──────────────────────┬──────────────────────┐" << std::endl;
-    std::cout << "│    ID    │              TÊN              │     TÊN ĐĂNG NHẬP    │     SỐ ĐIỆN THOẠI     │         SỐ DƯ        │   MÁY ĐANG SỬ DỤNG   │" << std::endl;
-    std::cout << "├──────────┼───────────────────────────────┼──────────────────────┼───────────────────────┼──────────────────────┼──────────────────────┤" << std::endl;
+    std::cout << "┌──────────┬───────────────────────────────┬──────────────────────┬───────────────────────┬──────────────────────┬─────────────────────┐" << std::endl;
+    std::cout << "│    ID    │              TÊN              │     TÊN ĐĂNG NHẬP    │     SỐ ĐIỆN THOẠI     │        SỐ DƯ         │   MÁY ĐANG SỬ DỤNG  │" << std::endl;
+    std::cout << "├──────────┼───────────────────────────────┼──────────────────────┼───────────────────────┼──────────────────────┼─────────────────────┤" << std::endl;
     List<Customer> customers = Database<Customer>::gets("", info);
     int i = 0;
     for (Customer &customer : customers)
     {
+        ConsoleUtils::ClearLine(i + 4);
         ConsoleUtils::Gotoxy(0, i + 4);
         std::cout << "│ " << customer.getId();
         ConsoleUtils::Gotoxy(11, i + 4);
         std::cout << "│  " << customer.getName();
-        ConsoleUtils::Gotoxy(32 + 11, i + 4);
-        std::cout << "│      " << customer.getUserName();
-        ConsoleUtils::Gotoxy(55 + 11, i + 4);
-        std::cout << "│      " << customer.getPhone();
-        ConsoleUtils::Gotoxy(79 + 11, i + 4);
-        std::cout << "│       " << customer.getBalance();
-        ConsoleUtils::Gotoxy(102 + 11, i + 4);
+        ConsoleUtils::Gotoxy(43, i + 4);
+        std::cout << "│";
+        ConsoleUtils::Gotoxy((66 + 43 - customer.getUserName().size() + 1) / 2, i + 4);
+        std::cout << customer.getUserName();
+        ConsoleUtils::Gotoxy(66, i + 4);
+        std::cout << "│";
+        ConsoleUtils::Gotoxy((90 + 66 - customer.getPhone().size() + 1) / 2, i + 4);
+        std::cout << customer.getPhone();
+        ConsoleUtils::Gotoxy(90, i + 4);
+        std::cout << "│";
+        ConsoleUtils::Gotoxy((113 + 90 - Utilities::MiscUtils::formatMoney(customer.getBalance()).size() + 1) / 2, i + 4);
+        std::cout << Utilities::MiscUtils::formatMoney(customer.getBalance());
+        ConsoleUtils::Gotoxy(113, i + 4);
+        std::cout << "│";
         if (customer.getComputer().getId() == "")
         {
-            std::cout << "│          -";
+            ConsoleUtils::Gotoxy((135 + 113) / 2, i + 4);
+            std::cout << "-";
         }
         else
         {
-            std::cout << "│        " << customer.getComputer().getId();
+            ConsoleUtils::Gotoxy((135 + 113 - customer.getComputer().getId().size() + 1) / 2, i + 4);
+            std::cout << customer.getComputer().getId();
         }
-        ConsoleUtils::Gotoxy(125 + 11, i + 4);
+        ConsoleUtils::Gotoxy(135, i + 4);
         std::cout << "│";
         i++;
     }
     ConsoleUtils::Gotoxy(0, i + 4);
-    std::cout << "└──────────┴───────────────────────────────┴──────────────────────┴───────────────────────┴──────────────────────┴──────────────────────┘" << std::endl;
+    std::cout << "└──────────┴───────────────────────────────┴──────────────────────┴───────────────────────┴──────────────────────┴─────────────────────┘";
     Utilities::MiscUtils::pressKeyQ();
     ConsoleUtils::ShowCursor(false);
 }
@@ -243,15 +288,6 @@ void Staff::topUpAccount()
 
     while (true)
     {
-        ConsoleUtils::ClearLine(3);
-        ConsoleUtils::ClearLine(4);
-
-        ConsoleUtils::Gotoxy(0, 3);
-
-        std::cout << "(Nhập sai 3 lần sẽ thoát: " << count << " lần nhập sai)";
-
-        ConsoleUtils::ClearLine(0);
-        ConsoleUtils::Gotoxy(0, 0);
         std::cout << "Tên đăng nhập: ";
         Utilities::InputUtils::inputString(userName);
         if (userName.empty())
@@ -263,22 +299,13 @@ void Staff::topUpAccount()
 
         if (!Utilities::Validation::isExistUsername(userName))
         {
-            if (++count == 4)
-            {
-                system("cls");
-                std::cout << "Nhập sai 3 lần. Hãy thử lại sau" << std::endl;
-                Utilities::MiscUtils::pressKeyQ();
-                ConsoleUtils::ShowCursor(false);
-                return;
-            }
+            ConsoleUtils::print("Tên đăng nhập không tồn tại", {Constants::ANSI::Foreground::RED}, true);
+            ConsoleUtils::ClearLine(0);
         }
         else
-        {
-            ConsoleUtils::ClearLine(3);
-            ConsoleUtils::ClearLine(4);
             break;
-        }
     }
+    ConsoleUtils::ClearLine(1);
     std::string money;
     double amount = 0;
     do
@@ -296,10 +323,12 @@ void Staff::topUpAccount()
 
         if (amount < 1000)
         {
-            MessageBoxW(NULL, L"Số tiền được nhập phải là số nguyên dương và lớn hơn 1000", L"Thông báo", MB_ICONWARNING);
+            ConsoleUtils::print("Số tiền phải lớn hơn 1.000 (VNĐ)", {Constants::ANSI::Foreground::RED}, true);
+            ConsoleUtils::ClearLine(1);
         }
     } while (amount < 1000);
 
+    ConsoleUtils::ClearLine(2);
     revenue = revenue + amount;
     Database<Revenue>::update(revenue);
 
@@ -375,27 +404,24 @@ void Staff::viewCustomersInfo()
             i++;
         }
         prevCustomers = customers;
-        ConsoleUtils::Gotoxy(0, customers.size() + 3);
-        std::cout << "└──────────┴───────────────────────────────┴──────────────────────┴───────────────────────┴──────────────────────┴─────────────────────┘" << std::endl;
-        ConsoleUtils::Gotoxy(0, customers.size() + 5);
-        std::cout << "(Nhấn phím q để thoát)";
+        ConsoleUtils::Gotoxy(0, i + 3);
+        std::cout << "└──────────┴───────────────────────────────┴──────────────────────┴───────────────────────┴──────────────────────┴─────────────────────┘";
+        ConsoleUtils::print("\n(Nhấn phím q để thoát)", {Constants::ANSI::Foreground::YELLOW});
         if (_kbhit())
         {
             char key = _getch();
-            if (key == 'q')
+            if (key == 'q' || key == 'Q')
                 break;
-            else
-                continue;
         }
         Sleep(1000);
     }
     system("cls");
 }
 
-void Staff::viewTypeOfComputer(bool isRegister)
+void Staff::viewTypeOfComputer()
 {
     system("cls");
-    int i = isRegister ? 7 : 0;
+    int i = 0;
     ConsoleUtils::Gotoxy(0, i++);
     std::cout << "┌──────────────┬──────────────────────────────────────────┬─────────────┐";
     ConsoleUtils::Gotoxy(0, i++);
@@ -433,21 +459,27 @@ void Staff::registerComputerForCus()
     system("cls");
     if (Utilities::Validation::isFullAllComputer())
     {
-        MessageBoxW(NULL, L"Tất cả các máy đã được sử dụng", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
-        return;
-    }
-    std::string typeOfComputer = Menu::menuSelectTypeOfComputer();
-    if (typeOfComputer == "")
-    {
-        system("cls");
+        ConsoleUtils::print("Tất cả các máy đã được sử dụng", {Constants::ANSI::Foreground::RED}, true);
+        Menu::button(14, 1, "ok");
         return;
     }
 
-    std::string idComputer = Menu::menuSelectComputer(typeOfComputer);
-    if (idComputer == "")
+    std::string typeOfComputer;
+    std::string idComputer;
+    int select = 1;
+    while (true)
     {
-        system("cls");
-        return;
+        typeOfComputer = Menu::menuSelectTypeOfComputer(select);
+        if (typeOfComputer == "")
+        {
+            return;
+        }
+
+        idComputer = Menu::menuSelectComputer(typeOfComputer);
+        if (idComputer == "")
+            continue;
+        else
+            break;
     }
 
     system("cls");
@@ -476,6 +508,12 @@ void Staff::registerComputerForCus()
         }
     }
 
+    Computer computer;
+    computer.setId(idComputer);
+    Database<Computer>::get(computer);
+    computer.setStatus("Registered");
+    Database<Computer>::update(computer);
+
     std::fstream file("./data/computer/registered.txt", std::ios::app);
     if (!file.is_open())
     {
@@ -496,7 +534,6 @@ void Staff::cancelRegisterComputer()
     std::string idComputer = Menu::menuSelectComputerRegistered();
     if (idComputer == "")
     {
-        system("cls");
         return;
     }
     Customer customer;

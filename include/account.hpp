@@ -28,7 +28,7 @@ public:
     void setIsFirstLogin(std::string isFirstLogin);
 
     bool signIn();
-    bool changePassword();
+    bool changePassword(bool isFirstLogin = false);
     friend std::istream &operator>>(std::istream &is, Account &account);
     friend std::ostream &operator<<(std::ostream &os, const Account &account);
     friend bool checkAccount(Account &account);

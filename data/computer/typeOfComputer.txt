@@ -1,3 +1,3 @@
-VIP|4
-Cao cap|5
-Co ban|7
+VIP|7
+Cao cap|8
+Co ban|8

@@ -1,5 +1,6 @@
 #include "../include/history.hpp"
 #include "../include/file.hpp"
+#include "../include/constants.hpp"
 #include <sstream>
 
 History::History(Day day, std::string customerID)
@@ -69,7 +70,7 @@ void History::addHistoryToFile()
     }
     catch (const std::string &error)
     {
-        std::cerr << error << std::endl;
+        std::cerr << Constants::ANSI::Foreground::RED << "Error: " << Constants::ANSI::RESET << error << std::endl;
     }
 }
 

@@ -43,9 +43,3 @@ g++ -std=c++11 src/*.cpp -o build/Net-Management ; ./build/Net-Management
 
 - [Đặng Đăng Khoa](https://github.com/dangkhoaw)
 - [Trần Nguyễn Văn Phát](https://github.com/grayzy2617)
-
----
-
-<p align="center"><a href="https://visitcount.itsvg.in/api?id=dangkhoaw%2FNet-Management&label=Project%20Views&color=1&icon=5&pretty=true">
-  <img src="https://visitcount.itsvg.in/api?id=dangkhoaw%2FNet-Management&label=Project%20Views&color=1&icon=5&pretty=true" />
-</a></p>

@@ -5,6 +5,7 @@
 #include "../include/constants.hpp"
 #include <thread>
 #include <conio.h>
+#include <map>
 
 namespace Menu
 {
@@ -14,325 +15,109 @@ namespace Menu
     /// @param computers Danh sách máy tính (Bỏ trống nếu không cần)
     void optionMenu(std::string typeMenu, int option, List<Computer> computers)
     {
-        if (typeMenu == "staff")
-        {
-            switch (option)
-            {
-            case 1:
-                std::cout << "       Quản lí khách hàng      ";
-                break;
-            case 2:
-                std::cout << "       Quản lí máy tính        ";
-                break;
-            case 3:
-                std::cout << "       Xem doanh thu           ";
-                break;
-            case 4:
-                std::cout << "       Nạp tiền                ";
-                break;
-            case 5:
-                std::cout << "       Đăng kí máy             ";
-                break;
-            case 6:
-                std::cout << "       Hủy đăng kí máy         ";
-                break;
-            case 7:
-                std::cout << "       Xem các loại máy        ";
-                break;
-            case 8:
-                std::cout << "       Đăng xuất               ";
-                break;
-            }
-        }
-        else if (typeMenu == "customerManger")
-        {
-            switch (option)
-            {
-            case 1:
-                std::cout << "       Thêm tài khoản             ";
-                break;
-            case 2:
-                std::cout << "       Xóa tài khoản              ";
-                break;
-            case 3:
-                std::cout << "       Tìm kiếm khách hàng        ";
-                break;
-            case 4:
-                std::cout << "       Xem thông tin khách hàng   ";
-                break;
-            case 5:
-                std::cout << "       Thoát                      ";
-                break;
-            }
-        }
-        else if (typeMenu == "computerManager")
-        {
-            switch (option)
-            {
-            case 1:
-                std::cout << "       Thêm máy tính             ";
-                break;
-            case 2:
-                std::cout << "       Xóa máy tính              ";
-                break;
-            case 3:
-                std::cout << "       Xem trạng thái máy        ";
-                break;
-            case 4:
-                std::cout << "       Thoát                     ";
-                break;
-            }
-        }
-        else if (typeMenu == "customer")
-        {
-            switch (option)
-            {
-            case 1:
-                std::cout << "    Đổi mật khẩu                 ";
-                break;
-            case 2:
-                std::cout << "    Xem thông tin cá nhân        ";
-                break;
-            case 3:
-                std::cout << "    Đặt món ăn                   ";
-                break;
-            case 4:
-                std::cout << "    Đăng xuất                    ";
-                break;
-            }
-        }
+        static const std::map<std::string, List<std::string>> menu = {
+            {"staff",
+             {"       Quản lí khách hàng      ",
+              "       Quản lí máy tính        ",
+              "       Xem doanh thu           ",
+              "       Nạp tiền                ",
+              "       Đăng kí máy             ",
+              "       Hủy đăng kí máy         ",
+              "       Xem các loại máy        ",
+              "       Đăng xuất               "}},
+            {"customermanager",
+             {"       Thêm tài khoản             ",
+              "       Xóa tài khoản              ",
+              "       Tìm kiếm khách hàng        ",
+              "       Xem thông tin khách hàng   ",
+              "       Thoát                      "}},
+            {"computermanager",
+             {"       Thêm máy tính             ",
+              "       Xóa máy tính              ",
+              "       Xem trạng thái máy        ",
+              "       Thoát                     "}},
+            {"customer",
+             {"    Đổi mật khẩu                 ",
+              "    Xem thông tin cá nhân        ",
+              "    Đặt món ăn                   ",
+              "    Đăng xuất                    "}},
+            {"dish",
+             {"         Thức ăn             ",
+              "         Nước uống           ",
+              "         Đặt                 ",
+              "         Thoát               "}},
+            {"food",
+             {"     Bánh mì thịt nướng       │  15.000  ",
+              "     Mì tôm trứng             │  15.000  ",
+              "     Cơm gà nướng             │  25.000  ",
+              "     Cơm gà chiên nước mắm    │  25.000  ",
+              "     Xúc xích                 │  10.000  ",
+              "     Cơm cuộn                 │  15.000  ",
+              "                  Thoát                 "}},
+            {"drink",
+             {"        Coca lon              │  10.000  ",
+              "        Nước suối             │  5.000   ",
+              "        Caffee đen            │  10.000  ",
+              "        Caffee sữa            │  15.000  ",
+              "        Nước cam              │  10.000  ",
+              "        Bò húc                │  15.000  ",
+              "                  Thoát                  "}},
+            {"quantity",
+             {"        1                 ",
+              "        2                 ",
+              "        Nhiều hơn         ",
+              "         Thoát          "}},
+            {"reorder",
+             {"         Sửa số lượng        ",
+              "         Xóa món             ",
+              "         Thoát               "}},
+            {"revenue",
+             {"     Xem doanh thu theo ngày    ",
+              "     Xem doanh thu theo tháng   ",
+              "     Xem doanh thu theo năm     ",
+              "     Thoát                      "}},
+            {"revenueday",
+             {"       Doanh thu hôm nay         ",
+              "       Doanh thu hôm qua         ",
+              "       Doanh thu ngày khác       ",
+              "       Thoát                     "}},
+            {"revenuemonth",
+             {"      Doanh thu tháng này        ",
+              "      Doanh thu tháng trước      ",
+              "      Doanh thu tháng khác       ",
+              "      Thoát                      "}},
+            {"revenueyear",
+             {"      Doanh thu năm nay          ",
+              "      Doanh thu năm trước        ",
+              "      Doanh thu năm khác         ",
+              "      Thoát                      "}},
+            {"selecttypeofcomputer",
+             {"        V.I.P          ",
+              "        Cao cấp        ",
+              "        Cơ bản         ",
+              "         Thoát        "}},
+            {"yesno",
+             {"[  Có  ]",
+              "[  Không ]"}},
+            {"ok",
+             {"[  OK  ]"}}};
 
-        else if (typeMenu == "dish")
-        {
-            switch (option)
-            {
-            case 1:
-                std::cout << "         Thức ăn             ";
-                break;
-            case 2:
-                std::cout << "         Nước uống           ";
-                break;
-            case 3:
-                std::cout << "         Đặt                 ";
-                break;
-            case 4:
-                std::cout << "         Thoát               ";
-                break;
-            }
-        }
-        else if (typeMenu == "food")
-        {
-            switch (option)
-            {
-            case 1:
-                std::cout << "     Bánh mì thịt nướng       │  15.000  ";
-                break;
-            case 2:
-                std::cout << "     Mì tôm trứng             │  15.000  ";
-                break;
-            case 3:
-                std::cout << "     Cơm gà nướng             │  25.000  ";
-                break;
-            case 4:
-                std::cout << "     Cơm gà chiên nước mắm    │  25.000  ";
-                break;
-            case 5:
-                std::cout << "     Xúc xích                 │  10.000  ";
-                break;
-            case 6:
-                std::cout << "     Cơm cuộn                 │  15.000  ";
-                break;
-            case 7:
-                std::cout << "                  Thoát                 ";
-                break;
-            }
-        }
-        else if (typeMenu == "drink")
-        {
-            switch (option)
-            {
-            case 1:
-                std::cout << "        Coca lon              │  10.000  ";
-                break;
-            case 2:
-                std::cout << "        Nước suối             │  5.000   ";
-                break;
-            case 3:
-                std::cout << "        Caffee đen            │  10.000  ";
-                break;
-            case 4:
-                std::cout << "        Caffee sữa            │  15.000  ";
-                break;
-            case 5:
-                std::cout << "        Nước cam              │  10.000  ";
-                break;
-            case 6:
-                std::cout << "        Bò húc                │  15.000  ";
-                break;
-            case 7:
-                std::cout << "                  Thoát                  ";
-                break;
-            }
-        }
-        else if (typeMenu == "quantity")
-        {
-            switch (option)
-            {
-            case 1:
-                std::cout << "        1                 " << std::endl;
-                break;
-            case 2:
-                std::cout << "        2                 " << std::endl;
-                break;
-            case 3:
-                std::cout << "        Nhiều hơn         " << std::endl;
-                break;
-            case 4:
-                std::cout << "         Thoát           " << std::endl;
-            }
-        }
-        else if (typeMenu == "reOrder")
-        {
-            switch (option)
-            {
-            case 1:
-                std::cout << "         Sửa số lượng        ";
-                break;
-            case 2:
-                std::cout << "         Xóa                 ";
-                break;
-            case 3:
-                std::cout << "         Thoát               ";
-                break;
-            }
-        }
-        else if (typeMenu == "revenue")
-        {
-            switch (option)
-            {
-            case 1:
-                std::cout << "     Xem doanh thu theo ngày    ";
-                break;
-            case 2:
-                std::cout << "     Xem doanh thu theo tháng   ";
-                break;
-            case 3:
-                std::cout << "     Xem doanh thu theo năm     ";
-                break;
-            case 4:
-                std::cout << "     Thoát                      ";
-                break;
-            }
-        }
-        else if (typeMenu == "revenueDay")
-        {
-            switch (option)
-            {
-            case 1:
-                std::cout << "       Doanh thu hôm nay         ";
-                break;
-            case 2:
-                std::cout << "       Doanh thu hôm qua         ";
-                break;
-            case 3:
-                std::cout << "       Doanh thu ngày khác       ";
-                break;
-            case 4:
-                std::cout << "       Thoát                     ";
-                break;
-            }
-        }
-        else if (typeMenu == "revenueMonth")
-        {
-            switch (option)
-            {
-            case 1:
-                std::cout << "      Doanh thu tháng này        ";
-                break;
-            case 2:
-                std::cout << "      Doanh thu tháng trước      ";
-                break;
-            case 3:
-                std::cout << "      Doanh thu tháng khác       ";
-                break;
-            case 4:
-                std::cout << "      Thoát                      ";
-                break;
-            }
-        }
-        else if (typeMenu == "revenueYear")
-        {
-            switch (option)
-            {
-            case 1:
-                std::cout << "      Doanh thu năm nay          ";
-                break;
-            case 2:
-                std::cout << "      Doanh thu năm trước        ";
-                break;
-            case 3:
-                std::cout << "      Doanh thu năm khác         ";
-                break;
-            case 4:
-                std::cout << "      Thoát                      ";
-                break;
-            }
-        }
-        else if (typeMenu == "selectTypeOfComputer")
-        {
-            switch (option)
-            {
-            case 1:
-                std::cout << "       V.I.P             ";
-                break;
-            case 2:
-                std::cout << "      Cao cấp            ";
-                break;
-            case 3:
-                std::cout << "      Cơ bản             ";
-                break;
-            case 4:
-                std::cout << "       Thoát            ";
-                break;
-            }
-        }
-        else if (typeMenu == "selectComputer")
+        if (typeMenu == "selectcomputer" || typeMenu == "selectcomputerregistered")
         {
             if (option == computers.size() + 1)
             {
                 std::cout << "       Thoát     ";
+                return;
             }
             else
             {
                 std::cout << "      " << computers[option - 1].getId() << "       ";
+                return;
             }
         }
-        else if (typeMenu == "selectComputerRegistered")
+        else
         {
-            if (option == computers.size() + 1)
-            {
-                std::cout << "       Thoát     ";
-            }
-            else
-            {
-                std::cout << "      " << computers[option - 1].getId() << "       ";
-            }
-        }
-        else if (Utilities::StringUtils::toLower(typeMenu) == "yesno")
-        {
-            switch (option)
-            {
-            case 1:
-                std::cout << "   Có   ";
-                break;
-            case 2:
-                std::cout << "  Không  ";
-                break;
-            }
-        }
-        else if (Utilities::StringUtils::toLower(typeMenu) == "ok")
-        {
-            std::cout << "    OK    ";
+            std::cout << menu.at(typeMenu)[option - 1];
         }
     }
 
@@ -343,15 +128,22 @@ namespace Menu
     /// @param computers Danh sách máy tính (Bỏ trống nếu không cần)
     void printMenuOption(std::string typeMenu, int option, bool isSelected, List<Computer> computers)
     {
-        HANDLE myConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-
-        int foregroundWhite = FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY;
-        int backgroundWhite = BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_RED | BACKGROUND_INTENSITY;
-        int color = isSelected ? backgroundWhite : foregroundWhite;
-
-        SetConsoleTextAttribute(myConsole, color);
+        typeMenu = Utilities::StringUtils::toLower(typeMenu);
+        List<const char *> color;
+        if (typeMenu != "yesno")
+            color = isSelected ? List<const char *>{Constants::ANSI::Background::WHITE, Constants::ANSI::Foreground::BLACK} : List<const char *>{Constants::ANSI::Foreground::WHITE};
+        else
+        {
+            if (option == 1 && isSelected)
+                color = List<const char *>{Constants::ANSI::Background::GREEN, Constants::ANSI::Foreground::BLACK};
+            else if (option == 2 && isSelected)
+                color = List<const char *>{Constants::ANSI::Background::RED, Constants::ANSI::Foreground::BLACK};
+            else
+                color = List<const char *>{Constants::ANSI::Foreground::WHITE};
+        }
+        ConsoleUtils::setColor(color);
         optionMenu(typeMenu, option, computers);
-        SetConsoleTextAttribute(myConsole, foregroundWhite);
+        ConsoleUtils::setColor({Constants::ANSI::RESET});
     }
 
     /// @brief In ra menu
@@ -360,6 +152,7 @@ namespace Menu
     /// @param typeComputer Loại máy tính (Bỏ trống nếu không cần)
     void showMenu(std::string typeMenu, int selectOption, std::string typeComputer)
     {
+        typeMenu = Utilities::StringUtils::toLower(typeMenu);
         if (typeMenu == "staff")
         {
             ConsoleUtils::Gotoxy(0, 0);
@@ -374,7 +167,7 @@ namespace Menu
             }
             std::cout << "└────────────────────────────────┘" << std::endl;
         }
-        else if (typeMenu == "customerManger")
+        else if (typeMenu == "customermanager")
         {
             ConsoleUtils::Gotoxy(0, 0);
             std::cout << "┌───────────────────────────────────┐" << std::endl;
@@ -388,7 +181,7 @@ namespace Menu
             }
             std::cout << "└───────────────────────────────────┘" << std::endl;
         }
-        else if (typeMenu == "computerManager")
+        else if (typeMenu == "computermanager")
         {
             ConsoleUtils::Gotoxy(0, 0);
             std::cout << "┌──────────────────────────────────┐" << std::endl;
@@ -503,7 +296,7 @@ namespace Menu
             std::cout << std::endl
                       << "└─────────────────────────-┘" << std::endl;
         }
-        else if (typeMenu == "reOrder")
+        else if (typeMenu == "reorder")
         {
             ConsoleUtils::Gotoxy(0, 0);
             std::cout << "┌──────────────────────────────┐" << std::endl;
@@ -531,7 +324,7 @@ namespace Menu
             }
             std::cout << "└─────────────────────────────────┘" << std::endl;
         }
-        else if (typeMenu == "revenueDay")
+        else if (typeMenu == "revenueday")
         {
             ConsoleUtils::Gotoxy(0, 0);
             std::cout << "┌──────────────────────────────────┐" << std::endl;
@@ -545,7 +338,7 @@ namespace Menu
             }
             std::cout << "└──────────────────────────────────┘" << std::endl;
         }
-        else if (typeMenu == "revenueMonth")
+        else if (typeMenu == "revenuemonth")
         {
             ConsoleUtils::Gotoxy(0, 0);
             std::cout << "┌──────────────────────────────────┐" << std::endl;
@@ -559,7 +352,7 @@ namespace Menu
             }
             std::cout << "└──────────────────────────────────┘" << std::endl;
         }
-        else if (typeMenu == "revenueYear")
+        else if (typeMenu == "revenueyear")
         {
             ConsoleUtils::Gotoxy(0, 0);
             std::cout << "┌──────────────────────────────────┐" << std::endl;
@@ -587,10 +380,10 @@ namespace Menu
             }
             std::cout << "└──────────────────────────────┘" << std::endl;
         }
-        else if (typeMenu == "selectTypeOfComputer") // áp dụng cho thêm máy với chọn loại máy cho khách hàng
+        else if (typeMenu == "selecttypeofcomputer") // áp dụng cho thêm máy với chọn loại máy cho khách hàng
         {
             ConsoleUtils::Gotoxy(0, 0);
-            std::cout << "┌─────────────────────────┐" << std::endl;
+            std::cout << "┌───────────────────────┐" << std::endl;
             for (int i = 1; i <= Constants::Menu::MENUSELECTTYPEOFCOMPUTER; i++)
             {
                 ConsoleUtils::Gotoxy(0, i);
@@ -599,9 +392,9 @@ namespace Menu
                 printMenuOption(typeMenu, i, isSelected);
                 std::cout << "│" << std::endl;
             }
-            std::cout << "└─────────────────────────┘" << std::endl;
+            std::cout << "└───────────────────────┘" << std::endl;
         }
-        else if (typeMenu == "selectComputer")
+        else if (typeMenu == "selectcomputer")
         {
             ConsoleUtils::Gotoxy(0, 0);
             std::cout << "┌──────────────────┐" << std::endl;
@@ -616,7 +409,7 @@ namespace Menu
             }
             std::cout << "└──────────────────┘" << std::endl;
         }
-        else if (typeMenu == "selectComputerRegistered")
+        else if (typeMenu == "selectcomputerregistered")
         {
             ConsoleUtils::Gotoxy(0, 0);
             std::cout << "┌──────────────────┐" << std::endl;
@@ -640,7 +433,7 @@ namespace Menu
         int selectOption = 1;
         while (true)
         {
-            showMenu("customerManger", selectOption);
+            showMenu("customerManager", selectOption);
             int key = _getch();
             switch (key)
             {
@@ -758,10 +551,7 @@ namespace Menu
                     Utilities::MiscUtils::pressKeyQ();
                     break;
                 case 8:
-                    staff.setStatus("Offline");
-                    Database<Account>::update(staff);
-                    system("cls");
-                    ConsoleUtils::ShowCursor(true);
+                    Utilities::MiscUtils::reset(staff);
                     return;
                 }
             default:
@@ -847,8 +637,10 @@ namespace Menu
                     ConsoleUtils::ShowCursor(true);
                     system("cls");
                     std::cin >> date;
-                    revenue.viewRevenueDay(date);
                     ConsoleUtils::ShowCursor(false);
+                    if (date == Date())
+                        break;
+                    revenue.viewRevenueDay(date);
                     break;
                 case 4:
                     system("cls");
@@ -1185,11 +977,11 @@ namespace Menu
         }
     }
 
-    std::string menuSelectTypeOfComputer()
+    std::string menuSelectTypeOfComputer(int &selectOption)
     {
         SetConsoleTitle(TEXT("Menu chọn máy"));
         ConsoleUtils::ShowCursor(false);
-        int selectOption = 1;
+        // int selectOption = 1;
         while (true)
         {
             showMenu("selectTypeOfComputer", selectOption);
@@ -1254,8 +1046,6 @@ namespace Menu
                 else
                 {
                     Computer computer = Database<Computer>::gets(typeOfComputer, "Available")[selectOption - 1];
-                    computer.setStatus("Registered");
-                    Database<Computer>::update(computer);
                     return computer.getId();
                 }
             default:
@@ -1316,6 +1106,7 @@ namespace Menu
                 for (int i = 1; i <= 2; i++)
                 {
                     printMenuOption(type, i, (i == selectOption));
+                    std::cout << "  ";
                 }
                 int key = _getch();
                 switch (key)
@@ -1357,7 +1148,6 @@ namespace Menu
         SetConsoleTitle(TEXT("Menu khách hàng"));
         ConsoleUtils::ShowCursor(false);
         int selectOption = 1;
-        History history(Day().getCurrentDay(), customer.getId());
 
         while (Constants::Globals::showRemainingTime)
         {
@@ -1402,23 +1192,25 @@ namespace Menu
             }
         }
 
-        system("cls");
-        File::remove("./data/order/" + customer.getId() + "_ordered.txt");
-        history.addHistoryToFile();
-        customer.getComputer().setStatus("Available");
-        customer.getComputer().setCustomerUsingName("");
-        customer.getComputer().setUsageTimeToFile(Time());
-        Database<Computer>::update(customer.getComputer());
+        Utilities::MiscUtils::reset(customer);
+        // system("cls");
+        // File::remove("./data/order/" + customer.getId() + "_ordered.txt");
+        // customer.setHistory(History(Day().getCurrentDay(), customer.getId()));
+        // customer.getHistory().addHistoryToFile();
+        // customer.getComputer().setStatus("Available");
+        // customer.getComputer().setCustomerUsingName("");
+        // customer.getComputer().setUsageTimeToFile(Time());
+        // Database<Computer>::update(customer.getComputer());
 
-        customer.setTimeToFile(Time());
-        customer.setStatus("Offline");
-        Utilities::MiscUtils::unRegisterComputer(customer);
-        customer.getComputer().setId("");
+        // customer.setTimeToFile(Time());
+        // customer.setStatus("Offline");
+        // Utilities::MiscUtils::unRegisterComputer(customer);
+        // customer.getComputer().setId("");
 
-        Database<Customer>::update(customer);
-        Database<Account>::update(customer);
+        // Database<Customer>::update(customer);
+        // Database<Account>::update(customer);
 
-        ConsoleUtils::ShowCursor(true);
+        // ConsoleUtils::ShowCursor(true);
     }
 
     void printItemsOrdered(Customer &customer)

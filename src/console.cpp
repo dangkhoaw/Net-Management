@@ -1,4 +1,5 @@
 #include "../include/console.hpp"
+#include "../include/constants.hpp"
 #include <iostream>
 
 namespace ConsoleUtils
@@ -48,5 +49,30 @@ namespace ConsoleUtils
             std::cout << " ";
         }
         Gotoxy(posX, posY);
+    }
+
+    /// @brief In chuỗi với các thuộc tính như màu chữ, màu nền, style chữ
+    /// @param str Chuỗi cần in
+    /// @param attributes Danh sách thuộc tính
+    /// @param isError True: Là lỗi, False: Không phải lỗi
+    void print(const char *str, List<const char *> attributes, bool isError)
+    {
+        std::ostream &output = isError ? std::cerr : std::cout;
+
+        for (const char *attr : attributes)
+        {
+            output << attr;
+        }
+        output << str << Constants::ANSI::RESET;
+    }
+
+    /// @brief Đặt màu cho terminal
+    /// @param attributes Danh sách màu
+    void setColor(List<const char *> attributes)
+    {
+        for (const char *color : attributes)
+        {
+            std::cout << color;
+        }
     }
 }

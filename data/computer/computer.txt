@@ -1,5 +1,4 @@
 COM03|VIP|Available|
-COM05|Co ban|Available|
 COM07|Co ban|Available|
 COM08|Cao cap|Available|
 COM10|Cao cap|Available|
@@ -8,3 +7,10 @@ COM12|Co ban|Available|
 COM13|Cao cap|Available|
 COM14|Co ban|Available|
 COM15|Co ban|Available|
+COM17|VIP|Available|
+COM18|Cao cap|Available|
+COM19|VIP|Available|
+COM20|Cao cap|Available|
+COM21|Co ban|Available|
+COM22|Cao cap|Available|
+COM23|VIP|Available|

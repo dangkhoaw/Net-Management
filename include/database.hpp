@@ -10,6 +10,7 @@
 #include "base64.hpp"
 #include "file.hpp"
 #include "revenue.hpp"
+#include "constants.hpp"
 
 template <class T>
 class Database
@@ -48,7 +49,7 @@ bool Database<T>::add(T &obj)
         }
         catch (const std::string &error)
         {
-            std::cerr << error << std::endl;
+            std::cerr << Constants::ANSI::Foreground::RED << "Error: " << Constants::ANSI::RESET << error << std::endl;
             return false;
         }
     }
@@ -83,7 +84,7 @@ bool Database<T>::add(T &obj)
         }
         catch (const std::string &error)
         {
-            std::cerr << error << std::endl;
+            std::cerr << Constants::ANSI::Foreground::RED << "Error: " << Constants::ANSI::RESET << error << std::endl;
             return false;
         }
     }
@@ -118,7 +119,7 @@ bool Database<T>::add(T &obj)
         }
         catch (const std::string &error)
         {
-            std::cerr << error << std::endl;
+            std::cerr << Constants::ANSI::Foreground::RED << "Error: " << Constants::ANSI::RESET << error << std::endl;
             return false;
         }
     }
@@ -147,9 +148,10 @@ bool Database<T>::remove(T &obj)
             while (File::read(file, line))
             {
                 std::stringstream ss(line);
-                std::string id;
+                std::string id, username;
                 std::getline(ss, id, '|');
-                if (id != obj.getId())
+                std::getline(ss, username, '|');
+                if (id != obj.getId() || username != obj.getUserName())
                 {
                     if (!File::write(tempFile, line))
                         throw "Lỗi khi ghi vào file temp";
@@ -168,7 +170,7 @@ bool Database<T>::remove(T &obj)
         }
         catch (const std::string &error)
         {
-            std::cerr << error << std::endl;
+            std::cerr << Constants::ANSI::Foreground::RED << "Error: " << Constants::ANSI::RESET << error << std::endl;
             return false;
         }
     }
@@ -188,9 +190,11 @@ bool Database<T>::remove(T &obj)
             while (File::read(file, line))
             {
                 std::stringstream ss(line);
-                std::string id;
+                std::string id, name, username;
                 std::getline(ss, id, '|');
-                if (id != obj.getId())
+                std::getline(ss, name, '|');
+                std::getline(ss, username, '|');
+                if (id != obj.getId() || username != obj.getUserName())
                 {
                     if (!File::write(tempFile, line))
                         throw "Lỗi khi ghi vào file temp";
@@ -212,7 +216,7 @@ bool Database<T>::remove(T &obj)
         }
         catch (const std::string &error)
         {
-            std::cerr << error << std::endl;
+            std::cerr << Constants::ANSI::Foreground::RED << "Error: " << Constants::ANSI::RESET << error << std::endl;
             return false;
         }
     }
@@ -254,7 +258,7 @@ bool Database<T>::remove(T &obj)
         }
         catch (const std::string &error)
         {
-            std::cerr << error << std::endl;
+            std::cerr << Constants::ANSI::Foreground::RED << "Error: " << Constants::ANSI::RESET << error << std::endl;
             return false;
         }
     }
@@ -308,7 +312,7 @@ bool Database<T>::update(T &obj)
         }
         catch (const std::string &error)
         {
-            std::cerr << error << std::endl;
+            std::cerr << Constants::ANSI::Foreground::RED << "Error: " << Constants::ANSI::RESET << error << std::endl;
             return false;
         }
     }
@@ -354,7 +358,7 @@ bool Database<T>::update(T &obj)
         }
         catch (const std::string &error)
         {
-            std::cerr << error << std::endl;
+            std::cerr << Constants::ANSI::Foreground::RED << "Error: " << Constants::ANSI::RESET << error << std::endl;
             return false;
         }
     }
@@ -399,7 +403,7 @@ bool Database<T>::update(T &obj)
         }
         catch (const std::string &error)
         {
-            std::cerr << error << std::endl;
+            std::cerr << Constants::ANSI::Foreground::RED << "Error: " << Constants::ANSI::RESET << error << std::endl;
             return false;
         }
     }
@@ -437,7 +441,7 @@ bool Database<T>::update(T &obj)
         }
         catch (const std::string &error)
         {
-            std::cerr << error << std::endl;
+            std::cerr << Constants::ANSI::Foreground::RED << "Error: " << Constants::ANSI::RESET << error << std::endl;
             return false;
         }
     }
@@ -479,7 +483,7 @@ bool Database<T>::get(T &obj)
         }
         catch (const std::string &error)
         {
-            std::cerr << error << std::endl;
+            std::cerr << Constants::ANSI::Foreground::RED << "Error: " << Constants::ANSI::RESET << error << std::endl;
             return false;
         }
     }
@@ -514,7 +518,7 @@ bool Database<T>::get(T &obj)
         }
         catch (const std::string &error)
         {
-            std::cerr << error << std::endl;
+            std::cerr << Constants::ANSI::Foreground::RED << "Error: " << Constants::ANSI::RESET << error << std::endl;
             return false;
         }
     }
@@ -548,7 +552,7 @@ bool Database<T>::get(T &obj)
         }
         catch (const std::string &error)
         {
-            std::cerr << error << std::endl;
+            std::cerr << Constants::ANSI::Foreground::RED << "Error: " << Constants::ANSI::RESET << error << std::endl;
             return false;
         }
     }
@@ -609,7 +613,7 @@ List<T> Database<T>::gets(std::string field, std::string value)
         }
         catch (const std::string &error)
         {
-            std::cerr << error << std::endl;
+            std::cerr << Constants::ANSI::Foreground::RED << "Error: " << Constants::ANSI::RESET << error << std::endl;
             return objs;
         }
     }
@@ -658,7 +662,7 @@ List<T> Database<T>::gets(std::string field, std::string value)
         }
         catch (const std::string &error)
         {
-            std::cerr << error << std::endl;
+            std::cerr << Constants::ANSI::Foreground::RED << "Error: " << Constants::ANSI::RESET << error << std::endl;
             return objs;
         }
     }
@@ -693,7 +697,7 @@ List<T> Database<T>::gets(std::string field, std::string value)
         }
         catch (const std::string &error)
         {
-            std::cerr << error << std::endl;
+            std::cerr << Constants::ANSI::Foreground::RED << "Error: " << Constants::ANSI::RESET << error << std::endl;
             return objs;
         }
     }
@@ -720,7 +724,7 @@ List<T> Database<T>::gets(std::string field, std::string value)
         }
         catch (const std::string &error)
         {
-            std::cerr << error << std::endl;
+            std::cerr << Constants::ANSI::Foreground::RED << "Error: " << Constants::ANSI::RESET << error << std::endl;
             return objs;
         }
     }

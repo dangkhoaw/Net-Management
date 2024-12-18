@@ -47,7 +47,7 @@ Computer &Customer::getComputerViaFile()
     }
     catch (const std::string &error)
     {
-        std::cerr << error << std::endl;
+        std::cerr << Constants::ANSI::Foreground::RED << "Error: " << Constants::ANSI::RESET << error << std::endl;
         return computer;
     }
 }
@@ -82,8 +82,7 @@ Time Customer::getTimeFromFile()
     }
     catch (const std::string &error)
     {
-        std::cerr << error << std::endl;
-        system("pause");
+        std::cerr << Constants::ANSI::Foreground::RED << "Error: " << Constants::ANSI::RESET << error << std::endl;
         return Time();
     }
 }
@@ -103,7 +102,7 @@ void Customer::setTimeToFile(Time time)
     }
     catch (const std::string &error)
     {
-        std::cerr << error << std::endl;
+        std::cerr << Constants::ANSI::Foreground::RED << "Error: " << Constants::ANSI::RESET << error << std::endl;
         system("pause");
     }
 }
@@ -167,7 +166,7 @@ void Customer::showHistory()
     }
     catch (const std::string &error)
     {
-        std::cerr << error << std::endl;
+        std::cerr << Constants::ANSI::Foreground::RED << "Error: " << Constants::ANSI::RESET << error << std::endl;
         return;
     }
 }
@@ -201,16 +200,21 @@ std::istream &operator>>(std::istream &is, Customer &customer)
         }
         if (Utilities::Validation::isExistPhoneNumber(customer.phone))
         {
-            MessageBoxW(NULL, L"Số điện thoại đã tồn tại", L"Thông báo", MB_OK | MB_ICONWARNING | MB_TOPMOST);
+            ConsoleUtils::Gotoxy(0, 5);
+            ConsoleUtils::print("Số điện thoại đã tồn tại", {Constants::ANSI::Foreground::RED});
             ConsoleUtils::ClearLine(17, 2, 19);
         }
         else if (!Utilities::Validation::isPhoneNumber(customer.phone))
         {
-            MessageBoxW(NULL, L"Số điện thoại không hợp lệ", L"Thông báo", MB_OK | MB_ICONWARNING | MB_TOPMOST);
+            ConsoleUtils::Gotoxy(0, 5);
+            ConsoleUtils::print("Số điện thoại không hợp lệ", {Constants::ANSI::Foreground::RED});
             ConsoleUtils::ClearLine(17, 2, 19);
         }
         else
+        {
+            ConsoleUtils::ClearLine(5);
             break;
+        }
     }
 
     while (true)
@@ -224,11 +228,15 @@ std::istream &operator>>(std::istream &is, Customer &customer)
         }
         if (Utilities::Validation::isExistUsername(customer.username))
         {
-            MessageBoxW(NULL, L"Tài khoản đã tồn tại", L"Thông báo", MB_OK | MB_ICONWARNING | MB_TOPMOST);
+            ConsoleUtils::Gotoxy(0, 5);
+            ConsoleUtils::print("Tài khoản đã tồn tại", {Constants::ANSI::Foreground::RED});
             ConsoleUtils::ClearLine(17, 3, 18);
         }
         else
+        {
+            ConsoleUtils::ClearLine(5);
             break;
+        }
     }
     ConsoleUtils::ClearLine(4);
     std::cout << "│ Mật khẩu: 123456                            │" << std::endl;
@@ -264,7 +272,7 @@ int Customer::enterAmountOrder()
         amount = stoi(input);
         if (amount <= 0)
         {
-            std::cout << "Số lượng không hợp lệ" << std::endl;
+            ConsoleUtils::print("Số lượng không hợp lệ", {Constants::ANSI::Foreground::RED});
         }
     } while (amount <= 0);
     return amount;
@@ -300,12 +308,12 @@ void Customer::order(std::string nameRefreshment, int quantity, bool orderAgain)
         {
             this->moneyforOrder -= price;
         }
-        MessageBoxW(NULL, L"Số dư không đủ!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
+        ConsoleUtils::print("Số dư không đủ", {Constants::ANSI::Foreground::RED});
         return;
     }
     Dish dish_temp(nameRefreshment, quantity, price);
     addAndUpdateDishToFile(this->getId(), dish_temp);
-    MessageBoxW(NULL, L"    Đã thêm món..!    ", L"Thông báo", MB_OK);
+    ConsoleUtils::print("Đã thêm món", {Constants::ANSI::Foreground::GREEN});
 }
 
 void Customer::ConfirmOrder()
@@ -318,7 +326,7 @@ void Customer::ConfirmOrder()
     this->moneyforOrder = 0;
     Database<Customer>::update(*this);
     File::remove("./data/order/" + getId() + "_ordered.txt");
-    MessageBoxW(NULL, L"Đang chuẩn bị, vui lòng chờ trong giây lát..!", L"Thông báo", MB_OK);
+    ConsoleUtils::print("Đã đặt món", {Constants::ANSI::Foreground::GREEN});
     return;
 }
 
@@ -327,7 +335,7 @@ int Customer::getTotalPrice()
     std::fstream file;
     if (!File::open(file, "./data/order/" + this->getId() + "_ordered.txt", std::ios::in))
     {
-        std::cout << "Không thể mở file ordered" << std::endl;
+        std::cerr << Constants::ANSI::Foreground::RED << "Error: " << Constants::ANSI::RESET << "Không thể mở file ordered" << std::endl;
         return 0;
     }
     std::string line;

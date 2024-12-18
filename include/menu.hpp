@@ -25,7 +25,7 @@ namespace Menu
     void menuFood(Customer &customer);
     void menuQuantity(Customer &customer, std::string nameFood);
     void menuDrink(Customer &customer);
-    std::string menuSelectTypeOfComputer();
+    std::string menuSelectTypeOfComputer(int &selectOption);
     std::string menuSelectComputer(std::string typeOfComputer = "");
     std::string menuSelectComputerRegistered();
     void printItemsOrdered(Customer &customer);
