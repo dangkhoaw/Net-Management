@@ -23,7 +23,7 @@ namespace Utilities
         bool isPhoneNumber(const std::string &str);
         bool isExistPhoneNumber(const std::string &str);
         bool isRegisterComputer(const std::string &username);
-        bool isExistUsername(std::string &username);
+        bool isExistUsername(const std::string &username);
         bool isFullAllComputer();
         bool isAdminOnline();
         bool isOrdered(Customer &customer, std::string nameFood);
@@ -65,10 +65,10 @@ namespace Utilities
         void makeFileOrdered(Customer &customer);
         // OTHER
         void handleStaffLogin(Account &account);
-        void handleStaffLogin();
         void handleCustomerLogin(Account &account);
         void mainProcess();
         void run();
+        void reset(Account &account);
     }
 }
 

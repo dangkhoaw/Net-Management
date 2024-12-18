@@ -1,5 +1,6 @@
-ADMIN|admin|YWRtaW4=|staff|Online|NotFirstLogin
+ADMIN|admin|YWRtaW4=|staff|Offline|NotFirstLogin
 UID0001|grayzyss1|MTIzNDU2Nw==|customer|Offline|NotFirstLogin
 UID0002|dangkhoaw|MTIzNDU2|customer|Offline|NotFirstLogin
 UID0003|y|MTIzNDU2Nw==|customer|Offline|NotFirstLogin
-UID0004|qn123|MTIzNDU2|customer|Offline|FirstLogin
+UID0005|qn|MTIz|customer|Offline|NotFirstLogin
+UID0006|abc123|MTIzNDU2|customer|Offline|FirstLogin

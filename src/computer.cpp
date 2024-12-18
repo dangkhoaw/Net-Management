@@ -1,3 +1,4 @@
+#include "../include/console.hpp"
 #include "../include/computer.hpp"
 #include "../include/constants.hpp"
 #include "../include/file.hpp"
@@ -33,6 +34,7 @@ Time Computer::getUsageTimeFromFile()
 {
     try
     {
+        std::lock_guard<std::mutex> lock(Constants::Globals::mtxComputer);
         Time time;
         std::fstream file;
         if (!File::open(file, "./data/time/" + id + ".txt", std::ios::in))
@@ -45,7 +47,7 @@ Time Computer::getUsageTimeFromFile()
     }
     catch (const std::string &error)
     {
-        std::cerr << error << std::endl;
+        ConsoleUtils::error(error.c_str());
         static Time defaultTime;
         return defaultTime;
     }
@@ -59,6 +61,7 @@ void Computer::setUsageTimeToFile(Time time)
 {
     try
     {
+        std::lock_guard<std::mutex> lock(Constants::Globals::mtxComputer);
         std::fstream file;
         if (!File::open(file, "./data/time/" + id + ".txt", std::ios::out))
         {
@@ -69,7 +72,7 @@ void Computer::setUsageTimeToFile(Time time)
     }
     catch (const std::string &error)
     {
-        std::cerr << error << std::endl;
+        ConsoleUtils::error(error.c_str());
     }
 }
 

@@ -32,6 +32,32 @@ namespace Constants
         constexpr int KEY_TAB = 0x09;
     }
 
+    namespace ANSI
+    {
+        namespace Foreground
+        {
+            constexpr const char *RED = "\x1b[38;2;255;51;51m";
+            constexpr const char *GREEN = "\x1b[38;2;51;255;51m";
+            constexpr const char *YELLOW = "\x1b[38;2;255;255;51m";
+            constexpr const char *WHITE = "\x1b[38;2;255;255;255m";
+            constexpr const char *BLACK = "\x1b[38;2;0;0;0m";
+        }
+        namespace Background
+        {
+            constexpr const char *RED = "\x1b[48;2;255;51;51m";
+            constexpr const char *GREEN = "\x1b[48;2;51;255;51m";
+            constexpr const char *YELLOW = "\x1b[48;2;255;255;51m";
+            constexpr const char *WHITE = "\x1b[48;2;255;255;255m";
+            constexpr const char *BLACK = "\x1b[48;2;0;0;0m";
+        }
+        namespace Style
+        {
+            constexpr const char *BOLD = "\x1b[1m";
+        }
+
+        constexpr const char *RESET = "\x1b[0m";
+    }
+
     namespace Globals
     {
         inline std::atomic<bool> showRemainingTime = true;
@@ -45,6 +71,7 @@ namespace Constants
 
         inline std::mutex mtxTime;
         inline std::mutex mtxCustomer;
+        inline std::mutex mtxComputer;
     }
 }
 

@@ -1,7 +1,7 @@
 #include "../include/console.hpp"
-#include "../include/utilities.hpp"
 #include "../include/base64.hpp"
 #include "../include/database.hpp"
+#include "../include/constants.hpp"
 #include <sstream>
 
 Account::Account(std::string username, std::string password, std::string role, std::string id, std::string status, std::string isFirstLogin) : username(username), password(password), role(role), id(id), status(status), isFirstLogin(isFirstLogin) {}
@@ -49,36 +49,43 @@ std::istream &operator>>(std::istream &is, Account &account)
             return is;
         }
 
+        bool isFullComputer = Utilities::Validation::isFullAllComputer();
         if (checkAccount(account))
         {
             if (account.status == "Online")
             {
                 ConsoleUtils::Gotoxy(0, 7);
-                std::cout << "\nTài khoản đã đăng nhập ở máy khác!" << std::endl;
+                ConsoleUtils::print("\nTài khoản đã đăng nhập ở máy khác!\n", {Constants::ANSI::Foreground::RED});
                 account.username.clear();
                 account.password.clear();
-                count++;
-                Sleep(555);
+                Sleep(700);
                 continue;
             }
-            else if (account.role == "staff" || !Utilities::Validation::isFullAllComputer())
+            else if (account.role == "staff" || !isFullComputer)
             {
                 ConsoleUtils::Gotoxy(0, 7);
-                std::cout << "\nĐăng nhập thành công!\n"
-                          << std::endl;
+                ConsoleUtils::print("\nĐăng nhập thành công!\n\n", {Constants::ANSI::Foreground::GREEN});
                 ConsoleUtils::ShowCursor(false);
                 Utilities::MiscUtils::loading();
                 return is;
+            }
+            else if (account.role == "customer" && isFullComputer)
+            {
+                ConsoleUtils::Gotoxy(0, 7);
+                ConsoleUtils::print("\nBạn không thể đăng nhập vào máy này!\n", {Constants::ANSI::Foreground::RED});
+                account.username.clear();
+                account.password.clear();
+                Sleep(700);
             }
         }
         else
         {
             ConsoleUtils::Gotoxy(0, 7);
-            std::cout << "\nTài khoản hoặc mật khẩu không đúng!" << std::endl;
+            ConsoleUtils::print("\nTài khoản hoặc mật khẩu không đúng!\n", {Constants::ANSI::Foreground::RED});
             account.username.clear();
             account.password.clear();
             count++;
-            Sleep(555);
+            Sleep(600);
         }
     }
     return is;
@@ -105,28 +112,43 @@ bool Account::signIn()
     return true;
 }
 
-bool Account::changePassword()
+bool Account::changePassword(bool isFirstLogin)
 {
     system("cls");
     ConsoleUtils::ShowCursor(true);
     std::string passwd, newPassword, rePassword;
-    std::cout << "Mật khẩu cũ: ";
-    Utilities::InputUtils::inputPassword(passwd);
-    if (passwd.empty())
+
+    if (!isFirstLogin)
     {
-        system("cls");
-        ConsoleUtils::ShowCursor(false);
-        return false;
+        while (true)
+        {
+            std::cout << "Mật khẩu cũ: ";
+            Utilities::InputUtils::inputPassword(passwd);
+            if (passwd.empty())
+            {
+                system("cls");
+                ConsoleUtils::ShowCursor(false);
+                return false;
+            }
+            if (passwd != password)
+            {
+                ConsoleUtils::print("\nMật khẩu không đúng!\n", {Constants::ANSI::Foreground::RED});
+                ConsoleUtils::ClearLine(0);
+            }
+            else
+            {
+                ConsoleUtils::ClearLine(2);
+                break;
+            }
+        }
     }
-    if (passwd != password)
-    {
-        MessageBoxW(NULL, L"Mật khẩu không đúng!", L"Thông báo", MB_OK | MB_ICONERROR | MB_TOPMOST);
-        system("cls");
-        ConsoleUtils::ShowCursor(false);
-        return false;
-    }
+
     while (true)
     {
+        if (isFirstLogin)
+            ConsoleUtils::ClearLine(0);
+        else
+            ConsoleUtils::ClearLine(1);
         std::cout << "Mật khẩu mới: ";
         Utilities::InputUtils::inputPassword(newPassword);
         if (newPassword.empty())
@@ -135,33 +157,54 @@ bool Account::changePassword()
             ConsoleUtils::ShowCursor(false);
             return false;
         }
-        if (newPassword == passwd)
+        if (newPassword == password)
         {
-            std::cout << "\nMật khẩu mới không được trùng với mật khẩu cũ!" << std::endl;
-            continue;
+            ConsoleUtils::print("\nMật khẩu mới không được trùng với mật khẩu cũ!\n", {Constants::ANSI::Foreground::YELLOW});
         }
-        break;
+        else
+        {
+            if (isFirstLogin)
+                ConsoleUtils::ClearLine(2);
+            else
+                ConsoleUtils::ClearLine(3);
+            break;
+        }
     }
-    std::cout << "Nhập lại mật khẩu: ";
-    Utilities::InputUtils::inputPassword(rePassword);
-    if (rePassword.empty())
+
+    while (true)
     {
-        system("cls");
-        ConsoleUtils::ShowCursor(false);
-        return false;
+        if (isFirstLogin)
+            ConsoleUtils::ClearLine(1);
+        else
+            ConsoleUtils::ClearLine(2);
+        std::cout << "Nhập lại mật khẩu mới: ";
+        Utilities::InputUtils::inputPassword(rePassword);
+        if (rePassword.empty())
+        {
+            system("cls");
+            ConsoleUtils::ShowCursor(false);
+            return false;
+        }
+        if (newPassword != rePassword)
+        {
+            ConsoleUtils::print("\nMật khẩu không khớp!\n", {Constants::ANSI::Foreground::RED});
+        }
+        else
+        {
+            if (isFirstLogin)
+                ConsoleUtils::ClearLine(3);
+            else
+                ConsoleUtils::ClearLine(4);
+            break;
+        }
     }
-    if (newPassword != rePassword)
-    {
-        MessageBoxW(NULL, L"Mật khẩu không khớp!", L"Thông báo", MB_OK | MB_ICONERROR | MB_TOPMOST);
-        system("cls");
-        ConsoleUtils::ShowCursor(false);
-        return false;
-    }
+
     password = newPassword;
     Database<Account>::update(*this);
-    MessageBoxW(NULL, L"Đổi mật khẩu thành công!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
-    system("cls");
+    ConsoleUtils::print("Đổi mật khẩu thành công!", {Constants::ANSI::Foreground::GREEN});
     ConsoleUtils::ShowCursor(false);
+    Utilities::MiscUtils::pressKeyQ();
+    system("cls");
     return true;
 }
 

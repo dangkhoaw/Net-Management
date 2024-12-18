@@ -1,4 +1,6 @@
+#include "../include/console.hpp"
 #include "../include/dish.hpp"
+#include "../include/constants.hpp"
 #include <sstream>
 #include "../include/file.hpp"
 
@@ -67,7 +69,7 @@ Dish Dish::getDishFromFile(std::string id_cus, std::string name)
     std::fstream file;
     if (!File::open(file, "./data/order/" + id_cus + "_ordered.txt", std::ios::in))
     {
-        std::cout << "Không thể mở file dish" << std::endl;
+        ConsoleUtils::error("Không thể mở file ordered");
         return Dish();
     }
 
@@ -98,13 +100,14 @@ void addAndUpdateDishToFile(std::string id_cus, Dish &dish) // truyền id vô
     std::fstream file;
     if (!File::open(file, "./data/order/" + id_cus + "_ordered.txt", std::ios::in))
     {
-        std::cout << "Không thể mở file ordered" << std::endl;
+        ConsoleUtils::error("Không thể mở file ordered");
         return;
     }
     std::fstream tempFile;
     if (!File::open(tempFile, "./data/order/temp.txt", std::ios::out))
     {
-        std::cout << "Không thể mở file temp" << std::endl;
+        ConsoleUtils::error("Không thể tạo file temp");
+        File::close(file);
         return;
     }
     std::string line;
@@ -142,13 +145,14 @@ void removeDishFromFile(std::string id_cus, int &moneyForOrderOfCus, Dish &dish)
     std::fstream file;
     if (!File::open(file, "./data/order/" + id_cus + "_ordered.txt", std::ios::in))
     {
-        std::cout << "Không thể mở file ordered" << std::endl;
+        ConsoleUtils::error("Không thể mở file ordered");
         return;
     }
     std::fstream tempFile;
     if (!File::open(tempFile, "./data/order/temp.txt", std::ios::out))
     {
-        std::cout << "Không thể mở file temp" << std::endl;
+        ConsoleUtils::error("Không thể tạo file temp");
+        File::close(file);
         return;
     }
     std::string line;

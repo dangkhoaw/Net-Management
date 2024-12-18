@@ -14,7 +14,7 @@
 
 - **C++11** hoặc cao hơn để đảm bảo tính năng `thread` hoạt động. Bạn có thể cài đặt thông qua [MSYS2](https://www.msys2.org/)
 
-- Font chữ **CaskaydiaCove Nerd Font** để hiển thị icon trong chương trình. Bạn có thể tải font chữ tại [đây](https://www.nerdfonts.com/font-downloads)
+- Font chữ **Caskaydia Cove Nerd Font** để hiển thị icon trong chương trình. Bạn có thể tải font chữ tại [đây](https://www.nerdfonts.com/font-downloads)
 
 ## Usage
 
@@ -43,9 +43,3 @@ g++ -std=c++11 src/*.cpp -o build/Net-Management ; ./build/Net-Management
 
 - [Đặng Đăng Khoa](https://github.com/dangkhoaw)
 - [Trần Nguyễn Văn Phát](https://github.com/grayzy2617)
-
----
-
-<p align="center"><a href="https://visitcount.itsvg.in/api?id=dangkhoaw%2FNet-Management&label=Project%20Views&color=1&icon=5&pretty=true">
-  <img src="https://visitcount.itsvg.in/api?id=dangkhoaw%2FNet-Management&label=Project%20Views&color=1&icon=5&pretty=true" />
-</a></p>

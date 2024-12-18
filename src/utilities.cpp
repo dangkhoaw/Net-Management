@@ -116,7 +116,7 @@ namespace Utilities
             std::fstream file;
             if (!File::open(file, "./data/customer/customer.txt", std::ios::in))
             {
-                std::cout << "Không thể mở file customer" << std::endl;
+                ConsoleUtils::error("Không thể mở file customer");
                 return false;
             }
             std::string line;
@@ -140,7 +140,7 @@ namespace Utilities
             std::fstream file;
             if (!File::open(file, "./data/computer/registered.txt", std::ios::in))
             {
-                std::cout << "Không thể mở file registered" << std::endl;
+                ConsoleUtils::error("Không thể mở file registered");
                 return false;
             }
             std::string line;
@@ -159,18 +159,16 @@ namespace Utilities
             return false;
         }
 
-        bool isExistUsername(std::string &username)
+        bool isExistUsername(const std::string &username)
         {
             if (username == "admin")
                 return true;
 
             List<Account> accounts = Database<Account>::gets();
-            for (int i = 0; i < accounts.size(); i++)
+            for (Account account : accounts)
             {
-                if (accounts[i].getUserName() == username)
-                {
+                if (account.getUserName() == username)
                     return true;
-                }
             }
             return false;
         }
@@ -180,11 +178,8 @@ namespace Utilities
             List<Computer> computers = Database<Computer>::gets();
             for (Computer computer : computers)
             {
-                // if (computer.getStatus() == "Available" || computer.getStatus() == "Registered")
-                if (computer.getStatus() == "Available")
-                {
+                if (computer.getStatus() == "Available" || computer.getStatus() == "Registered")
                     return false;
-                }
             }
             return true;
         }
@@ -308,9 +303,14 @@ namespace Utilities
         void pressKeyQ()
         {
             ConsoleUtils::ShowCursor(false);
-            std::cout << "\n\n(Nhấn 'q' để thoát)" << std::endl;
-            while (_getch() != 'q')
-                ;
+            ConsoleUtils::print("\n\n(Nhấn 'q' để thoát)\n", {Constants::ANSI::Foreground::YELLOW, Constants::ANSI::Style::BOLD});
+            while (true)
+                if (_kbhit())
+                {
+                    char key = _getch();
+                    if (key == 'q' || key == 'Q')
+                        break;
+                }
             system("cls");
         }
 
@@ -320,7 +320,7 @@ namespace Utilities
             std::fstream file;
             if (!File::open(file, "./data/order/" + idCustomer + "_ordered.txt", std::ios::in))
             {
-                std::cout << "Không thể mở file ordered" << std::endl;
+                ConsoleUtils::error("Không thể mở file ordered");
                 return dishes;
             }
             std::string line;
@@ -346,13 +346,14 @@ namespace Utilities
             std::fstream file;
             if (!File::open(file, "./data/computer/registered.txt", std::ios::in))
             {
-                std::cout << "Không thể mở file registered" << std::endl;
+                ConsoleUtils::error("Không thể mở file registered");
                 return;
             }
             std::fstream tempFile;
             if (!File::open(tempFile, "./data/computer/temp.txt", std::ios::out))
             {
-                std::cout << "Không thể mở file temp" << std::endl;
+                ConsoleUtils::error("Không thể tạo file temp");
+                File::close(file);
                 return;
             }
             std::string line;
@@ -388,9 +389,9 @@ namespace Utilities
         {
             int count = 0;
             std::fstream file;
-            if (!File::open(file, "./data/computer/count.txt", std::ios::in))
+            if (!File::open(file, "./data/computer/typeOfComputer.txt", std::ios::in))
             {
-                std::cout << "Không thể mở file count" << std::endl;
+                ConsoleUtils::error("Không thể mở file typeOfComputer");
                 return -1;
             }
             std::string line;
@@ -412,13 +413,14 @@ namespace Utilities
             std::fstream file;
             if (!File::open(file, "./data/computer/typeOfComputer.txt", std::ios::in))
             {
-                std::cout << "Không thể mở file typeOfComputer" << std::endl;
+                ConsoleUtils::error("Không thể mở file typeOfComputer");
                 return;
             }
             std::fstream tempFile;
             if (!File::open(tempFile, "./data/computer/temp.txt", std::ios::out))
             {
-                std::cout << "Không thể mở file temp" << std::endl;
+                ConsoleUtils::error("Không thể tạo file temp");
+                File::close(file);
                 return;
             }
             std::string line;
@@ -480,7 +482,7 @@ namespace Utilities
             std::fstream file;
             if (!File::open(file, "./data/computer/registered.txt", std::ios::in))
             {
-                std::cout << "Không thể mở file registered" << std::endl;
+                ConsoleUtils::error("Không thể mở file registered");
                 return "";
             }
             std::string line;
@@ -505,7 +507,7 @@ namespace Utilities
             std::fstream file;
             if (!File::open(file, "./data/account/count.txt", std::ios::out))
             {
-                std::cout << "Không thể mở file count" << std::endl;
+                ConsoleUtils::error("Không thể mở file count");
                 return;
             }
             file << count;
@@ -518,7 +520,7 @@ namespace Utilities
             std::fstream file;
             if (!File::open(file, "./data/account/count.txt", std::ios::in))
             {
-                std::cout << "Không thể mở file count" << std::endl;
+                ConsoleUtils::error("Không thể mở file count");
                 return -1;
             }
             file >> count;
@@ -541,13 +543,12 @@ namespace Utilities
         {
             if (Constants::Globals::firstOrder)
             {
-                // MessageBoxW(NULL, L"Số dư sau khi mua phải trên 5.000 đồng!", L"Yêu cầu", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
-                std::cout << "Số dư sau khi mua phải trên 5.000 đồng!" << std::endl;
-                Menu::button(52, 0, "ok");
+                ConsoleUtils::print("Số dư sau khi mua phải trên 5.000 (VNĐ)!\n", {Constants::ANSI::Foreground::YELLOW, Constants::ANSI::Style::BOLD});
+                Menu::button(13, 1, "ok");
                 std::fstream file;
                 if (!File::open(file, "./data/order/" + customer.getId() + "_ordered.txt", std::ios::out))
                 {
-                    std::cout << "Không thể mở file ordered" << std::endl;
+                    ConsoleUtils::error("Không thể tạo file ordered");
                     return;
                 }
                 File::close(file);
@@ -567,7 +568,8 @@ namespace Utilities
         {
             if (!Utilities::Validation::isRegisterComputer(account.getUserName()))
             {
-                MessageBoxW(NULL, L"Bạn chưa đăng kí máy, vui lòng đăng kí máy trước!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
+                ConsoleUtils::print("Bạn chưa đăng kí máy, vui lòng đăng kí máy trước!\n", {Constants::ANSI::Foreground::YELLOW, Constants::ANSI::Style::BOLD});
+                Menu::button(24, 1, "ok");
                 ConsoleUtils::ShowCursor(true);
                 return;
             }
@@ -582,8 +584,9 @@ namespace Utilities
 
             if (Utilities::Validation::isFirstLogin(account))
             {
-                MessageBoxW(NULL, L"Đây là lần đầu tiên bạn đăng nhập, vui lòng đổi mật khẩu!", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
-                while (!account.changePassword())
+                ConsoleUtils::print("Đây là lần đầu tiên bạn đăng nhập, vui lòng đổi mật khẩu!\n", {Constants::ANSI::Foreground::YELLOW, Constants::ANSI::Style::BOLD});
+                Menu::button(24, 1, "ok");
+                while (!account.changePassword(true))
                 {
                 }
                 customer.setPassword(account.getPassword());
@@ -605,23 +608,6 @@ namespace Utilities
             }
         }
 
-        void handleStaffLogin()
-        {
-            Account account;
-            if (account.signIn())
-            {
-                Database<Account>::get(account);
-                if (account.getRole() == "staff")
-                {
-                    handleStaffLogin(account);
-                }
-                else
-                {
-                    MessageBoxW(NULL, L"Bạn không phải nhân viên, vui lòng không sử dụng máy", L"Thông báo", MB_OK | MB_ICONINFORMATION | MB_TOPMOST);
-                }
-            }
-        }
-
         void mainProcess()
         {
             Account account;
@@ -629,13 +615,19 @@ namespace Utilities
                 return;
 
             Database<Account>::get(account);
-            if (account.getRole() == "staff")
+            try
             {
-                handleStaffLogin(account);
+                if (account.getRole() == "staff")
+                    handleStaffLogin(account);
+                else if (account.getRole() == "customer")
+                    handleCustomerLogin(account);
             }
-            else if (account.getRole() == "customer")
+            catch (...)
             {
-                handleCustomerLogin(account);
+                system("cls");
+                ConsoleUtils::print("Có lỗi xảy ra, vui lòng thử lại sau!", {Constants::ANSI::Foreground::RED});
+                Utilities::MiscUtils::pressKeyQ();
+                Utilities::MiscUtils::reset(account);
             }
         }
 
@@ -649,16 +641,50 @@ namespace Utilities
 
             if (isFull && !isAdmin)
             {
-                std::cout << "Bạn có phải nhân viên không? (Y/N): ";
-                std::string choice;
-                std::cin >> choice;
-                if (choice == "Y" || choice == "y")
-                    handleStaffLogin();
-                else if (choice == "N" || choice == "n")
+                ConsoleUtils::print("Bạn có phải nhân viên không?", {Constants::ANSI::Foreground::YELLOW});
+                if (Menu::button(4, 1, "yesno"))
+                    mainProcess();
+                else
                     return;
             }
             else
                 mainProcess();
+        }
+
+        void reset(Account &account)
+        {
+            if (account.getRole() == "staff")
+            {
+                account.setStatus("Offline");
+                Database<Account>::update(account);
+            }
+            else if (account.getRole() == "customer")
+            {
+                Customer customer;
+                customer.setUserName(account.getUserName());
+                Database<Customer>::get(customer);
+
+                customer.getComputer().setStatus("Available");
+                customer.getComputer().setCustomerUsingName("");
+                customer.getComputer().setUsageTimeToFile(Time());
+                customer.getComputer().setTypeOfComputer(getTypesOfComputerFromFile(customer.getComputer().getId()));
+                Database<Computer>::update(customer.getComputer());
+
+                File::remove("./data/order/" + customer.getId() + "_ordered.txt");
+                customer.setHistory(History(Day().getCurrentDay(), customer.getId()));
+                customer.getHistory().addHistoryToFile();
+                customer.setTimeToFile(Time());
+                customer.setStatus("Offline");
+                Utilities::MiscUtils::unRegisterComputer(customer);
+                customer.getComputer().setId("");
+
+                Database<Customer>::update(customer);
+                Database<Account>::update(customer);
+            }
+            system("cls");
+            ConsoleUtils::ShowCursor(true);
+            ConsoleUtils::print("Đăng xuất thành công", {Constants::ANSI::Foreground::GREEN});
+            Sleep(3000);
         }
     }
 
@@ -677,7 +703,13 @@ namespace Utilities
                 if (ch == Constants::Keys::KEY_ENTER)
                 {
                     if (!num.empty())
+                    {
+                        for (int i = 0; i < num.size(); i++)
+                            std::cout << "\b \b";
+
+                        std::cout << num;
                         break;
+                    }
                 }
                 else if (ch == Constants::Keys::KEY_TAB)
                     continue;
@@ -700,7 +732,7 @@ namespace Utilities
                     {
                         if (length == 0 || num.size() < length)
                         {
-                            std::cout << ch;
+                            ConsoleUtils::print(std::string(1, ch).c_str(), {Constants::ANSI::Foreground::YELLOW});
                             num += ch;
                         }
                     }
@@ -722,7 +754,19 @@ namespace Utilities
                 if (ch == Constants::Keys::KEY_ENTER)
                 {
                     if (!password.empty())
+                    {
+                        for (int j = 0; j < i; j++)
+                            std::cout << "\b \b";
+
+                        if (show)
+                            std::cout << password;
+                        else
+                        {
+                            for (int j = 0; j < i; j++)
+                                std::cout << "•";
+                        }
                         break;
+                    }
                 }
                 else if (ch == Constants::Keys::KEY_BACKSPACE)
                 {
@@ -739,12 +783,12 @@ namespace Utilities
                     for (int j = 0; j < i; j++)
                         std::cout << "\b \b";
 
-                    for (int j = 0; j < i; j++)
+                    if (show)
+                        ConsoleUtils::print(password.c_str(), {Constants::ANSI::Foreground::YELLOW});
+                    else
                     {
-                        if (show)
-                            std::cout << password[j];
-                        else
-                            std::cout << "•";
+                        for (int j = 0; j < i; j++)
+                            ConsoleUtils::print("•", {Constants::ANSI::Foreground::YELLOW});
                     }
                 }
                 else if (ch == Constants::Keys::KEY_ESC)
@@ -757,9 +801,9 @@ namespace Utilities
                     password += ch;
                     i++;
                     if (show)
-                        std::cout << ch;
+                        ConsoleUtils::print(std::string(1, ch).c_str(), {Constants::ANSI::Foreground::YELLOW});
                     else
-                        std::cout << "•";
+                        ConsoleUtils::print("•", {Constants::ANSI::Foreground::YELLOW});
                 }
             }
             std::cout << std::endl;
@@ -778,7 +822,13 @@ namespace Utilities
                 if (ch == Constants::Keys::KEY_ENTER)
                 {
                     if (!str.empty())
+                    {
+                        for (int i = 0; i < str.size(); i++)
+                            std::cout << "\b \b";
+
+                        std::cout << str;
                         break;
+                    }
                 }
                 else if (ch == Constants::Keys::KEY_TAB)
                     continue;
@@ -799,7 +849,7 @@ namespace Utilities
                 {
                     if (length == 0 || str.size() < length)
                     {
-                        std::cout << ch;
+                        ConsoleUtils::print(std::string(1, ch).c_str(), {Constants::ANSI::Foreground::YELLOW});
                         str += ch;
                     }
                 }
@@ -820,7 +870,13 @@ namespace Utilities
                 if (ch == Constants::Keys::KEY_ENTER)
                 {
                     if (!str.empty())
+                    {
+                        for (int i = 0; i < str.size(); i++)
+                            std::cout << "\b \b";
+
+                        std::cout << str;
                         break;
+                    }
                 }
                 else if (ch == Constants::Keys::KEY_TAB)
                     continue;
@@ -843,7 +899,7 @@ namespace Utilities
                     {
                         if (length == 0 || str.size() < length)
                         {
-                            std::cout << ch;
+                            ConsoleUtils::print(std::string(1, ch).c_str(), {Constants::ANSI::Foreground::YELLOW});
                             str += ch;
                         }
                     }
@@ -866,7 +922,18 @@ namespace Utilities
                 if (ch == Constants::Keys::KEY_ENTER)
                 {
                     if (!money.empty())
+                    {
+                        ConsoleUtils::ClearLine(22, 1, 10);
+
+                        if (money.size() >= 4)
+                            ConsoleUtils::Gotoxy(29 - money.size() - 1, 1);
+                        else
+                            ConsoleUtils::Gotoxy(29 - money.size(), 1);
+
+                        std::cout << Utilities::MiscUtils::formatMoney(stod(money));
+
                         break;
+                    }
                 }
                 else if (ch == Constants::Keys::KEY_TAB)
                     continue;
@@ -882,7 +949,7 @@ namespace Utilities
                                 ConsoleUtils::Gotoxy(29 - money.size() - 1, 1);
                             else
                                 ConsoleUtils::Gotoxy(29 - money.size(), 1);
-                            std::cout << Utilities::MiscUtils::formatMoney(stod(money));
+                            ConsoleUtils::print(Utilities::MiscUtils::formatMoney(stod(money)).c_str(), {Constants::ANSI::Foreground::YELLOW});
                         }
                         else
                             ConsoleUtils::Gotoxy(29, 1);
@@ -907,7 +974,7 @@ namespace Utilities
                                 ConsoleUtils::Gotoxy(29 - money.size() - 1, 1);
                             else
                                 ConsoleUtils::Gotoxy(29 - money.size(), 1);
-                            std::cout << Utilities::MiscUtils::formatMoney(stod(money));
+                            ConsoleUtils::print(Utilities::MiscUtils::formatMoney(stod(money)).c_str(), {Constants::ANSI::Foreground::YELLOW});
                         }
                     }
                 }

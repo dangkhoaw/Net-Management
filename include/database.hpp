@@ -10,6 +10,7 @@
 #include "base64.hpp"
 #include "file.hpp"
 #include "revenue.hpp"
+#include "constants.hpp"
 
 template <class T>
 class Database
@@ -36,19 +37,19 @@ bool Database<T>::add(T &obj)
         {
             std::fstream file;
             if (!File::open(file, "./data/account/account.txt", std::ios::app))
-                throw "Không thể mở file account";
+                throw std::string("Không thể mở file account");
 
             if (!File::write(file, obj.serialize()))
-                throw "Không thể ghi vào file account";
+                throw std::string("Không thể ghi vào file account");
 
             if (!File::close(file))
-                throw "Không thể đóng file account";
+                throw std::string("Không thể đóng file account");
 
             return true;
         }
         catch (const std::string &error)
         {
-            std::cerr << error << std::endl;
+            ConsoleUtils::error(error.c_str());
             return false;
         }
     }
@@ -59,31 +60,31 @@ bool Database<T>::add(T &obj)
             {
                 std::fstream file;
                 if (!File::open(file, "./data/customer/customer.txt", std::ios::app))
-                    throw "Không thể mở file customer";
+                    throw std::string("Không thể mở file customer");
 
                 if (!File::write(file, obj.serialize()))
-                    throw "Không thể ghi vào file customer";
+                    throw std::string("Không thể ghi vào file customer");
 
                 if (!File::close(file))
-                    throw "Không thể đóng file customer";
+                    throw std::string("Không thể đóng file customer");
             }
             {
                 std::fstream file;
                 if (!File::open(file, "./data/time/" + obj.getId() + ".txt", std::ios::out))
-                    throw "Không thể tạo file t/g customer";
+                    throw std::string("Không thể tạo file t/g customer");
 
                 if (!File::write(file, obj.getTime().serialize()))
-                    throw "Không thể ghi vào file t/g customer";
+                    throw std::string("Không thể ghi vào file t/g customer");
 
                 if (!File::close(file))
-                    throw "Không thể đóng file t/g customer";
+                    throw std::string("Không thể đóng file t/g customer");
             }
 
             return true;
         }
         catch (const std::string &error)
         {
-            std::cerr << error << std::endl;
+            ConsoleUtils::error(error.c_str());
             return false;
         }
     }
@@ -94,31 +95,31 @@ bool Database<T>::add(T &obj)
             {
                 std::fstream file;
                 if (!File::open(file, "./data/computer/computer.txt", std::ios::app))
-                    throw "Không thể mở file computer";
+                    throw std::string("Không thể mở file computer");
 
                 if (!File::write(file, obj.serialize()))
-                    throw "Không thể ghi vào file computer";
+                    throw std::string("Không thể ghi vào file computer");
 
                 if (!File::close(file))
-                    throw "Không thể đóng file computer";
+                    throw std::string("Không thể đóng file computer");
             }
             {
                 std::fstream file;
                 if (!File::open(file, "./data/time/" + obj.getId() + ".txt", std::ios::out))
-                    throw "Không thể tạo file t/g computer";
+                    throw std::string("Không thể tạo file t/g computer");
 
                 if (!File::write(file, obj.getUsageTime().serialize()))
-                    throw "Không thể ghi vào file t/g computer";
+                    throw std::string("Không thể ghi vào file t/g computer");
 
                 if (!File::close(file))
-                    throw "Không thể đóng file t/g computer";
+                    throw std::string("Không thể đóng file t/g computer");
             }
 
             return true;
         }
         catch (const std::string &error)
         {
-            std::cerr << error << std::endl;
+            ConsoleUtils::error(error.c_str());
             return false;
         }
     }
@@ -137,30 +138,31 @@ bool Database<T>::remove(T &obj)
         {
             std::fstream file;
             if (!File::open(file, "./data/account/account.txt", std::ios::in))
-                throw "Không thể mở file account";
+                throw std::string("Không thể mở file account");
 
             std::fstream tempFile;
             if (!File::open(tempFile, "./data/account/temp.txt", std::ios::out))
-                throw "Không thể mở file temp";
+                throw std::string("Không thể mở file temp");
 
             std::string line;
             while (File::read(file, line))
             {
                 std::stringstream ss(line);
-                std::string id;
+                std::string id, username;
                 std::getline(ss, id, '|');
-                if (id != obj.getId())
+                std::getline(ss, username, '|');
+                if (id != obj.getId() || username != obj.getUserName())
                 {
                     if (!File::write(tempFile, line))
-                        throw "Lỗi khi ghi vào file temp";
+                        throw std::string("Lỗi khi ghi vào file temp");
                 }
             }
 
             if (!File::close(file))
-                throw "Không thể đóng file account";
+                throw std::string("Không thể đóng file account");
 
             if (!File::close(tempFile))
-                throw "Không thể đóng file temp";
+                throw std::string("Không thể đóng file temp");
 
             File::remove("./data/account/account.txt");
             File::rename("./data/account/temp.txt", "./data/account/account.txt");
@@ -168,7 +170,7 @@ bool Database<T>::remove(T &obj)
         }
         catch (const std::string &error)
         {
-            std::cerr << error << std::endl;
+            ConsoleUtils::error(error.c_str());
             return false;
         }
     }
@@ -178,30 +180,32 @@ bool Database<T>::remove(T &obj)
         {
             std::fstream file;
             if (!File::open(file, "./data/customer/customer.txt", std::ios::in))
-                throw "Không thể mở file customer";
+                throw std::string("Không thể mở file customer");
 
             std::fstream tempFile;
             if (!File::open(tempFile, "./data/customer/temp.txt", std::ios::out))
-                throw "Không thể mở file temp";
+                throw std::string("Không thể mở file temp");
 
             std::string line;
             while (File::read(file, line))
             {
                 std::stringstream ss(line);
-                std::string id;
+                std::string id, name, username;
                 std::getline(ss, id, '|');
-                if (id != obj.getId())
+                std::getline(ss, name, '|');
+                std::getline(ss, username, '|');
+                if (id != obj.getId() || username != obj.getUserName())
                 {
                     if (!File::write(tempFile, line))
-                        throw "Lỗi khi ghi vào file temp";
+                        throw std::string("Lỗi khi ghi vào file temp");
                 }
             }
 
             if (!File::close(file))
-                throw "Không thể đóng file customer";
+                throw std::string("Không thể đóng file customer");
 
             if (!File::close(tempFile))
-                throw "Không thể đóng file temp";
+                throw std::string("Không thể đóng file temp");
 
             Database<Account>::remove(obj);
 
@@ -212,7 +216,7 @@ bool Database<T>::remove(T &obj)
         }
         catch (const std::string &error)
         {
-            std::cerr << error << std::endl;
+            ConsoleUtils::error(error.c_str());
             return false;
         }
     }
@@ -222,11 +226,11 @@ bool Database<T>::remove(T &obj)
         {
             std::fstream file;
             if (!File::open(file, "./data/computer/computer.txt", std::ios::in))
-                throw "Không thể mở file computer";
+                throw std::string("Không thể mở file computer");
 
             std::fstream tempFile;
             if (!File::open(tempFile, "./data/computer/temp.txt", std::ios::out))
-                throw "Không thể mở file temp";
+                throw std::string("Không thể mở file temp");
 
             std::string line;
             while (File::read(file, line))
@@ -237,15 +241,15 @@ bool Database<T>::remove(T &obj)
                 if (id != obj.getId())
                 {
                     if (!File::write(tempFile, line))
-                        throw "Lỗi khi ghi vào file temp";
+                        throw std::string("Lỗi khi ghi vào file temp");
                 }
             }
 
             if (!File::close(file))
-                throw "Không thể đóng file computer";
+                throw std::string("Không thể đóng file computer");
 
             if (!File::close(tempFile))
-                throw "Không thể đóng file temp";
+                throw std::string("Không thể đóng file temp");
 
             File::remove("./data/computer/computer.txt");
             File::rename("./data/computer/temp.txt", "./data/computer/computer.txt");
@@ -254,7 +258,7 @@ bool Database<T>::remove(T &obj)
         }
         catch (const std::string &error)
         {
-            std::cerr << error << std::endl;
+            ConsoleUtils::error(error.c_str());
             return false;
         }
     }
@@ -273,11 +277,11 @@ bool Database<T>::update(T &obj)
         {
             std::fstream file;
             if (!File::open(file, "./data/account/account.txt", std::ios::in))
-                throw "Không thể mở file account";
+                throw std::string("Không thể mở file account");
 
             std::fstream tempFile;
             if (!File::open(tempFile, "./data/account/temp.txt", std::ios::out))
-                throw "Không thể mở file temp";
+                throw std::string("Không thể mở file temp");
 
             std::string line;
             Account account;
@@ -287,20 +291,20 @@ bool Database<T>::update(T &obj)
                 if (account.getId() == obj.getId())
                 {
                     if (!File::write(tempFile, obj.serialize()))
-                        throw "Lỗi khi ghi vào file temp";
+                        throw std::string("Lỗi khi ghi vào file temp");
                 }
                 else
                 {
                     if (!File::write(tempFile, line))
-                        throw "Lỗi khi ghi vào file temp";
+                        throw std::string("Lỗi khi ghi vào file temp");
                 }
             }
 
             if (!File::close(file))
-                throw "Không thể đóng file account";
+                throw std::string("Không thể đóng file account");
 
             if (!File::close(tempFile))
-                throw "Không thể đóng file temp";
+                throw std::string("Không thể đóng file temp");
 
             File::remove("./data/account/account.txt");
             File::rename("./data/account/temp.txt", "./data/account/account.txt");
@@ -308,7 +312,7 @@ bool Database<T>::update(T &obj)
         }
         catch (const std::string &error)
         {
-            std::cerr << error << std::endl;
+            ConsoleUtils::error(error.c_str());
             return false;
         }
     }
@@ -318,11 +322,11 @@ bool Database<T>::update(T &obj)
         {
             std::fstream file;
             if (!File::open(file, "./data/customer/customer.txt", std::ios::in))
-                throw "Không thể mở file customer";
+                throw std::string("Không thể mở file customer");
 
             std::fstream tempFile;
             if (!File::open(tempFile, "./data/customer/temp.txt", std::ios::out))
-                throw "Không thể mở file temp";
+                throw std::string("Không thể mở file temp");
 
             std::string line;
             Customer customer;
@@ -332,20 +336,20 @@ bool Database<T>::update(T &obj)
                 if (customer.getId() == obj.getId())
                 {
                     if (!File::write(tempFile, obj.serialize()))
-                        throw "Lỗi khi ghi vào file temp";
+                        throw std::string("Lỗi khi ghi vào file temp");
                 }
                 else
                 {
                     if (!File::write(tempFile, line))
-                        throw "Lỗi khi ghi vào file temp";
+                        throw std::string("Lỗi khi ghi vào file temp");
                 }
             }
 
             if (!File::close(file))
-                throw "Không thể đóng file customer";
+                throw std::string("Không thể đóng file customer");
 
             if (!File::close(tempFile))
-                throw "Không thể đóng file temp";
+                throw std::string("Không thể đóng file temp");
 
             File::remove("./data/customer/customer.txt");
             File::rename("./data/customer/temp.txt", "./data/customer/customer.txt");
@@ -354,7 +358,7 @@ bool Database<T>::update(T &obj)
         }
         catch (const std::string &error)
         {
-            std::cerr << error << std::endl;
+            ConsoleUtils::error(error.c_str());
             return false;
         }
     }
@@ -364,11 +368,11 @@ bool Database<T>::update(T &obj)
         {
             std::fstream file;
             if (!File::open(file, "./data/computer/computer.txt", std::ios::in))
-                throw "Không thể mở file computer";
+                throw std::string("Không thể mở file computer");
 
             std::fstream tempFile;
             if (!File::open(tempFile, "./data/computer/temp.txt", std::ios::out))
-                throw "Không thể mở file temp";
+                throw std::string("Không thể mở file temp");
 
             std::string line;
             Computer computer;
@@ -378,20 +382,20 @@ bool Database<T>::update(T &obj)
                 if (computer.getId() == obj.getId())
                 {
                     if (!File::write(tempFile, obj.serialize()))
-                        throw "Lỗi khi ghi vào file temp";
+                        throw std::string("Lỗi khi ghi vào file temp");
                 }
                 else
                 {
                     if (!File::write(tempFile, line))
-                        throw "Lỗi khi ghi vào file temp";
+                        throw std::string("Lỗi khi ghi vào file temp");
                 }
             }
 
             if (!File::close(file))
-                throw "Không thể đóng file computer";
+                throw std::string("Không thể đóng file computer");
 
             if (!File::close(tempFile))
-                throw "Không thể đóng file temp";
+                throw std::string("Không thể đóng file temp");
 
             File::remove("./data/computer/computer.txt");
             File::rename("./data/computer/temp.txt", "./data/computer/computer.txt");
@@ -399,7 +403,7 @@ bool Database<T>::update(T &obj)
         }
         catch (const std::string &error)
         {
-            std::cerr << error << std::endl;
+            ConsoleUtils::error(error.c_str());
             return false;
         }
     }
@@ -410,7 +414,7 @@ bool Database<T>::update(T &obj)
             List<Revenue> revenues = Database<Revenue>::gets();
             std::fstream file;
             if (!File::open(file, "./data/revenue/revenue.txt", std::ios::out))
-                throw "Không thể mở file revenue";
+                throw std::string("Không thể mở file revenue");
 
             bool check = false;
             for (Revenue &revenue : revenues)
@@ -421,23 +425,23 @@ bool Database<T>::update(T &obj)
                     revenue = obj;
                 }
                 if (!File::write(file, revenue.serialize()))
-                    throw "Không thể ghi vào file revenue";
+                    throw std::string("Không thể ghi vào file revenue");
             }
 
             if (!check)
             {
                 if (!File::write(file, obj.serialize()))
-                    throw "Không thể ghi vào file revenue";
+                    throw std::string("Không thể ghi vào file revenue");
             }
 
             if (!File::close(file))
-                throw "Không thể đóng file revenue";
+                throw std::string("Không thể đóng file revenue");
 
             return true;
         }
         catch (const std::string &error)
         {
-            std::cerr << error << std::endl;
+            ConsoleUtils::error(error.c_str());
             return false;
         }
     }
@@ -456,7 +460,7 @@ bool Database<T>::get(T &obj)
         {
             std::fstream file;
             if (!File::open(file, "./data/account/account.txt", std::ios::in))
-                throw "Không thể mở file account";
+                throw std::string("Không thể mở file account");
 
             std::string line;
             Account account;
@@ -467,19 +471,19 @@ bool Database<T>::get(T &obj)
                 {
                     obj = account;
                     if (!File::close(file))
-                        throw "Không thể đóng file account";
+                        throw std::string("Không thể đóng file account");
                     return true;
                 }
             }
 
             if (!File::close(file))
-                throw "Không thể đóng file account";
+                throw std::string("Không thể đóng file account");
 
             return false;
         }
         catch (const std::string &error)
         {
-            std::cerr << error << std::endl;
+            ConsoleUtils::error(error.c_str());
             return false;
         }
     }
@@ -489,7 +493,7 @@ bool Database<T>::get(T &obj)
         {
             std::fstream file;
             if (!File::open(file, "./data/customer/customer.txt", std::ios::in))
-                throw "Không thể mở file customer";
+                throw std::string("Không thể mở file customer");
 
             std::string line;
             Customer customer;
@@ -502,19 +506,19 @@ bool Database<T>::get(T &obj)
                     obj.setTime(obj.getTimeFromFile());
                     Database<Account>::get(obj);
                     if (!File::close(file))
-                        throw "Không thể đóng file customer";
+                        throw std::string("Không thể đóng file customer");
                     return true;
                 }
             }
 
             if (!File::close(file))
-                throw "Không thể đóng file customer";
+                throw std::string("Không thể đóng file customer");
 
             return false;
         }
         catch (const std::string &error)
         {
-            std::cerr << error << std::endl;
+            ConsoleUtils::error(error.c_str());
             return false;
         }
     }
@@ -524,7 +528,7 @@ bool Database<T>::get(T &obj)
         {
             std::fstream file;
             if (!File::open(file, "./data/computer/computer.txt", std::ios::in))
-                throw "Không thể mở file computer";
+                throw std::string("Không thể mở file computer");
 
             std::string line;
             Computer computer;
@@ -536,19 +540,19 @@ bool Database<T>::get(T &obj)
                     obj = computer;
                     obj.setUsageTime(obj.getUsageTimeFromFile());
                     if (!File::close(file))
-                        throw "Không thể đóng file computer";
+                        throw std::string("Không thể đóng file computer");
                     return true;
                 }
             }
 
             if (!File::close(file))
-                throw "Không thể đóng file computer";
+                throw std::string("Không thể đóng file computer");
 
             return false;
         }
         catch (const std::string &error)
         {
-            std::cerr << error << std::endl;
+            ConsoleUtils::error(error.c_str());
             return false;
         }
     }
@@ -575,7 +579,7 @@ List<T> Database<T>::gets(std::string field, std::string value)
         {
             std::fstream file;
             if (!File::open(file, "./data/account/account.txt", std::ios::in))
-                throw "Không thể mở file account";
+                throw std::string("Không thể mở file account");
 
             std::string line;
             Account account;
@@ -603,13 +607,13 @@ List<T> Database<T>::gets(std::string field, std::string value)
             }
 
             if (!File::close(file))
-                throw "Không thể đóng file account";
+                throw std::string("Không thể đóng file account");
 
             return objs;
         }
         catch (const std::string &error)
         {
-            std::cerr << error << std::endl;
+            ConsoleUtils::error(error.c_str());
             return objs;
         }
     }
@@ -619,7 +623,7 @@ List<T> Database<T>::gets(std::string field, std::string value)
         {
             std::fstream file;
             if (!File::open(file, "./data/customer/customer.txt", std::ios::in))
-                throw "Không thể mở file customer";
+                throw std::string("Không thể mở file customer");
 
             std::string line;
             Customer customer;
@@ -652,13 +656,13 @@ List<T> Database<T>::gets(std::string field, std::string value)
             }
 
             if (!File::close(file))
-                throw "Không thể đóng file customer";
+                throw std::string("Không thể đóng file customer");
 
             return objs;
         }
         catch (const std::string &error)
         {
-            std::cerr << error << std::endl;
+            ConsoleUtils::error(error.c_str());
             return objs;
         }
     }
@@ -668,7 +672,7 @@ List<T> Database<T>::gets(std::string field, std::string value)
         {
             std::fstream file;
             if (!File::open(file, "./data/computer/computer.txt", std::ios::in))
-                throw "Không thể mở file computer";
+                throw std::string("Không thể mở file computer");
 
             std::string line;
             Computer computer;
@@ -687,13 +691,13 @@ List<T> Database<T>::gets(std::string field, std::string value)
             }
 
             if (!File::close(file))
-                throw "Không thể đóng file computer";
+                throw std::string("Không thể đóng file computer");
 
             return objs;
         }
         catch (const std::string &error)
         {
-            std::cerr << error << std::endl;
+            ConsoleUtils::error(error.c_str());
             return objs;
         }
     }
@@ -703,7 +707,7 @@ List<T> Database<T>::gets(std::string field, std::string value)
         {
             std::fstream file;
             if (!File::open(file, "./data/revenue/revenue.txt", std::ios::in))
-                throw "Không thể mở file revenue";
+                throw std::string("Không thể mở file revenue");
 
             std::string line;
             Revenue revenue;
@@ -714,13 +718,13 @@ List<T> Database<T>::gets(std::string field, std::string value)
             }
 
             if (!File::close(file))
-                throw "Không thể đóng file revenue";
+                throw std::string("Không thể đóng file revenue");
 
             return objs;
         }
         catch (const std::string &error)
         {
-            std::cerr << error << std::endl;
+            ConsoleUtils::error(error.c_str());
             return objs;
         }
     }

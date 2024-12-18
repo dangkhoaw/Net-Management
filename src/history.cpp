@@ -1,5 +1,7 @@
+#include "../include/console.hpp"
 #include "../include/history.hpp"
 #include "../include/file.hpp"
+#include "../include/constants.hpp"
 #include <sstream>
 
 History::History(Day day, std::string customerID)
@@ -48,12 +50,12 @@ void History::addHistoryToFile()
         std::fstream file;
         if (!File::open(file, "./data/history/history.txt", std::ios::in))
         {
-            throw "Không thể mở file history";
+            throw std::string("Không thể mở file history");
         }
         std::fstream tempFile;
         if (!File::open(tempFile, "./data/history/temp.txt", std::ios::out))
         {
-            throw "Không thể mở file temp";
+            throw std::string("Không thể mở file temp");
         }
 
         File::write(tempFile, this->getCustomerID() + "|" + this->getDay().serialize());
@@ -69,7 +71,7 @@ void History::addHistoryToFile()
     }
     catch (const std::string &error)
     {
-        std::cerr << error << std::endl;
+        ConsoleUtils::error(error.c_str());
     }
 }
 

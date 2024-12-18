@@ -63,10 +63,15 @@
     "text_encoding": "cpp",
     "thread": "cpp",
     "typeinfo": "cpp",
-    "variant": "cpp"
+    "variant": "cpp",
+    "map": "cpp",
+    "math.h": "c"
   },
   "code-runner.executorMap": {
-    "cpp": "g++ src/*.cpp -o build/Net-Management && ./Net-Management"
+    "cpp": "g++ src/*.cpp -o build/Net-Management; ./Net-Management"
   },
-  "code-runner.runInTerminal": true
+  "editor.defaultFormatter": "ms-vscode.cpptools",
+  "code-runner.runInTerminal": true,
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true
 }

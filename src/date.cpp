@@ -1,5 +1,7 @@
+#include "../include/console.hpp"
 #include "../include/utilities.hpp"
 #include "../include/date.hpp"
+#include "../include/constants.hpp"
 #include <iomanip>
 
 Date::Date(int day, int month, int year) : day(day), month(month), year(year) {}
@@ -16,15 +18,22 @@ std::istream &operator>>(std::istream &is, Date &date)
 {
     while (true)
     {
+        date = Date();
         std::cout << "Nhập vào ngày, tháng, năm dưới dạng (dd/mm/yyyy): ";
         std::string temp;
         Utilities::InputUtils::inputString(temp, 10);
+        if (temp.empty())
+        {
+            system("cls");
+            return is;
+        }
 
         int pos1 = temp.find('/');
         int pos2 = temp.find('/', pos1 + 1);
         if (pos1 == -1 || pos2 == -1 || pos1 == 0 || pos2 == temp.size() - 1 || temp.find('/', pos2 + 1) != -1 || pos1 == pos2 - 1) // kiểm tra xem có phải là dd/mm/yyyy không
         {
-            std::cout << "Nhập sai định dạng!" << std::endl;
+            ConsoleUtils::print("Nhập sai định dạng!", {Constants::ANSI::Foreground::RED});
+            ConsoleUtils::ClearLine(0);
             continue;
         }
 
@@ -34,7 +43,8 @@ std::istream &operator>>(std::istream &is, Date &date)
 
         if (date.isValid())
             break;
-        std::cout << "Ngày tháng năm không hợp lệ!" << std::endl;
+        ConsoleUtils::print("Ngày tháng năm không hợp lệ!", {Constants::ANSI::Foreground::RED});
+        ConsoleUtils::ClearLine(0);
     }
     return is;
 }

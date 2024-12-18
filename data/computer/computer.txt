@@ -1,10 +1,3 @@
-COM03|VIP|Available|
-COM05|Co ban|Available|
-COM07|Co ban|Available|
-COM08|Cao cap|Available|
-COM10|Cao cap|Available|
-COM11|Co ban|Available|
-COM12|Co ban|Available|
-COM13|Cao cap|Available|
-COM14|Co ban|Available|
-COM15|Co ban|Available|
+COM01|Co ban|Available|
+COM02|Cao cap|Available|
+COM03|Co ban|Available|
