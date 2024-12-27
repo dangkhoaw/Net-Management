@@ -633,8 +633,19 @@ namespace Utilities
 
         void run()
         {
-            bool isFull = Utilities::Validation::isFullAllComputer();
-            bool isAdmin = Utilities::Validation::isAdminOnline();
+            bool isAdmin, isFull;
+            try
+            {
+                isFull = Utilities::Validation::isFullAllComputer();
+                isAdmin = Utilities::Validation::isAdminOnline();
+            }
+            catch (...)
+            {
+                system("cls");
+                ConsoleUtils::print("Có lỗi xảy ra, vui lòng thử lại sau!", {Constants::ANSI::Foreground::RED});
+                Utilities::MiscUtils::pressKeyQ();
+                return;
+            }
 
             if (isFull && isAdmin)
                 return;
