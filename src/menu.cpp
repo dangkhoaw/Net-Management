@@ -61,7 +61,7 @@ namespace Menu
               "        Caffee sữa            │  15.000  ",
               "        Nước cam              │  10.000  ",
               "        Bò húc                │  15.000  ",
-              "                  Thoát                  "}},
+              "                  Thoát                 "}},
             {"quantity",
              {"        1                 ",
               "        2                 ",
@@ -929,8 +929,8 @@ namespace Menu
         Utilities::MiscUtils::makeFileOrdered(customer);
         while (true)
         {
-            printItemsOrdered(customer);
             showMenu("dish", selectOption);
+            printItemsOrdered(customer);
             int key = _getch();
             switch (key)
             {
@@ -1183,7 +1183,7 @@ namespace Menu
 
     void printItemsOrdered(Customer &customer)
     {
-        system("cls");
+
         if (Constants::Globals::isChangedOrder)
         {
             std::fstream file;
