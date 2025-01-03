@@ -47,21 +47,21 @@ namespace Menu
               "         Đặt                 ",
               "         Thoát               "}},
             {"food",
-             {"     Bánh mì thịt nướng       │  15.000  ",
-              "     Mì tôm trứng             │  15.000  ",
-              "     Cơm gà nướng             │  25.000  ",
-              "     Cơm gà chiên nước mắm    │  25.000  ",
-              "     Xúc xích                 │  10.000  ",
-              "     Cơm cuộn                 │  15.000  ",
-              "                  Thoát                 "}},
+             {"     Bánh mì thịt nướng       ",
+              "     Mì tôm trứng             ",
+              "     Cơm gà nướng             ",
+              "     Cơm gà chiên nước mắm    ",
+              "     Xúc xích                 ",
+              "     Cơm cuộn                 ",
+              "      Thoát                  "}},
             {"drink",
-             {"        Coca lon              │  10.000  ",
-              "        Nước suối             │  5.000   ",
-              "        Caffee đen            │  10.000  ",
-              "        Caffee sữa            │  15.000  ",
-              "        Nước cam              │  10.000  ",
-              "        Bò húc                │  15.000  ",
-              "                  Thoát                 "}},
+             {"        Coca lon              ",
+              "        Nước suối             ",
+              "        Caffee đen            ",
+              "        Caffee sữa            ",
+              "        Nước cam              ",
+              "        Bò húc                ",
+              "         Thoát               "}},
             {"quantity",
              {"        1                 ",
               "        2                 ",
@@ -243,11 +243,25 @@ namespace Menu
         else if (typeMenu == "food")
         {
             ConsoleUtils::Gotoxy(0, 0);
-            std::cout << "┌─────────────────────────────────────────┐";
+            std::cout << "┌──────────────────────────────┬──────────┐";
             ConsoleUtils::Gotoxy(0, 1);
-            std::cout << "│        Tên món               │   Giá    │";
+            std::cout << "│           Tên món            │   Giá    │";
             ConsoleUtils::Gotoxy(0, 2);
-            std::cout << "├─────────────────────────────────────────┤";
+            std::cout << "├──────────────────────────────┼──────────┤";
+            ConsoleUtils::Gotoxy(31, 3);
+            std::cout << "│  15.000  │";
+            ConsoleUtils::Gotoxy(31, 4);
+            std::cout << "│  15.000  │";
+            ConsoleUtils::Gotoxy(31, 5);
+            std::cout << "│  25.000  │";
+            ConsoleUtils::Gotoxy(31, 6);
+            std::cout << "│  25.000  │";
+            ConsoleUtils::Gotoxy(31, 7);
+            std::cout << "│  10.000  │";
+            ConsoleUtils::Gotoxy(31, 8);
+            std::cout << "│  15.000  │";
+            ConsoleUtils::Gotoxy(31, 9);
+            std::cout << "│          │";
             for (int i = 1; i <= Constants::Menu::MENUFOOD; i++)
             {
                 ConsoleUtils::Gotoxy(0, i + 2);
@@ -256,16 +270,30 @@ namespace Menu
                 printMenuOption(typeMenu, i, isSelected);
                 std::cout << "│" << std::endl;
             }
-            std::cout << "└─────────────────────────────────────────┘" << std::endl;
+            std::cout << "└──────────────────────────────┴──────────┘" << std::endl;
         }
         else if (typeMenu == "drink")
         {
             ConsoleUtils::Gotoxy(0, 0);
-            std::cout << "┌─────────────────────────────────────────┐";
+            std::cout << "┌──────────────────────────────┬──────────┐";
             ConsoleUtils::Gotoxy(0, 1);
-            std::cout << "│        Thức uống             │   Giá    │";
+            std::cout << "│           Thức uống          │   Giá    │";
             ConsoleUtils::Gotoxy(0, 2);
-            std::cout << "├─────────────────────────────────────────┤";
+            std::cout << "├──────────────────────────────┼──────────┤";
+            ConsoleUtils::Gotoxy(31, 3);
+            std::cout << "│  10.000  │";
+            ConsoleUtils::Gotoxy(31, 4);
+            std::cout << "│  5.000   │";
+            ConsoleUtils::Gotoxy(31, 5);
+            std::cout << "│  10.000  │";
+            ConsoleUtils::Gotoxy(31, 6);
+            std::cout << "│  15.000  │";
+            ConsoleUtils::Gotoxy(31, 7);
+            std::cout << "│  10.000  │";
+            ConsoleUtils::Gotoxy(31, 8);
+            std::cout << "│  15.000  │";
+            ConsoleUtils::Gotoxy(31, 9);
+            std::cout << "│          │";
             for (int i = 1; i <= Constants::Menu::MENUDRINK; i++)
             {
                 ConsoleUtils::Gotoxy(0, i + 2);
@@ -274,7 +302,7 @@ namespace Menu
                 printMenuOption(typeMenu, i, isSelected);
                 std::cout << "│" << std::endl;
             }
-            std::cout << "└─────────────────────────────────────────┘" << std::endl;
+            std::cout << "└──────────────────────────────┴──────────┘" << std::endl;
         }
         else if (typeMenu == "quantity")
         {
@@ -929,8 +957,8 @@ namespace Menu
         Utilities::MiscUtils::makeFileOrdered(customer);
         while (true)
         {
-            showMenu("dish", selectOption);
             printItemsOrdered(customer);
+            showMenu("dish", selectOption);
             int key = _getch();
             switch (key)
             {
@@ -1183,7 +1211,6 @@ namespace Menu
 
     void printItemsOrdered(Customer &customer)
     {
-
         if (Constants::Globals::isChangedOrder)
         {
             std::fstream file;

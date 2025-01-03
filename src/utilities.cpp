@@ -545,6 +545,7 @@ namespace Utilities
             {
                 ConsoleUtils::print("Số dư sau khi mua phải trên 5.000 (VNĐ)!\n", {Constants::ANSI::Foreground::YELLOW, Constants::ANSI::Style::BOLD});
                 Menu::button(13, 1, "ok");
+                system("cls");
                 std::fstream file;
                 if (!File::open(file, "./data/order/" + customer.getId() + "_ordered.txt", std::ios::out))
                 {
@@ -695,7 +696,7 @@ namespace Utilities
             system("cls");
             ConsoleUtils::ShowCursor(true);
             ConsoleUtils::print("Đăng xuất thành công", {Constants::ANSI::Foreground::GREEN});
-            Sleep(3000);
+            Sleep(1000);
         }
     }
 
