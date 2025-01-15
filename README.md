@@ -36,9 +36,6 @@ cd Net-Management
 g++ -std=c++11 src/*.cpp -o build/Net-Management ; ./build/Net-Management
 ```
 
-> [!TIP]
-> Bạn có thể chạy file Net-Management.exe trong thư mục Net-Management mà không cần biên dịch lại chương trình
-
 # 🧑🏻‍💻 Contributors
 
 - [Đặng Đăng Khoa](https://github.com/dangkhoaw)
